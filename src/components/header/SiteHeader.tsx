@@ -11,7 +11,11 @@ export const SiteHeader = ({ globalHeader, globalSettings }: HeaderNavProps) => 
   return (
     <header className="shadow-bottom">
       <TopNav topNavProps={globalHeader?.topNav} settings={globalSettings}></TopNav>
-      <MainNav headerLogo={globalHeader?.headerLogo} />
+      <MainNav
+        headerLogo={globalHeader?.headerLogo}
+        leftLinks={globalHeader?.leftLinks}
+        rightLinks={globalHeader?.rightLinks}
+      />
     </header>
   )
 }

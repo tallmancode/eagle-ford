@@ -17,13 +17,13 @@ import type { NavLinks } from '@/payload-types'
 
 type NavLink = NonNullable<NavLinks>[number]
 
-export const renderNavItem = (item: NavLink, index: number) => {
+export const renderNavItem = (item: NavLink, index: number, linkClassName?: string) => {
   if (item.type === 'dropdown') {
     const parentHref = getDropdownParentHref(item)
 
     return (
       <NavigationMenuItem key={item.id ?? index}>
-        <NavigationMenuTrigger>
+        <NavigationMenuTrigger className={linkClassName}>
           {parentHref ? (
             <Link href={parentHref} target={getNavLinkTarget(item)}>
               {item.label}
@@ -76,7 +76,7 @@ export const renderNavItem = (item: NavLink, index: number) => {
   return (
     <NavigationMenuItem key={item.id ?? index}>
       <NavigationMenuLink asChild>
-        <Link href={href} target={target}>
+        <Link href={href} target={target} className={linkClassName}>
           {item.label}
         </Link>
       </NavigationMenuLink>
@@ -84,13 +84,21 @@ export const renderNavItem = (item: NavLink, index: number) => {
   )
 }
 
-export const NavMenuItems = ({ links, className }: { links?: NavLinks; className?: string }) => {
+export const NavMenuItems = ({
+  links,
+  className,
+  linkClassName,
+}: {
+  links?: NavLinks
+  className?: string
+  linkClassName?: string
+}) => {
   if (!links?.length) return null
 
   return (
     <NavigationMenu className={className}>
       <NavigationMenuList className="space-x-2">
-        {links.map((item, index) => renderNavItem(item, index))}
+        {links.map((item, index) => renderNavItem(item, index, linkClassName))}
       </NavigationMenuList>
     </NavigationMenu>
   )
