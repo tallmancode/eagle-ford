@@ -21,8 +21,8 @@ export const resolveNavHref = ({
       return getPagePath(reference.value)
     }
 
-    if (reference.relationTo === 'blog') {
-      return `/blog/${reference.value.slug}`
+    if (reference.relationTo === 'blogs') {
+      return `/blogs/${reference.value.slug}`
     }
   }
 

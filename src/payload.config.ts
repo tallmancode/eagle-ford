@@ -4,16 +4,13 @@ import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
-import { Categories } from './collections/Categories'
-import { Media } from './collections/Media'
-import { Pages } from './collections/Pages'
-import { Posts } from './collections/Posts'
-import { Users } from './collections/Users'
-import { Footer } from './Footer/config'
-import { Header } from './Header/config'
+import { UsersCollection } from './collections/Users'
+import Collections from '@/collections'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
+import Globals from '@/globals'
+import Blocks from '@/lib/blocks'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -21,6 +18,11 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     components: {
+      views: {
+        login: {
+          Component: '@/views/Login',
+        },
+      },
       // The `BeforeLogin` component renders a message that you see while logging into your admin panel.
       // Feel free to delete this at any time. Simply remove the line below.
       beforeLogin: ['@/components/BeforeLogin'],
@@ -31,7 +33,7 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    user: Users.slug,
+    user: UsersCollection.slug,
     livePreview: {
       breakpoints: [
         {
@@ -60,9 +62,10 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
   }),
-  collections: [Pages, Posts, Media, Categories, Users],
+  collections: [UsersCollection, ...Collections],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
+  globals: Globals,
+  blocks: [...Blocks],
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,

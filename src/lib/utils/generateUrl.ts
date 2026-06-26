@@ -8,8 +8,8 @@ const generateURL: GenerateURL<Page | Blog> = ({ doc, collectionSlug }) => {
 
   if (!doc?.slug) return url
 
-  if (collectionSlug === 'blog') {
-    return `${url}/blog/${doc.slug}`
+  if (collectionSlug === 'blogs') {
+    return `${url}/blogs/${doc.slug}`
   }
 
   return `${url}${getPagePath(doc)}`

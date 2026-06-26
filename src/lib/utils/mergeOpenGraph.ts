@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
-import { DEFAULT_OG_DESCRIPTION, DEFAULT_OG_IMAGE_PATH, SITE_NAME } from '@/lib/constants/site'
+import { DEFAULT_OG_DESCRIPTION, DEFAULT_OG_IMAGE_PATH, SITE_NAME } from '@/constants/site'
 
 const defaultOpenGraph: Metadata['openGraph'] = {
   type: 'website',
