@@ -1,0 +1,126 @@
+import type { ServerProps } from 'payload'
+import React from 'react'
+import { FC } from 'react'
+import { AdminSidebarWrapper } from '@/components/admin/sidebar/AdminSidebarWrapper'
+import { RenderServerComponent } from '@payloadcms/ui/elements/RenderServerComponent'
+import { AdminSidebarClient } from '@/components/admin/sidebar/AdminSidebar.client'
+import { EntityToGroup, groupNavItems, EntityType } from '@payloadcms/ui/utilities/groupNavItems'
+import { getNavPrefs } from '@/components/admin/sidebar/getNavPrefs'
+import { Logout } from '@payloadcms/ui'
+export const baseClass = 'nav'
+
+export const AdminSidebar: FC<ServerProps> = async (props) => {
+  const {
+    documentSubViewType,
+    i18n,
+    locale,
+    params,
+    payload,
+    permissions,
+    searchParams,
+    user,
+    viewType,
+    visibleEntities,
+  } = props
+
+  if (!payload?.config || !permissions) {
+    return null
+  }
+
+  const {
+    admin: {
+      components: { afterNavLinks, beforeNavLinks, logout },
+    },
+    collections,
+    globals,
+  } = payload.config
+
+  const groups = groupNavItems(
+    [
+      ...collections
+        .filter(({ slug }) => visibleEntities?.collections.includes(slug))
+        .map(
+          (collection) =>
+            ({
+              type: EntityType.collection,
+              entity: collection,
+            }) satisfies EntityToGroup,
+        ),
+      ...globals
+        .filter(({ slug }) => visibleEntities?.globals.includes(slug))
+        .map(
+          (global) =>
+            ({
+              type: EntityType.global,
+              entity: global,
+            }) satisfies EntityToGroup,
+        ),
+    ],
+    permissions,
+    i18n,
+  )
+
+  const navPreferences = await getNavPrefs({ payload, user })
+
+  const LogoutComponent = RenderServerComponent({
+    clientProps: {
+      documentSubViewType,
+      viewType,
+    },
+    Component: logout?.Button,
+    Fallback: Logout,
+    importMap: payload.importMap,
+    serverProps: {
+      i18n,
+      locale,
+      params,
+      payload,
+      permissions,
+      searchParams,
+      user,
+    },
+  })
+
+  return (
+    <AdminSidebarWrapper baseClass={baseClass}>
+      <nav className={`${baseClass}__wrap`}>
+        {RenderServerComponent({
+          clientProps: {
+            documentSubViewType,
+            viewType,
+          },
+          Component: beforeNavLinks,
+          importMap: payload.importMap,
+          serverProps: {
+            i18n,
+            locale,
+            params,
+            payload,
+            permissions,
+            searchParams,
+            user,
+          },
+        })}
+        <AdminSidebarClient groups={groups} navPreferences={navPreferences} />
+        {RenderServerComponent({
+          clientProps: {
+            documentSubViewType,
+            viewType,
+          },
+          Component: afterNavLinks,
+          importMap: payload.importMap,
+          serverProps: {
+            i18n,
+            locale,
+            params,
+            payload,
+            permissions,
+            searchParams,
+            user,
+          },
+        })}
+        <div className={`${baseClass}__controls`}>{LogoutComponent} </div>
+      </nav>
+    </AdminSidebarWrapper>
+  )
+}

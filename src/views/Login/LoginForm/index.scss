@@ -1,0 +1,28 @@
+@layer payload-default {
+  .login__form {
+    &__inputWrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--base);
+      margin-bottom: calc(var(--base) / 4);
+      .field-type {
+        label.field-label {
+          color: #dcdcdc;
+        }
+
+        input {
+          background: transparent;
+          border: 1px solid #dcdcdc;
+          color: #dcdcdc;
+          &:hover,
+          &:focus {
+            border: 1px solid #dcdcdc;
+          }
+        }
+      }
+    }
+    &__link {
+      color: #dcdcdc;
+    }
+  }
+}
