@@ -41,7 +41,10 @@ export const HeaderGlobal: GlobalConfig = {
         },
         {
           label: 'Navigation',
-          fields: [NavLinksField({ name: 'links', maxRows: 10, relationTo: ['pages'] })],
+          fields: [
+            NavLinksField({ name: 'leftLinks', maxRows: 10, relationTo: ['pages'] }),
+            NavLinksField({ name: 'rightLinks', maxRows: 10, relationTo: ['pages'] }),
+          ],
         },
       ],
     },

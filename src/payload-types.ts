@@ -1521,7 +1521,8 @@ export interface Header {
     homeLinkText?: string | null;
     topNavLinks?: NavLinks;
   };
-  links?: NavLinks;
+  leftLinks?: NavLinks;
+  rightLinks?: NavLinks;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1633,7 +1634,8 @@ export interface HeaderSelect<T extends boolean = true> {
         homeLinkText?: T;
         topNavLinks?: T | NavLinksSelect<T>;
       };
-  links?: T | NavLinksSelect<T>;
+  leftLinks?: T | NavLinksSelect<T>;
+  rightLinks?: T | NavLinksSelect<T>;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
