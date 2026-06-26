@@ -1,7 +1,5 @@
-import fallbackLogo from '@/assets/Media/logo/eagle-ford-logo-stacked.png'
 import { Media } from '@/components/Media'
 import { Header as GlobalHeader } from '@/payload-types'
-import Image from 'next/image'
 import Link from 'next/link'
 
 export const MainNav = ({ headerLogo }: { headerLogo: GlobalHeader['headerLogo'] }) => {
@@ -18,13 +16,11 @@ export const MainNav = ({ headerLogo }: { headerLogo: GlobalHeader['headerLogo']
           Pre-Owned
         </a>
       </nav>
-      <Link href="/" aria-label="Home">
-        {typeof headerLogo === 'object' && headerLogo ? (
+      {typeof headerLogo === 'object' && headerLogo && (
+        <Link href="/" aria-label="Home">
           <Media resource={headerLogo} imgClassName="lg:w-36 w-28" priority />
-        ) : (
-          <Image className="lg:w-36 w-28" src={fallbackLogo} alt="Eagle Ford Logo" />
-        )}
-      </Link>
+        </Link>
+      )}
       <nav className="flex space-x-4 items-center">
         <a href="#" className="text-secondary font-bold text-lg">
           Services

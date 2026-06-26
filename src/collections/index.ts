@@ -1,9 +1,9 @@
 import { CollectionConfig } from 'payload'
 import { PagesCollection } from '@/collections/Pages'
 import { Blogs } from '@/collections/Blogs'
-import { Media } from '@/collections/Media'
+import { MediaCollection } from '@/collections/Media/MediaCollection'
 import { Categories } from '@/collections/Categories'
 
-const collections: CollectionConfig[] = [PagesCollection, Blogs, Media, Categories]
+const collections: CollectionConfig[] = [PagesCollection, Blogs, MediaCollection, Categories]
 
 export default collections

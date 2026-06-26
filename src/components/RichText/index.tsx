@@ -13,7 +13,10 @@ import {
 
 import { CodeBlock, CodeBlockProps } from '@/blocks/Code/Component'
 
-import type { BannerBlock as BannerBlockProps, MediaBlock as MediaBlockProps } from '@/payload-types'
+import type {
+  BannerBlock as BannerBlockProps,
+  MediaBlock as MediaBlockProps,
+} from '@/payload-types'
 
 type CTABlockProps = {
   id?: string | null
@@ -53,7 +56,9 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         disableInnerContainer={true}
       />
     ),
-    code: ({ node }: { node: SerializedBlockNode<CodeBlockProps> }) => <CodeBlock className="col-start-2" {...node.fields} />,
+    code: ({ node }: { node: SerializedBlockNode<CodeBlockProps> }) => (
+      <CodeBlock className="col-start-2" {...node.fields} />
+    ),
     cta: ({ node }: { node: SerializedBlockNode<any> }) => <CallToActionBlock {...node.fields} />,
   },
 })

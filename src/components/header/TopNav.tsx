@@ -1,9 +1,9 @@
 import { Separator } from '@/components/ui/separator'
 import { MapPin, PhoneCall } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Header as GlobalHeader, Setting as GlobalSettings } from '@/payload-types'
 import { formatPhoneNumber } from '@/utilities/formatPhoneNumber'
 import Link from 'next/link'
+import { NavMenuItems } from '@/components/header/NavMenuItems'
 
 export const TopNav = ({
   topNavProps,
@@ -66,13 +66,7 @@ export const TopNav = ({
             </>
           )}
         </div>
-        <div className="flex justify-end space-x-4 items-center">
-          <a href="#">Book a Test Drive</a>
-          <a href="#">Book a Service</a>
-          <Button variant="secondary" className="rounded-full" size={'sm'}>
-            Eagle Motor City
-          </Button>
-        </div>
+        <NavMenuItems links={topNavProps?.topNavLinks} className="flex justify-end" />
       </div>
     </div>
   )
