@@ -13,7 +13,7 @@ import { isAnyone, isAuthenticated } from '@/lib/utils/accessUtil'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-export const Media: CollectionConfig = {
+export const MediaCollection: CollectionConfig = {
   slug: 'media',
   folders: true,
   access: {
@@ -29,12 +29,17 @@ export const Media: CollectionConfig = {
       admin: {
         components: {
           Description: {
-            path: '/lib/components/admin/media-description/MediaDescription',
+            path: '/lib/components/media-description/MediaDescription',
             exportName: 'MediaDescription',
             clientProps: { length: 150 },
           },
         },
       },
+      required: true,
+    },
+    {
+      name: 'creditText',
+      type: 'text',
     },
     {
       name: 'caption',

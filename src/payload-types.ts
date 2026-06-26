@@ -403,7 +403,8 @@ export interface Page {
  */
 export interface Media {
   id: string;
-  alt?: string | null;
+  alt: string;
+  creditText?: string | null;
   caption?: {
     root: {
       type: string;
@@ -1125,6 +1126,7 @@ export interface BlogsSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  creditText?: T;
   caption?: T;
   folder?: T;
   updatedAt?: T;
