@@ -50,9 +50,9 @@ export default function LoginView({ initPageResult, searchParams }: AdminViewSer
       : undefined
 
   return (
-    <div className="w-full h-full relative">
-      <div className="w-full max-w-115 h-full min-h-dvh bg-dark-950/50 flex flex-col justify-center items-center p-8">
-        <div className="w-full h-auto">
+    <div className="tw w-full h-full relative">
+      <div className="tw w-full max-w-200 relative left-[100px] h-full min-h-dvh bg-dark-950/50 flex flex-col justify-center items-center px-10 py-8">
+        <div className="w-full h-auto max-w-xl mx-auto mb-8">
           <FullLogo className="w-full h-auto"></FullLogo>
         </div>
         {!collectionConfig?.auth?.disableLocalStrategy && (

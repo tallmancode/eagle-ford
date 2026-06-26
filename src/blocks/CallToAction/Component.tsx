@@ -1,6 +1,11 @@
 import React from 'react'
 
-import type { CallToActionBlock as CTABlockProps } from '@/payload-types'
+type CTABlockProps = {
+  id?: string | null
+  blockType?: string
+  richText?: import('@payloadcms/richtext-lexical').DefaultTypedEditorState | null
+  links?: Array<{ link: Record<string, unknown> }> | null
+}
 
 import RichText from '@/components/RichText'
 import { CMSLink } from '@/components/Link'

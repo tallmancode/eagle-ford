@@ -2,7 +2,16 @@ import { cn } from '@/utilities/ui'
 import React from 'react'
 import RichText from '@/components/RichText'
 
-import type { ContentBlock as ContentBlockProps } from '@/payload-types'
+type ContentBlockProps = {
+  id?: string | null
+  blockType?: string
+  columns?: Array<{
+    size?: 'full' | 'half' | 'oneThird' | 'twoThirds' | null
+    richText?: import('@payloadcms/richtext-lexical').DefaultTypedEditorState | null
+    enableLink?: boolean | null
+    link?: Record<string, unknown>
+  }> | null
+}
 
 import { CMSLink } from '../../components/Link'
 

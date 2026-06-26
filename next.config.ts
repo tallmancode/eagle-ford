@@ -22,6 +22,18 @@ const nextConfig: NextConfig = {
       {
         pathname: '/api/media/file/**',
       },
+      {
+        pathname: '/vehicle-tabs/**',
+      },
+      {
+        pathname: '/images/**',
+      },
+      {
+        pathname: '/meet-the-team/**',
+      },
+      {
+        pathname: '/sell-hero.webp',
+      },
     ],
     qualities: [100],
     remotePatterns: [

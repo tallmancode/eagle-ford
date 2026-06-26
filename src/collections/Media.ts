@@ -8,8 +8,7 @@ import {
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import { anyone } from '../access/anyone'
-import { authenticated } from '../access/authenticated'
+import { isAnyone, isAuthenticated } from '@/lib/utils/accessUtil'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -18,16 +17,24 @@ export const Media: CollectionConfig = {
   slug: 'media',
   folders: true,
   access: {
-    create: authenticated,
-    delete: authenticated,
-    read: anyone,
-    update: authenticated,
+    create: isAuthenticated,
+    delete: isAuthenticated,
+    read: isAnyone,
+    update: isAuthenticated,
   },
   fields: [
     {
       name: 'alt',
       type: 'text',
-      //required: true,
+      admin: {
+        components: {
+          Description: {
+            path: '/lib/components/admin/media-description/MediaDescription',
+            exportName: 'MediaDescription',
+            clientProps: { length: 150 },
+          },
+        },
+      },
     },
     {
       name: 'caption',
@@ -40,10 +47,13 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
     staticDir: path.resolve(dirname, '../../public/media'),
     adminThumbnail: 'thumbnail',
     focalPoint: true,
+    formatOptions: {
+      format: 'webp',
+    },
+    mimeTypes: ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml'],
     imageSizes: [
       {
         name: 'thumbnail',
