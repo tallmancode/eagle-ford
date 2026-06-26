@@ -1536,13 +1536,7 @@ export interface Footer {
    * Copyright text shown in the footer bottom bar.
    */
   copyrightText?: string | null;
-  bottomBarLink?: {
-    label?: string | null;
-    /**
-     * Link shown on the right side of the footer bottom bar.
-     */
-    url?: string | null;
-  };
+  bottomBarLink?: NavLinks;
   /**
    * Full WhatsApp chat URL (e.g. https://wa.me/27123456789). Shows a floating button when set.
    */
@@ -1557,42 +1551,71 @@ export interface Footer {
      */
     form?: (string | null) | Form;
   };
-  links?: NavLinks;
-  brandLinks?: NavLinks;
-  legalLinks?: NavLinks;
-  socials?:
-    | {
-        platform: string;
-        url: string;
-        /**
-         * Override the default brand color or use a rounded badge style.
-         */
-        iconStyle?: {
-          variant?: ('default' | 'custom' | 'rounded') | null;
-          /**
-           * Hex, e.g. #ffffff
-           */
-          fill?: string | null;
-          /**
-           * Hex, e.g. #3b5998
-           */
-          background?: string | null;
-        };
-        id?: string | null;
-      }[]
+  /**
+   * Add up to 6 footer columns. Drag to reorder. Each column type has its own set of fields.
+   */
+  columns?:
+    | (
+        | {
+            /**
+             * Column heading displayed above the list of links.
+             */
+            heading: string;
+            links?: NavLinks;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'linksColumn';
+          }
+        | {
+            /**
+             * Column heading displayed above the social links.
+             */
+            heading: string;
+            socials?:
+              | {
+                  platform: string;
+                  url: string;
+                  /**
+                   * Override the default brand color or use a rounded badge style.
+                   */
+                  iconStyle?: {
+                    variant?: ('default' | 'custom' | 'rounded') | null;
+                    /**
+                     * Hex, e.g. #ffffff
+                     */
+                    fill?: string | null;
+                    /**
+                     * Hex, e.g. #3b5998
+                     */
+                    background?: string | null;
+                  };
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'socialColumn';
+          }
+        | {
+            /**
+             * Brand logo displayed at the top of the column.
+             */
+            logoImage?: (string | null) | Media;
+            badgeEnabled?: boolean | null;
+            /**
+             * When set, overrides the built-in badge layout below.
+             */
+            badgeImage?: (string | null) | Media;
+            badgeTitle?: string | null;
+            badgeSubtitle?: string | null;
+            rating?: number | null;
+            googleReviewUrl?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'badgeColumn';
+          }
+      )[]
     | null;
-  dealershipBadge?: {
-    enabled?: boolean | null;
-    /**
-     * Optional full badge image. When set, overrides the built-in badge layout.
-     */
-    badgeImage?: (string | null) | Media;
-    logoImage?: (string | null) | Media;
-    title?: string | null;
-    subtitle?: string | null;
-    rating?: number | null;
-    googleReviewUrl?: string | null;
-  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1669,12 +1692,7 @@ export interface NavLinksSelect<T extends boolean = true> {
  */
 export interface FooterSelect<T extends boolean = true> {
   copyrightText?: T;
-  bottomBarLink?:
-    | T
-    | {
-        label?: T;
-        url?: T;
-      };
+  bottomBarLink?: T | NavLinksSelect<T>;
   whatsappUrl?: T;
   newsletter?:
     | T
@@ -1685,33 +1703,51 @@ export interface FooterSelect<T extends boolean = true> {
         buttonLabel?: T;
         form?: T;
       };
-  links?: T | NavLinksSelect<T>;
-  brandLinks?: T | NavLinksSelect<T>;
-  legalLinks?: T | NavLinksSelect<T>;
-  socials?:
+  columns?:
     | T
     | {
-        platform?: T;
-        url?: T;
-        iconStyle?:
+        linksColumn?:
           | T
           | {
-              variant?: T;
-              fill?: T;
-              background?: T;
+              heading?: T;
+              links?: T | NavLinksSelect<T>;
+              id?: T;
+              blockName?: T;
             };
-        id?: T;
-      };
-  dealershipBadge?:
-    | T
-    | {
-        enabled?: T;
-        badgeImage?: T;
-        logoImage?: T;
-        title?: T;
-        subtitle?: T;
-        rating?: T;
-        googleReviewUrl?: T;
+        socialColumn?:
+          | T
+          | {
+              heading?: T;
+              socials?:
+                | T
+                | {
+                    platform?: T;
+                    url?: T;
+                    iconStyle?:
+                      | T
+                      | {
+                          variant?: T;
+                          fill?: T;
+                          background?: T;
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        badgeColumn?:
+          | T
+          | {
+              logoImage?: T;
+              badgeEnabled?: T;
+              badgeImage?: T;
+              badgeTitle?: T;
+              badgeSubtitle?: T;
+              rating?: T;
+              googleReviewUrl?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;
