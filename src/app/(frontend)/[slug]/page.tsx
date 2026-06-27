@@ -64,7 +64,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   }
 
   return (
-    <article className="pt-16 pb-24">
+    <div>
       <PageClient />
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
@@ -72,7 +72,7 @@ export default async function Page({ params: paramsPromise }: Args) {
       {draft && <LivePreviewListener />}
 
       <RenderBlocks blocks={page.content?.section ?? null} />
-    </article>
+    </div>
   )
 }
 
