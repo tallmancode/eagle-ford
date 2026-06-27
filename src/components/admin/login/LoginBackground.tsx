@@ -15,6 +15,7 @@ export const LoginBackground = () => {
         fill
         src={bgImage}
         alt="Login background image"
+        placeholder="blur"
       />
     </div>
   )

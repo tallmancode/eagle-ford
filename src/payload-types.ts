@@ -102,6 +102,9 @@ export interface Config {
   blocks: {
     section: Section;
     sectionInner: SectionInner;
+    hero: Hero;
+    heading: Heading;
+    'rich-text': RichText;
   };
   collections: {
     users: User;
@@ -195,7 +198,7 @@ export interface UserAuthOperations {
  * via the `definition` "section".
  */
 export interface Section {
-  content?: SectionInner[] | null;
+  content?: (SectionInner | Heading | Hero | RichText)[] | null;
   backgroundColor?:
     | ('none' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
     | null;
@@ -269,7 +272,7 @@ export interface Section {
  * via the `definition` "sectionInner".
  */
 export interface SectionInner {
-  content?: unknown[] | null;
+  content?: (Heading | Hero | RichText)[] | null;
   backgroundColor?:
     | ('none' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
     | null;
@@ -338,64 +341,145 @@ export interface SectionInner {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "heading".
  */
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  username?: string | null;
-  roles?: ('admin' | 'contributor')[] | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
+export interface Heading {
+  template: 'separator' | 'standard' | 'dash' | 'swipe';
+  standardHeadingContent?: StandardHeading;
+  dashHeadingContent?: DashHeading;
+  separatorHeadingContent?: SeparatorHeading;
+  swipeHeadingContent?: SwipeHeading;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'heading';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pages".
+ * via the `definition` "StandardHeading".
  */
-export interface Page {
-  id: string;
-  title: string;
-  /**
-   * When enabled, the header is transparent at the top of the page (for hero blocks) and turns solid white on scroll. When disabled (default), the header is always solid white with dark navigation links.
-   */
-  overlayHeader?: boolean | null;
-  content?: {
-    section?: Section[] | null;
+export interface StandardHeading {
+  tag?: {
+    label?: string | null;
+    style?: ('filled' | 'outline' | 'none') | null;
+    color?: ('primary' | 'neutral' | 'success' | 'danger' | 'warning' | 'white') | null;
   };
-  meta?: {
-    title?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (string | null) | Media;
-    description?: string | null;
-  };
-  publishedAt?: string | null;
   /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
    */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  heading: string;
+  /**
+   * Animates the main heading with a word-by-word reveal.
+   */
+  splitTextAnimation?: boolean | null;
+  /**
+   * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
+   */
+  subheading?: string | null;
+  headingTag?: ('h1' | 'h2' | 'h3' | 'h4') | null;
+  size?: ('sm' | 'md' | 'lg' | 'xl') | null;
+  alignment?: ('left' | 'center' | 'right') | null;
+  color?: ('primary' | 'neutral' | 'success' | 'danger' | 'warning' | 'white') | null;
+  fontWeight?: ('normal' | 'medium' | 'semibold' | 'bold' | 'extrabold') | null;
+  uppercase?: boolean | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DashHeading".
+ */
+export interface DashHeading {
+  tag: string;
+  /**
+   * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
+   */
+  heading: string;
+  /**
+   * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
+   */
+  subheading?: string | null;
+  headingTag?: ('h1' | 'h2' | 'h3' | 'h4') | null;
+  size?: ('sm' | 'md' | 'lg' | 'xl') | null;
+  alignment?: ('left' | 'center' | 'right') | null;
+  color?: ('primary' | 'neutral' | 'success' | 'danger' | 'warning' | 'white') | null;
+  fontWeight?: ('normal' | 'medium' | 'semibold' | 'bold' | 'extrabold') | null;
+  uppercase?: boolean | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SeparatorHeading".
+ */
+export interface SeparatorHeading {
+  /**
+   * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
+   */
+  heading: string;
+  headingTag?: ('h1' | 'h2' | 'h3' | 'h4') | null;
+  size?: ('sm' | 'md' | 'lg' | 'xl') | null;
+  alignment?: ('left' | 'center' | 'right') | null;
+  color?: ('primary' | 'neutral' | 'success' | 'danger' | 'warning' | 'white') | null;
+  fontWeight?: ('normal' | 'medium' | 'semibold' | 'bold' | 'extrabold') | null;
+  uppercase?: boolean | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SwipeHeading".
+ */
+export interface SwipeHeading {
+  /**
+   * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
+   */
+  heading: string;
+  /**
+   * Hex color for the reveal bar (e.g. #FF0000)
+   */
+  barColor?: string | null;
+  headingTag?: ('h1' | 'h2' | 'h3' | 'h4') | null;
+  size?: ('sm' | 'md' | 'lg' | 'xl') | null;
+  alignment?: ('left' | 'center' | 'right') | null;
+  color?: ('primary' | 'neutral' | 'success' | 'danger' | 'warning' | 'white') | null;
+  fontWeight?: ('normal' | 'medium' | 'semibold' | 'bold' | 'extrabold') | null;
+  uppercase?: boolean | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero".
+ */
+export interface Hero {
+  template:
+    | 'form'
+    | 'cta'
+    | 'video-banner'
+    | 'banner'
+    | 'carousel'
+    | 'dictionary'
+    | 'grid'
+    | 'wave'
+    | 'portrait-punch'
+    | 'headline';
+  ctaHeroContent?: CtaHero;
+  dictionaryHeroContent?: DictionaryHero;
+  gridHeroContent?: GridHero;
+  carouselHeroContent?: CarouselHero;
+  bannerHeroContent?: BannerHero;
+  videoBannerHeroContent?: VideoBannerHero;
+  waveHero?: WaveHero;
+  portraitPunchHeroContent?: PortraitPunchHero;
+  headlineHeroContent?: HeadlineHero;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaHero".
+ */
+export interface CtaHero {
+  /**
+   * Recommended: vehicle or product on a dark/transparent background for the right side of the banner.
+   */
+  image: string | Media;
+  heading: string;
+  paragraph?: string | null;
+  cta?: NavLinks;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -516,6 +600,265 @@ export interface FolderInterface {
   folderType?: 'media'[] | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: string;
+  title: string;
+  /**
+   * When enabled, the header is transparent at the top of the page (for hero blocks) and turns solid white on scroll. When disabled (default), the header is always solid white with dark navigation links.
+   */
+  overlayHeader?: boolean | null;
+  content?: {
+    section?: Section[] | null;
+  };
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DictionaryHero".
+ */
+export interface DictionaryHero {
+  mainImage?: (string | null) | Media;
+  mainHeading?: string | null;
+  subHeading?: string | null;
+  definitions?:
+    | {
+        text?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  exampleText?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "GridHero".
+ */
+export interface GridHero {
+  mainHeading: string;
+  subHeading?: string | null;
+  description?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CarouselHero".
+ */
+export interface CarouselHero {
+  slides: {
+    /**
+     * Recommended: 1920×1080px, WebP or JPEG.
+     */
+    image: string | Media;
+    reference?: {
+      relationTo: 'pages';
+      value: string | Page;
+    } | null;
+    id?: string | null;
+  }[];
+  enableInteraction?: boolean | null;
+  autoPlay?: boolean | null;
+  /**
+   * Time in milliseconds between slide transitions.
+   */
+  autoPlayInterval?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BannerHero".
+ */
+export interface BannerHero {
+  bannerTemplate: 'full-width' | 'overlay';
+  fullWidthBannerContent?: FullWidthBanner;
+  overlayBannerContent?: OverlayBanner;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FullWidthBanner".
+ */
+export interface FullWidthBanner {
+  /**
+   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   */
+  image: string | Media;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OverlayBanner".
+ */
+export interface OverlayBanner {
+  /**
+   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   */
+  image: string | Media;
+  heading?: string | null;
+  subheading?: string | null;
+  alignment?: ('left' | 'center' | 'right') | null;
+  /**
+   * Adds a semi-transparent dark tint over the image to improve text legibility.
+   */
+  darkOverlay?: boolean | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VideoBannerHero".
+ */
+export interface VideoBannerHero {
+  /**
+   * Recommended: MP4 or WebM, wide format (e.g. 1920×600).
+   */
+  video: string | Media;
+  /**
+   * Shown until the page has fully loaded, then replaced by autoplaying video.
+   */
+  poster: string | Media;
+  loop?: boolean | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WaveHero".
+ */
+export interface WaveHero {
+  slides?:
+    | {
+        /**
+         * Recommended: 1920×1080px, WebP or JPEG.
+         */
+        image: string | Media;
+        /**
+         * Tint over the background image. Choose None to disable.
+         */
+        overlayColor?: ('none' | 'primary' | 'secondary' | 'dark' | 'danger') | null;
+        /**
+         * Overlay strength (0–100). Set to 0 for no overlay.
+         */
+        overlayOpacity?: number | null;
+        /**
+         * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
+         */
+        title: string;
+        /**
+         * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
+         */
+        subtitle?: string | null;
+        primaryLink?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?: {
+            relationTo: 'pages';
+            value: string | Page;
+          } | null;
+          url?: string | null;
+          label?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  showWave?: boolean | null;
+  autoPlay?: boolean | null;
+  /**
+   * Time in milliseconds between slide transitions.
+   */
+  autoPlayInterval?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PortraitPunchHero".
+ */
+export interface PortraitPunchHero {
+  heading: string;
+  subheading?: string | null;
+  /**
+   * Recommended: portrait format (e.g. 3:4 ratio, ~800×1066px), WebP or JPEG.
+   */
+  image: string | Media;
+  overlayColor?: ('none' | 'primary' | 'secondary' | 'black' | 'white') | null;
+  /**
+   * Percentage opacity of the overlay. Only applied when a color is selected.
+   */
+  overlayOpacity?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeadlineHero".
+ */
+export interface HeadlineHero {
+  /**
+   * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
+   */
+  mainHeading: string;
+  subHeading?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rich-text".
+ */
+export interface RichText {
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'rich-text';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  username?: string | null;
+  roles?: ('admin' | 'contributor')[] | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
