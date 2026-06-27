@@ -2,6 +2,7 @@ import type { GroupField } from 'payload'
 import { bannerOptions } from '@/lib/blocks/hero-block/templates/banner-hero/bannerOptions'
 import { fullWidthBannerConfig } from '@/lib/blocks/hero-block/templates/banner-hero/templates/full-width/config'
 import { overlayBannerConfig } from '@/lib/blocks/hero-block/templates/banner-hero/templates/overlay/config'
+import { ctaOverlayBannerConfig } from '@/lib/blocks/hero-block/templates/banner-hero/templates/cta-overlay/config'
 
 export const bannerHeroConfig: GroupField = {
   type: 'group',
@@ -22,5 +23,6 @@ export const bannerHeroConfig: GroupField = {
     },
     fullWidthBannerConfig,
     overlayBannerConfig,
+    ctaOverlayBannerConfig,
   ],
 }

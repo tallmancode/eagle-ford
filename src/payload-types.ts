@@ -659,9 +659,10 @@ export interface OverlayCarousel {
  * via the `definition` "BannerHero".
  */
 export interface BannerHero {
-  bannerTemplate: 'full-width' | 'overlay';
+  bannerTemplate: 'full-width' | 'overlay' | 'cta-overlay';
   fullWidthBannerContent?: FullWidthBanner;
   overlayBannerContent?: OverlayBanner;
+  ctaOverlayContent?: CtaOverlayBanner;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -689,6 +690,38 @@ export interface OverlayBanner {
    * Adds a semi-transparent dark tint over the image to improve text legibility.
    */
   darkOverlay?: boolean | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaOverlayBanner".
+ */
+export interface CtaOverlayBanner {
+  /**
+   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   */
+  image: string | Media;
+  /**
+   * Small uppercase label above the heading (e.g. "Eagle Ford — Service Centre").
+   */
+  eyebrow?: string | null;
+  heading: string;
+  subheading?: string | null;
+  primaryButton?: {
+    label?: string | null;
+    /**
+     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
+     */
+    href?: string | null;
+    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
+  };
+  secondaryButton?: {
+    label?: string | null;
+    /**
+     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
+     */
+    href?: string | null;
+    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
