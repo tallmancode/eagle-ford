@@ -34,6 +34,9 @@ const nextConfig: NextConfig = {
       {
         pathname: '/sell-hero.webp',
       },
+      {
+        pathname: '/blocks/hero-templates/**',
+      },
     ],
     qualities: [100],
     remotePatterns: [
