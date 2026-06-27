@@ -1,9 +1,20 @@
-import type { Section, SectionInner, Config, Heading, Hero, RichText } from '@/payload-types'
+import type {
+  Section,
+  SectionInner,
+  Config,
+  Heading,
+  Hero,
+  RichText,
+  FeatureList,
+  FormBlockType,
+} from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
 import { HeadingBlockComponent } from '@/lib/blocks/heading-block/components/HeadingBlockComponent'
 import { HeroBlock } from '@/lib/blocks/hero-block/components/HeroBlockComponent'
 import { RichTextBlockComponent } from '@/lib/blocks/rich-text-block/components/RichTextBlockComponent'
+import { FeatureListBlockComponent } from '@/lib/blocks/feature-list-block/components/FeatureListBlockComponent'
+import { FormBlockComponent } from '@/lib/blocks/form-block/components/FormBlockComponent'
 
 type BlockComponentMap = {
   section: Section
@@ -11,6 +22,8 @@ type BlockComponentMap = {
   heading: Heading
   hero: Hero
   'rich-text': RichText
+  'feature-list': FeatureList
+  formBlock: FormBlockType
 }
 
 type WithMeta<T> = T & { meta?: unknown }
@@ -23,6 +36,8 @@ const blockComponents: {
   heading: HeadingBlockComponent,
   hero: HeroBlock,
   'rich-text': RichTextBlockComponent,
+  'feature-list': FeatureListBlockComponent,
+  formBlock: FormBlockComponent as unknown as React.ComponentType<WithMeta<FormBlockType>>,
 } as const
 
 type Blocks = Config['blocks']
