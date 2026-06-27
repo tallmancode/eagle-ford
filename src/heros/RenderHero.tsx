@@ -3,19 +3,15 @@ import React from 'react'
 import { HighImpactHero } from '@/heros/HighImpact'
 import { LowImpactHero } from '@/heros/LowImpact'
 import { MediumImpactHero } from '@/heros/MediumImpact'
+import type { PageHeroProps } from '@/heros/types'
 
-type HeroType = {
-  type?: 'highImpact' | 'lowImpact' | 'mediumImpact' | 'none' | null
-  [key: string]: unknown
-}
-
-const heroes: Record<string, React.FC<any>> = {
+const heroes: Record<string, React.FC<PageHeroProps>> = {
   highImpact: HighImpactHero,
-  lowImpact: LowImpactHero,
+  lowImpact: LowImpactHero as React.FC<PageHeroProps>,
   mediumImpact: MediumImpactHero,
 }
 
-export const RenderHero: React.FC<HeroType> = (props) => {
+export const RenderHero: React.FC<PageHeroProps> = (props) => {
   const { type } = props || {}
 
   if (!type || type === 'none') return null

@@ -2,16 +2,16 @@ import React from 'react'
 
 import RichText from '@/components/RichText'
 
+import type { PageHeroProps } from '@/heros/types'
+
 type LowImpactHeroType =
   | {
       children?: React.ReactNode
       richText?: never
     }
-  | {
+  | (Pick<PageHeroProps, 'richText'> & {
       children?: never
-      richText?: any
-      [key: string]: unknown
-    }
+    })
 
 export const LowImpactHero: React.FC<LowImpactHeroType> = ({ children, richText }) => {
   return (

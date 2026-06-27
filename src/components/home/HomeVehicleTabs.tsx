@@ -1,7 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-import hero from '@/assets/Media/home-vehicle-tabs/hero.webp'
-import Image from 'next/image'
 import VehicleTab from '@/components/home/VehicleTab'
 
 export default function HomeVehicleTabs() {

@@ -6,12 +6,14 @@ import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 
-const blockComponents: Record<string, React.FC<any>> = {
-  archive: ArchiveBlock,
-  content: ContentBlock,
-  cta: CallToActionBlock,
-  formBlock: FormBlock,
-  mediaBlock: MediaBlock,
+type BlockComponentProps = Record<string, unknown> & { disableInnerContainer?: boolean }
+
+const blockComponents: Record<string, React.ComponentType<BlockComponentProps>> = {
+  archive: ArchiveBlock as unknown as React.ComponentType<BlockComponentProps>,
+  content: ContentBlock as unknown as React.ComponentType<BlockComponentProps>,
+  cta: CallToActionBlock as unknown as React.ComponentType<BlockComponentProps>,
+  formBlock: FormBlock as unknown as React.ComponentType<BlockComponentProps>,
+  mediaBlock: MediaBlock as unknown as React.ComponentType<BlockComponentProps>,
 }
 
 export const RenderBlocks: React.FC<{
