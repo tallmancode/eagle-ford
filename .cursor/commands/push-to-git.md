@@ -8,6 +8,10 @@ For the **eagle-ford** repository (Eagle Ford dealership website), create a **Gi
 | --------------- | -------------------------------------------------- | --------------------------------------------------------- |
 | `.` (repo root) | Next.js 16 + Payload CMS 3 + React 19 + TypeScript | `lint:fix` + `format:write` + `lint` + `tsc` + `test:int` |
 
+## Shell
+
+All commands target **Windows PowerShell 5.x**. Run each command as a separate shell call — do not chain with `&&`. Use backtick (`` ` ``) for line continuation and `@" ... "@` for multi-line strings.
+
 ## Preconditions
 
 1. **[GitHub CLI](https://cli.github.com/)** (`gh`) is installed and authenticated (`gh auth login`) with permission to create issues and pull requests and to **assign yourself**.
@@ -66,10 +70,10 @@ Run all commands from the **repository root**.
 
 ### 1. Detect changes
 
-```bash
-git rev-parse --git-dir        # confirm this is a git repo
-git status                     # staged/unstaged changes
-git log @{u}..HEAD             # commits not yet on origin
+```powershell
+git rev-parse --git-dir
+git status
+git log "@{u}..HEAD" --oneline
 ```
 
 If there is nothing to publish, **stop**.
@@ -78,11 +82,12 @@ If there is nothing to publish, **stop**.
 
 All feature branches and PRs target **`develop`** (not GitHub's default branch). Verify it exists on the remote:
 
-```bash
-BASE_BRANCH=develop
+```powershell
 git fetch origin
-git show-ref --verify --quiet refs/remotes/origin/develop || { echo "origin/develop not found"; exit 1; }
+git show-ref --verify --quiet refs/remotes/origin/develop
 ```
+
+If `git show-ref` exits non-zero, **stop** — `origin/develop` does not exist.
 
 ### 3. Create GitHub issue (before the new branch)
 
@@ -176,17 +181,18 @@ git push -u origin issue-42-short-description
 
 ### 9. Open pull request
 
-```bash
-gh pr create \
-  --base develop \
-  --head issue-42-short-description \
-  --title "Short imperative description" \
-  --body "$(cat <<'EOF'
+```powershell
+$body = @"
 Closes #42
 
 Description of what changed and why.
-EOF
-)" \
+"@
+
+gh pr create `
+  --base develop `
+  --head issue-42-short-description `
+  --title "Short imperative description" `
+  --body $body `
   --label "feature"
 ```
 

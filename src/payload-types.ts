@@ -444,42 +444,47 @@ export interface SwipeHeading {
  * via the `definition` "hero".
  */
 export interface Hero {
-  template:
-    | 'form'
-    | 'cta'
-    | 'video-banner'
-    | 'banner'
-    | 'carousel'
-    | 'dictionary'
-    | 'grid'
-    | 'wave'
-    | 'portrait-punch'
-    | 'headline';
-  ctaHeroContent?: CtaHero;
-  dictionaryHeroContent?: DictionaryHero;
-  gridHeroContent?: GridHero;
+  template: 'banner' | 'carousel';
   carouselHeroContent?: CarouselHero;
   bannerHeroContent?: BannerHero;
-  videoBannerHeroContent?: VideoBannerHero;
-  waveHero?: WaveHero;
-  portraitPunchHeroContent?: PortraitPunchHero;
-  headlineHeroContent?: HeadlineHero;
   id?: string | null;
   blockName?: string | null;
   blockType: 'hero';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CtaHero".
+ * via the `definition` "CarouselHero".
  */
-export interface CtaHero {
+export interface CarouselHero {
+  carouselTemplate: 'standard' | 'overlay';
   /**
-   * Recommended: vehicle or product on a dark/transparent background for the right side of the banner.
+   * Shows previous/next navigation arrows.
    */
-  image: string | Media;
-  heading: string;
-  paragraph?: string | null;
-  cta?: NavLinks;
+  enableInteraction?: boolean | null;
+  autoPlay?: boolean | null;
+  /**
+   * Time in milliseconds between slide transitions.
+   */
+  autoPlayInterval?: number | null;
+  standardCarouselContent?: StandardCarousel;
+  overlayCarouselContent?: OverlayCarousel;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StandardCarousel".
+ */
+export interface StandardCarousel {
+  slides: {
+    /**
+     * Recommended: 1920×1080px, WebP or JPEG.
+     */
+    image: string | Media;
+    reference?: {
+      relationTo: 'pages';
+      value: string | Page;
+    } | null;
+    id?: string | null;
+  }[];
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -635,51 +640,19 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "DictionaryHero".
+ * via the `definition` "OverlayCarousel".
  */
-export interface DictionaryHero {
-  mainImage?: (string | null) | Media;
-  mainHeading?: string | null;
-  subHeading?: string | null;
-  definitions?:
-    | {
-        text?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  exampleText?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "GridHero".
- */
-export interface GridHero {
-  mainHeading: string;
-  subHeading?: string | null;
-  description?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CarouselHero".
- */
-export interface CarouselHero {
+export interface OverlayCarousel {
   slides: {
     /**
      * Recommended: 1920×1080px, WebP or JPEG.
      */
     image: string | Media;
-    reference?: {
-      relationTo: 'pages';
-      value: string | Page;
-    } | null;
+    heading?: string | null;
+    subheading?: string | null;
+    alignment?: ('left' | 'center' | 'right') | null;
     id?: string | null;
   }[];
-  enableInteraction?: boolean | null;
-  autoPlay?: boolean | null;
-  /**
-   * Time in milliseconds between slide transitions.
-   */
-  autoPlayInterval?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -716,96 +689,6 @@ export interface OverlayBanner {
    * Adds a semi-transparent dark tint over the image to improve text legibility.
    */
   darkOverlay?: boolean | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "VideoBannerHero".
- */
-export interface VideoBannerHero {
-  /**
-   * Recommended: MP4 or WebM, wide format (e.g. 1920×600).
-   */
-  video: string | Media;
-  /**
-   * Shown until the page has fully loaded, then replaced by autoplaying video.
-   */
-  poster: string | Media;
-  loop?: boolean | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "WaveHero".
- */
-export interface WaveHero {
-  slides?:
-    | {
-        /**
-         * Recommended: 1920×1080px, WebP or JPEG.
-         */
-        image: string | Media;
-        /**
-         * Tint over the background image. Choose None to disable.
-         */
-        overlayColor?: ('none' | 'primary' | 'secondary' | 'dark' | 'danger') | null;
-        /**
-         * Overlay strength (0–100). Set to 0 for no overlay.
-         */
-        overlayOpacity?: number | null;
-        /**
-         * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
-         */
-        title: string;
-        /**
-         * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
-         */
-        subtitle?: string | null;
-        primaryLink?: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: string | Page;
-          } | null;
-          url?: string | null;
-          label?: string | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  showWave?: boolean | null;
-  autoPlay?: boolean | null;
-  /**
-   * Time in milliseconds between slide transitions.
-   */
-  autoPlayInterval?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "PortraitPunchHero".
- */
-export interface PortraitPunchHero {
-  heading: string;
-  subheading?: string | null;
-  /**
-   * Recommended: portrait format (e.g. 3:4 ratio, ~800×1066px), WebP or JPEG.
-   */
-  image: string | Media;
-  overlayColor?: ('none' | 'primary' | 'secondary' | 'black' | 'white') | null;
-  /**
-   * Percentage opacity of the overlay. Only applied when a color is selected.
-   */
-  overlayOpacity?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "HeadlineHero".
- */
-export interface HeadlineHero {
-  /**
-   * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
-   */
-  mainHeading: string;
-  subHeading?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

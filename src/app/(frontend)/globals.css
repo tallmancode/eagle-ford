@@ -136,3 +136,123 @@ html[data-theme='light'] {
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 }
+
+@utility container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+
+  --container-padding-x: 1.25rem;
+  padding-left: var(--container-padding-x);
+  padding-right: var(--container-padding-x);
+
+  @media (width >= 48rem) {
+    --container-padding-x: 2rem;
+    padding-left: var(--container-padding-x);
+    padding-right: var(--container-padding-x);
+  }
+
+  /* Responsive max-widths */
+  @media (width >= 40rem) {
+    max-width: 40rem;
+  }
+
+  @media (width >= 48rem) {
+    max-width: 48rem;
+  }
+
+  @media (width >= 64rem) {
+    max-width: 64rem;
+  }
+
+  @media (width >= 80rem) {
+    max-width: 80rem;
+  }
+
+  @media (width >= 86rem) {
+    max-width: 86rem;
+  }
+}
+
+/* Section blocks — spacing vars from layoutSpacingToCssVars() */
+.section-layout-padding {
+  padding-top: var(--section-pad-top);
+  padding-right: var(--section-pad-right);
+  padding-bottom: var(--section-pad-bottom);
+  padding-left: var(--section-pad-left);
+}
+
+/* Preserve container gutters when CMS spacing only sets vertical padding. */
+.container.section-layout-padding {
+  padding-left: var(--section-pad-left, var(--container-padding-x));
+  padding-right: var(--section-pad-right, var(--container-padding-x));
+}
+
+.section-layout-margin {
+  margin-top: var(--section-mar-top, 0);
+  margin-right: var(--section-mar-right, 0);
+  margin-bottom: var(--section-mar-bottom, 0);
+  margin-left: var(--section-mar-left, 0);
+}
+
+@media (min-width: 768px) {
+  .section-layout-padding {
+    padding-top: var(--section-pad-top-md, var(--section-pad-top));
+    padding-right: var(--section-pad-right-md, var(--section-pad-right));
+    padding-bottom: var(--section-pad-bottom-md, var(--section-pad-bottom));
+    padding-left: var(--section-pad-left-md, var(--section-pad-left));
+  }
+
+  .container.section-layout-padding {
+    padding-left: var(--section-pad-left-md, var(--section-pad-left, var(--container-padding-x)));
+    padding-right: var(
+      --section-pad-right-md,
+      var(--section-pad-right, var(--container-padding-x))
+    );
+  }
+
+  .section-layout-margin {
+    margin-top: var(--section-mar-top-md, var(--section-mar-top, 0));
+    margin-right: var(--section-mar-right-md, var(--section-mar-right, 0));
+    margin-bottom: var(--section-mar-bottom-md, var(--section-mar-bottom, 0));
+    margin-left: var(--section-mar-left-md, var(--section-mar-left, 0));
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-layout-padding {
+    padding-top: var(--section-pad-top-lg, var(--section-pad-top-md, var(--section-pad-top)));
+    padding-right: var(
+      --section-pad-right-lg,
+      var(--section-pad-right-md, var(--section-pad-right))
+    );
+    padding-bottom: var(
+      --section-pad-bottom-lg,
+      var(--section-pad-bottom-md, var(--section-pad-bottom))
+    );
+    padding-left: var(--section-pad-left-lg, var(--section-pad-left-md, var(--section-pad-left)));
+  }
+
+  .container.section-layout-padding {
+    padding-left: var(
+      --section-pad-left-lg,
+      var(--section-pad-left-md, var(--section-pad-left, var(--container-padding-x)))
+    );
+    padding-right: var(
+      --section-pad-right-lg,
+      var(--section-pad-right-md, var(--section-pad-right, var(--container-padding-x)))
+    );
+  }
+  .section-layout-margin {
+    margin-top: var(--section-mar-top-lg, var(--section-mar-top-md, var(--section-mar-top, 0)));
+    margin-right: var(
+      --section-mar-right-lg,
+      var(--section-mar-right-md, var(--section-mar-right, 0))
+    );
+    margin-bottom: var(
+      --section-mar-bottom-lg,
+      var(--section-mar-bottom-md, var(--section-mar-bottom, 0))
+    );
+    margin-left: var(--section-mar-left-lg, var(--section-mar-left-md, var(--section-mar-left, 0)));
+  }
+}

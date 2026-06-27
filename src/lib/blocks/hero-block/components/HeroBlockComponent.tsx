@@ -16,15 +16,17 @@ function buildNextImageSrcset(relativePath: string): string {
 
 function getLcpImagePath(props: Hero): string | null {
   if (props.template === 'carousel') {
-    const firstSlide = props.carouselHeroContent?.slides?.[0]
+    const carouselContent = props.carouselHeroContent
+    if (!carouselContent) return null
+
+    const slides =
+      carouselContent.carouselTemplate === 'standard'
+        ? carouselContent.standardCarouselContent?.slides
+        : carouselContent.overlayCarouselContent?.slides
+
+    const firstSlide = slides?.[0]
     if (!firstSlide) return null
     const image = firstSlide.image
-    if (image && typeof image === 'object') {
-      return getMediaUrl((image as Media).url, (image as Media).updatedAt) || null
-    }
-  }
-  if (props.template === 'portrait-punch') {
-    const image = props.portraitPunchHeroContent?.image
     if (image && typeof image === 'object') {
       return getMediaUrl((image as Media).url, (image as Media).updatedAt) || null
     }

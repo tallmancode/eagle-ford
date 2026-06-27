@@ -1,4 +1,7 @@
 import type { GroupField } from 'payload'
+import { carouselOptions } from '@/lib/blocks/hero-block/templates/carousel-hero/carouselOptions'
+import { standardCarouselConfig } from '@/lib/blocks/hero-block/templates/carousel-hero/templates/standard/config'
+import { overlayCarouselConfig } from '@/lib/blocks/hero-block/templates/carousel-hero/templates/overlay/config'
 
 export const carouselHeroConfig: GroupField = {
   type: 'group',
@@ -10,40 +13,21 @@ export const carouselHeroConfig: GroupField = {
   },
   fields: [
     {
-      name: 'slides',
-      type: 'array',
-      label: 'Slides',
-      minRows: 1,
-      maxRows: 8,
+      name: 'carouselTemplate',
+      type: 'select',
+      label: 'Carousel Template',
+      options: carouselOptions,
       required: true,
-      admin: {
-        initCollapsed: true,
-      },
-      fields: [
-        {
-          name: 'image',
-          type: 'upload',
-          relationTo: 'media',
-          required: true,
-          label: 'Background Image',
-          admin: {
-            description: 'Recommended: 1920×1080px, WebP or JPEG.',
-          },
-        },
-        {
-          name: 'reference',
-          type: 'relationship',
-          label: 'Document to link to',
-          maxDepth: 2,
-          relationTo: ['pages'],
-        },
-      ],
+      defaultValue: 'standard',
     },
     {
       name: 'enableInteraction',
       type: 'checkbox',
       label: 'Enable Interaction',
       defaultValue: true,
+      admin: {
+        description: 'Shows previous/next navigation arrows.',
+      },
     },
     {
       name: 'autoPlay',
@@ -64,5 +48,7 @@ export const carouselHeroConfig: GroupField = {
         step: 500,
       },
     },
+    standardCarouselConfig,
+    overlayCarouselConfig,
   ],
 }
