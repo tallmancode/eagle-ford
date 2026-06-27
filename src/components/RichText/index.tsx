@@ -21,7 +21,7 @@ import type {
 type CTABlockProps = {
   id?: string | null
   blockType?: string
-  richText?: Record<string, unknown> | null
+  richText?: DefaultTypedEditorState | null
   links?: Array<{ link: Record<string, unknown> }> | null
 }
 import { BannerBlock } from '@/blocks/Banner/Component'
@@ -59,7 +59,9 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
     code: ({ node }: { node: SerializedBlockNode<CodeBlockProps> }) => (
       <CodeBlock className="col-start-2" {...node.fields} />
     ),
-    cta: ({ node }: { node: SerializedBlockNode<any> }) => <CallToActionBlock {...node.fields} />,
+    cta: ({ node }: { node: SerializedBlockNode<CTABlockProps> }) => (
+      <CallToActionBlock {...node.fields} />
+    ),
   },
 })
 

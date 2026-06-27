@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { SelectField, useField } from '@payloadcms/ui'
 import type { SelectFieldClientComponent } from 'payload'
 import { getHeroTemplatePreview } from '@/lib/blocks/hero-block/heroTemplatePreviews'
@@ -30,9 +31,11 @@ export const HeroTemplateField: SelectFieldClientComponent = (props) => {
               width: '200px',
             }}
           >
-            <img
+            <Image
               src={preview.src}
               alt={preview.alt}
+              width={200}
+              height={112}
               style={{
                 display: 'block',
                 width: '100%',

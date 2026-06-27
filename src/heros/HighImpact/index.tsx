@@ -6,9 +6,9 @@ import { CMSLink } from '@/components/Link'
 import { Media } from '@/components/Media'
 import RichText from '@/components/RichText'
 
-type HeroProps = { links?: any[] | null; media?: any; richText?: any; [key: string]: unknown }
+import type { PageHeroProps } from '@/heros/types'
 
-export const HighImpactHero: React.FC<HeroProps> = ({ links, media, richText }) => {
+export const HighImpactHero: React.FC<PageHeroProps> = ({ links, media, richText }) => {
   const { setHeaderTheme } = useHeaderTheme()
 
   useEffect(() => {

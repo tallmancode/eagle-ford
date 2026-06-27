@@ -9,11 +9,8 @@ import {
   Footprints,
   PanelTopClose,
   ExternalLink,
-  Tags,
   Form,
   Send,
-  LucideSparkle,
-  Car,
 } from 'lucide-react'
 import { ExoticComponent } from 'react'
 
