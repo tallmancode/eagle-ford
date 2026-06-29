@@ -7,6 +7,9 @@ import type {
   RichText,
   FeatureList,
   FormBlockType,
+  ContactInfo,
+  IconText,
+  CtaButton,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -15,6 +18,9 @@ import { HeroBlock } from '@/lib/blocks/hero-block/components/HeroBlockComponent
 import { RichTextBlockComponent } from '@/lib/blocks/rich-text-block/components/RichTextBlockComponent'
 import { FeatureListBlockComponent } from '@/lib/blocks/feature-list-block/components/FeatureListBlockComponent'
 import { FormBlockComponent } from '@/lib/blocks/form-block/components/FormBlockComponent'
+import { ContactInfoBlockComponent } from '@/lib/blocks/contact-info-block/components/ContactInfoBlockComponent'
+import { IconTextBlockComponent } from '@/lib/blocks/icon-text-block/components/IconTextBlockComponent'
+import { CtaButtonBlockComponent } from '@/lib/blocks/cta-button-block/components/CtaButtonBlockComponent'
 
 type BlockComponentMap = {
   section: Section
@@ -24,6 +30,9 @@ type BlockComponentMap = {
   'rich-text': RichText
   'feature-list': FeatureList
   formBlock: FormBlockType
+  'contact-info': ContactInfo
+  'icon-text': IconText
+  'cta-button': CtaButton
 }
 
 type WithMeta<T> = T & { meta?: unknown }
@@ -38,6 +47,11 @@ const blockComponents: {
   'rich-text': RichTextBlockComponent,
   'feature-list': FeatureListBlockComponent,
   formBlock: FormBlockComponent as unknown as React.ComponentType<WithMeta<FormBlockType>>,
+  'contact-info': ContactInfoBlockComponent as unknown as React.ComponentType<
+    WithMeta<ContactInfo>
+  >,
+  'icon-text': IconTextBlockComponent as unknown as React.ComponentType<WithMeta<IconText>>,
+  'cta-button': CtaButtonBlockComponent,
 } as const
 
 type Blocks = Config['blocks']

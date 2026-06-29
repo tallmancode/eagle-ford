@@ -51,7 +51,12 @@ export function getStepInputNames(step: FormStep): string[] {
 
   return step.fields
     .filter((field): field is FormInputField & { name: string } => {
-      return field.blockType !== 'message' && 'name' in field && Boolean(field.name)
+      return (
+        field.blockType !== 'message' &&
+        field.blockType !== 'subheading' &&
+        'name' in field &&
+        Boolean(field.name)
+      )
     })
     .map((field) => field.name)
 }

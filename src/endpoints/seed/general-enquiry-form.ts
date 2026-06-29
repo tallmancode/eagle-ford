@@ -1,0 +1,143 @@
+import type { RequiredDataFromCollectionSlug } from 'payload'
+
+export const generalEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = {
+  title: 'General Enquiry Form',
+  confirmationType: 'message',
+  confirmationMessage: {
+    root: {
+      type: 'root',
+      children: [
+        {
+          type: 'heading',
+          tag: 'h2',
+          children: [
+            {
+              type: 'text',
+              detail: 0,
+              format: 0,
+              mode: 'normal',
+              style: '',
+              text: 'Enquiry Received',
+              version: 1,
+            },
+          ],
+          direction: 'ltr',
+          format: '',
+          indent: 0,
+          version: 1,
+        },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              detail: 0,
+              format: 0,
+              mode: 'normal',
+              style: '',
+              text: 'Thank you for reaching out. A member of our team will be in touch with you shortly.',
+              version: 1,
+            },
+          ],
+          direction: 'ltr',
+          format: '',
+          indent: 0,
+          textFormat: 0,
+          version: 1,
+        },
+      ],
+      direction: 'ltr',
+      format: '',
+      indent: 0,
+      version: 1,
+    },
+  },
+  emails: [
+    {
+      emailFrom: '"Eagle Ford" <noreply@eagleford.co.za>',
+      emailTo: '{{email}}',
+      subject: 'Your enquiry has been received — Eagle Ford',
+      message: {
+        root: {
+          type: 'root',
+          children: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  type: 'text',
+                  detail: 0,
+                  format: 0,
+                  mode: 'normal',
+                  style: '',
+                  text: 'Thank you for reaching out. A member of our team will be in touch with you shortly.',
+                  version: 1,
+                },
+              ],
+              direction: 'ltr',
+              format: '',
+              indent: 0,
+              textFormat: 0,
+              version: 1,
+            },
+          ],
+          direction: 'ltr',
+          format: '',
+          indent: 0,
+          version: 1,
+        },
+      },
+    },
+  ],
+  submitButtonLabel: 'Submit',
+  fields: [
+    {
+      blockType: 'text',
+      blockName: 'firstName',
+      name: 'firstName',
+      label: 'First Name',
+      required: true,
+      width: 50,
+    },
+    {
+      blockType: 'text',
+      blockName: 'lastName',
+      name: 'lastName',
+      label: 'Last Name',
+      required: true,
+      width: 50,
+    },
+    {
+      blockType: 'text',
+      blockName: 'phone',
+      name: 'phone',
+      label: 'Phone Number',
+      required: true,
+      width: 50,
+    },
+    {
+      blockType: 'email',
+      blockName: 'email',
+      name: 'email',
+      label: 'Email Address',
+      required: true,
+      width: 50,
+    },
+    {
+      blockType: 'textarea',
+      blockName: 'message',
+      name: 'message',
+      label: 'Question / Comment',
+      required: false,
+      width: 100,
+    },
+    {
+      blockType: 'checkbox',
+      blockName: 'privacyPolicy',
+      name: 'privacyPolicy',
+      label: 'I have read and agree to the Eagle Ford (Pty) Ltd Privacy Policy',
+      required: true,
+      width: 100,
+    },
+  ],
+}

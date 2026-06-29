@@ -5,6 +5,9 @@ import { HeadingBlock } from '@/lib/blocks/heading-block/HeadingBlock'
 import { RichTextBlock } from '@/lib/blocks/rich-text-block/RichTextBlock'
 import { FeatureListBlock } from '@/lib/blocks/feature-list-block/FeatureListBlock'
 import { FormBlock } from '@/lib/blocks/form-block/FormBlock'
+import { ContactInfoBlock } from '@/lib/blocks/contact-info-block/ContactInfoBlock'
+import { IconTextBlock } from '@/lib/blocks/icon-text-block/IconTextBlock'
+import { CtaButtonBlock } from '@/lib/blocks/cta-button-block/CtaButtonBlock'
 
 const Blocks = [
   SectionBlock,
@@ -14,6 +17,9 @@ const Blocks = [
   RichTextBlock,
   FeatureListBlock,
   FormBlock,
+  ContactInfoBlock,
+  IconTextBlock,
+  CtaButtonBlock,
 ]
 
 export default Blocks

@@ -71,7 +71,7 @@ export const CtaOverlayBanner: React.FC<Hero> = (props) => {
               <a href={secondaryButton.href}>
                 <Button
                   variant="outline"
-                  className="rounded-full border-white text-white hover:bg-white/10 gap-2"
+                  className="rounded-full border-white text-white bg-transparent hover:bg-white/10 gap-2"
                 >
                   <ButtonIcon name={secondaryButton.icon} className="size-4" />
                   {secondaryButton.label}

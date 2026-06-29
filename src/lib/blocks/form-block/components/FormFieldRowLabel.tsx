@@ -16,6 +16,7 @@ const blockTypeLabels: Record<string, string> = {
   date: 'Date',
   email: 'Email',
   message: 'Message',
+  subheading: 'Subheading',
   number: 'Number',
   radio: 'Radio',
   select: 'Select',

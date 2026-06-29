@@ -13,6 +13,7 @@ import { buildInitialFormState } from '@/lib/blocks/form-block/components/buildI
 import { formFields } from '@/lib/blocks/form-block/components/fields'
 import { MessageField } from '@/lib/blocks/form-block/components/fields/MessageField'
 import { FormStepProgress } from '@/lib/blocks/form-block/components/FormStepProgress'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/lib/components/ui/button'
 import { cn } from '@/lib/utils/cn'
 import { buildFormSubmissionRequest } from '@/lib/blocks/form-block/utils/buildFormSubmission'
@@ -226,8 +227,9 @@ function FormActions({
         type="submit"
         disabled={isLoading}
         className={cn(
-          'h-12 w-full cursor-pointer bg-primary-500 px-6 text-base font-semibold uppercase tracking-wide text-white hover:bg-primary-600 sm:w-auto lg:px-8',
-          isHero ? 'sm:ml-auto' : 'sm:ml-auto',
+          isHero
+            ? 'h-12 w-full cursor-pointer bg-primary-500 px-6 text-base font-semibold uppercase tracking-wide text-white hover:bg-primary-600 sm:ml-auto sm:w-auto lg:px-8'
+            : 'w-full rounded-full',
         )}
       >
         {isLastStep ? submitButtonLabel || 'Submit' : nextLabel}
@@ -383,98 +385,161 @@ export function FormBlockClient({
       (heroPartition.textareaField ? 1 : 0)
     : 0
 
+  if (layout === 'hero') {
+    return (
+      <div ref={formBlockRef} className="mx-auto w-full scroll-mt-8 max-w-none">
+        {enableIntro && introContent && !hasSubmitted && (
+          <div className="prose prose-invert mb-8 max-w-none">
+            <ConvertRichText converters={richTextConverters} data={introContent} />
+          </div>
+        )}
+
+        {error && (
+          <div
+            className="mb-6 rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+            role="alert"
+          >
+            {error.status ? `${error.status}: ` : ''}
+            {error.message}
+          </div>
+        )}
+
+        {isLoading && !hasSubmitted && (
+          <p className="mb-4 text-sm text-muted-foreground">Loading, please wait...</p>
+        )}
+
+        {!isLoading && hasSubmitted && confirmationType === 'message' && confirmationMessage && (
+          <div className="prose max-w-none">
+            <ConvertRichText
+              converters={richTextConverters}
+              data={confirmationMessage as SerializedEditorState}
+            />
+          </div>
+        )}
+
+        {!hasSubmitted && currentStep && (
+          <>
+            {showProgress && <FormStepProgress steps={steps} currentIndex={currentStepIndex} />}
+
+            {!showProgress && currentStep.title && isMultiStep && (
+              <h3 className="mb-6 text-lg font-semibold text-foreground">{currentStep.title}</h3>
+            )}
+
+            {!showProgress && currentStep.description && (
+              <div className="prose mb-6 max-w-none">
+                <ConvertRichText
+                  converters={richTextConverters}
+                  data={currentStep.description as SerializedEditorState}
+                />
+              </div>
+            )}
+
+            <form
+              className={cn('grid grid-cols-1 gap-4 lg:grid-cols-3', heroFormFieldClassName)}
+              onSubmit={handleFormAction}
+              noValidate
+            >
+              {renderHeroFormFields(currentStep.fields ?? [], formMethods)}
+              <FormActions
+                isMultiStep={isMultiStep}
+                isFirstStep={isFirstStep}
+                isLastStep={isLastStep}
+                isLoading={isLoading}
+                layout={layout}
+                checkboxFields={heroPartition?.checkboxFields ?? []}
+                formMethods={formMethods}
+                fieldIndexStart={heroCheckboxFieldIndexStart}
+                backLabel={backLabel}
+                nextLabel={nextLabel}
+                submitButtonLabel={submitButtonLabel}
+                onBackStep={handleBackStep}
+              />
+            </form>
+          </>
+        )}
+      </div>
+    )
+  }
+
   return (
-    <div
-      ref={formBlockRef}
-      className={cn(
-        'mx-auto w-full scroll-mt-8',
-        layout === 'hero'
-          ? 'max-w-none'
-          : showProgress && !hasSubmitted
-            ? 'max-w-4xl'
-            : 'max-w-2xl',
-      )}
-    >
-      {enableIntro && introContent && !hasSubmitted && (
-        <div className="prose prose-invert mb-8 max-w-none">
-          <ConvertRichText converters={richTextConverters} data={introContent} />
-        </div>
-      )}
-
-      {error && (
-        <div
-          className="mb-6 rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive"
-          role="alert"
-        >
-          {error.status ? `${error.status}: ` : ''}
-          {error.message}
-        </div>
-      )}
-
-      {isLoading && !hasSubmitted && (
-        <p className="mb-4 text-sm text-muted-foreground">Loading, please wait...</p>
-      )}
-
-      {!isLoading && hasSubmitted && confirmationType === 'message' && confirmationMessage && (
-        <div className={cn('max-w-none', layout === 'hero' ? 'prose' : 'prose prose-invert')}>
-          <ConvertRichText
-            converters={richTextConverters}
-            data={confirmationMessage as SerializedEditorState}
-          />
-        </div>
-      )}
-
-      {!hasSubmitted && currentStep && (
-        <>
-          {showProgress && <FormStepProgress steps={steps} currentIndex={currentStepIndex} />}
-
-          {!showProgress && currentStep.title && isMultiStep && (
-            <h3 className="mb-6 text-lg font-semibold text-foreground">{currentStep.title}</h3>
+    <div ref={formBlockRef} className="scroll-mt-8">
+      <Card
+        className={cn(
+          'mx-auto w-full shadow-md',
+          showProgress && !hasSubmitted ? 'max-w-4xl' : 'max-w-3xl',
+        )}
+      >
+        <CardHeader className="pb-4">
+          <CardTitle className="text-2xl text-primary">{form.title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {error && (
+            <div
+              className="mb-6 rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+              role="alert"
+            >
+              {error.status ? `${error.status}: ` : ''}
+              {error.message}
+            </div>
           )}
 
-          {!showProgress && currentStep.description && (
-            <div
-              className={cn('mb-6 max-w-none', layout === 'hero' ? 'prose' : 'prose prose-invert')}
-            >
+          {isLoading && !hasSubmitted && (
+            <p className="mb-4 text-sm text-muted-foreground">Loading, please wait...</p>
+          )}
+
+          {!isLoading && hasSubmitted && confirmationType === 'message' && confirmationMessage && (
+            <div className="prose prose-invert max-w-none">
               <ConvertRichText
                 converters={richTextConverters}
-                data={currentStep.description as SerializedEditorState}
+                data={confirmationMessage as SerializedEditorState}
               />
             </div>
           )}
 
-          <form
-            className={cn(
-              useHeroLayout
-                ? cn('grid grid-cols-1 gap-4 lg:grid-cols-3', heroFormFieldClassName)
-                : 'flex flex-wrap gap-x-4 gap-y-4',
-            )}
-            onSubmit={handleFormAction}
-            noValidate
-          >
-            {useHeroLayout && heroPartition
-              ? renderHeroFormFields(currentStep.fields ?? [], formMethods)
-              : currentStep.fields?.map((field, index) =>
+          {!hasSubmitted && currentStep && (
+            <>
+              {showProgress && <FormStepProgress steps={steps} currentIndex={currentStepIndex} />}
+
+              {!showProgress && currentStep.title && isMultiStep && (
+                <h3 className="mb-6 text-lg font-semibold text-foreground">{currentStep.title}</h3>
+              )}
+
+              {!showProgress && currentStep.description && (
+                <div className="prose prose-invert mb-6 max-w-none">
+                  <ConvertRichText
+                    converters={richTextConverters}
+                    data={currentStep.description as SerializedEditorState}
+                  />
+                </div>
+              )}
+
+              <form
+                className="flex flex-wrap gap-x-4 gap-y-4"
+                onSubmit={handleFormAction}
+                noValidate
+              >
+                {currentStep.fields?.map((field, index) =>
                   renderFormField(field, index, formMethods),
                 )}
-
-            <FormActions
-              isMultiStep={isMultiStep}
-              isFirstStep={isFirstStep}
-              isLastStep={isLastStep}
-              isLoading={isLoading}
-              layout={layout}
-              checkboxFields={useHeroLayout ? (heroPartition?.checkboxFields ?? []) : []}
-              formMethods={formMethods}
-              fieldIndexStart={heroCheckboxFieldIndexStart}
-              backLabel={backLabel}
-              nextLabel={nextLabel}
-              submitButtonLabel={submitButtonLabel}
-              onBackStep={handleBackStep}
-            />
-          </form>
-        </>
-      )}
+                <FormActions
+                  isMultiStep={isMultiStep}
+                  isFirstStep={isFirstStep}
+                  isLastStep={isLastStep}
+                  isLoading={isLoading}
+                  layout={layout}
+                  checkboxFields={[]}
+                  formMethods={formMethods}
+                  fieldIndexStart={0}
+                  backLabel={backLabel}
+                  nextLabel={nextLabel}
+                  submitButtonLabel={submitButtonLabel}
+                  onBackStep={handleBackStep}
+                />
+              </form>
+            </>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }
