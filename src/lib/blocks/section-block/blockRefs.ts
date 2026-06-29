@@ -1,6 +1,15 @@
 import { Block, BlockSlug } from 'payload'
 
-const allBlockRefs: BlockSlug[] = ['heading', 'hero', 'rich-text', 'feature-list', 'formBlock']
+const allBlockRefs: BlockSlug[] = [
+  'heading',
+  'hero',
+  'rich-text',
+  'feature-list',
+  'formBlock',
+  'contact-info',
+  'icon-text',
+  'cta-button',
+]
 
 /** Nested block slugs for section content. Pass `exclude` to prevent circular blockReferences (stack overflow in admin). */
 export const blockRefs = (exclude: BlockSlug[] = []): (Block | BlockSlug)[] => {

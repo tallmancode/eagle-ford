@@ -107,6 +107,9 @@ export interface Config {
     'rich-text': RichText;
     'feature-list': FeatureList;
     formBlock: FormBlockType;
+    'contact-info': ContactInfo;
+    'icon-text': IconText;
+    'cta-button': CtaButton;
   };
   collections: {
     users: User;
@@ -200,7 +203,9 @@ export interface UserAuthOperations {
  * via the `definition` "section".
  */
 export interface Section {
-  content?: (SectionInner | Heading | Hero | RichText | FeatureList | FormBlockType)[] | null;
+  content?:
+    | (SectionInner | Heading | Hero | RichText | FeatureList | FormBlockType | ContactInfo | IconText | CtaButton)[]
+    | null;
   backgroundColor?:
     | ('none' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
     | null;
@@ -259,7 +264,7 @@ export interface Section {
     /**
      * Sets the HTML id attribute. Used as an anchor target and can be referenced by aria-labelledby / aria-describedby on other elements.
      */
-    id?: string | null;
+    sectionId?: string | null;
     /**
      * Controls whether the section itself is focusable. Rarely needed — only set if the section is a scroll target or managed focus container.
      */
@@ -274,7 +279,7 @@ export interface Section {
  * via the `definition` "sectionInner".
  */
 export interface SectionInner {
-  content?: (Heading | Hero | RichText | FeatureList | FormBlockType)[] | null;
+  content?: (Heading | Hero | RichText | FeatureList | FormBlockType | ContactInfo | IconText | CtaButton)[] | null;
   backgroundColor?:
     | ('none' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
     | null;
@@ -331,7 +336,7 @@ export interface SectionInner {
     /**
      * Sets the HTML id attribute. Used as an anchor target and can be referenced by aria-labelledby / aria-describedby on other elements.
      */
-    id?: string | null;
+    sectionId?: string | null;
     /**
      * Controls whether the section itself is focusable. Rarely needed — only set if the section is a scroll target or managed focus container.
      */
@@ -1143,6 +1148,7 @@ export interface Form {
               blockName?: string | null;
               blockType: 'upload';
             }
+          | SubheadingBlockType
         )[];
         id?: string | null;
       }[]
@@ -1209,6 +1215,83 @@ export interface Form {
     | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SubheadingBlockType".
+ */
+export interface SubheadingBlockType {
+  text: string;
+  size?: ('h2' | 'h3' | 'h4') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'subheading';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-info".
+ */
+export interface ContactInfo {
+  heading?: string | null;
+  phone: string;
+  email: string;
+  addressLine1: string;
+  addressLine2?: string | null;
+  businessHours: {
+    label: string;
+    hours: string;
+    id?: string | null;
+  }[];
+  directionsUrl?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contact-info';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "icon-text".
+ */
+export interface IconText {
+  icon:
+    | 'map-pin'
+    | 'phone'
+    | 'mail'
+    | 'clock'
+    | 'car'
+    | 'wrench'
+    | 'check-circle'
+    | 'info'
+    | 'star'
+    | 'calendar'
+    | 'shield'
+    | 'fuel';
+  text: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'icon-text';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cta-button".
+ */
+export interface CtaButton {
+  label: string;
+  linkType: 'url' | 'anchor';
+  variant?: ('default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'white') | null;
+  /**
+   * e.g. /contact, https://example.com, tel:0105971555, mailto:info@example.com
+   */
+  url?: string | null;
+  newTab?: boolean | null;
+  /**
+   * The Section ID of the target section (without #). Set on the target section via its Accessibility settings.
+   */
+  anchorId?: string | null;
+  size?: ('sm' | 'default' | 'lg') | null;
+  align?: ('left' | 'center' | 'right') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cta-button';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2126,6 +2209,7 @@ export interface FormsSelect<T extends boolean = true> {
                     id?: T;
                     blockName?: T;
                   };
+              subheading?: T | SubheadingBlockTypeSelect<T>;
             };
         id?: T;
       };
@@ -2153,6 +2237,16 @@ export interface FormsSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SubheadingBlockType_select".
+ */
+export interface SubheadingBlockTypeSelect<T extends boolean = true> {
+  text?: T;
+  size?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2402,7 +2496,7 @@ export interface Footer {
  */
 export interface Setting {
   id: string;
-  contactInfo: ContactInfo;
+  contactInfo: ContactInfo1;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2410,7 +2504,7 @@ export interface Setting {
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "ContactInfo".
  */
-export interface ContactInfo {
+export interface ContactInfo1 {
   email?: string | null;
   phone?: string | null;
   address: {

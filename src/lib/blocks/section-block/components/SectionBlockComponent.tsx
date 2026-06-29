@@ -119,7 +119,7 @@ export const SectionBlock: React.FC<Section | SectionInner> = (props) => {
   const role = landmark && !landmarkElementMap[landmark] ? landmark : undefined
 
   const ariaProps = {
-    id: accessibility?.id || undefined,
+    id: accessibility?.sectionId || undefined,
     role,
     'aria-label': accessibility?.ariaLabel || undefined,
     'aria-labelledby': accessibility?.ariaLabelledBy || undefined,

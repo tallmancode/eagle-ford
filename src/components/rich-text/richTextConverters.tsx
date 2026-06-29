@@ -1,9 +1,14 @@
 import { DefaultNodeTypes, SerializedLinkNode } from '@payloadcms/richtext-lexical'
-import { type JSXConvertersFunction, LinkJSXConverter } from '@payloadcms/richtext-lexical/react'
+import {
+  type JSXConvertersFunction,
+  LinkJSXConverter,
+  TextJSXConverter,
+} from '@payloadcms/richtext-lexical/react'
 import React from 'react'
 import { cn } from '@/lib/utils/cn'
 import { getPagePath } from '@/lib/utils/getPagePath'
 import type { Page } from '@/payload-types'
+import { richTextColorState } from '@/lib/blocks/rich-text-block/richTextColors'
 
 type NodeTypes = DefaultNodeTypes
 
@@ -47,6 +52,32 @@ export const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }
 export const richTextConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
   ...defaultConverters,
   ...LinkJSXConverter({ internalDocToHref }),
+  text: (args) => {
+    const { node, nodesToJSX: _nodesToJSX } = args
+    // Apply base formatting via the default text converter
+    const textConverter = TextJSXConverter.text
+    const baseText =
+      typeof textConverter === 'function'
+        ? textConverter(args as Parameters<typeof textConverter>[0])
+        : textConverter
+
+    // Read Lexical node state (stored under the "$" key by TextStateFeature)
+    const nodeState = (node as Record<string, unknown>)['$'] as Record<string, string> | undefined
+    if (!nodeState) return baseText
+
+    // Build inline style from all active state values
+    const inlineStyle: Record<string, string> = {}
+    for (const colorKey of Object.values(nodeState)) {
+      const entry = richTextColorState[colorKey]
+      if (entry?.css) {
+        Object.assign(inlineStyle, entry.css)
+      }
+    }
+
+    if (Object.keys(inlineStyle).length === 0) return baseText
+
+    return <span style={inlineStyle as React.CSSProperties}>{baseText}</span>
+  },
   heading: ({ node, nodesToJSX }) => {
     const alignClass = getAlignmentClass(
       'format' in node && typeof node.format === 'number' ? node.format : undefined,

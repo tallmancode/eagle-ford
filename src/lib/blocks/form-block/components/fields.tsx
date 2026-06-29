@@ -9,6 +9,7 @@ import { CountryField } from '@/lib/blocks/form-block/components/fields/CountryF
 import { DateField } from '@/lib/blocks/form-block/components/fields/DateField'
 import { EmailField } from '@/lib/blocks/form-block/components/fields/EmailField'
 import { MessageField } from '@/lib/blocks/form-block/components/fields/MessageField'
+import { SubheadingField } from '@/lib/blocks/form-block/components/fields/SubheadingField'
 import { NumberField } from '@/lib/blocks/form-block/components/fields/NumberField'
 import { RadioField } from '@/lib/blocks/form-block/components/fields/RadioField'
 import { SelectField } from '@/lib/blocks/form-block/components/fields/SelectField'
@@ -31,6 +32,7 @@ export const formFields: Record<string, ComponentType<FormFieldComponentProps>> 
   date: DateField as ComponentType<FormFieldComponentProps>,
   email: EmailField as ComponentType<FormFieldComponentProps>,
   message: MessageField as ComponentType<FormFieldComponentProps>,
+  subheading: SubheadingField as ComponentType<FormFieldComponentProps>,
   number: NumberField as ComponentType<FormFieldComponentProps>,
   radio: RadioField as ComponentType<FormFieldComponentProps>,
   select: SelectField as ComponentType<FormFieldComponentProps>,

@@ -70,7 +70,7 @@ export const AccessibilityFields = (): Field[] => {
       },
     },
     {
-      name: 'id',
+      name: 'sectionId',
       type: 'text',
       label: 'Section ID',
       admin: {

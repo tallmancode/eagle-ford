@@ -13,7 +13,12 @@ import { beforeSyncWithSearch } from '@/search/beforeSync'
 
 import { Page, Blog } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
-import { FORM_UPLOAD_COLLECTIONS, getFormInputBlocks } from '@/plugins/form-builder/formInputBlocks'
+import {
+  FORM_UPLOAD_COLLECTIONS,
+  getFormInputBlocks,
+  withFormFieldBlockLabel,
+} from '@/plugins/form-builder/formInputBlocks'
+import { SubheadingBlock } from '@/lib/blocks/form-block/SubheadingBlock'
 import { handleMultiStepFormUploads } from '@/lib/blocks/form-block/hooks/handleMultiStepFormUploads'
 
 const formStepRowLabelPath = '@/lib/blocks/form-block/components/FormStepRowLabel#FormStepRowLabel'
@@ -75,6 +80,7 @@ export const plugins: Plugin[] = [
     formOverrides: {
       fields: ({ defaultFields }) => {
         const formInputBlocks = getFormInputBlocks(FORM_UPLOAD_COLLECTIONS)
+        const allFormBlocks = [...formInputBlocks, withFormFieldBlockLabel(SubheadingBlock)]
         const result: Field[] = []
 
         for (const field of defaultFields) {
@@ -103,8 +109,8 @@ export const plugins: Plugin[] = [
 
           const labeledBlocks =
             blocksField.blocks?.map(
-              (block) => formInputBlocks.find((b) => b.slug === block.slug) ?? block,
-            ) ?? formInputBlocks
+              (block) => allFormBlocks.find((b) => b.slug === block.slug) ?? block,
+            ) ?? allFormBlocks
 
           result.push(
             {
@@ -175,7 +181,7 @@ export const plugins: Plugin[] = [
                   label: 'Fields',
                   required: true,
                   minRows: 1,
-                  blocks: formInputBlocks,
+                  blocks: allFormBlocks,
                 },
               ],
             } as Field,
