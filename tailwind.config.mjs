@@ -4,6 +4,7 @@ const config = {
     extend: {
       boxShadow: {
         bottom: 'rgba(33, 35, 38, 0.1) 0px 10px 10px -10px',
+        card: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
       },
       typography: {
         DEFAULT: {

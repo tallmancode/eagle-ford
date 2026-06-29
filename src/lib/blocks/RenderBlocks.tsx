@@ -10,6 +10,8 @@ import type {
   ContactInfo,
   IconText,
   CtaButton,
+  WhyCards,
+  Map,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -21,6 +23,8 @@ import { FormBlockComponent } from '@/lib/blocks/form-block/components/FormBlock
 import { ContactInfoBlockComponent } from '@/lib/blocks/contact-info-block/components/ContactInfoBlockComponent'
 import { IconTextBlockComponent } from '@/lib/blocks/icon-text-block/components/IconTextBlockComponent'
 import { CtaButtonBlockComponent } from '@/lib/blocks/cta-button-block/components/CtaButtonBlockComponent'
+import { WhyCardsBlockComponent } from '@/lib/blocks/why-cards-block/components/WhyCardsBlockComponent'
+import { MapBlockComponent } from '@/lib/blocks/map-block/components/MapBlockComponent'
 
 type BlockComponentMap = {
   section: Section
@@ -33,6 +37,8 @@ type BlockComponentMap = {
   'contact-info': ContactInfo
   'icon-text': IconText
   'cta-button': CtaButton
+  'why-cards': WhyCards
+  map: Map
 }
 
 type WithMeta<T> = T & { meta?: unknown }
@@ -52,6 +58,8 @@ const blockComponents: {
   >,
   'icon-text': IconTextBlockComponent as unknown as React.ComponentType<WithMeta<IconText>>,
   'cta-button': CtaButtonBlockComponent,
+  'why-cards': WhyCardsBlockComponent,
+  map: MapBlockComponent as unknown as React.ComponentType<WithMeta<Map>>,
 } as const
 
 type Blocks = Config['blocks']

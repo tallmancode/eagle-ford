@@ -13,7 +13,7 @@ import { buildInitialFormState } from '@/lib/blocks/form-block/components/buildI
 import { formFields } from '@/lib/blocks/form-block/components/fields'
 import { MessageField } from '@/lib/blocks/form-block/components/fields/MessageField'
 import { FormStepProgress } from '@/lib/blocks/form-block/components/FormStepProgress'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/lib/components/ui/button'
 import { cn } from '@/lib/utils/cn'
 import { buildFormSubmissionRequest } from '@/lib/blocks/form-block/utils/buildFormSubmission'
@@ -469,9 +469,9 @@ export function FormBlockClient({
           showProgress && !hasSubmitted ? 'max-w-4xl' : 'max-w-3xl',
         )}
       >
-        <CardHeader className="pb-4">
-          <CardTitle className="text-2xl text-primary">{form.title}</CardTitle>
-        </CardHeader>
+        {/*<CardHeader className="pb-4">*/}
+        {/*  <CardTitle className="text-2xl text-primary">{form.title}</CardTitle>*/}
+        {/*</CardHeader>*/}
         <CardContent>
           {error && (
             <div

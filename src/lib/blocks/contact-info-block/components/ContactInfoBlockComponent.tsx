@@ -1,6 +1,8 @@
 import type { ContactInfo } from '@/payload-types'
 import { Phone, Mail, MapPin, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { backgroundColorToClass } from '@/lib/fields/background-color/backgroundColorUtils'
+import { cn } from '@/lib/utils/cn'
 import React from 'react'
 
 export const ContactInfoBlockComponent: React.FC<ContactInfo> = ({
@@ -11,9 +13,16 @@ export const ContactInfoBlockComponent: React.FC<ContactInfo> = ({
   addressLine2,
   businessHours,
   directionsUrl,
+  backgroundColor,
+  border,
 }) => {
+  const resolvedBackground = backgroundColor ?? 'card'
+  const bgClass = backgroundColorToClass(resolvedBackground)
+  const borderClass = border === 'none' ? '' : 'border'
+  const shadowClass = resolvedBackground === 'card' ? 'shadow-sm' : ''
+
   return (
-    <div className="bg-card border rounded-2xl p-8 shadow-sm space-y-6">
+    <div className={cn('rounded-2xl p-8 space-y-6', bgClass, borderClass, shadowClass)}>
       <h2 className="text-primary text-2xl font-bold">{heading ?? 'Get in Touch'}</h2>
 
       <div className="flex items-start gap-3">

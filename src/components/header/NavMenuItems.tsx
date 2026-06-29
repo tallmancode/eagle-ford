@@ -32,7 +32,7 @@ export const renderNavItem = (item: NavLink, index: number, linkClassName?: stri
             item.label
           )}
         </NavigationMenuTrigger>
-        <NavigationMenuContent className="bg-light-50">
+        <NavigationMenuContent className="bg-light-50 shadow-card">
           <ul className="flex flex-col min-w-[160px] p-2">
             {item.children?.map((child, childIndex) => {
               const childHref = generateNavHref(child)

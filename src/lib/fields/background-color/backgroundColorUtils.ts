@@ -2,6 +2,7 @@ import type { BackgroundColorValue } from '@/lib/fields/background-color/backgro
 
 export const backgroundColorClassMap: Record<BackgroundColorValue, string> = {
   none: '',
+  card: 'bg-card',
   white: 'bg-light-50',
   light: 'bg-light-100',
   neutral: 'bg-neutral-50',
