@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { BackgroundColorField } from '@/lib/fields/background-color/backgroundColorField'
 
 export const ContactInfoBlock: Block = {
   slug: 'contact-info',
@@ -61,6 +62,29 @@ export const ContactInfoBlock: Block = {
       name: 'directionsUrl',
       type: 'text',
       label: 'Directions URL (Google Maps)',
+    },
+    {
+      type: 'collapsible',
+      label: 'Style',
+      admin: {
+        initCollapsed: false,
+      },
+      fields: [
+        {
+          ...BackgroundColorField(),
+          defaultValue: 'card',
+        },
+        {
+          name: 'border',
+          type: 'select',
+          label: 'Border',
+          defaultValue: 'default',
+          options: [
+            { label: 'None', value: 'none' },
+            { label: 'Default', value: 'default' },
+          ],
+        },
+      ],
     },
   ],
 }

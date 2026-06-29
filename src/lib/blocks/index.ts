@@ -8,6 +8,8 @@ import { FormBlock } from '@/lib/blocks/form-block/FormBlock'
 import { ContactInfoBlock } from '@/lib/blocks/contact-info-block/ContactInfoBlock'
 import { IconTextBlock } from '@/lib/blocks/icon-text-block/IconTextBlock'
 import { CtaButtonBlock } from '@/lib/blocks/cta-button-block/CtaButtonBlock'
+import { WhyCardsBlock } from '@/lib/blocks/why-cards-block/WhyCardsBlock'
+import { MapBlock } from '@/lib/blocks/map-block/MapBlock'
 
 const Blocks = [
   SectionBlock,
@@ -20,6 +22,8 @@ const Blocks = [
   ContactInfoBlock,
   IconTextBlock,
   CtaButtonBlock,
+  WhyCardsBlock,
+  MapBlock,
 ]
 
 export default Blocks

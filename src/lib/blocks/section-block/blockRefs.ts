@@ -9,6 +9,8 @@ const allBlockRefs: BlockSlug[] = [
   'contact-info',
   'icon-text',
   'cta-button',
+  'why-cards',
+  'map',
 ]
 
 /** Nested block slugs for section content. Pass `exclude` to prevent circular blockReferences (stack overflow in admin). */

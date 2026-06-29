@@ -30,6 +30,7 @@ import { default as default_86286278ce5a0b2c8f2e1898d6246a28 } from '../../../li
 import { SocialIconPicker as SocialIconPicker_25c02dffa7af99e062dc453e0db76697 } from '@/lib/fields/social-icons/components/SocialIconPicker'
 import { ColorField as ColorField_31c0780c96066ad2689556a239466438 } from '@/lib/fields/social-icons/components/ColorField'
 import { SocialIconRowLabel as SocialIconRowLabel_27f6a7a8b6f24a71f102f20c13591ee6 } from '@/lib/fields/social-icons/components/SocialIconRowLabel'
+import { SeedButtonsComponent as SeedButtonsComponent_fdfc3e37576a0e6bfa4567073a5dec60 } from '@/lib/fields/seed-buttons/SeedButtonsComponent'
 import { SpacingLayoutField as SpacingLayoutField_159c820f40a576f4549e5527a6f70bac } from '@/lib/fields/layout-field/components/SpacingLayoutField'
 import { default as default_e301b8bae2b26609d383354140baa92e } from '../../../lib/blocks/section-block/components/SectionBlockLabel'
 import { HeroTemplateField as HeroTemplateField_27d1cf759e24d534a822506b2c26c92e } from '@/lib/blocks/hero-block/components/HeroTemplateField'
@@ -51,6 +52,8 @@ import { SuperscriptFeatureClient as SuperscriptFeatureClient_e70f5e05f09f93e00b
 import { SubscriptFeatureClient as SubscriptFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { StrikethroughFeatureClient as StrikethroughFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { default as default_e1a58303156ebe7cade534e2f731143e } from '../../../lib/blocks/icon-text-block/components/IconTextBlockLabel'
+import { default as default_4191d274ce90987d75999927e51364a8 } from '../../../lib/blocks/why-cards-block/components/WhyCardsBlockLabel'
+import { default as default_1186204a6de4fec56bd7a499c2b45917 } from '../../../lib/blocks/map-block/components/MapBlockLabel'
 import { default as default_1a7510af427896d367a49dbf838d2de6 } from '@/components/BeforeDashboard'
 import { default as default_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/components/BeforeLogin'
 import { default as default_410252c7292359409637c465dfeb7f50 } from '@/views/Login'
@@ -116,6 +119,8 @@ export const importMap = {
     ColorField_31c0780c96066ad2689556a239466438,
   '@/lib/fields/social-icons/components/SocialIconRowLabel#SocialIconRowLabel':
     SocialIconRowLabel_27f6a7a8b6f24a71f102f20c13591ee6,
+  '@/lib/fields/seed-buttons/SeedButtonsComponent#SeedButtonsComponent':
+    SeedButtonsComponent_fdfc3e37576a0e6bfa4567073a5dec60,
   '@/lib/fields/layout-field/components/SpacingLayoutField#SpacingLayoutField':
     SpacingLayoutField_159c820f40a576f4549e5527a6f70bac,
   '/lib/blocks/section-block/components/SectionBlockLabel#default':
@@ -158,6 +163,10 @@ export const importMap = {
     StrikethroughFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   '/lib/blocks/icon-text-block/components/IconTextBlockLabel#default':
     default_e1a58303156ebe7cade534e2f731143e,
+  '/lib/blocks/why-cards-block/components/WhyCardsBlockLabel#default':
+    default_4191d274ce90987d75999927e51364a8,
+  '/lib/blocks/map-block/components/MapBlockLabel#default':
+    default_1186204a6de4fec56bd7a499c2b45917,
   '@/components/BeforeDashboard#default': default_1a7510af427896d367a49dbf838d2de6,
   '@/components/BeforeLogin#default': default_8a7ab0eb7ab5c511aba12e68480bfe5e,
   '@/views/Login#default': default_410252c7292359409637c465dfeb7f50,

@@ -110,6 +110,8 @@ export interface Config {
     'contact-info': ContactInfo;
     'icon-text': IconText;
     'cta-button': CtaButton;
+    'why-cards': WhyCards;
+    map: Map;
   };
   collections: {
     users: User;
@@ -204,10 +206,22 @@ export interface UserAuthOperations {
  */
 export interface Section {
   content?:
-    | (SectionInner | Heading | Hero | RichText | FeatureList | FormBlockType | ContactInfo | IconText | CtaButton)[]
+    | (
+        | SectionInner
+        | Heading
+        | Hero
+        | RichText
+        | FeatureList
+        | FormBlockType
+        | ContactInfo
+        | IconText
+        | CtaButton
+        | WhyCards
+        | Map
+      )[]
     | null;
   backgroundColor?:
-    | ('none' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
+    | ('none' | 'card' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
     | null;
   /**
    * Diagonal clip on the section background. Pair with a background color for best results.
@@ -279,9 +293,11 @@ export interface Section {
  * via the `definition` "sectionInner".
  */
 export interface SectionInner {
-  content?: (Heading | Hero | RichText | FeatureList | FormBlockType | ContactInfo | IconText | CtaButton)[] | null;
+  content?:
+    | (Heading | Hero | RichText | FeatureList | FormBlockType | ContactInfo | IconText | CtaButton | WhyCards | Map)[]
+    | null;
   backgroundColor?:
-    | ('none' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
+    | ('none' | 'card' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
     | null;
   /**
    * Diagonal clip on the section background. Pair with a background color for best results.
@@ -1243,6 +1259,10 @@ export interface ContactInfo {
     id?: string | null;
   }[];
   directionsUrl?: string | null;
+  backgroundColor?:
+    | ('none' | 'card' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
+    | null;
+  border?: ('none' | 'default') | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'contact-info';
@@ -1292,6 +1312,58 @@ export interface CtaButton {
   id?: string | null;
   blockName?: string | null;
   blockType: 'cta-button';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WhyCards".
+ */
+export interface WhyCards {
+  cards: {
+    icon:
+      | 'trending-up'
+      | 'shield-check'
+      | 'handshake'
+      | 'check-circle'
+      | 'star'
+      | 'shield'
+      | 'car'
+      | 'wrench'
+      | 'info'
+      | 'calendar'
+      | 'fuel'
+      | 'map-pin'
+      | 'phone'
+      | 'mail'
+      | 'clock'
+      | 'award'
+      | 'zap'
+      | 'heart'
+      | 'thumbs-up'
+      | 'dollar-sign';
+    title: string;
+    description: string;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'why-cards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Map".
+ */
+export interface Map {
+  /**
+   * Paste the embed URL from Google Maps: open the location → Share → Embed a map → copy the src URL from the iframe code.
+   */
+  embedUrl: string;
+  /**
+   * Accessible title for the map iframe. Defaults to "Location map".
+   */
+  title?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'map';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

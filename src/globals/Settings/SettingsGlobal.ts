@@ -46,6 +46,21 @@ export const SettingsGlobal: GlobalConfig = {
             AddressField(),
           ],
         },
+        {
+          label: 'Data Seeds',
+          fields: [
+            {
+              type: 'ui',
+              label: 'Seeds',
+              name: 'seedsDisplay',
+              admin: {
+                components: {
+                  Field: '@/lib/fields/seed-buttons/SeedButtonsComponent#SeedButtonsComponent',
+                },
+              },
+            },
+          ],
+        },
       ],
     },
   ],

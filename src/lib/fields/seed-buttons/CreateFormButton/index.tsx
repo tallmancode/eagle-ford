@@ -82,7 +82,7 @@ export const CreateFormButton: React.FC<Props> = ({ endpoint, label, successText
 
   return (
     <Fragment>
-      <button className="seedButton" type="button" onClick={handleClick}>
+      <button className="seedButton" onClick={handleClick}>
         {label}
       </button>
       {message}
