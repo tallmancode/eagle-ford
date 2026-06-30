@@ -48,14 +48,32 @@ export const UsersCollection: CollectionConfig = {
       saveToJWT: true,
       options: [
         {
+          label: 'Developer',
+          value: 'developer',
+        },
+        {
           label: 'Admin',
           value: 'admin',
         },
         {
-          label: 'Contributor',
-          value: 'contributor',
+          label: 'Marketing',
+          value: 'marketing',
+        },
+        {
+          label: 'Manager',
+          value: 'manager',
+        },
+        {
+          label: 'Staff',
+          value: 'staff',
         },
       ],
+      filterOptions: ({ options, req }) =>
+        req.user?.roles?.includes('developer')
+          ? options
+          : options.filter(
+              (option) => (typeof option === 'string' ? options : option.value) !== 'developer',
+            ),
     },
   ],
   timestamps: true,

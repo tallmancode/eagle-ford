@@ -11,6 +11,11 @@ const allBlockRefs: BlockSlug[] = [
   'cta-button',
   'why-cards',
   'map',
+  'team-grid',
+  'image-block',
+  'cta-cards',
+  'statsBlock',
+  'hours-tabs',
 ]
 
 /** Nested block slugs for section content. Pass `exclude` to prevent circular blockReferences (stack overflow in admin). */

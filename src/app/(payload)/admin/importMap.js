@@ -54,7 +54,11 @@ import { StrikethroughFeatureClient as StrikethroughFeatureClient_e70f5e05f09f93
 import { default as default_e1a58303156ebe7cade534e2f731143e } from '../../../lib/blocks/icon-text-block/components/IconTextBlockLabel'
 import { default as default_4191d274ce90987d75999927e51364a8 } from '../../../lib/blocks/why-cards-block/components/WhyCardsBlockLabel'
 import { default as default_1186204a6de4fec56bd7a499c2b45917 } from '../../../lib/blocks/map-block/components/MapBlockLabel'
-import { default as default_1a7510af427896d367a49dbf838d2de6 } from '@/components/BeforeDashboard'
+import { default as default_a220ec9db5b9132be136187d781b00db } from '../../../lib/blocks/team-grid-block/components/TeamGridBlockLabel'
+import { default as default_55db0c70c40e0b9848bc6212cc499f9b } from '../../../lib/blocks/image-block/components/ImageBlockLabel'
+import { default as default_cc6684bfc9bca610c54f9ccdff085d70 } from '../../../lib/blocks/cta-cards-block/components/CtaCardsBlockLabel'
+import { default as default_9c512141ec1eddbbee092512a0ec1e94 } from '../../../lib/blocks/stats-block/components/StatsBlockLabel'
+import { default as default_6f3197c07453688a360c56703708e06a } from '../../../lib/blocks/hours-tabs-block/components/HoursTabsBlockLabel'
 import { default as default_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/components/BeforeLogin'
 import { default as default_410252c7292359409637c465dfeb7f50 } from '@/views/Login'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -167,7 +171,16 @@ export const importMap = {
     default_4191d274ce90987d75999927e51364a8,
   '/lib/blocks/map-block/components/MapBlockLabel#default':
     default_1186204a6de4fec56bd7a499c2b45917,
-  '@/components/BeforeDashboard#default': default_1a7510af427896d367a49dbf838d2de6,
+  '/lib/blocks/team-grid-block/components/TeamGridBlockLabel#default':
+    default_a220ec9db5b9132be136187d781b00db,
+  '/lib/blocks/image-block/components/ImageBlockLabel#default':
+    default_55db0c70c40e0b9848bc6212cc499f9b,
+  '/lib/blocks/cta-cards-block/components/CtaCardsBlockLabel#default':
+    default_cc6684bfc9bca610c54f9ccdff085d70,
+  '/lib/blocks/stats-block/components/StatsBlockLabel#default':
+    default_9c512141ec1eddbbee092512a0ec1e94,
+  '/lib/blocks/hours-tabs-block/components/HoursTabsBlockLabel#default':
+    default_6f3197c07453688a360c56703708e06a,
   '@/components/BeforeLogin#default': default_8a7ab0eb7ab5c511aba12e68480bfe5e,
   '@/views/Login#default': default_410252c7292359409637c465dfeb7f50,
   '@payloadcms/next/rsc#CollectionCards': CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,

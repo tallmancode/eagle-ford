@@ -64,6 +64,14 @@ const BeforeDashboard: React.FC = () => {
           {' to add the wheel & tyre enquiry form to your Forms collection.'}
         </li>
         <li>
+          <CreateFormButton
+            endpoint="/next/create-service-form"
+            label="Create Service Booking Form"
+            successText="Service Booking Form created!"
+          />
+          {' to add the service booking form to your Forms collection.'}
+        </li>
+        <li>
           {'Modify your '}
           <a
             href="https://payloadcms.com/docs/configuration/collections"

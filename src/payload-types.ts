@@ -112,6 +112,11 @@ export interface Config {
     'cta-button': CtaButton;
     'why-cards': WhyCards;
     map: Map;
+    'team-grid': TeamGrid;
+    'image-block': ImageBlock;
+    'cta-cards': CtaCards;
+    statsBlock: StatsBlock;
+    'hours-tabs': HoursTabs;
   };
   collections: {
     users: User;
@@ -218,6 +223,11 @@ export interface Section {
         | CtaButton
         | WhyCards
         | Map
+        | TeamGrid
+        | ImageBlock
+        | CtaCards
+        | StatsBlock
+        | HoursTabs
       )[]
     | null;
   backgroundColor?:
@@ -294,7 +304,23 @@ export interface Section {
  */
 export interface SectionInner {
   content?:
-    | (Heading | Hero | RichText | FeatureList | FormBlockType | ContactInfo | IconText | CtaButton | WhyCards | Map)[]
+    | (
+        | Heading
+        | Hero
+        | RichText
+        | FeatureList
+        | FormBlockType
+        | ContactInfo
+        | IconText
+        | CtaButton
+        | WhyCards
+        | Map
+        | TeamGrid
+        | ImageBlock
+        | CtaCards
+        | StatsBlock
+        | HoursTabs
+      )[]
     | null;
   backgroundColor?:
     | ('none' | 'card' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
@@ -1367,6 +1393,96 @@ export interface Map {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamGrid".
+ */
+export interface TeamGrid {
+  members: {
+    name: string;
+    image?: (string | null) | Media;
+    /**
+     * YouTube embed or Shorts URL. Leave empty for non-clickable cards.
+     */
+    videoUrl?: string | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'team-grid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImageBlock".
+ */
+export interface ImageBlock {
+  image: string | Media;
+  /**
+   * Override the alt text from the media library. Leave empty to use the media alt text.
+   */
+  alt?: string | null;
+  cornerRadius?: ('none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl') | null;
+  aspectRatio?: ('auto' | '1/1' | '4/3' | '3/2' | '16/9' | '21/9') | null;
+  shadow?: ('none' | 'sm' | 'md' | 'lg') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'image-block';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaCards".
+ */
+export interface CtaCards {
+  cards: {
+    title: string;
+    description: string;
+    label: string;
+    /**
+     * e.g. /new/, /showroom/, https://example.com
+     */
+    url: string;
+    newTab?: boolean | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cta-cards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBlock".
+ */
+export interface StatsBlock {
+  stats: {
+    value: string;
+    label: string;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'statsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HoursTabs".
+ */
+export interface HoursTabs {
+  departments: {
+    label: string;
+    rows: {
+      day: string;
+      /**
+       * Enter exactly "Closed" to apply muted styling.
+       */
+      hours: string;
+      id?: string | null;
+    }[];
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hours-tabs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -1374,7 +1490,7 @@ export interface User {
   firstName: string;
   lastName: string;
   username?: string | null;
-  roles?: ('admin' | 'contributor')[] | null;
+  roles?: ('developer' | 'admin' | 'marketing' | 'manager' | 'staff')[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;

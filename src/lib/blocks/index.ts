@@ -10,6 +10,11 @@ import { IconTextBlock } from '@/lib/blocks/icon-text-block/IconTextBlock'
 import { CtaButtonBlock } from '@/lib/blocks/cta-button-block/CtaButtonBlock'
 import { WhyCardsBlock } from '@/lib/blocks/why-cards-block/WhyCardsBlock'
 import { MapBlock } from '@/lib/blocks/map-block/MapBlock'
+import { TeamGridBlock } from '@/lib/blocks/team-grid-block/TeamGridBlock'
+import { ImageBlock } from '@/lib/blocks/image-block/ImageBlock'
+import { CtaCardsBlock } from '@/lib/blocks/cta-cards-block/CtaCardsBlock'
+import { StatsBlock } from '@/lib/blocks/stats-block/StatsBlock'
+import { HoursTabsBlock } from '@/lib/blocks/hours-tabs-block/HoursTabsBlock'
 
 const Blocks = [
   SectionBlock,
@@ -24,6 +29,11 @@ const Blocks = [
   CtaButtonBlock,
   WhyCardsBlock,
   MapBlock,
+  TeamGridBlock,
+  ImageBlock,
+  CtaCardsBlock,
+  StatsBlock,
+  HoursTabsBlock,
 ]
 
 export default Blocks

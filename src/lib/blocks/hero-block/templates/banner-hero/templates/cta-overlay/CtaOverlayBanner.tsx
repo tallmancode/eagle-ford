@@ -31,7 +31,7 @@ export const CtaOverlayBanner: React.FC<Hero> = (props) => {
   const { image, eyebrow, heading, subheading, primaryButton, secondaryButton } = content
 
   return (
-    <section className="relative w-full overflow-hidden min-h-[380px] md:min-h-[480px]">
+    <section className="relative w-full overflow-hidden min-h-[500px] md:min-h-[500px]">
       <MediaImage
         resource={image}
         fill

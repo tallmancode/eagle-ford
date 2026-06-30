@@ -12,6 +12,11 @@ import type {
   CtaButton,
   WhyCards,
   Map,
+  TeamGrid,
+  ImageBlock,
+  CtaCards,
+  StatsBlock,
+  HoursTabs,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -25,6 +30,11 @@ import { IconTextBlockComponent } from '@/lib/blocks/icon-text-block/components/
 import { CtaButtonBlockComponent } from '@/lib/blocks/cta-button-block/components/CtaButtonBlockComponent'
 import { WhyCardsBlockComponent } from '@/lib/blocks/why-cards-block/components/WhyCardsBlockComponent'
 import { MapBlockComponent } from '@/lib/blocks/map-block/components/MapBlockComponent'
+import { TeamGridBlockComponent } from '@/lib/blocks/team-grid-block/components/TeamGridBlockComponent'
+import { StatsBlockComponent } from '@/lib/blocks/stats-block/components/StatsBlockComponent'
+import { CtaCardsBlockComponent } from '@/lib/blocks/cta-cards-block/components/CtaCardsBlockComponent'
+import { ImageBlockComponent } from '@/lib/blocks/image-block/components/ImageBlockComponent'
+import { HoursTabsBlockComponent } from '@/lib/blocks/hours-tabs-block/components/HoursTabsBlockComponent'
 
 type BlockComponentMap = {
   section: Section
@@ -39,6 +49,11 @@ type BlockComponentMap = {
   'cta-button': CtaButton
   'why-cards': WhyCards
   map: Map
+  'team-grid': TeamGrid
+  'image-block': ImageBlock
+  'cta-cards': CtaCards
+  statsBlock: StatsBlock
+  'hours-tabs': HoursTabs
 }
 
 type WithMeta<T> = T & { meta?: unknown }
@@ -60,6 +75,11 @@ const blockComponents: {
   'cta-button': CtaButtonBlockComponent,
   'why-cards': WhyCardsBlockComponent,
   map: MapBlockComponent as unknown as React.ComponentType<WithMeta<Map>>,
+  'team-grid': TeamGridBlockComponent,
+  'image-block': ImageBlockComponent,
+  'cta-cards': CtaCardsBlockComponent,
+  statsBlock: StatsBlockComponent,
+  'hours-tabs': HoursTabsBlockComponent,
 } as const
 
 type Blocks = Config['blocks']

@@ -16,7 +16,7 @@ export const OverlayBanner: React.FC<Hero> = (props) => {
   const { image, heading, subheading, alignment = 'left', darkOverlay = true } = content
 
   return (
-    <section className="relative w-full overflow-hidden max-h-[500px]">
+    <section className="relative w-full overflow-hidden max-h-125">
       <MediaImage resource={image} imgClassName="w-full h-auto block" priority loading="eager" />
 
       {darkOverlay && <div className="absolute inset-0 bg-dark-950/50" aria-hidden />}
