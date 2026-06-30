@@ -46,6 +46,14 @@ export const SeedButtonsComponent = ({ payload: _payload }: { payload: Payload }
           />
           {' to add the wheel & tyre enquiry form to your Forms collection.'}
         </li>
+        <li>
+          <CreateFormButton
+            endpoint="/next/create-service-form"
+            label="Create Service Booking Form"
+            successText="Service Booking Form created!"
+          />
+          {' to add the service booking form to your Forms collection.'}
+        </li>
       </ul>
     </div>
   )

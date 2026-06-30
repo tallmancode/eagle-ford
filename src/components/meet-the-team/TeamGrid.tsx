@@ -5,13 +5,13 @@ import { PlayCircle, UserCircle2, X } from 'lucide-react'
 import Image from 'next/image'
 import * as React from 'react'
 
-type TeamMember = {
+export type TeamMember = {
   name: string
   image: string | null
   videoUrl: string | null
 }
 
-const TEAM_MEMBERS: TeamMember[] = [
+const DEFAULT_TEAM_MEMBERS: TeamMember[] = [
   {
     name: 'Adrian Victor',
     image: '/meet-the-team/adrian-victor.webp',
@@ -78,7 +78,11 @@ function resolveEmbedUrl(url: string): { src: string; isShorts: boolean } {
   }
 }
 
-export function TeamGrid() {
+type TeamGridProps = {
+  members?: TeamMember[]
+}
+
+export function TeamGrid({ members = DEFAULT_TEAM_MEMBERS }: TeamGridProps) {
   const [activeVideo, setActiveVideo] = React.useState<string | null>(null)
 
   const embedData = activeVideo ? resolveEmbedUrl(activeVideo) : null
@@ -86,7 +90,7 @@ export function TeamGrid() {
   return (
     <>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-        {TEAM_MEMBERS.map((member) => {
+        {members.map((member) => {
           const clickable = !!member.videoUrl
           return (
             <article

@@ -48,6 +48,11 @@ export const SettingsGlobal: GlobalConfig = {
         },
         {
           label: 'Data Seeds',
+          admin: {
+            condition: (_data, _siblingData, { user }) => {
+              return Boolean(user?.roles?.includes('developer'))
+            },
+          },
           fields: [
             {
               type: 'ui',

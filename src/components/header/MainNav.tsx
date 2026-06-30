@@ -15,7 +15,7 @@ export const MainNav = ({ headerLogo, leftLinks, rightLinks }: MainNavProps) => 
       <NavMenuItems
         links={leftLinks}
         className="flex space-x-4 items-center"
-        linkClassName="text-secondary font-bold text-lg"
+        linkClassName="text-secondary font-bold text-sm"
       />
       {typeof headerLogo === 'object' && headerLogo && (
         <Link href="/" aria-label="Home">
@@ -25,7 +25,7 @@ export const MainNav = ({ headerLogo, leftLinks, rightLinks }: MainNavProps) => 
       <NavMenuItems
         links={rightLinks}
         className="flex space-x-4 items-center"
-        linkClassName="text-secondary font-bold text-lg"
+        linkClassName="text-secondary font-bold text-sm"
       />
     </div>
   )

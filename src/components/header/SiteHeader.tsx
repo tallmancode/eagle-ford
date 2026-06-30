@@ -9,7 +9,7 @@ export interface HeaderNavProps {
 
 export const SiteHeader = ({ globalHeader, globalSettings }: HeaderNavProps) => {
   return (
-    <header className="shadow-bottom">
+    <header className="relative z-50 shadow-bottom">
       <TopNav topNavProps={globalHeader?.topNav} settings={globalSettings}></TopNav>
       <MainNav
         headerLogo={globalHeader?.headerLogo}
