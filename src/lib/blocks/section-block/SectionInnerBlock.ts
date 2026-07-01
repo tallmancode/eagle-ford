@@ -73,7 +73,7 @@ export const SectionInnerBlock: Block = {
         {
           label: 'Accessibility',
           name: 'accessibility',
-          fields: AccessibilityFields(),
+          fields: AccessibilityFields({ landmarkDefault: '' }),
         },
       ],
     },

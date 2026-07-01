@@ -514,7 +514,7 @@ export function FormBlockClient({
               )}
 
               <form
-                className="flex flex-wrap gap-x-4 gap-y-4"
+                className="flex flex-wrap gap-x-4 gap-y-4 pt-4"
                 onSubmit={handleFormAction}
                 noValidate
               >

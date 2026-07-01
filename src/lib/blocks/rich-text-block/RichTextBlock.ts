@@ -4,7 +4,9 @@ import {
   HeadingFeature,
   InlineToolbarFeature,
   lexicalEditor,
+  OrderedListFeature,
   TextStateFeature,
+  UnorderedListFeature,
 } from '@payloadcms/richtext-lexical'
 import { richTextColorState } from './richTextColors'
 
@@ -28,6 +30,8 @@ export const RichTextBlock: Block = {
         features: ({ rootFeatures }) => [
           ...rootFeatures,
           HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+          UnorderedListFeature(),
+          OrderedListFeature(),
           FixedToolbarFeature(),
           InlineToolbarFeature(),
           TextStateFeature({

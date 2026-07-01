@@ -16,6 +16,7 @@ const allBlockRefs: BlockSlug[] = [
   'cta-cards',
   'statsBlock',
   'hours-tabs',
+  'faq',
 ]
 
 /** Nested block slugs for section content. Pass `exclude` to prevent circular blockReferences (stack overflow in admin). */

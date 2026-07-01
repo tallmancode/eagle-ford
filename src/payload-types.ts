@@ -117,6 +117,7 @@ export interface Config {
     'cta-cards': CtaCards;
     statsBlock: StatsBlock;
     'hours-tabs': HoursTabs;
+    faq: Faq;
   };
   collections: {
     users: User;
@@ -228,6 +229,7 @@ export interface Section {
         | CtaCards
         | StatsBlock
         | HoursTabs
+        | Faq
       )[]
     | null;
   backgroundColor?:
@@ -320,6 +322,7 @@ export interface SectionInner {
         | CtaCards
         | StatsBlock
         | HoursTabs
+        | Faq
       )[]
     | null;
   backgroundColor?:
@@ -1480,6 +1483,39 @@ export interface HoursTabs {
   id?: string | null;
   blockName?: string | null;
   blockType: 'hours-tabs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Faq".
+ */
+export interface Faq {
+  items: {
+    question: string;
+    answer?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    image?: (string | null) | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faq';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
