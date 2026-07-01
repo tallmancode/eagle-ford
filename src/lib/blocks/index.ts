@@ -15,6 +15,7 @@ import { ImageBlock } from '@/lib/blocks/image-block/ImageBlock'
 import { CtaCardsBlock } from '@/lib/blocks/cta-cards-block/CtaCardsBlock'
 import { StatsBlock } from '@/lib/blocks/stats-block/StatsBlock'
 import { HoursTabsBlock } from '@/lib/blocks/hours-tabs-block/HoursTabsBlock'
+import { FaqBlock } from '@/lib/blocks/faq-block/FaqBlock'
 
 const Blocks = [
   SectionBlock,
@@ -34,6 +35,7 @@ const Blocks = [
   CtaCardsBlock,
   StatsBlock,
   HoursTabsBlock,
+  FaqBlock,
 ]
 
 export default Blocks

@@ -1,12 +1,17 @@
 import { Field } from 'payload'
 
-export const AccessibilityFields = (): Field[] => {
+interface AccessibilityFieldsOptions {
+  landmarkDefault?: string
+}
+
+export const AccessibilityFields = (options: AccessibilityFieldsOptions = {}): Field[] => {
+  const { landmarkDefault = 'region' } = options
   return [
     {
       name: 'landmark',
       type: 'select',
       label: 'Landmark Role',
-      defaultValue: 'region',
+      defaultValue: landmarkDefault,
       options: [
         { label: 'None (div)', value: '' },
         { label: 'main', value: 'main' },
