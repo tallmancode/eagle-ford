@@ -38,5 +38,44 @@ export const IconTextBlock: Block = {
       label: 'Text',
       required: true,
     },
+    {
+      name: 'color',
+      type: 'select',
+      label: 'Text Color',
+      defaultValue: 'default',
+      options: [
+        { label: 'Default (inherit)', value: 'default' },
+        { label: 'Primary', value: 'primary' },
+        { label: 'Neutral', value: 'neutral' },
+        { label: 'Success', value: 'success' },
+        { label: 'Danger', value: 'danger' },
+        { label: 'Warning', value: 'warning' },
+        { label: 'White', value: 'white' },
+      ],
+    },
+    {
+      name: 'enableLink',
+      type: 'checkbox',
+      label: 'Make text a link',
+      defaultValue: false,
+    },
+    {
+      name: 'url',
+      type: 'text',
+      label: 'URL',
+      admin: {
+        description: 'e.g. tel:0104400510, mailto:info@example.com, /contact',
+        condition: (_data, siblingData) => siblingData?.enableLink === true,
+      },
+    },
+    {
+      name: 'newTab',
+      type: 'checkbox',
+      label: 'Open in new tab',
+      defaultValue: false,
+      admin: {
+        condition: (_data, siblingData) => siblingData?.enableLink === true,
+      },
+    },
   ],
 }

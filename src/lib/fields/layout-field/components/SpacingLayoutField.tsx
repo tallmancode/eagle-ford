@@ -3,6 +3,8 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useField } from '@payloadcms/ui'
 import {
+  ArrowDown,
+  ArrowRight,
   ChevronDown,
   ChevronRight,
   Link2,
@@ -13,6 +15,11 @@ import {
 } from 'lucide-react'
 import type { JSONFieldClientProps } from 'payload'
 import type {
+  FlexAlign,
+  FlexBreakpointSettings,
+  FlexDirection,
+  FlexJustify,
+  FlexLayoutValue,
   LayoutSpacingValue,
   SpacingAxis,
   SpacingBreakpointKey,
@@ -22,6 +29,7 @@ import type {
 import {
   DEFAULT_SPACING_UNIT,
   emptySpacingAxis,
+  mergeFlexLayoutWithDefaults,
   mergeLayoutSpacingWithDefaults,
   SPACING_BREAKPOINTS,
   SPACING_UNITS,
@@ -42,9 +50,30 @@ const BP_META: Record<SpacingBreakpointKey, { label: string; Icon: typeof Smartp
   lg: { label: 'Desktop (≥1024px)', Icon: Monitor },
 }
 
+const JUSTIFY_LABELS: Record<FlexJustify, string> = {
+  start: 'Start',
+  center: 'Center',
+  end: 'End',
+  between: 'Space between',
+  around: 'Space around',
+  evenly: 'Space evenly',
+}
+
+const ALIGN_LABELS: Record<FlexAlign, string> = {
+  start: 'Start',
+  center: 'Center',
+  end: 'End',
+  stretch: 'Stretch',
+  baseline: 'Baseline',
+}
+
 function cycleBreakpoint(current: SpacingBreakpointKey): SpacingBreakpointKey {
   const i = SPACING_BREAKPOINTS.indexOf(current)
   return SPACING_BREAKPOINTS[(i + 1) % SPACING_BREAKPOINTS.length]
+}
+
+function flexPathFromSpacingPath(spacingPath: string): string {
+  return spacingPath.replace(/\.spacing$/, '.flex')
 }
 
 const hintClass: Record<keyof SpacingSides, string> = {
@@ -61,10 +90,17 @@ export function SpacingLayoutField(props: JSONFieldClientProps) {
   const excluded = useMemo(() => new Set(exclude), [exclude])
 
   const { value, setValue } = useField<LayoutSpacingValue | null | undefined>({ path })
+  const flexPath = useMemo(() => flexPathFromSpacingPath(path), [path])
+  const { value: flexValue, setValue: setFlexValue } = useField<FlexLayoutValue | null | undefined>(
+    { path: flexPath },
+  )
 
   const merged = useMemo(() => mergeLayoutSpacingWithDefaults(value, exclude), [value, exclude])
+  const mergedFlex = useMemo(() => mergeFlexLayoutWithDefaults(flexValue), [flexValue])
 
   const [open, setOpen] = useState(true)
+  const [flexOpen, setFlexOpen] = useState(true)
+  const [spacingOpen, setSpacingOpen] = useState(true)
   const [activeBp, setActiveBp] = useState<SpacingBreakpointKey>('base')
 
   const commit = useCallback(
@@ -81,6 +117,13 @@ export function SpacingLayoutField(props: JSONFieldClientProps) {
     [excluded, setValue],
   )
 
+  const commitFlex = useCallback(
+    (next: FlexLayoutValue) => {
+      setFlexValue(next)
+    },
+    [setFlexValue],
+  )
+
   const patchAxis = useCallback(
     (axisKey: ExcludeAxis, updater: (prev: SpacingAxis) => SpacingAxis) => {
       const base = mergeLayoutSpacingWithDefaults(value, exclude)
@@ -89,6 +132,22 @@ export function SpacingLayoutField(props: JSONFieldClientProps) {
       commit({ ...base, [axisKey]: nextAxis })
     },
     [commit, exclude, value],
+  )
+
+  const patchFlexBreakpoint = useCallback(
+    (updater: (prev: FlexBreakpointSettings) => FlexBreakpointSettings) => {
+      const base = mergeFlexLayoutWithDefaults(flexValue)
+      const prev = base.breakpoints[activeBp]
+      const next = updater(prev)
+      commitFlex({
+        ...base,
+        breakpoints: {
+          ...base.breakpoints,
+          [activeBp]: next,
+        },
+      })
+    },
+    [activeBp, commitFlex, flexValue],
   )
 
   const updateSide = useCallback(
@@ -130,13 +189,63 @@ export function SpacingLayoutField(props: JSONFieldClientProps) {
     [patchAxis],
   )
 
+  const updateFlexDirection = useCallback(
+    (direction: FlexDirection | '') => {
+      patchFlexBreakpoint((prev) => ({ ...prev, direction }))
+    },
+    [patchFlexBreakpoint],
+  )
+
+  const updateFlexJustify = useCallback(
+    (justifyContent: FlexJustify | '') => {
+      patchFlexBreakpoint((prev) => ({ ...prev, justifyContent }))
+    },
+    [patchFlexBreakpoint],
+  )
+
+  const updateFlexAlign = useCallback(
+    (alignItems: FlexAlign | '') => {
+      patchFlexBreakpoint((prev) => ({ ...prev, alignItems }))
+    },
+    [patchFlexBreakpoint],
+  )
+
+  const updateFlexGap = useCallback(
+    (raw: string) => {
+      const normalized = raw.replace(/[^\d.]/g, '')
+      patchFlexBreakpoint((prev) => ({ ...prev, gap: normalized }))
+    },
+    [patchFlexBreakpoint],
+  )
+
+  const updateFlexGapUnit = useCallback(
+    (unit: SpacingUnit) => {
+      const base = mergeFlexLayoutWithDefaults(flexValue)
+      commitFlex({ ...base, gapUnit: unit })
+    },
+    [commitFlex, flexValue],
+  )
+
+  const clearFlexBreakpoint = useCallback(() => {
+    patchFlexBreakpoint(() => ({
+      direction: '',
+      justifyContent: '',
+      alignItems: '',
+      gap: '',
+    }))
+  }, [patchFlexBreakpoint])
+
   const showPadding = !excluded.has('padding')
   const showMargin = !excluded.has('margin')
+  const showSpacing = showPadding || showMargin
 
   const description =
     field?.admin && typeof field.admin === 'object' && 'description' in field.admin
       ? (field.admin.description as string | undefined)
       : undefined
+
+  const flexBp = mergedFlex.breakpoints[activeBp]
+  const { Icon: BpIcon, label: bpLabel } = BP_META[activeBp]
 
   return (
     <div className={styles.wrap}>
@@ -145,41 +254,189 @@ export function SpacingLayoutField(props: JSONFieldClientProps) {
           <span className={styles.triggerIcon} aria-hidden>
             {open ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </span>
-          <span>{typeof field.label === 'string' ? field.label : 'Spacing'}</span>
+          <span>Layout</span>
         </button>
 
         {open ? (
           <div className={styles.body}>
-            {description ? (
-              <p style={{ margin: 0, fontSize: 12, color: 'var(--theme-elevation-600, #666)' }}>
-                {description}
-              </p>
-            ) : null}
+            <div className={styles.subPanel}>
+              <button
+                type="button"
+                className={styles.subTrigger}
+                onClick={() => setFlexOpen((o) => !o)}
+              >
+                <span className={styles.triggerIcon} aria-hidden>
+                  {flexOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                </span>
+                <span>Flex</span>
+              </button>
 
-            {showMargin ? (
-              <SpacingAxisRow
-                axisKey="margin"
-                label="Margins"
-                merged={merged}
-                activeBp={activeBp}
-                onCycleBp={() => setActiveBp((prev) => cycleBreakpoint(prev))}
-                onToggleLinked={() => toggleLinked('margin')}
-                onSideChange={(side, v) => updateSide('margin', side, v)}
-                onUnitChange={(u) => updateUnit('margin', u)}
-              />
-            ) : null}
+              {flexOpen ? (
+                <div className={styles.subBody}>
+                  <p className={styles.hint}>
+                    Set direction to enable flex layout on single-column sections.
+                  </p>
 
-            {showPadding ? (
-              <SpacingAxisRow
-                axisKey="padding"
-                label="Padding"
-                merged={merged}
-                activeBp={activeBp}
-                onCycleBp={() => setActiveBp((prev) => cycleBreakpoint(prev))}
-                onToggleLinked={() => toggleLinked('padding')}
-                onSideChange={(side, v) => updateSide('padding', side, v)}
-                onUnitChange={(u) => updateUnit('padding', u)}
-              />
+                  <div className={styles.flexRow}>
+                    <span className={styles.rowLabel}>Breakpoint</span>
+                    <div className={styles.rowActions}>
+                      <button
+                        type="button"
+                        className={styles.iconBtn}
+                        onClick={() => setActiveBp((prev) => cycleBreakpoint(prev))}
+                        title={`Breakpoint: ${bpLabel}. Click to switch.`}
+                        aria-label={`Breakpoint: ${bpLabel}. Click to switch.`}
+                      >
+                        <BpIcon size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.textBtn}
+                        onClick={clearFlexBreakpoint}
+                        title="Clear flex settings for this breakpoint"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                    <span className={styles.bpLabelInline}>{bpLabel}</span>
+                  </div>
+
+                  <div className={styles.flexRow}>
+                    <span className={styles.rowLabel}>Direction</span>
+                    <div className={styles.toggleGroup}>
+                      <button
+                        type="button"
+                        className={`${styles.toggleBtn} ${flexBp.direction === 'row' ? styles.toggleBtnActive : ''}`}
+                        onClick={() => updateFlexDirection(flexBp.direction === 'row' ? '' : 'row')}
+                        aria-pressed={flexBp.direction === 'row'}
+                      >
+                        <ArrowRight size={14} aria-hidden />
+                        Row
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.toggleBtn} ${flexBp.direction === 'column' ? styles.toggleBtnActive : ''}`}
+                        onClick={() =>
+                          updateFlexDirection(flexBp.direction === 'column' ? '' : 'column')
+                        }
+                        aria-pressed={flexBp.direction === 'column'}
+                      >
+                        <ArrowDown size={14} aria-hidden />
+                        Column
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className={styles.flexRow}>
+                    <span className={styles.rowLabel}>Justify</span>
+                    <select
+                      className={styles.flexSelect}
+                      value={flexBp.justifyContent}
+                      onChange={(e) => updateFlexJustify(e.target.value as FlexJustify | '')}
+                      aria-label={`Justify content (${bpLabel})`}
+                    >
+                      <option value="">Default</option>
+                      {(Object.keys(JUSTIFY_LABELS) as FlexJustify[]).map((key) => (
+                        <option key={key} value={key}>
+                          {JUSTIFY_LABELS[key]}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className={styles.flexRow}>
+                    <span className={styles.rowLabel}>Align</span>
+                    <select
+                      className={styles.flexSelect}
+                      value={flexBp.alignItems}
+                      onChange={(e) => updateFlexAlign(e.target.value as FlexAlign | '')}
+                      aria-label={`Align items (${bpLabel})`}
+                    >
+                      <option value="">Default</option>
+                      {(Object.keys(ALIGN_LABELS) as FlexAlign[]).map((key) => (
+                        <option key={key} value={key}>
+                          {ALIGN_LABELS[key]}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className={styles.flexRow}>
+                    <span className={styles.rowLabel}>Gap</span>
+                    <div className={styles.gapInputWrap}>
+                      <input
+                        className={styles.gapInput}
+                        type="text"
+                        inputMode="decimal"
+                        autoComplete="off"
+                        placeholder="0"
+                        value={flexBp.gap}
+                        onChange={(e) => updateFlexGap(e.target.value)}
+                        aria-label={`Gap (${bpLabel})`}
+                      />
+                      <select
+                        className={styles.unitSelect}
+                        value={mergedFlex.gapUnit ?? DEFAULT_SPACING_UNIT}
+                        onChange={(e) => updateFlexGapUnit(e.target.value as SpacingUnit)}
+                        aria-label="Gap unit"
+                      >
+                        {SPACING_UNITS.map((u) => (
+                          <option key={u} value={u}>
+                            {u}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+
+            {showSpacing ? (
+              <div className={styles.subPanel}>
+                <button
+                  type="button"
+                  className={styles.subTrigger}
+                  onClick={() => setSpacingOpen((o) => !o)}
+                >
+                  <span className={styles.triggerIcon} aria-hidden>
+                    {spacingOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                  </span>
+                  <span>{typeof field.label === 'string' ? field.label : 'Spacing'}</span>
+                </button>
+
+                {spacingOpen ? (
+                  <div className={styles.subBody}>
+                    {description ? <p className={styles.hint}>{description}</p> : null}
+
+                    {showMargin ? (
+                      <SpacingAxisRow
+                        axisKey="margin"
+                        label="Margins"
+                        merged={merged}
+                        activeBp={activeBp}
+                        onCycleBp={() => setActiveBp((prev) => cycleBreakpoint(prev))}
+                        onToggleLinked={() => toggleLinked('margin')}
+                        onSideChange={(side, v) => updateSide('margin', side, v)}
+                        onUnitChange={(u) => updateUnit('margin', u)}
+                      />
+                    ) : null}
+
+                    {showPadding ? (
+                      <SpacingAxisRow
+                        axisKey="padding"
+                        label="Padding"
+                        merged={merged}
+                        activeBp={activeBp}
+                        onCycleBp={() => setActiveBp((prev) => cycleBreakpoint(prev))}
+                        onToggleLinked={() => toggleLinked('padding')}
+                        onSideChange={(side, v) => updateSide('padding', side, v)}
+                        onUnitChange={(u) => updateUnit('padding', u)}
+                      />
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
             ) : null}
           </div>
         ) : null}

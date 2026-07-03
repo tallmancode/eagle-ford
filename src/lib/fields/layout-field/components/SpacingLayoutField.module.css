@@ -197,3 +197,139 @@
   color: var(--theme-elevation-500, #888);
   margin-top: 2px;
 }
+
+.subPanel {
+  border: 1px solid var(--theme-elevation-150, #e6e6e6);
+  border-radius: 6px;
+  background: var(--theme-bg, #fff);
+  overflow: hidden;
+}
+
+.subTrigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--theme-text, #333);
+  text-align: left;
+}
+
+.subTrigger:hover {
+  background: var(--theme-elevation-50, #fafafa);
+}
+
+.subBody {
+  padding: 0 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--theme-elevation-600, #666);
+}
+
+.flexRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.bpLabelInline {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--theme-elevation-500, #888);
+}
+
+.toggleGroup {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.toggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border: 1px solid var(--theme-elevation-150, #e6e6e6);
+  border-radius: 6px;
+  background: var(--theme-bg, #fff);
+  font-size: 12px;
+  color: var(--theme-elevation-700, #555);
+  cursor: pointer;
+}
+
+.toggleBtn:hover {
+  border-color: var(--theme-elevation-250, #ccc);
+  background: var(--theme-elevation-50, #fafafa);
+}
+
+.toggleBtnActive {
+  border-color: var(--theme-success-600, #24a148);
+  background: var(--theme-success-50, #edfdf4);
+  color: var(--theme-success-800, #166534);
+}
+
+.flexSelect {
+  flex: 1;
+  min-width: 140px;
+  padding: 6px 8px;
+  border: 1px solid var(--theme-elevation-150, #e6e6e6);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--theme-elevation-700, #555);
+  background: var(--theme-bg, #fff);
+}
+
+.gapInputWrap {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  min-width: 120px;
+  border: 1px solid var(--theme-elevation-150, #e6e6e6);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--theme-bg, #fff);
+}
+
+.gapInput {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border: none;
+  font-size: 12px;
+  background: transparent;
+  color: var(--theme-text, #222);
+}
+
+.gapInput:focus {
+  outline: none;
+  background: var(--theme-elevation-50, #fafafa);
+}
+
+.textBtn {
+  padding: 0 8px;
+  height: 32px;
+  border: 1px solid var(--theme-elevation-150, #e6e6e6);
+  border-radius: 6px;
+  background: var(--theme-bg, #fff);
+  font-size: 11px;
+  color: var(--theme-elevation-600, #666);
+  cursor: pointer;
+}
+
+.textBtn:hover {
+  border-color: var(--theme-elevation-250, #ccc);
+  background: var(--theme-elevation-50, #fafafa);
+}

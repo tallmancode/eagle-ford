@@ -118,6 +118,7 @@ export interface Config {
     statsBlock: StatsBlock;
     'hours-tabs': HoursTabs;
     faq: Faq;
+    'contact-footer': ContactFooter;
   };
   collections: {
     users: User;
@@ -230,6 +231,7 @@ export interface Section {
         | StatsBlock
         | HoursTabs
         | Faq
+        | ContactFooter
       )[]
     | null;
   backgroundColor?:
@@ -251,6 +253,27 @@ export interface Section {
      * Padding and margin per breakpoint (top, right, bottom, left).
      */
     spacing?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    flex?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hide this section at specific screen sizes.
+     */
+    visibility?:
       | {
           [k: string]: unknown;
         }
@@ -323,6 +346,7 @@ export interface SectionInner {
         | StatsBlock
         | HoursTabs
         | Faq
+        | ContactFooter
       )[]
     | null;
   backgroundColor?:
@@ -342,6 +366,27 @@ export interface SectionInner {
      * Padding and margin per breakpoint (top, right, bottom, left).
      */
     spacing?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    flex?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hide this section at specific screen sizes.
+     */
+    visibility?:
       | {
           [k: string]: unknown;
         }
@@ -1315,6 +1360,13 @@ export interface IconText {
     | 'shield'
     | 'fuel';
   text: string;
+  color?: ('default' | 'primary' | 'neutral' | 'success' | 'danger' | 'warning' | 'white') | null;
+  enableLink?: boolean | null;
+  /**
+   * e.g. tel:0104400510, mailto:info@example.com, /contact
+   */
+  url?: string | null;
+  newTab?: boolean | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'icon-text';
@@ -1516,6 +1568,15 @@ export interface Faq {
   id?: string | null;
   blockName?: string | null;
   blockType: 'faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactFooter".
+ */
+export interface ContactFooter {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contact-footer';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2731,6 +2792,10 @@ export interface Setting {
 export interface ContactInfo1 {
   email?: string | null;
   phone?: string | null;
+  /**
+   * e.g. Mon – Fri: 08:00 – 17:00 & Sat: 08:00 – 12:30
+   */
+  operationHours?: string | null;
   address: {
     street: string;
     suburb?: string | null;
@@ -2865,6 +2930,7 @@ export interface SettingsSelect<T extends boolean = true> {
 export interface ContactInfoSelect<T extends boolean = true> {
   email?: T;
   phone?: T;
+  operationHours?: T;
   address?:
     | T
     | {

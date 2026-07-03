@@ -18,6 +18,7 @@ import type {
   StatsBlock,
   HoursTabs,
   Faq,
+  ContactFooter,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -37,6 +38,7 @@ import { CtaCardsBlockComponent } from '@/lib/blocks/cta-cards-block/components/
 import { ImageBlockComponent } from '@/lib/blocks/image-block/components/ImageBlockComponent'
 import { HoursTabsBlockComponent } from '@/lib/blocks/hours-tabs-block/components/HoursTabsBlockComponent'
 import { FaqBlockComponent } from '@/lib/blocks/faq-block/components/FaqBlockComponent'
+import { ContactFooterBlockComponent } from '@/lib/blocks/contact-footer-block/components/ContactFooterBlockComponent'
 
 type BlockComponentMap = {
   section: Section
@@ -57,6 +59,7 @@ type BlockComponentMap = {
   statsBlock: StatsBlock
   'hours-tabs': HoursTabs
   faq: Faq
+  'contact-footer': ContactFooter
 }
 
 type WithMeta<T> = T & { meta?: unknown }
@@ -84,6 +87,9 @@ const blockComponents: {
   statsBlock: StatsBlockComponent,
   'hours-tabs': HoursTabsBlockComponent,
   faq: FaqBlockComponent,
+  'contact-footer': ContactFooterBlockComponent as unknown as React.ComponentType<
+    WithMeta<ContactFooter>
+  >,
 } as const
 
 type Blocks = Config['blocks']

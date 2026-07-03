@@ -1,6 +1,7 @@
 import { Separator } from '@/components/ui/separator'
 import { MapPin, PhoneCall } from 'lucide-react'
 import { Header as GlobalHeader, Setting as GlobalSettings } from '@/payload-types'
+import { formatContactAddress } from '@/lib/utils/formatContactAddress'
 import { formatPhoneNumber } from '@/utilities/formatPhoneNumber'
 import Link from 'next/link'
 import { NavMenuItems } from '@/components/header/NavMenuItems'
@@ -13,15 +14,7 @@ export const TopNav = ({
   settings: GlobalSettings
 }) => {
   const address = settings?.contactInfo?.address
-  const addressLine = [
-    address?.street,
-    address?.suburb,
-    address?.city,
-    address?.province,
-    address?.postCode,
-  ]
-    .filter((part): part is string => Boolean(part?.trim()))
-    .join(', ')
+  const addressLine = formatContactAddress(address)
 
   return (
     <div className="w-full bg-primary-500 py-2 text-sm">
