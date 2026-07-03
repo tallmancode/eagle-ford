@@ -1,0 +1,21 @@
+import { MainNav } from '@/components/header/MainNav'
+import { TopNav } from '@/components/header/TopNav'
+import { Header as GlobalHeader, Setting as GlobalSettings } from '@/payload-types'
+
+export interface HeaderNavProps {
+  globalHeader: GlobalHeader
+  globalSettings: GlobalSettings
+}
+
+export const SiteHeader = ({ globalHeader, globalSettings }: HeaderNavProps) => {
+  return (
+    <header className="relative z-50 shadow-bottom">
+      <TopNav topNavProps={globalHeader?.topNav} settings={globalSettings}></TopNav>
+      <MainNav
+        headerLogo={globalHeader?.headerLogo}
+        leftLinks={globalHeader?.leftLinks}
+        rightLinks={globalHeader?.rightLinks}
+      />
+    </header>
+  )
+}

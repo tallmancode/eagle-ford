@@ -6,7 +6,7 @@ export async function getBlogBySlug(slug: string, draft: boolean) {
   const payload = await getPayload({ config: configPromise })
 
   const result = await payload.find({
-    collection: 'blog',
+    collection: 'blogs',
     draft,
     limit: 1,
     pagination: false,

@@ -28,23 +28,16 @@ export const FooterGlobal: GlobalConfig = {
               },
             },
             {
-              name: 'bottomBarLink',
-              type: 'group',
+              ...NavLinksField({ name: 'bottomBarLink', maxRows: 1, relationTo: ['pages'] }),
               label: 'Bottom Bar Link',
-              fields: [
-                {
-                  name: 'label',
-                  type: 'text',
-                  defaultValue: 'Privacy Policy',
+              admin: {
+                isSortable: false,
+                description:
+                  'Single link shown on the right side of the footer bottom bar (e.g. Privacy Policy).',
+                components: {
+                  RowLabel: '/lib/fields/navigation/Components/NavLinkRowLabel',
                 },
-                {
-                  name: 'url',
-                  type: 'text',
-                  admin: {
-                    description: 'Link shown on the right side of the footer bottom bar.',
-                  },
-                },
-              ],
+              },
             },
             {
               name: 'whatsappUrl',
@@ -106,85 +99,119 @@ export const FooterGlobal: GlobalConfig = {
           ],
         },
         {
-          label: 'Quick Links',
-          fields: [NavLinksField({ name: 'links', maxRows: 10, relationTo: ['pages'] })],
-        },
-        {
-          label: 'Our Brands',
-          fields: [NavLinksField({ name: 'brandLinks', maxRows: 10, relationTo: ['pages'] })],
-        },
-        {
-          label: 'Legal & Disclaimer',
-          fields: [NavLinksField({ name: 'legalLinks', maxRows: 10, relationTo: ['pages'] })],
-        },
-        {
-          label: 'Social & Badge',
+          label: 'Columns',
           fields: [
-            SocialAccountsField({ name: 'socials', maxRows: 8 }),
             {
-              name: 'dealershipBadge',
-              type: 'group',
-              label: 'Dealership Badge',
-              fields: [
+              name: 'columns',
+              type: 'blocks',
+              maxRows: 6,
+              admin: {
+                isSortable: true,
+                description:
+                  'Add up to 6 footer columns. Drag to reorder. Each column type has its own set of fields.',
+              },
+              blocks: [
                 {
-                  name: 'enabled',
-                  type: 'checkbox',
-                  defaultValue: true,
-                  label: 'Show dealership badge',
+                  slug: 'linksColumn',
+                  labels: { singular: 'Links Column', plural: 'Links Columns' },
+                  fields: [
+                    {
+                      name: 'heading',
+                      type: 'text',
+                      required: true,
+                      admin: {
+                        description: 'Column heading displayed above the list of links.',
+                      },
+                    },
+                    NavLinksField({ name: 'links', maxRows: 20, relationTo: ['pages'] }),
+                  ],
                 },
                 {
-                  name: 'badgeImage',
-                  type: 'upload',
-                  label: 'Badge image',
-                  relationTo: 'media',
-                  admin: {
-                    description:
-                      'Optional full badge image. When set, overrides the built-in badge layout.',
-                  },
+                  slug: 'socialColumn',
+                  labels: { singular: 'Social Column', plural: 'Social Columns' },
+                  fields: [
+                    {
+                      name: 'heading',
+                      type: 'text',
+                      required: true,
+                      admin: {
+                        description: 'Column heading displayed above the social links.',
+                      },
+                    },
+                    SocialAccountsField({ name: 'socials', maxRows: 8 }),
+                  ],
                 },
                 {
-                  name: 'logoImage',
-                  type: 'upload',
-                  label: 'Logo',
-                  relationTo: 'media',
-                  admin: {
-                    condition: (_, siblingData) => !siblingData?.badgeImage,
-                  },
-                },
-                {
-                  name: 'title',
-                  type: 'text',
-                  defaultValue: 'EAGLE MOTOR CITY',
-                  admin: {
-                    condition: (_, siblingData) => !siblingData?.badgeImage,
-                  },
-                },
-                {
-                  name: 'subtitle',
-                  type: 'text',
-                  defaultValue: 'TOP-RATED DEALERSHIP',
-                  admin: {
-                    condition: (_, siblingData) => !siblingData?.badgeImage,
-                  },
-                },
-                {
-                  name: 'rating',
-                  type: 'number',
-                  min: 0,
-                  max: 5,
-                  defaultValue: 4.7,
-                  admin: {
-                    condition: (_, siblingData) => !siblingData?.badgeImage,
-                    step: 0.1,
-                  },
-                },
-                {
-                  name: 'googleReviewUrl',
-                  type: 'text',
-                  label: 'Google review URL',
-                  admin: {
-                    condition: (_, siblingData) => !siblingData?.badgeImage,
-                  },
+                  slug: 'badgeColumn',
+                  labels: { singular: 'Badge / Logo Column', plural: 'Badge / Logo Columns' },
+                  fields: [
+                    {
+                      name: 'logoImage',
+                      type: 'upload',
+                      label: 'Logo',
+                      relationTo: 'media',
+                      admin: {
+                        description: 'Brand logo displayed at the top of the column.',
+                      },
+                    },
+                    {
+                      name: 'badgeEnabled',
+                      type: 'checkbox',
+                      label: 'Show dealership badge',
+                      defaultValue: true,
+                    },
+                    {
+                      name: 'badgeImage',
+                      type: 'upload',
+                      label: 'Full badge image (optional)',
+                      relationTo: 'media',
+                      admin: {
+                        condition: (_, siblingData) => Boolean(siblingData?.badgeEnabled),
+                        description: 'When set, overrides the built-in badge layout below.',
+                      },
+                    },
+                    {
+                      name: 'badgeTitle',
+                      type: 'text',
+                      label: 'Badge title',
+                      defaultValue: 'EAGLE MOTOR CITY',
+                      admin: {
+                        condition: (_, siblingData) =>
+                          Boolean(siblingData?.badgeEnabled) && !siblingData?.badgeImage,
+                      },
+                    },
+                    {
+                      name: 'badgeSubtitle',
+                      type: 'text',
+                      label: 'Badge subtitle',
+                      defaultValue: 'TOP-RATED DEALERSHIP',
+                      admin: {
+                        condition: (_, siblingData) =>
+                          Boolean(siblingData?.badgeEnabled) && !siblingData?.badgeImage,
+                      },
+                    },
+                    {
+                      name: 'rating',
+                      type: 'number',
+                      min: 0,
+                      max: 5,
+                      defaultValue: 4.7,
+                      admin: {
+                        step: 0.1,
+                        condition: (_, siblingData) =>
+                          Boolean(siblingData?.badgeEnabled) && !siblingData?.badgeImage,
+                      },
+                    },
+                    {
+                      name: 'googleReviewUrl',
+                      type: 'text',
+                      label: 'Google review URL',
+                      admin: {
+                        condition: (_, siblingData) =>
+                          Boolean(siblingData?.badgeEnabled) && !siblingData?.badgeImage,
+                      },
+                    },
+                  ],
                 },
               ],
             },

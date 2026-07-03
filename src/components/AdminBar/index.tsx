@@ -19,9 +19,9 @@ const collectionLabels = {
     plural: 'Pages',
     singular: 'Page',
   },
-  posts: {
-    plural: 'Posts',
-    singular: 'Post',
+  blogs: {
+    plural: 'Blogs',
+    singular: 'Blog',
   },
   projects: {
     plural: 'Projects',
@@ -48,7 +48,7 @@ export const AdminBar: React.FC<{
 
   return (
     <div
-      className={cn(baseClass, 'py-2 bg-black text-white', {
+      className={cn(baseClass, 'py-2 bg-primary-500/70 text-light-50 fixed bottom-0 w-full', {
         block: show,
         hidden: !show,
       })}
@@ -56,7 +56,7 @@ export const AdminBar: React.FC<{
       <div className="container">
         <PayloadAdminBar
           {...adminBarProps}
-          className="py-2 text-white"
+          className="py-4 text-white"
           classNames={{
             controls: 'font-medium text-white',
             logo: 'text-white',

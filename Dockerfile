@@ -14,7 +14,7 @@ COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm i --frozen-lockfile; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -30,10 +30,15 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN \
+# Build with: docker build --secret id=env,src=.env --network=host -t esm-app:latest .
+# Env is mounted at /run/secrets/env (not baked into image layers).
+# BUILD_DATABASE_URL in .env overrides DATABASE_URL during build only (--network=host reaches port 4222).
+RUN --mount=type=secret,id=env,required=true --network=host \
+  set -a && . /run/secrets/env && set +a && \
+  export DATABASE_URL="${BUILD_DATABASE_URL:-$DATABASE_URL}" && \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm run build; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -49,7 +54,8 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Remove this line if you do not have this folder
-COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+RUN mkdir -p public/media/uploads && chown -R nextjs:nodejs public
 
 # Set the correct permission for prerender cache
 RUN mkdir .next

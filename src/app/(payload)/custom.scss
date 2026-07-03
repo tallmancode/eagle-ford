@@ -1,0 +1,47 @@
+@import '../../styles/base.css';
+
+@layer theme {
+  @import 'tailwindcss/theme.css';
+}
+
+@layer base {
+  .twp {
+    @import 'tailwindcss/preflight.css';
+  }
+
+  .twp.no-twp {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+      all: revert-layer;
+    }
+  }
+}
+
+@layer components;
+
+@layer utilities {
+  @import 'tailwindcss/utilities.css';
+}
+
+.table.table--appearance-default > div:first-of-type {
+  width: 100% !important;
+}
+
+.table-wrap .table {
+  width: 100% !important;
+}
+
+.login {
+  @apply p-0;
+}
+
+.login .template-minimal {
+  @apply h-full;
+}
+
+.login .template-minimal__wrap {
+  @apply max-w-none h-full flex flex-col;
+}

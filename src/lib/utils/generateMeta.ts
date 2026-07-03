@@ -4,7 +4,7 @@ import type { Media, Page, Blog, Config } from '@/payload-types'
 
 import { mergeOpenGraph } from './mergeOpenGraph'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
-import { DEFAULT_OG_IMAGE_PATH, formatPageTitle, SITE_NAME } from '@/lib/constants/site'
+import { DEFAULT_OG_IMAGE_PATH, formatPageTitle, SITE_NAME } from '@/constants/site'
 
 const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   const serverUrl = getServerSideURL()

@@ -18,12 +18,30 @@ const nextConfig: NextConfig = {
     loadPaths: ['./node_modules/@payloadcms/ui/dist/scss/'],
   },
   images: {
+    qualities: [65, 75, 100],
     localPatterns: [
       {
         pathname: '/api/media/file/**',
       },
+      {
+        pathname: '/vehicle-tabs/**',
+      },
+      {
+        pathname: '/images/**',
+      },
+      {
+        pathname: '/meet-the-team/**',
+      },
+      {
+        pathname: '/about-us/**',
+      },
+      {
+        pathname: '/sell-hero.webp',
+      },
+      {
+        pathname: '/blocks/hero-templates/**',
+      },
     ],
-    qualities: [100],
     remotePatterns: [
       ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
         const url = new URL(item)

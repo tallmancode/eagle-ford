@@ -1,7 +1,7 @@
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 
-type SlugCollection = 'blog'
+type SlugCollection = 'blogs'
 
 export async function getCollectionStaticParams(
   collection: SlugCollection,

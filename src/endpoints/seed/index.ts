@@ -14,7 +14,7 @@ const collections: CollectionSlug[] = [
   'categories',
   'media',
   'pages',
-  'posts',
+  'blogs',
   'forms',
   'form-submissions',
   'search',
@@ -48,9 +48,7 @@ export const seed = async ({
     globals.map((global) =>
       payload.updateGlobal({
         slug: global,
-        data: {
-          navItems: [],
-        },
+        data: {},
         depth: 0,
         context: {
           disableRevalidate: true,
@@ -102,7 +100,8 @@ export const seed = async ({
     payload.create({
       collection: 'users',
       data: {
-        name: 'Demo Author',
+        firstName: 'Demo',
+        lastName: 'Author',
         email: 'demo-author@example.com',
         password: 'password',
       },
@@ -138,12 +137,12 @@ export const seed = async ({
     ),
   ])
 
-  payload.logger.info(`— Seeding posts...`)
+  payload.logger.info(`— Seeding blogs...`)
 
-  // Do not create posts with `Promise.all` because we want the posts to be created in order
+  // Do not create blogs with `Promise.all` because we want the blogs to be created in order
   // This way we can sort them by `createdAt` or `publishedAt` and they will be in the expected order
   const post1Doc = await payload.create({
-    collection: 'posts',
+    collection: 'blogs',
     depth: 0,
     context: {
       disableRevalidate: true,
@@ -152,7 +151,7 @@ export const seed = async ({
   })
 
   const post2Doc = await payload.create({
-    collection: 'posts',
+    collection: 'blogs',
     depth: 0,
     context: {
       disableRevalidate: true,
@@ -161,7 +160,7 @@ export const seed = async ({
   })
 
   const post3Doc = await payload.create({
-    collection: 'posts',
+    collection: 'blogs',
     depth: 0,
     context: {
       disableRevalidate: true,
@@ -172,21 +171,21 @@ export const seed = async ({
   // update each post with related posts
   await payload.update({
     id: post1Doc.id,
-    collection: 'posts',
+    collection: 'blogs',
     data: {
       relatedPosts: [post2Doc.id, post3Doc.id],
     },
   })
   await payload.update({
     id: post2Doc.id,
-    collection: 'posts',
+    collection: 'blogs',
     data: {
       relatedPosts: [post1Doc.id, post3Doc.id],
     },
   })
   await payload.update({
     id: post3Doc.id,
-    collection: 'posts',
+    collection: 'blogs',
     data: {
       relatedPosts: [post1Doc.id, post2Doc.id],
     },
@@ -202,7 +201,7 @@ export const seed = async ({
 
   payload.logger.info(`— Seeding pages...`)
 
-  const [_, contactPage] = await Promise.all([
+  const [_, _contactPage] = await Promise.all([
     payload.create({
       collection: 'pages',
       depth: 0,
@@ -220,57 +219,11 @@ export const seed = async ({
   await Promise.all([
     payload.updateGlobal({
       slug: 'header',
-      data: {
-        navItems: [
-          {
-            link: {
-              type: 'custom',
-              label: 'Posts',
-              url: '/posts',
-            },
-          },
-          {
-            link: {
-              type: 'reference',
-              label: 'Contact',
-              reference: {
-                relationTo: 'pages',
-                value: contactPage.id,
-              },
-            },
-          },
-        ],
-      },
+      data: {},
     }),
     payload.updateGlobal({
       slug: 'footer',
-      data: {
-        navItems: [
-          {
-            link: {
-              type: 'custom',
-              label: 'Admin',
-              url: '/admin',
-            },
-          },
-          {
-            link: {
-              type: 'custom',
-              label: 'Source Code',
-              newTab: true,
-              url: 'https://github.com/payloadcms/payload/tree/3.x/templates/website',
-            },
-          },
-          {
-            link: {
-              type: 'custom',
-              label: 'Payload',
-              newTab: true,
-              url: 'https://payloadcms.com/',
-            },
-          },
-        ],
-      },
+      data: {},
     }),
   ])
 

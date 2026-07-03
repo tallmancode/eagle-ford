@@ -9,11 +9,8 @@ import {
   Footprints,
   PanelTopClose,
   ExternalLink,
-  Tags,
   Form,
   Send,
-  LucideSparkle,
-  Car,
 } from 'lucide-react'
 import { ExoticComponent } from 'react'
 
@@ -22,17 +19,13 @@ export const navIconMap: Partial<
 > = {
   media: Image,
   users: User,
-  blog: LayoutGrid,
+  blogs: LayoutGrid,
   pages: StickyNote,
   header: PanelTopClose,
   footer: Footprints,
-  tags: Tags,
-  vehicles: Car,
-  'vehicle-makes': Car,
   redirects: ExternalLink,
   forms: Form,
   'form-submissions': Send,
-  'ai-provider-settings': LucideSparkle,
 }
 
 export const getNavIcon = (slug: string) =>

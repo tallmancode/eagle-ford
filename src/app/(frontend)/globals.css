@@ -1,9 +1,8 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-
+@import '../../styles/base.css';
 @config '../../../tailwind.config.mjs';
 
-@custom-variant dark (&:is([data-theme='dark'] *));
 @custom-variant sm (@media (width >= theme(--breakpoint-sm)));
 @custom-variant md (@media (width >= theme(--breakpoint-md)));
 @custom-variant lg (@media (width >= theme(--breakpoint-lg)));
@@ -37,6 +36,48 @@
 @source inline("border-warning");
 @source inline("bg-warning/30");
 
+/* LayoutField flex utilities (generated at runtime by flexLayoutToClassName) */
+@source inline("flex");
+@source inline("flex-row");
+@source inline("flex-col");
+@source inline("justify-start");
+@source inline("justify-center");
+@source inline("justify-end");
+@source inline("justify-between");
+@source inline("justify-around");
+@source inline("justify-evenly");
+@source inline("items-start");
+@source inline("items-center");
+@source inline("items-end");
+@source inline("items-stretch");
+@source inline("items-baseline");
+@source inline("md:flex-row");
+@source inline("md:flex-col");
+@source inline("md:justify-start");
+@source inline("md:justify-center");
+@source inline("md:justify-end");
+@source inline("md:justify-between");
+@source inline("md:justify-around");
+@source inline("md:justify-evenly");
+@source inline("md:items-start");
+@source inline("md:items-center");
+@source inline("md:items-end");
+@source inline("md:items-stretch");
+@source inline("md:items-baseline");
+@source inline("lg:flex-row");
+@source inline("lg:flex-col");
+@source inline("lg:justify-start");
+@source inline("lg:justify-center");
+@source inline("lg:justify-end");
+@source inline("lg:justify-between");
+@source inline("lg:justify-around");
+@source inline("lg:justify-evenly");
+@source inline("lg:items-start");
+@source inline("lg:items-center");
+@source inline("lg:items-end");
+@source inline("lg:items-stretch");
+@source inline("lg:items-baseline");
+
 @theme {
   --breakpoint-sm: 40rem;
   --breakpoint-md: 48rem;
@@ -45,6 +86,7 @@
   --breakpoint-2xl: 86rem;
   --font-mono: var(--font-geist-mono);
   --font-sans: var(--font-geist-sans);
+  --font-ford: var(--font-ford-f1);
 }
 
 @layer utilities {
@@ -86,125 +128,6 @@
   }
 }
 
-:root {
-  --background: oklch(100% 0 0deg);
-  --foreground: oklch(14.5% 0 0deg);
-  --card: oklch(96.5% 0.005 265deg);
-  --card-foreground: oklch(14.5% 0 0deg);
-  --popover: oklch(100% 0 0deg);
-  --popover-foreground: oklch(14.5% 0 0deg);
-  --primary: oklch(20.5% 0 0deg);
-  --primary-foreground: oklch(98.5% 0 0deg);
-  --secondary: oklch(97% 0 0deg);
-  --secondary-foreground: oklch(20.5% 0 0deg);
-  --muted: oklch(97% 0 0deg);
-  --muted-foreground: oklch(55.6% 0 0deg);
-  --accent: oklch(97% 0 0deg);
-  --accent-foreground: oklch(20.5% 0 0deg);
-  --destructive: oklch(57.7% 0.245 27.325deg);
-  --destructive-foreground: oklch(57.7% 0.245 27.325deg);
-  --border: oklch(92.2% 0 0deg);
-  --input: oklch(92.2% 0 0deg);
-  --ring: oklch(70.8% 0 0deg);
-  --chart-1: oklch(64.6% 0.222 41.116deg);
-  --chart-2: oklch(60% 0.118 184.704deg);
-  --chart-3: oklch(39.8% 0.07 227.392deg);
-  --chart-4: oklch(82.8% 0.189 84.429deg);
-  --chart-5: oklch(76.9% 0.188 70.08deg);
-  --radius: 0.625rem;
-  --sidebar: oklch(98.5% 0 0deg);
-  --sidebar-foreground: oklch(14.5% 0 0deg);
-  --sidebar-primary: oklch(20.5% 0 0deg);
-  --sidebar-primary-foreground: oklch(98.5% 0 0deg);
-  --sidebar-accent: oklch(97% 0 0deg);
-  --sidebar-accent-foreground: oklch(20.5% 0 0deg);
-  --sidebar-border: oklch(92.2% 0 0deg);
-  --sidebar-ring: oklch(70.8% 0 0deg);
-  --success: oklch(78% 0.08 200deg);
-  --warning: oklch(89% 0.1 75deg);
-  --error: oklch(75% 0.15 25deg);
-}
-
-[data-theme='dark'] {
-  --background: oklch(14.5% 0 0deg);
-  --foreground: oklch(98.5% 0 0deg);
-  --card: oklch(17% 0 0deg);
-  --card-foreground: oklch(98.5% 0 0deg);
-  --popover: oklch(14.5% 0 0deg);
-  --popover-foreground: oklch(98.5% 0 0deg);
-  --primary: oklch(98.5% 0 0deg);
-  --primary-foreground: oklch(20.5% 0 0deg);
-  --secondary: oklch(26.9% 0 0deg);
-  --secondary-foreground: oklch(98.5% 0 0deg);
-  --muted: oklch(26.9% 0 0deg);
-  --muted-foreground: oklch(70.8% 0 0deg);
-  --accent: oklch(26.9% 0 0deg);
-  --accent-foreground: oklch(98.5% 0 0deg);
-  --destructive: oklch(39.6% 0.141 25.723deg);
-  --destructive-foreground: oklch(63.7% 0.237 25.331deg);
-  --border: oklch(26.9% 0 0deg);
-  --input: oklch(26.9% 0 0deg);
-  --ring: oklch(43.9% 0 0deg);
-  --chart-1: oklch(48.8% 0.243 264.376deg);
-  --chart-2: oklch(69.6% 0.17 162.48deg);
-  --chart-3: oklch(76.9% 0.188 70.08deg);
-  --chart-4: oklch(62.7% 0.265 303.9deg);
-  --chart-5: oklch(64.5% 0.246 16.439deg);
-  --sidebar: oklch(20.5% 0 0deg);
-  --sidebar-foreground: oklch(98.5% 0 0deg);
-  --sidebar-primary: oklch(48.8% 0.243 264.376deg);
-  --sidebar-primary-foreground: oklch(98.5% 0 0deg);
-  --sidebar-accent: oklch(26.9% 0 0deg);
-  --sidebar-accent-foreground: oklch(98.5% 0 0deg);
-  --sidebar-border: oklch(26.9% 0 0deg);
-  --sidebar-ring: oklch(43.9% 0 0deg);
-  --success: oklch(28% 0.1 200deg);
-  --warning: oklch(35% 0.08 70deg);
-  --error: oklch(45% 0.1 25deg);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-error: var(--error);
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -221,4 +144,174 @@ html {
 html[data-theme='dark'],
 html[data-theme='light'] {
   opacity: initial;
+}
+
+:root {
+  --sidebar: hsl(0 0% 98%);
+  --sidebar-foreground: hsl(240 5.3% 26.1%);
+  --sidebar-primary: hsl(240 5.9% 10%);
+  --sidebar-primary-foreground: hsl(0 0% 98%);
+  --sidebar-accent: hsl(240 4.8% 95.9%);
+  --sidebar-accent-foreground: hsl(240 5.9% 10%);
+  --sidebar-border: hsl(220 13% 91%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+.dark {
+  --sidebar: hsl(240 5.9% 10%);
+  --sidebar-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-primary: hsl(224.3 76.3% 48%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(240 3.7% 15.9%);
+  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-border: hsl(240 3.7% 15.9%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+@theme inline {
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@utility container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+
+  --container-padding-x: 1.25rem;
+  padding-left: var(--container-padding-x);
+  padding-right: var(--container-padding-x);
+
+  @media (width >= 48rem) {
+    --container-padding-x: 2rem;
+    padding-left: var(--container-padding-x);
+    padding-right: var(--container-padding-x);
+  }
+
+  /* Responsive max-widths */
+  @media (width >= 40rem) {
+    max-width: 40rem;
+  }
+
+  @media (width >= 48rem) {
+    max-width: 48rem;
+  }
+
+  @media (width >= 64rem) {
+    max-width: 64rem;
+  }
+
+  @media (width >= 80rem) {
+    max-width: 80rem;
+  }
+
+  @media (width >= 86rem) {
+    max-width: 86rem;
+  }
+}
+
+/* Section blocks — spacing vars from layoutSpacingToCssVars() */
+.section-layout-padding {
+  padding-top: var(--section-pad-top);
+  padding-right: var(--section-pad-right);
+  padding-bottom: var(--section-pad-bottom);
+  padding-left: var(--section-pad-left);
+}
+
+/* Preserve container gutters when CMS spacing only sets vertical padding. */
+.container.section-layout-padding {
+  padding-left: var(--section-pad-left, var(--container-padding-x));
+  padding-right: var(--section-pad-right, var(--container-padding-x));
+}
+
+.section-layout-margin {
+  margin-top: var(--section-mar-top, 0);
+  margin-right: var(--section-mar-right, 0);
+  margin-bottom: var(--section-mar-bottom, 0);
+  margin-left: var(--section-mar-left, 0);
+}
+
+@media (min-width: 768px) {
+  .section-layout-padding {
+    padding-top: var(--section-pad-top-md, var(--section-pad-top));
+    padding-right: var(--section-pad-right-md, var(--section-pad-right));
+    padding-bottom: var(--section-pad-bottom-md, var(--section-pad-bottom));
+    padding-left: var(--section-pad-left-md, var(--section-pad-left));
+  }
+
+  .container.section-layout-padding {
+    padding-left: var(--section-pad-left-md, var(--section-pad-left, var(--container-padding-x)));
+    padding-right: var(
+      --section-pad-right-md,
+      var(--section-pad-right, var(--container-padding-x))
+    );
+  }
+
+  .section-layout-margin {
+    margin-top: var(--section-mar-top-md, var(--section-mar-top, 0));
+    margin-right: var(--section-mar-right-md, var(--section-mar-right, 0));
+    margin-bottom: var(--section-mar-bottom-md, var(--section-mar-bottom, 0));
+    margin-left: var(--section-mar-left-md, var(--section-mar-left, 0));
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-layout-padding {
+    padding-top: var(--section-pad-top-lg, var(--section-pad-top-md, var(--section-pad-top)));
+    padding-right: var(
+      --section-pad-right-lg,
+      var(--section-pad-right-md, var(--section-pad-right))
+    );
+    padding-bottom: var(
+      --section-pad-bottom-lg,
+      var(--section-pad-bottom-md, var(--section-pad-bottom))
+    );
+    padding-left: var(--section-pad-left-lg, var(--section-pad-left-md, var(--section-pad-left)));
+  }
+
+  .container.section-layout-padding {
+    padding-left: var(
+      --section-pad-left-lg,
+      var(--section-pad-left-md, var(--section-pad-left, var(--container-padding-x)))
+    );
+    padding-right: var(
+      --section-pad-right-lg,
+      var(--section-pad-right-md, var(--section-pad-right, var(--container-padding-x)))
+    );
+  }
+  .section-layout-margin {
+    margin-top: var(--section-mar-top-lg, var(--section-mar-top-md, var(--section-mar-top, 0)));
+    margin-right: var(
+      --section-mar-right-lg,
+      var(--section-mar-right-md, var(--section-mar-right, 0))
+    );
+    margin-bottom: var(
+      --section-mar-bottom-lg,
+      var(--section-mar-bottom-md, var(--section-mar-bottom, 0))
+    );
+    margin-left: var(--section-mar-left-lg, var(--section-mar-left-md, var(--section-mar-left, 0)));
+  }
+}
+
+/* Section blocks — flex gap vars from flexLayoutGapToCssVars() */
+.section-layout-flex-gap {
+  gap: var(--section-flex-gap);
+}
+
+@media (min-width: 768px) {
+  .section-layout-flex-gap {
+    gap: var(--section-flex-gap-md, var(--section-flex-gap));
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-layout-flex-gap {
+    gap: var(--section-flex-gap-lg, var(--section-flex-gap-md, var(--section-flex-gap)));
+  }
 }
