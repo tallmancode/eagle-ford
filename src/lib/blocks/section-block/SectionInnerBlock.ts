@@ -16,6 +16,7 @@ export const SectionInnerBlock: Block = {
     plural: 'Sections (Inner)',
   },
   admin: {
+    group: 'Block Wrappers',
     components: {
       Label: '/lib/blocks/section-block/components/SectionBlockLabel',
     },

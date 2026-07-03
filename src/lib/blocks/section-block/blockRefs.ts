@@ -18,6 +18,10 @@ const allBlockRefs: BlockSlug[] = [
   'hours-tabs',
   'faq',
   'contact-footer',
+  'feature-grid',
+  'benefits',
+  'popup-cards',
+  'financeCalculatorBlock',
 ]
 
 /** Nested block slugs for section content. Pass `exclude` to prevent circular blockReferences (stack overflow in admin). */

@@ -19,6 +19,10 @@ import type {
   HoursTabs,
   Faq,
   ContactFooter,
+  FeatureGrid,
+  Benefits,
+  PopupCards,
+  FinanceCalculatorBlockType,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -39,6 +43,10 @@ import { ImageBlockComponent } from '@/lib/blocks/image-block/components/ImageBl
 import { HoursTabsBlockComponent } from '@/lib/blocks/hours-tabs-block/components/HoursTabsBlockComponent'
 import { FaqBlockComponent } from '@/lib/blocks/faq-block/components/FaqBlockComponent'
 import { ContactFooterBlockComponent } from '@/lib/blocks/contact-footer-block/components/ContactFooterBlockComponent'
+import { FeatureGridBlockComponent } from '@/lib/blocks/feature-grid-block/components/FeatureGridBlockComponent'
+import { BenefitsBlockComponent } from '@/lib/blocks/benefits-block/components/BenefitsBlockComponent'
+import { PopupCardsBlockComponent } from '@/lib/blocks/popup-cards-block/components/PopupCardsBlockComponent'
+import { FinanceCalculatorBlockComponent } from '@/lib/blocks/finance-calculator-block/components/FinanceCalculatorBlockComponent'
 
 type BlockComponentMap = {
   section: Section
@@ -60,6 +68,10 @@ type BlockComponentMap = {
   'hours-tabs': HoursTabs
   faq: Faq
   'contact-footer': ContactFooter
+  'feature-grid': FeatureGrid
+  benefits: Benefits
+  'popup-cards': PopupCards
+  financeCalculatorBlock: FinanceCalculatorBlockType
 }
 
 type WithMeta<T> = T & { meta?: unknown }
@@ -90,6 +102,10 @@ const blockComponents: {
   'contact-footer': ContactFooterBlockComponent as unknown as React.ComponentType<
     WithMeta<ContactFooter>
   >,
+  'feature-grid': FeatureGridBlockComponent,
+  benefits: BenefitsBlockComponent,
+  'popup-cards': PopupCardsBlockComponent,
+  financeCalculatorBlock: FinanceCalculatorBlockComponent,
 } as const
 
 type Blocks = Config['blocks']

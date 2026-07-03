@@ -62,6 +62,11 @@ import { default as default_9c512141ec1eddbbee092512a0ec1e94 } from '../../../li
 import { default as default_6f3197c07453688a360c56703708e06a } from '../../../lib/blocks/hours-tabs-block/components/HoursTabsBlockLabel'
 import { default as default_d7fb5d85eea6bc8c516a6af89d5644d8 } from '../../../lib/blocks/faq-block/components/FaqBlockLabel'
 import { default as default_1015795ec1c5572b4dc347a24611f9f2 } from '../../../lib/blocks/contact-footer-block/components/ContactFooterBlockLabel'
+import { LucideIconPicker as LucideIconPicker_ab397823dc968897d484dcdaed123f2a } from '@/lib/fields/lucide-icons/components/LucideIconPicker'
+import { default as default_1935dbb4eb6d1f312f5460164c0758f9 } from '../../../lib/blocks/feature-grid-block/components/FeatureGridBlockLabel'
+import { default as default_d2f28c17ecebea560ecad034b9adce49 } from '../../../lib/blocks/benefits-block/components/BenefitsBlockLabel'
+import { default as default_d4671d0eaa4897481b54a72d51acf32f } from '../../../lib/blocks/popup-cards-block/components/PopupCardsBlockLabel'
+import { default as default_ee0932451d1029052bbbc48e80ff3d1d } from '../../../lib/blocks/finance-calculator-block/components/FinanceCalculatorBlockLabel'
 import { default as default_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/components/BeforeLogin'
 import { default as default_410252c7292359409637c465dfeb7f50 } from '@/views/Login'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -190,6 +195,16 @@ export const importMap = {
     default_d7fb5d85eea6bc8c516a6af89d5644d8,
   '/lib/blocks/contact-footer-block/components/ContactFooterBlockLabel#default':
     default_1015795ec1c5572b4dc347a24611f9f2,
+  '@/lib/fields/lucide-icons/components/LucideIconPicker#LucideIconPicker':
+    LucideIconPicker_ab397823dc968897d484dcdaed123f2a,
+  '/lib/blocks/feature-grid-block/components/FeatureGridBlockLabel#default':
+    default_1935dbb4eb6d1f312f5460164c0758f9,
+  '/lib/blocks/benefits-block/components/BenefitsBlockLabel#default':
+    default_d2f28c17ecebea560ecad034b9adce49,
+  '/lib/blocks/popup-cards-block/components/PopupCardsBlockLabel#default':
+    default_d4671d0eaa4897481b54a72d51acf32f,
+  '/lib/blocks/finance-calculator-block/components/FinanceCalculatorBlockLabel#default':
+    default_ee0932451d1029052bbbc48e80ff3d1d,
   '@/components/BeforeLogin#default': default_8a7ab0eb7ab5c511aba12e68480bfe5e,
   '@/views/Login#default': default_410252c7292359409637c465dfeb7f50,
   '@payloadcms/next/rsc#CollectionCards': CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,

@@ -119,6 +119,10 @@ export interface Config {
     'hours-tabs': HoursTabs;
     faq: Faq;
     'contact-footer': ContactFooter;
+    'feature-grid': FeatureGrid;
+    benefits: Benefits;
+    'popup-cards': PopupCards;
+    financeCalculatorBlock: FinanceCalculatorBlockType;
   };
   collections: {
     users: User;
@@ -232,6 +236,10 @@ export interface Section {
         | HoursTabs
         | Faq
         | ContactFooter
+        | FeatureGrid
+        | Benefits
+        | PopupCards
+        | FinanceCalculatorBlockType
       )[]
     | null;
   backgroundColor?:
@@ -347,6 +355,10 @@ export interface SectionInner {
         | HoursTabs
         | Faq
         | ContactFooter
+        | FeatureGrid
+        | Benefits
+        | PopupCards
+        | FinanceCalculatorBlockType
       )[]
     | null;
   backgroundColor?:
@@ -1577,6 +1589,119 @@ export interface ContactFooter {
   id?: string | null;
   blockName?: string | null;
   blockType: 'contact-footer';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureGrid".
+ */
+export interface FeatureGrid {
+  columns?: ('1' | '2' | '3') | null;
+  items: {
+    icon: string;
+    label: string;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'feature-grid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Benefits".
+ */
+export interface Benefits {
+  columns?: ('1' | '2' | '3') | null;
+  items: {
+    icon: string;
+    title: string;
+    description: string;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'benefits';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PopupCards".
+ */
+export interface PopupCards {
+  columns?: ('1' | '2' | '3') | null;
+  cards: {
+    image: string | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    icon: string;
+    title: string;
+    description: string;
+    buttonLabel: string;
+    popupTitle: string;
+    popupSubtitle?: string | null;
+    /**
+     * Optional paragraph shown before popup sections.
+     */
+    popupIntro?: string | null;
+    popupSections?:
+      | {
+          label?: string | null;
+          style: 'text' | 'checkList' | 'numberedList' | 'richText';
+          text?: string | null;
+          items?:
+            | {
+                text: string;
+                id?: string | null;
+              }[]
+            | null;
+          content?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          /**
+           * Adds a top border before this section.
+           */
+          showDivider?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'popup-cards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FinanceCalculatorBlockType".
+ */
+export interface FinanceCalculatorBlockType {
+  /**
+   * Optional heading displayed above the calculator.
+   */
+  heading?: string | null;
+  /**
+   * Pre-fills the purchase price field (ZAR).
+   */
+  defaultPurchasePrice?: number | null;
+  /**
+   * Optional legal or estimate disclaimer shown below the results.
+   */
+  disclaimer?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'financeCalculatorBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
