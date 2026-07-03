@@ -1,7 +1,19 @@
 import { Section, SectionInner } from '@/payload-types'
 import { RenderBlocks, renderBlock } from '@/lib/blocks/RenderBlocks'
-import type { LayoutSpacingValue } from '@/lib/fields/layout-field/utils/layout-utils'
-import { mergeLayoutSpacingWithDefaults } from '@/lib/fields/layout-field/utils/layout-utils'
+import type {
+  FlexLayoutValue,
+  LayoutSpacingValue,
+} from '@/lib/fields/layout-field/utils/layout-utils'
+import {
+  flexLayoutGapToCssVars,
+  flexLayoutHasConfig,
+  flexLayoutHasGap,
+  flexLayoutToClassName,
+  layoutVisibilityToClassName,
+  mergeFlexLayoutWithDefaults,
+  mergeLayoutSpacingWithDefaults,
+} from '@/lib/fields/layout-field/utils/layout-utils'
+import type { LayoutVisibilityValue } from '@/lib/fields/layout-field/utils/layout-utils'
 
 import React, { JSX } from 'react'
 import {
@@ -91,6 +103,24 @@ export const SectionBlock: React.FC<Section | SectionInner> = (props) => {
       ? mergeLayoutSpacingWithDefaults(raw as LayoutSpacingValue, [])
       : null
 
+  const rawFlex = props.layout?.flex
+  const layoutFlexNormalized =
+    rawFlex !== null &&
+    rawFlex !== undefined &&
+    typeof rawFlex === 'object' &&
+    !Array.isArray(rawFlex)
+      ? mergeFlexLayoutWithDefaults(rawFlex as FlexLayoutValue)
+      : null
+
+  const useFlexLayout =
+    (!gridCols || gridCols === '1') &&
+    layoutFlexNormalized !== null &&
+    flexLayoutHasConfig(layoutFlexNormalized)
+
+  const flexClass = useFlexLayout ? flexLayoutToClassName(layoutFlexNormalized) : ''
+  const hasFlexGap = useFlexLayout && flexLayoutHasGap(layoutFlexNormalized)
+  const flexGapClass = hasFlexGap ? 'section-layout-flex-gap' : ''
+
   const hasLayoutSpacingPadding = layoutSpacingNormalized
     ? layoutSpacingHasVars(layoutSpacingNormalized, 'padding')
     : false
@@ -100,17 +130,34 @@ export const SectionBlock: React.FC<Section | SectionInner> = (props) => {
     : false
 
   const spacingStyle =
-    hasLayoutSpacingPadding || hasLayoutSpacingMargin
-      ? layoutSpacingToCssVars(layoutSpacingNormalized!)
+    hasLayoutSpacingPadding || hasLayoutSpacingMargin || hasFlexGap
+      ? {
+          ...((hasLayoutSpacingPadding || hasLayoutSpacingMargin) && layoutSpacingNormalized
+            ? layoutSpacingToCssVars(layoutSpacingNormalized)
+            : {}),
+          ...(hasFlexGap && layoutFlexNormalized
+            ? flexLayoutGapToCssVars(layoutFlexNormalized)
+            : {}),
+        }
       : undefined
 
   const containerClass = container ? 'container' : ''
   const spacingClassPadding = hasLayoutSpacingPadding ? 'section-layout-padding' : ''
   const spacingClassMargin = hasLayoutSpacingMargin ? 'section-layout-margin' : ''
-  const verticalAlignClass = verticalAlign ? (verticalAlignClassMap[verticalAlign] ?? '') : ''
-  const gridColsClass = gridCols ? (gridColsClassMap[gridCols] ?? '') : ''
+  const verticalAlignClass =
+    useFlexLayout || !verticalAlign ? '' : (verticalAlignClassMap[verticalAlign] ?? '')
+  const gridColsClass = gridCols && gridCols !== '1' ? (gridColsClassMap[gridCols] ?? '') : ''
   const backgroundClass = backgroundColorToClass(backgroundColor)
   const backgroundStyleClass = sectionBackgroundStyleToClass(backgroundStyle)
+
+  const rawVisibility = props.layout?.visibility
+  const visibilityClass =
+    rawVisibility !== null &&
+    rawVisibility !== undefined &&
+    typeof rawVisibility === 'object' &&
+    !Array.isArray(rawVisibility)
+      ? layoutVisibilityToClassName(rawVisibility as LayoutVisibilityValue)
+      : ''
 
   const landmark = accessibility?.landmark
   const Tag = (
@@ -129,13 +176,25 @@ export const SectionBlock: React.FC<Section | SectionInner> = (props) => {
     tabIndex: accessibility?.tabIndex ? Number(accessibility.tabIndex) : undefined,
   }
 
-  const contentClasses = [containerClass, spacingClassPadding, verticalAlignClass, gridColsClass]
+  const contentClasses = [
+    containerClass,
+    spacingClassPadding,
+    flexClass,
+    flexGapClass,
+    verticalAlignClass,
+    gridColsClass,
+  ]
     .filter(Boolean)
     .join(' ')
 
   // Background on the same element as `container` only spans the max-width box — wrap when both are set.
   if ((backgroundClass || backgroundStyleClass) && container) {
-    const outerClassName = [backgroundClass, backgroundStyleClass, spacingClassMargin]
+    const outerClassName = [
+      backgroundClass,
+      backgroundStyleClass,
+      spacingClassMargin,
+      visibilityClass,
+    ]
       .filter(Boolean)
       .join(' ')
     return (
@@ -151,8 +210,11 @@ export const SectionBlock: React.FC<Section | SectionInner> = (props) => {
     containerClass,
     spacingClassPadding,
     spacingClassMargin,
+    flexClass,
+    flexGapClass,
     verticalAlignClass,
     gridColsClass,
+    visibilityClass,
   ]
     .filter(Boolean)
     .join(' ')

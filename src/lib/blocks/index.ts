@@ -16,6 +16,7 @@ import { CtaCardsBlock } from '@/lib/blocks/cta-cards-block/CtaCardsBlock'
 import { StatsBlock } from '@/lib/blocks/stats-block/StatsBlock'
 import { HoursTabsBlock } from '@/lib/blocks/hours-tabs-block/HoursTabsBlock'
 import { FaqBlock } from '@/lib/blocks/faq-block/FaqBlock'
+import { ContactFooterBlock } from '@/lib/blocks/contact-footer-block/ContactFooterBlock'
 
 const Blocks = [
   SectionBlock,
@@ -36,6 +37,7 @@ const Blocks = [
   StatsBlock,
   HoursTabsBlock,
   FaqBlock,
+  ContactFooterBlock,
 ]
 
 export default Blocks

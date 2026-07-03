@@ -36,6 +36,48 @@
 @source inline("border-warning");
 @source inline("bg-warning/30");
 
+/* LayoutField flex utilities (generated at runtime by flexLayoutToClassName) */
+@source inline("flex");
+@source inline("flex-row");
+@source inline("flex-col");
+@source inline("justify-start");
+@source inline("justify-center");
+@source inline("justify-end");
+@source inline("justify-between");
+@source inline("justify-around");
+@source inline("justify-evenly");
+@source inline("items-start");
+@source inline("items-center");
+@source inline("items-end");
+@source inline("items-stretch");
+@source inline("items-baseline");
+@source inline("md:flex-row");
+@source inline("md:flex-col");
+@source inline("md:justify-start");
+@source inline("md:justify-center");
+@source inline("md:justify-end");
+@source inline("md:justify-between");
+@source inline("md:justify-around");
+@source inline("md:justify-evenly");
+@source inline("md:items-start");
+@source inline("md:items-center");
+@source inline("md:items-end");
+@source inline("md:items-stretch");
+@source inline("md:items-baseline");
+@source inline("lg:flex-row");
+@source inline("lg:flex-col");
+@source inline("lg:justify-start");
+@source inline("lg:justify-center");
+@source inline("lg:justify-end");
+@source inline("lg:justify-between");
+@source inline("lg:justify-around");
+@source inline("lg:justify-evenly");
+@source inline("lg:items-start");
+@source inline("lg:items-center");
+@source inline("lg:items-end");
+@source inline("lg:items-stretch");
+@source inline("lg:items-baseline");
+
 @theme {
   --breakpoint-sm: 40rem;
   --breakpoint-md: 48rem;
@@ -254,5 +296,22 @@ html[data-theme='light'] {
       var(--section-mar-bottom-md, var(--section-mar-bottom, 0))
     );
     margin-left: var(--section-mar-left-lg, var(--section-mar-left-md, var(--section-mar-left, 0)));
+  }
+}
+
+/* Section blocks — flex gap vars from flexLayoutGapToCssVars() */
+.section-layout-flex-gap {
+  gap: var(--section-flex-gap);
+}
+
+@media (min-width: 768px) {
+  .section-layout-flex-gap {
+    gap: var(--section-flex-gap-md, var(--section-flex-gap));
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-layout-flex-gap {
+    gap: var(--section-flex-gap-lg, var(--section-flex-gap-md, var(--section-flex-gap)));
   }
 }

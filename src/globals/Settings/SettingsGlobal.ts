@@ -43,6 +43,14 @@ export const SettingsGlobal: GlobalConfig = {
                 return pattern.test(value) || 'Must be a valid phone number (e.g. +27 11 123 4567)'
               },
             },
+            {
+              name: 'operationHours',
+              label: 'Operating Hours',
+              type: 'text',
+              admin: {
+                description: 'e.g. Mon – Fri: 08:00 – 17:00 & Sat: 08:00 – 12:30',
+              },
+            },
             AddressField(),
           ],
         },

@@ -32,6 +32,7 @@ import { ColorField as ColorField_31c0780c96066ad2689556a239466438 } from '@/lib
 import { SocialIconRowLabel as SocialIconRowLabel_27f6a7a8b6f24a71f102f20c13591ee6 } from '@/lib/fields/social-icons/components/SocialIconRowLabel'
 import { SeedButtonsComponent as SeedButtonsComponent_fdfc3e37576a0e6bfa4567073a5dec60 } from '@/lib/fields/seed-buttons/SeedButtonsComponent'
 import { SpacingLayoutField as SpacingLayoutField_159c820f40a576f4549e5527a6f70bac } from '@/lib/fields/layout-field/components/SpacingLayoutField'
+import { VisibilityLayoutField as VisibilityLayoutField_a24a3da0769b86a04fcfabb0206dea74 } from '@/lib/fields/layout-field/components/VisibilityLayoutField'
 import { default as default_e301b8bae2b26609d383354140baa92e } from '../../../lib/blocks/section-block/components/SectionBlockLabel'
 import { HeroTemplateField as HeroTemplateField_27d1cf759e24d534a822506b2c26c92e } from '@/lib/blocks/hero-block/components/HeroTemplateField'
 import { default as default_6dfbadc7d66d6d7531a6ba376b0806b8 } from '../../../lib/blocks/hero-block/components/HeroBlockLabel'
@@ -60,6 +61,7 @@ import { default as default_cc6684bfc9bca610c54f9ccdff085d70 } from '../../../li
 import { default as default_9c512141ec1eddbbee092512a0ec1e94 } from '../../../lib/blocks/stats-block/components/StatsBlockLabel'
 import { default as default_6f3197c07453688a360c56703708e06a } from '../../../lib/blocks/hours-tabs-block/components/HoursTabsBlockLabel'
 import { default as default_d7fb5d85eea6bc8c516a6af89d5644d8 } from '../../../lib/blocks/faq-block/components/FaqBlockLabel'
+import { default as default_1015795ec1c5572b4dc347a24611f9f2 } from '../../../lib/blocks/contact-footer-block/components/ContactFooterBlockLabel'
 import { default as default_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/components/BeforeLogin'
 import { default as default_410252c7292359409637c465dfeb7f50 } from '@/views/Login'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -128,6 +130,8 @@ export const importMap = {
     SeedButtonsComponent_fdfc3e37576a0e6bfa4567073a5dec60,
   '@/lib/fields/layout-field/components/SpacingLayoutField#SpacingLayoutField':
     SpacingLayoutField_159c820f40a576f4549e5527a6f70bac,
+  '@/lib/fields/layout-field/components/VisibilityLayoutField#VisibilityLayoutField':
+    VisibilityLayoutField_a24a3da0769b86a04fcfabb0206dea74,
   '/lib/blocks/section-block/components/SectionBlockLabel#default':
     default_e301b8bae2b26609d383354140baa92e,
   '@/lib/blocks/hero-block/components/HeroTemplateField#HeroTemplateField':
@@ -184,6 +188,8 @@ export const importMap = {
     default_6f3197c07453688a360c56703708e06a,
   '/lib/blocks/faq-block/components/FaqBlockLabel#default':
     default_d7fb5d85eea6bc8c516a6af89d5644d8,
+  '/lib/blocks/contact-footer-block/components/ContactFooterBlockLabel#default':
+    default_1015795ec1c5572b4dc347a24611f9f2,
   '@/components/BeforeLogin#default': default_8a7ab0eb7ab5c511aba12e68480bfe5e,
   '@/views/Login#default': default_410252c7292359409637c465dfeb7f50,
   '@payloadcms/next/rsc#CollectionCards': CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,

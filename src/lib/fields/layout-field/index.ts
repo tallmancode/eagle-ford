@@ -1,7 +1,11 @@
 import type { GroupField, LabelFunction, StaticLabel } from 'payload'
 import {
+  defaultFlexLayoutValue,
   defaultLayoutSpacingForExclude,
+  defaultLayoutVisibilityValue,
+  validateFlexLayoutValue,
   validateLayoutSpacingValue,
+  validateLayoutVisibilityValue,
 } from '@/lib/fields/layout-field/utils/layout-utils'
 
 export const LayoutField = ({
@@ -36,6 +40,31 @@ export const LayoutField = ({
         },
         defaultValue: defaultLayoutSpacingForExclude(excludeList),
         validate: validateLayoutSpacingValue,
+      },
+      {
+        type: 'json',
+        name: 'flex',
+        label: 'Flex',
+        admin: {
+          hidden: true,
+        },
+        defaultValue: defaultFlexLayoutValue(),
+        validate: validateFlexLayoutValue,
+      },
+      {
+        type: 'json',
+        name: 'visibility',
+        label: 'Visibility',
+        admin: {
+          description: 'Hide this section at specific screen sizes.',
+          components: {
+            Field: {
+              path: '@/lib/fields/layout-field/components/VisibilityLayoutField#VisibilityLayoutField',
+            },
+          },
+        },
+        defaultValue: defaultLayoutVisibilityValue(),
+        validate: validateLayoutVisibilityValue,
       },
     ],
   }
