@@ -90,6 +90,7 @@ export const StandardHeading: React.FC<Heading> = (props) => {
     sizes.heading,
     blockColors.heading,
     uppercase ? 'uppercase' : '',
+    'mb-2',
   ]
     .filter(Boolean)
     .join(' ')

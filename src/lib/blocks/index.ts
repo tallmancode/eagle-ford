@@ -17,6 +17,10 @@ import { StatsBlock } from '@/lib/blocks/stats-block/StatsBlock'
 import { HoursTabsBlock } from '@/lib/blocks/hours-tabs-block/HoursTabsBlock'
 import { FaqBlock } from '@/lib/blocks/faq-block/FaqBlock'
 import { ContactFooterBlock } from '@/lib/blocks/contact-footer-block/ContactFooterBlock'
+import { FeatureGridBlock } from '@/lib/blocks/feature-grid-block/FeatureGridBlock'
+import { BenefitsBlock } from '@/lib/blocks/benefits-block/BenefitsBlock'
+import { PopupCardsBlock } from '@/lib/blocks/popup-cards-block/PopupCardsBlock'
+import { FinanceCalculatorBlock } from '@/lib/blocks/finance-calculator-block/FinanceCalculatorBlock'
 
 const Blocks = [
   SectionBlock,
@@ -38,6 +42,10 @@ const Blocks = [
   HoursTabsBlock,
   FaqBlock,
   ContactFooterBlock,
+  FeatureGridBlock,
+  BenefitsBlock,
+  PopupCardsBlock,
+  FinanceCalculatorBlock,
 ]
 
 export default Blocks

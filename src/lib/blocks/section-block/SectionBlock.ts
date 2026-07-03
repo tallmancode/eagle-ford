@@ -12,11 +12,15 @@ export const SectionBlock: Block = {
     plural: 'Sections',
   },
   admin: {
+    group: 'Block Wrappers',
     components: {
       Label: '/lib/blocks/section-block/components/SectionBlockLabel',
     },
     images: {
-      thumbnail: '/blocks/section-block.jpg',
+      thumbnail: {
+        url: '/blocks/section-block.jpg',
+        alt: 'Section block - add a section to your page',
+      },
     },
   },
   fields: [
