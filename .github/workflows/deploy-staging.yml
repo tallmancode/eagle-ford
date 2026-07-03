@@ -1,0 +1,201 @@
+name: Deploy Staging
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+env:
+  NODE_ENV: production
+  NEXT_TELEMETRY_DISABLED: 1
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Validate required secrets
+        run: |
+          if [ -z "${{ secrets.SSH_KEY }}" ]; then
+            echo "::error::Missing SSH_KEY (set on the staging environment or repository secrets)"
+            exit 1
+          fi
+          if [ -z "${{ secrets.SSH_HOST }}" ]; then
+            echo "::error::Missing SSH_HOST (set on the staging environment or repository secrets)"
+            exit 1
+          fi
+          if [ -z "${{ secrets.SSH_USER }}" ]; then
+            echo "::error::Missing SSH_USER (set on the staging environment or repository secrets)"
+            exit 1
+          fi
+          if [ -z "${{ secrets.APP_ENV }}" ]; then
+            echo "::error::Missing APP_ENV (set on the staging environment or repository secrets)"
+            exit 1
+          fi
+
+      - name: Setup SSH Agent
+        uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Deploy to Server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          APP_ENV: ${{ secrets.APP_ENV }}
+          APP_DIR: ${{ secrets.APP_DIR || '/www/wwwroot' }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -e
+
+          SSH_OPTS="-o StrictHostKeyChecking=no -p $SSH_PORT"
+          SCP_OPTS="-o StrictHostKeyChecking=no -P $SSH_PORT"
+          DEPLOY_BRANCH="staging"
+          ENV_FILE="$(mktemp)"
+          trap 'rm -f "$ENV_FILE"' EXIT
+
+          printf '%s\n' "$APP_ENV" > "$ENV_FILE"
+          if [ ! -s "$ENV_FILE" ]; then
+            echo "::error::Failed to write APP_ENV to temp file"
+            exit 1
+          fi
+          if grep -q '^PAYLOAD_CONFIG_PATH=' "$ENV_FILE"; then
+            echo "::error::PAYLOAD_CONFIG_PATH must not be set in APP_ENV for Docker deploy."
+            echo "::error::Remove it from the staging environment secret — the container resolves config via @payload-config at /app."
+            exit 1
+          fi
+
+          echo "========================================"
+          echo "Syncing repository on $APP_DIR"
+          echo "========================================"
+
+          ssh $SSH_OPTS "$SSH_USER@$SSH_HOST" "
+            set -e
+
+            # Source shell profile to ensure PATH includes docker
+            [ -f ~/.bashrc ] && source ~/.bashrc || true
+            [ -f ~/.bash_profile ] && source ~/.bash_profile || true
+            [ -f ~/.profile ] && source ~/.profile || true
+
+            SERVER_PATH='$APP_DIR'
+
+            git config --global --add safe.directory \"\$SERVER_PATH\"
+
+            if [ ! -d \"\$SERVER_PATH/.git\" ]; then
+              echo 'Cloning repository...'
+              if [ -d \"\$SERVER_PATH\" ] && [ -w \"\$SERVER_PATH\" ]; then
+                rm -rf \"\$SERVER_PATH\"
+              elif [ -d \"\$SERVER_PATH\" ]; then
+                echo 'Warning: Cannot remove existing directory, will attempt to clone into it'
+                if [ -d \"\$SERVER_PATH/.git\" ]; then
+                  echo 'Git directory already exists, skipping clone'
+                  cd \"\$SERVER_PATH\"
+                else
+                  echo 'ERROR: Directory exists but is not a git repository and cannot be removed'
+                  exit 1
+                fi
+              fi
+              if [ ! -d \"\$SERVER_PATH/.git\" ]; then
+                mkdir -p \"\$SERVER_PATH\"
+                git clone git@github.com:$GITHUB_REPOSITORY.git \"\$SERVER_PATH\"
+                cd \"\$SERVER_PATH\"
+                git checkout '$DEPLOY_BRANCH' || git checkout -b '$DEPLOY_BRANCH' origin/'$DEPLOY_BRANCH'
+              fi
+            else
+              echo 'Pulling latest changes...'
+              cd \"\$SERVER_PATH\"
+              git fetch origin
+              git reset --hard origin/'$DEPLOY_BRANCH'
+            fi
+
+            echo 'Repository updated successfully'
+          "
+
+          echo 'Uploading .env to server...'
+          scp $SCP_OPTS "$ENV_FILE" "$SSH_USER@$SSH_HOST:$APP_DIR/.env"
+          echo "✓ .env file uploaded"
+
+          ssh $SSH_OPTS "$SSH_USER@$SSH_HOST" "
+            set -e
+
+            [ -f ~/.bashrc ] && source ~/.bashrc || true
+            [ -f ~/.bash_profile ] && source ~/.bash_profile || true
+            [ -f ~/.profile ] && source ~/.profile || true
+
+            cd '$APP_DIR'
+
+            if ! command -v docker >/dev/null 2>&1; then
+              echo 'ERROR: docker not found. Install Docker on the VPS and add the deploy user to the docker group.'
+              exit 1
+            fi
+
+            if ! docker compose version >/dev/null 2>&1; then
+              echo 'ERROR: docker compose not found. Install the Docker Compose plugin.'
+              exit 1
+            fi
+
+            echo \"Docker version: \$(docker --version)\"
+            echo \"Compose version: \$(docker compose version)\"
+
+            export DOCKER_BUILDKIT=1
+            chmod +x scripts/docker-deploy-prod.sh
+
+            echo ''
+            echo '========================================'
+            echo 'Building and starting Docker containers'
+            echo '========================================'
+
+            if ! ./scripts/docker-deploy-prod.sh; then
+              echo 'ERROR: docker-deploy-prod.sh failed. Check the output above.'
+              exit 1
+            fi
+
+            echo ''
+            echo '========================================'
+            echo 'Verifying deployment'
+            echo '========================================'
+
+            docker compose -f docker-compose.prod.yml ps
+
+            if ! docker compose -f docker-compose.prod.yml ps --status running | grep -q app; then
+              echo 'ERROR: app container is not running'
+              docker compose -f docker-compose.prod.yml logs app --tail 50
+              exit 1
+            fi
+
+            if ! docker compose -f docker-compose.prod.yml ps --status running | grep -q mongo; then
+              echo 'ERROR: mongo container is not running'
+              docker compose -f docker-compose.prod.yml logs mongo --tail 50
+              exit 1
+            fi
+
+            if ! curl -sf http://127.0.0.1:4411 > /dev/null; then
+              echo 'App not ready immediately — waiting for startup (Next.js can take up to 2 minutes)...'
+              ready=0
+              for i in \$(seq 1 30); do
+                if curl -sf http://127.0.0.1:4411 > /dev/null; then
+                  ready=1
+                  echo \"✓ App responded on port 4411 (attempt \$i)\"
+                  break
+                fi
+                echo \"  Attempt \$i/30 — not ready yet, waiting 5s...\"
+                sleep 5
+              done
+              if [ \"\$ready\" -ne 1 ]; then
+                echo 'ERROR: app is not responding on port 4411 after 150s'
+                docker compose -f docker-compose.prod.yml logs app --tail 100
+                exit 1
+              fi
+            else
+              echo '✓ App responded on port 4411'
+            fi
+
+            echo ''
+            echo '========================================'
+            echo '✓ Staging deployment completed successfully!'
+            echo '✓ App and mongo containers are running'
+            echo '========================================'
+          "

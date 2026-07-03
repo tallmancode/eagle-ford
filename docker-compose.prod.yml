@@ -1,0 +1,53 @@
+networks:
+  internal:
+
+services:
+  app:
+    image: ${APP_IMAGE:-eagle-ford-app:latest}
+    ports:
+      - '${APP_HOST_PORT:-4411}:3000'
+    env_file:
+      - .env
+    volumes:
+      - media_uploads:/app/public/media
+    networks:
+      - internal
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 120s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - '${MONGO_HOST_PORT:-4422}:27017'
+    command:
+      - --storageEngine=wiredTiger
+    volumes:
+      - data:/data/db
+    networks:
+      - internal
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      interval: 120s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    logging:
+      driver: none
+
+volumes:
+  data:
+  media_uploads:
