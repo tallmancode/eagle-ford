@@ -69,7 +69,7 @@ export const UsersCollection: CollectionConfig = {
         },
       ],
       filterOptions: ({ options, req }) =>
-        req.user?.roles?.includes('developer')
+        req.user?.roles?.includes('developer') || req.user?.roles?.includes('admin')
           ? options
           : options.filter(
               (option) => (typeof option === 'string' ? options : option.value) !== 'developer',
