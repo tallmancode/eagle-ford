@@ -12,6 +12,7 @@ import { draftMode } from 'next/headers'
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
+import { CRAWLER_BLOCK_ROBOTS } from '@/constants/crawlerPolicy'
 import { SITE_FAVICON_ICONS } from '@/constants/siteIcons'
 import { SiteHeader } from '@/components/header/SiteHeader'
 import { SiteFooter } from '@/components/footer/SiteFooter'
@@ -62,6 +63,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 export const metadata: Metadata = {
   metadataBase: new URL(getServerSideURL()),
+  robots: CRAWLER_BLOCK_ROBOTS,
   openGraph: mergeOpenGraph(),
   icons: SITE_FAVICON_ICONS,
   twitter: {

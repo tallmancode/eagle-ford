@@ -1,4 +1,5 @@
 import { Media } from '@/components/Media'
+import { MobileNav } from '@/components/header/MobileNav'
 import { NavMenuItems } from '@/components/header/NavMenuItems'
 import { Header as GlobalHeader } from '@/payload-types'
 import Link from 'next/link'
@@ -10,23 +11,35 @@ type MainNavProps = {
 }
 
 export const MainNav = ({ headerLogo, leftLinks, rightLinks }: MainNavProps) => {
+  const mobileLinks = [...(leftLinks ?? []), ...(rightLinks ?? [])]
+
   return (
-    <div className="flex justify-between items-center container py-2">
-      <NavMenuItems
-        links={leftLinks}
-        className="flex space-x-4 items-center"
-        linkClassName="text-secondary font-bold text-sm"
-      />
+    <div className="relative flex justify-between items-center container py-2">
+      <div className="flex items-center lg:flex-1">
+        <MobileNav links={mobileLinks} logo={headerLogo} className="lg:hidden" />
+        <NavMenuItems
+          links={leftLinks}
+          className="hidden lg:flex space-x-4 items-center"
+          linkClassName="text-secondary font-bold text-sm"
+        />
+      </div>
       {typeof headerLogo === 'object' && headerLogo && (
-        <Link href="/" aria-label="Home">
+        <Link
+          href="/"
+          aria-label="Home"
+          className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0"
+        >
           <Media resource={headerLogo} imgClassName="lg:w-36 w-28" priority />
         </Link>
       )}
-      <NavMenuItems
-        links={rightLinks}
-        className="flex space-x-4 items-center"
-        linkClassName="text-secondary font-bold text-sm"
-      />
+      <div className="flex items-center justify-end lg:flex-1">
+        <NavMenuItems
+          links={rightLinks}
+          className="hidden lg:flex space-x-4 items-center"
+          linkClassName="text-secondary font-bold text-sm"
+        />
+        <div className="w-10 lg:hidden" aria-hidden="true" />
+      </div>
     </div>
   )
 }
