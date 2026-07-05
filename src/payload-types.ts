@@ -124,6 +124,8 @@ export interface Config {
     benefits: Benefits;
     'popup-cards': PopupCards;
     financeCalculatorBlock: FinanceCalculatorBlockType;
+    'back-button': BackButton;
+    'benefits-grid': BenefitsGrid;
   };
   collections: {
     users: User;
@@ -222,6 +224,7 @@ export interface Section {
         | ContactInfo
         | IconText
         | CtaButton
+        | BackButton
         | WhyCards
         | Map
         | TeamGrid
@@ -233,6 +236,7 @@ export interface Section {
         | ContactFooter
         | FeatureGrid
         | Benefits
+        | BenefitsGrid
         | PopupCards
         | FinanceCalculatorBlockType
       )[]
@@ -341,6 +345,7 @@ export interface SectionInner {
         | ContactInfo
         | IconText
         | CtaButton
+        | BackButton
         | WhyCards
         | Map
         | TeamGrid
@@ -352,6 +357,7 @@ export interface SectionInner {
         | ContactFooter
         | FeatureGrid
         | Benefits
+        | BenefitsGrid
         | PopupCards
         | FinanceCalculatorBlockType
       )[]
@@ -1376,6 +1382,24 @@ export interface CtaButton {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "back-button".
+ */
+export interface BackButton {
+  label: string;
+  variant?: ('default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'white') | null;
+  /**
+   * Used when there is no browser history (e.g. direct link or new tab).
+   */
+  fallbackUrl?: string | null;
+  showIcon?: boolean | null;
+  size?: ('sm' | 'default' | 'lg') | null;
+  align?: ('left' | 'center' | 'right') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'back-button';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "WhyCards".
  */
 export interface WhyCards {
@@ -1588,6 +1612,36 @@ export interface Benefits {
   id?: string | null;
   blockName?: string | null;
   blockType: 'benefits';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BenefitsGrid".
+ */
+export interface BenefitsGrid {
+  columns?: ('1' | '2' | '3') | null;
+  items: {
+    image: string | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    title: string;
+    description: string;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+      label?: string | null;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'benefits-grid';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
