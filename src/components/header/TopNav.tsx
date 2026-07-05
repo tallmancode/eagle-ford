@@ -17,7 +17,7 @@ export const TopNav = ({
   const addressLine = formatContactAddress(address)
 
   return (
-    <div className="w-full bg-primary-500 py-2 text-sm">
+    <div className="w-full bg-primary-500 py-2 text-sm hidden lg:block">
       <div className="flex  text-light-50 container  mx-auto justify-between">
         <div className="flex space-x-2 items-center">
           {topNavProps?.homeLinkText && (

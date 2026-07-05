@@ -19,6 +19,7 @@ export const ImageBlock: Block = {
       relationTo: 'media',
       label: 'Image',
       required: true,
+      admin: {},
     },
     {
       name: 'alt',
