@@ -48,10 +48,43 @@ export const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }
   }
 }
 
+const richTextLinkClassName = 'text-primary underline underline-offset-2 hover:opacity-80'
+
+const styledLinkConverters = (() => {
+  const linkConverters = LinkJSXConverter({ internalDocToHref })
+
+  const applyLinkClass = (element: React.ReactNode) => {
+    if (!React.isValidElement<{ className?: string }>(element)) return element
+
+    return React.cloneElement(element, {
+      className: cn(richTextLinkClassName, element.props.className),
+    })
+  }
+
+  return {
+    link: (
+      args: Parameters<
+        Extract<NonNullable<typeof linkConverters.link>, (...args: never) => unknown>
+      >[0],
+    ) => {
+      if (typeof linkConverters.link !== 'function') return null
+      return applyLinkClass(linkConverters.link(args))
+    },
+    autolink: (
+      args: Parameters<
+        Extract<NonNullable<typeof linkConverters.autolink>, (...args: never) => unknown>
+      >[0],
+    ) => {
+      if (typeof linkConverters.autolink !== 'function') return null
+      return applyLinkClass(linkConverters.autolink(args))
+    },
+  }
+})()
+
 // JSX converters for rich text content
 export const richTextConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
   ...defaultConverters,
-  ...LinkJSXConverter({ internalDocToHref }),
+  ...styledLinkConverters,
   text: (args) => {
     const { node, nodesToJSX: _nodesToJSX } = args
     // Apply base formatting via the default text converter

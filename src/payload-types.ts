@@ -12,7 +12,7 @@
  */
 export type NavLinks =
   | {
-      type?: ('reference' | 'custom' | 'dropdown') | null;
+      type?: ('reference' | 'custom' | 'dropdown' | 'upload') | null;
       variant?: ('link' | 'button') | null;
       target?: ('_blank' | '_self' | '_parent' | '_top') | null;
       label?: string | null;
@@ -21,6 +21,7 @@ export type NavLinks =
         value: string | Page;
       } | null;
       url?: string | null;
+      document?: (string | null) | Media;
       /**
        * Optional link for the parent menu label
        */
@@ -2909,6 +2910,7 @@ export interface NavLinksSelect<T extends boolean = true> {
   label?: T;
   reference?: T;
   url?: T;
+  document?: T;
   parentLinkType?: T;
   children?:
     | T

@@ -28,7 +28,12 @@ export const FooterGlobal: GlobalConfig = {
               },
             },
             {
-              ...NavLinksField({ name: 'bottomBarLink', maxRows: 1, relationTo: ['pages'] }),
+              ...NavLinksField({
+                name: 'bottomBarLink',
+                maxRows: 1,
+                relationTo: ['pages'],
+                enableUploadLink: true,
+              }),
               label: 'Bottom Bar Link',
               admin: {
                 isSortable: false,
@@ -123,7 +128,12 @@ export const FooterGlobal: GlobalConfig = {
                         description: 'Column heading displayed above the list of links.',
                       },
                     },
-                    NavLinksField({ name: 'links', maxRows: 20, relationTo: ['pages'] }),
+                    NavLinksField({
+                      name: 'links',
+                      maxRows: 20,
+                      relationTo: ['pages'],
+                      enableUploadLink: true,
+                    }),
                   ],
                 },
                 {

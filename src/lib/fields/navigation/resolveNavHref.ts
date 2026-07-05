@@ -1,5 +1,6 @@
-import type { NavLinks } from '@/payload-types'
+import type { Media, NavLinks } from '@/payload-types'
 import { getPagePath } from '@/lib/utils/getPagePath'
+import { getMediaUrl } from '@/lib/utils/getMediaUrl'
 
 type NavLink = NonNullable<NavLinks>[number]
 type NavLinkChild = NonNullable<NonNullable<NavLink['children']>[number]>
@@ -9,12 +10,21 @@ export const resolveNavHref = ({
   linkType,
   reference,
   url,
+  document,
 }: {
-  linkType?: 'reference' | 'custom' | null
+  linkType?: 'reference' | 'custom' | 'upload' | null
   reference?: NavLinkReference
   url?: string | null
+  document?: string | Media | null
 }) => {
   if (linkType === 'custom' && url) return url
+
+  if (linkType === 'upload') {
+    if (typeof document === 'object' && document?.url) {
+      return getMediaUrl(document.url)
+    }
+    return '#'
+  }
 
   if (linkType === 'reference' && typeof reference?.value === 'object' && reference.value.slug) {
     if (reference.relationTo === 'pages') {
@@ -38,6 +48,7 @@ export const generateNavHref = (item: NavLink | NavLinkChild) => {
     linkType: item.type,
     reference: 'reference' in item ? item.reference : undefined,
     url: item.url,
+    document: 'document' in item ? item.document : undefined,
   })
 }
 
@@ -54,6 +65,8 @@ export const getDropdownParentHref = (item: NavLink) => {
 }
 
 export const getNavLinkTarget = (item: NavLink | NavLinkChild) => {
+  if (item.type === 'upload') return '_blank'
+
   const isCustom =
     item.type === 'custom' || (item.type === 'dropdown' && item.parentLinkType === 'custom')
 
