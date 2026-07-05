@@ -11,6 +11,12 @@ export const StatsBlock: Block = {
     components: {
       Label: '/lib/blocks/stats-block/components/StatsBlockLabel',
     },
+    images: {
+      thumbnail: {
+        url: '/blocks/stats-block.jpg',
+        alt: 'Stats block - dark band with large stat numbers',
+      },
+    },
   },
   fields: [
     {

@@ -1,5 +1,6 @@
 import type { CtaButton } from '@/payload-types'
 import { Button } from '@/components/ui/button'
+import { resolveNavHref } from '@/lib/fields/navigation/resolveNavHref'
 import { cn } from '@/utilities/ui'
 import Link from 'next/link'
 import React from 'react'
@@ -14,6 +15,7 @@ export const CtaButtonBlockComponent: React.FC<CtaButton> = ({
   label,
   linkType,
   url,
+  reference,
   newTab,
   anchorId,
   variant = 'default',
@@ -32,14 +34,24 @@ export const CtaButtonBlockComponent: React.FC<CtaButton> = ({
     )
   }
 
-  if (!url) return null
+  let href: string | null = null
+
+  if (linkType === 'reference') {
+    if (typeof reference?.value !== 'object' || !reference.value.slug) return null
+    href = resolveNavHref({ linkType: 'reference', reference })
+  } else if (linkType === 'url') {
+    if (!url) return null
+    href = url
+  } else {
+    return null
+  }
 
   const newTabProps = newTab ? { rel: 'noopener noreferrer', target: '_blank' } : {}
 
   return (
     <div className={wrapperClass}>
       <Button asChild variant={variant ?? 'default'} size={size ?? 'default'}>
-        <Link href={url} {...newTabProps}>
+        <Link href={href} {...newTabProps}>
           {label}
         </Link>
       </Button>

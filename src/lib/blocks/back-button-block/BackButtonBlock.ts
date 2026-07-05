@@ -6,6 +6,14 @@ export const BackButtonBlock: Block = {
     singular: 'Back Button',
     plural: 'Back Buttons',
   },
+  admin: {
+    images: {
+      thumbnail: {
+        url: '/blocks/back-button-block.jpg',
+        alt: 'Back Button block - navigation button with arrow',
+      },
+    },
+  },
   fields: [
     {
       name: 'label',

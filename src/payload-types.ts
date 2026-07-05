@@ -1363,12 +1363,16 @@ export interface IconText {
  */
 export interface CtaButton {
   label: string;
-  linkType: 'url' | 'anchor';
+  linkType: 'url' | 'reference' | 'anchor';
   variant?: ('default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'white') | null;
   /**
    * e.g. /contact, https://example.com, tel:0105971555, mailto:info@example.com
    */
   url?: string | null;
+  reference?: {
+    relationTo: 'pages';
+    value: string | Page;
+  } | null;
   newTab?: boolean | null;
   /**
    * The Section ID of the target section (without #). Set on the target section via its Accessibility settings.

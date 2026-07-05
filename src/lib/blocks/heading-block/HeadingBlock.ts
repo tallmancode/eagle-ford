@@ -16,7 +16,10 @@ export const HeadingBlock: Block = {
       Label: '/lib/blocks/heading-block/components/HeadingBlockLabel',
     },
     images: {
-      thumbnail: '/blocks/heading-block-thumbnail.png',
+      thumbnail: {
+        url: '/blocks/heading-block-thumbnail.png',
+        alt: 'Heading block - eyebrow tag, heading and subheading',
+      },
     },
   },
   fields: [

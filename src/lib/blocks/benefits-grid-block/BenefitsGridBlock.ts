@@ -12,6 +12,12 @@ export const BenefitsGridBlock: Block = {
     components: {
       Label: '/lib/blocks/benefits-grid-block/components/BenefitsGridBlockLabel',
     },
+    images: {
+      thumbnail: {
+        url: '/blocks/benefits-grid-block.jpg',
+        alt: 'Benefits Grid block - image cards with titles and CTA buttons',
+      },
+    },
   },
   fields: [
     {

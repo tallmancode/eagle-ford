@@ -8,8 +8,15 @@ export const WhyCardsBlock: Block = {
     plural: 'Why Cards',
   },
   admin: {
+    group: 'Cards',
     components: {
       Label: '/lib/blocks/why-cards-block/components/WhyCardsBlockLabel',
+    },
+    images: {
+      thumbnail: {
+        url: '/blocks/why-cards-block.jpg',
+        alt: 'Why Cards block - grid of icon cards with titles and descriptions',
+      },
     },
   },
   fields: [

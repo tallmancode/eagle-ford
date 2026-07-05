@@ -11,6 +11,12 @@ export const ImageBlock: Block = {
     components: {
       Label: '/lib/blocks/image-block/components/ImageBlockLabel',
     },
+    images: {
+      thumbnail: {
+        url: '/blocks/image-block.jpg',
+        alt: 'Image block - single photo with rounded corners and shadow',
+      },
+    },
   },
   fields: [
     {

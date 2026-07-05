@@ -21,7 +21,10 @@ export const SectionInnerBlock: Block = {
       Label: '/lib/blocks/section-block/components/SectionBlockLabel',
     },
     images: {
-      thumbnail: '/blocks/section-inner-block-thumbnail.png',
+      thumbnail: {
+        url: '/blocks/section-inner-block-thumbnail.png',
+        alt: 'Section Inner block - nested section wrapper for row layouts',
+      },
     },
   },
   fields: [
