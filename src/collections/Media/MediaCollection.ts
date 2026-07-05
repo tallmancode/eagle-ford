@@ -58,7 +58,19 @@ export const MediaCollection: CollectionConfig = {
     formatOptions: {
       format: 'webp',
     },
-    mimeTypes: ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml'],
+    mimeTypes: [
+      'image/png',
+      'image/jpg',
+      'image/jpeg',
+      'image/gif',
+      'image/webp',
+      'image/svg+xml',
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    ],
     imageSizes: [
       {
         name: 'thumbnail',
