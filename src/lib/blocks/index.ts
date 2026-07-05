@@ -21,6 +21,8 @@ import { FeatureGridBlock } from '@/lib/blocks/feature-grid-block/FeatureGridBlo
 import { BenefitsBlock } from '@/lib/blocks/benefits-block/BenefitsBlock'
 import { PopupCardsBlock } from '@/lib/blocks/popup-cards-block/PopupCardsBlock'
 import { FinanceCalculatorBlock } from '@/lib/blocks/finance-calculator-block/FinanceCalculatorBlock'
+import { BackButtonBlock } from '@/lib/blocks/back-button-block/BackButtonBlock'
+import { BenefitsGridBlock } from '@/lib/blocks/benefits-grid-block/BenefitsGridBlock'
 
 const Blocks = [
   SectionBlock,
@@ -46,6 +48,8 @@ const Blocks = [
   BenefitsBlock,
   PopupCardsBlock,
   FinanceCalculatorBlock,
+  BackButtonBlock,
+  BenefitsGridBlock,
 ]
 
 export default Blocks

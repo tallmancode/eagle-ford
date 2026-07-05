@@ -10,6 +10,12 @@ export const IconTextBlock: Block = {
     components: {
       Label: '/lib/blocks/icon-text-block/components/IconTextBlockLabel',
     },
+    images: {
+      thumbnail: {
+        url: '/blocks/icon-text-block.jpg',
+        alt: 'Icon Text block - inline icon with label',
+      },
+    },
   },
   fields: [
     {

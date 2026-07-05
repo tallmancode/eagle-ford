@@ -7,6 +7,14 @@ export const ContactInfoBlock: Block = {
     singular: 'Contact Info',
     plural: 'Contact Info',
   },
+  admin: {
+    images: {
+      thumbnail: {
+        url: '/blocks/contact-info-block.jpg',
+        alt: 'Contact Info block - card with phone, email, address and directions',
+      },
+    },
+  },
   fields: [
     {
       name: 'heading',

@@ -11,6 +11,12 @@ export const TeamGridBlock: Block = {
     components: {
       Label: '/lib/blocks/team-grid-block/components/TeamGridBlockLabel',
     },
+    images: {
+      thumbnail: {
+        url: '/blocks/team-grid-block.jpg',
+        alt: 'Team Grid block - photo grid with staff headshots and names',
+      },
+    },
   },
   fields: [
     {

@@ -42,6 +42,7 @@ export const PopupCardsBlock: Block = {
     plural: 'Popup Cards',
   },
   admin: {
+    group: 'Cards',
     components: {
       Label: '/lib/blocks/popup-cards-block/components/PopupCardsBlockLabel',
     },

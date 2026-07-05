@@ -8,8 +8,15 @@ export const HoursTabsBlock: Block = {
     plural: 'Hours Tabs',
   },
   admin: {
+    group: 'Tabbed Content',
     components: {
       Label: '/lib/blocks/hours-tabs-block/components/HoursTabsBlockLabel',
+    },
+    images: {
+      thumbnail: {
+        url: '/blocks/hours-tabs-block.jpg',
+        alt: 'Hours Tabs block - department tabs with hours table',
+      },
     },
   },
   fields: [

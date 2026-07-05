@@ -23,6 +23,8 @@ import type {
   Benefits,
   PopupCards,
   FinanceCalculatorBlockType,
+  BackButton,
+  BenefitsGrid,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -47,6 +49,8 @@ import { FeatureGridBlockComponent } from '@/lib/blocks/feature-grid-block/compo
 import { BenefitsBlockComponent } from '@/lib/blocks/benefits-block/components/BenefitsBlockComponent'
 import { PopupCardsBlockComponent } from '@/lib/blocks/popup-cards-block/components/PopupCardsBlockComponent'
 import { FinanceCalculatorBlockComponent } from '@/lib/blocks/finance-calculator-block/components/FinanceCalculatorBlockComponent'
+import { BackButtonBlockComponent } from '@/lib/blocks/back-button-block/components/BackButtonBlockComponent'
+import { BenefitsGridBlockComponent } from '@/lib/blocks/benefits-grid-block/components/BenefitsGridBlockComponent'
 
 type BlockComponentMap = {
   section: Section
@@ -59,6 +63,7 @@ type BlockComponentMap = {
   'contact-info': ContactInfo
   'icon-text': IconText
   'cta-button': CtaButton
+  'back-button': BackButton
   'why-cards': WhyCards
   map: Map
   'team-grid': TeamGrid
@@ -70,6 +75,7 @@ type BlockComponentMap = {
   'contact-footer': ContactFooter
   'feature-grid': FeatureGrid
   benefits: Benefits
+  'benefits-grid': BenefitsGrid
   'popup-cards': PopupCards
   financeCalculatorBlock: FinanceCalculatorBlockType
 }
@@ -91,6 +97,7 @@ const blockComponents: {
   >,
   'icon-text': IconTextBlockComponent as unknown as React.ComponentType<WithMeta<IconText>>,
   'cta-button': CtaButtonBlockComponent,
+  'back-button': BackButtonBlockComponent,
   'why-cards': WhyCardsBlockComponent,
   map: MapBlockComponent as unknown as React.ComponentType<WithMeta<Map>>,
   'team-grid': TeamGridBlockComponent,
@@ -104,6 +111,7 @@ const blockComponents: {
   >,
   'feature-grid': FeatureGridBlockComponent,
   benefits: BenefitsBlockComponent,
+  'benefits-grid': BenefitsGridBlockComponent,
   'popup-cards': PopupCardsBlockComponent,
   financeCalculatorBlock: FinanceCalculatorBlockComponent,
 } as const

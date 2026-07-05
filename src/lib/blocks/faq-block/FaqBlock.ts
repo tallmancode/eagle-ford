@@ -37,6 +37,12 @@ export const FaqBlock: Block = {
     components: {
       Label: '/lib/blocks/faq-block/components/FaqBlockLabel',
     },
+    images: {
+      thumbnail: {
+        url: '/blocks/faq-block.jpg',
+        alt: 'FAQ block - accordion list with expandable answers',
+      },
+    },
   },
   fields: [
     {

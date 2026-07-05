@@ -10,6 +10,12 @@ export const FeatureListBlock: Block = {
     components: {
       Label: '/lib/blocks/feature-list-block/components/FeatureListBlockLabel',
     },
+    images: {
+      thumbnail: {
+        url: '/blocks/feature-list-block.jpg',
+        alt: 'Feature List block - checklist rows with titles and descriptions',
+      },
+    },
   },
   fields: [
     {

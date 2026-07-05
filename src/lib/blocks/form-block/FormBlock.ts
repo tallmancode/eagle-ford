@@ -8,6 +8,14 @@ export const FormBlock: Block = {
     plural: 'Form Blocks',
     singular: 'Form Block',
   },
+  admin: {
+    images: {
+      thumbnail: {
+        url: '/blocks/form-block.jpg',
+        alt: 'Form block - centered card with input fields and submit button',
+      },
+    },
+  },
   fields: [
     {
       name: 'form',

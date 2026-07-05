@@ -16,7 +16,6 @@ export const MainNav = ({ headerLogo, leftLinks, rightLinks }: MainNavProps) => 
   return (
     <div className="relative flex justify-between items-center container py-2">
       <div className="flex items-center lg:flex-1">
-        <MobileNav links={mobileLinks} logo={headerLogo} className="lg:hidden" />
         <NavMenuItems
           links={leftLinks}
           className="hidden lg:flex space-x-4 items-center"
@@ -38,7 +37,11 @@ export const MainNav = ({ headerLogo, leftLinks, rightLinks }: MainNavProps) => 
           className="hidden lg:flex space-x-4 items-center"
           linkClassName="text-secondary font-bold text-sm"
         />
-        <div className="w-10 lg:hidden" aria-hidden="true" />
+        <MobileNav
+          links={mobileLinks}
+          logo={headerLogo}
+          className="lg:hidden flex items-center justify-end w-full"
+        />
       </div>
     </div>
   )
