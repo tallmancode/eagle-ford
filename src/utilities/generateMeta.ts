@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 
 import type { Media, Page, Blog, Config } from '../payload-types'
 
+import { CRAWLER_BLOCK_ROBOTS } from '@/constants/crawlerPolicy'
 import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
 import { getServerSideURL } from './getURL'
 
@@ -32,6 +33,7 @@ export const generateMeta = async (args: {
 
   return {
     description: doc?.meta?.description,
+    robots: CRAWLER_BLOCK_ROBOTS,
     openGraph: mergeOpenGraph({
       description: doc?.meta?.description || '',
       images: ogImage

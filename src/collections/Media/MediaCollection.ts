@@ -15,7 +15,6 @@ const dirname = path.dirname(filename)
 
 export const MediaCollection: CollectionConfig = {
   slug: 'media',
-  folders: true,
   access: {
     create: isAuthenticated,
     delete: isAuthenticated,
@@ -55,6 +54,7 @@ export const MediaCollection: CollectionConfig = {
     staticDir: path.resolve(dirname, '../../../public/media'),
     adminThumbnail: 'thumbnail',
     focalPoint: true,
+    crop: true,
     formatOptions: {
       format: 'webp',
     },

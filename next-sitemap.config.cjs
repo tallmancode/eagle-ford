@@ -6,15 +6,6 @@ const SITE_URL =
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: SITE_URL,
-  generateRobotsTxt: true,
+  generateRobotsTxt: false,
   exclude: ['/blogs-sitemap.xml', '/pages-sitemap.xml', '/*', '/blogs/*'],
-  robotsTxtOptions: {
-    policies: [
-      {
-        userAgent: '*',
-        disallow: '/admin/*',
-      },
-    ],
-    additionalSitemaps: [`${SITE_URL}/pages-sitemap.xml`, `${SITE_URL}/blogs-sitemap.xml`],
-  },
 }
