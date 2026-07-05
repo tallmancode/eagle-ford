@@ -1,31 +1,6 @@
 import type { Block } from 'payload'
-import {
-  FixedToolbarFeature,
-  HeadingFeature,
-  InlineToolbarFeature,
-  lexicalEditor,
-  OrderedListFeature,
-  TextStateFeature,
-  UnorderedListFeature,
-} from '@payloadcms/richtext-lexical'
-import { richTextColorState } from '@/lib/blocks/rich-text-block/richTextColors'
+import { blockRichTextEditor } from '@/lib/blocks/rich-text-block/blockRichTextEditor'
 import { LucideIconField } from '@/lib/fields/lucide-icons'
-
-const popupSectionEditor = lexicalEditor({
-  features: ({ rootFeatures }) => [
-    ...rootFeatures,
-    HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
-    UnorderedListFeature(),
-    OrderedListFeature(),
-    FixedToolbarFeature(),
-    InlineToolbarFeature(),
-    TextStateFeature({
-      state: {
-        color: richTextColorState,
-      },
-    }),
-  ],
-})
 
 const popupSectionStyleOptions = [
   { label: 'Text', value: 'text' },
@@ -178,7 +153,7 @@ export const PopupCardsBlock: Block = {
               name: 'content',
               type: 'richText',
               label: 'Content',
-              editor: popupSectionEditor,
+              editor: blockRichTextEditor,
               admin: {
                 condition: (_, siblingData) => siblingData?.style === 'richText',
               },
