@@ -13,11 +13,27 @@ import { richTextColorState } from '@/lib/blocks/rich-text-block/richTextColors'
 type NodeTypes = DefaultNodeTypes
 
 // Helper function to get alignment class from format
-export function getAlignmentClass(format?: number): string {
+export function getAlignmentClass(format?: string | number): string {
   if (!format) return ''
 
-  // Lexical text alignment format values
-  // 1 = left, 2 = center, 3 = right, 4 = justify
+  if (typeof format === 'string') {
+    switch (format) {
+      case 'center':
+        return 'text-center'
+      case 'right':
+      case 'end':
+        return 'text-right'
+      case 'justify':
+        return 'text-justify'
+      case 'left':
+      case 'start':
+        return 'text-left'
+      default:
+        return ''
+    }
+  }
+
+  // Lexical numeric format values: 1 = left, 2 = center, 3 = right, 4 = justify
   switch (format) {
     case 2:
       return 'text-center'
@@ -113,7 +129,7 @@ export const richTextConverters: JSXConvertersFunction<NodeTypes> = ({ defaultCo
   },
   heading: ({ node, nodesToJSX }) => {
     const alignClass = getAlignmentClass(
-      'format' in node && typeof node.format === 'number' ? node.format : undefined,
+      'format' in node ? (node.format as string | number) : undefined,
     )
     if (node.tag === 'h1') {
       return (
@@ -161,7 +177,7 @@ export const richTextConverters: JSXConvertersFunction<NodeTypes> = ({ defaultCo
   },
   list: ({ node, nodesToJSX }) => {
     const alignClass = getAlignmentClass(
-      'format' in node && typeof node.format === 'number' ? node.format : undefined,
+      'format' in node ? (node.format as string | number) : undefined,
     )
     if (node.listType === 'bullet') {
       return (
@@ -184,7 +200,7 @@ export const richTextConverters: JSXConvertersFunction<NodeTypes> = ({ defaultCo
   },
   paragraph: ({ node, nodesToJSX }) => {
     const alignClass = getAlignmentClass(
-      'format' in node && typeof node.format === 'number' ? node.format : undefined,
+      'format' in node ? (node.format as string | number) : undefined,
     )
     return (
       <p className={cn('my-4 leading-7 [&:not(:first-child)]:mt-6 first:mt-0', alignClass)}>
@@ -194,7 +210,7 @@ export const richTextConverters: JSXConvertersFunction<NodeTypes> = ({ defaultCo
   },
   quote: ({ node, nodesToJSX }) => {
     const alignClass = getAlignmentClass(
-      'format' in node && typeof node.format === 'number' ? node.format : undefined,
+      'format' in node ? (node.format as string | number) : undefined,
     )
     return (
       <blockquote

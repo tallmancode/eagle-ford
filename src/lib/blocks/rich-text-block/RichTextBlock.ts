@@ -1,14 +1,5 @@
 import type { Block } from 'payload'
-import {
-  FixedToolbarFeature,
-  HeadingFeature,
-  InlineToolbarFeature,
-  lexicalEditor,
-  OrderedListFeature,
-  TextStateFeature,
-  UnorderedListFeature,
-} from '@payloadcms/richtext-lexical'
-import { richTextColorState } from './richTextColors'
+import { blockRichTextEditor } from './blockRichTextEditor'
 
 export const RichTextBlock: Block = {
   slug: 'rich-text',
@@ -32,21 +23,7 @@ export const RichTextBlock: Block = {
       name: 'content',
       type: 'richText',
       required: true,
-      editor: lexicalEditor({
-        features: ({ rootFeatures }) => [
-          ...rootFeatures,
-          HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
-          UnorderedListFeature(),
-          OrderedListFeature(),
-          FixedToolbarFeature(),
-          InlineToolbarFeature(),
-          TextStateFeature({
-            state: {
-              color: richTextColorState,
-            },
-          }),
-        ],
-      }),
+      editor: blockRichTextEditor,
     },
   ],
 }

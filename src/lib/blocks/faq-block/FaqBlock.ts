@@ -1,30 +1,5 @@
 import type { Block } from 'payload'
-import {
-  FixedToolbarFeature,
-  HeadingFeature,
-  InlineToolbarFeature,
-  lexicalEditor,
-  OrderedListFeature,
-  TextStateFeature,
-  UnorderedListFeature,
-} from '@payloadcms/richtext-lexical'
-import { richTextColorState } from '@/lib/blocks/rich-text-block/richTextColors'
-
-const faqAnswerEditor = lexicalEditor({
-  features: ({ rootFeatures }) => [
-    ...rootFeatures,
-    HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
-    UnorderedListFeature(),
-    OrderedListFeature(),
-    FixedToolbarFeature(),
-    InlineToolbarFeature(),
-    TextStateFeature({
-      state: {
-        color: richTextColorState,
-      },
-    }),
-  ],
-})
+import { blockRichTextEditor } from '@/lib/blocks/rich-text-block/blockRichTextEditor'
 
 export const FaqBlock: Block = {
   slug: 'faq',
@@ -62,7 +37,7 @@ export const FaqBlock: Block = {
           name: 'answer',
           type: 'richText',
           label: 'Answer',
-          editor: faqAnswerEditor,
+          editor: blockRichTextEditor,
         },
         {
           name: 'image',
