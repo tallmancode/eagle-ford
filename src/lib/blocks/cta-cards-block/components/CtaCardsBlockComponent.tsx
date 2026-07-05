@@ -1,5 +1,6 @@
 import type { CtaCards } from '@/payload-types'
 import { Button } from '@/components/ui/button'
+import { resolveLinkFieldHref } from '@/lib/utils/resolveLinkFieldHref'
 import { ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -10,9 +11,10 @@ export const CtaCardsBlockComponent: React.FC<CtaCards> = ({ cards }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {cards.map((card, index) => {
-        if (!card.url) return null
+        const resolvedLink = resolveLinkFieldHref(card.link)
+        if (!resolvedLink) return null
 
-        const newTabProps = card.newTab
+        const newTabProps = resolvedLink.openInNewTab
           ? { rel: 'noopener noreferrer', target: '_blank' as const }
           : {}
 
@@ -25,7 +27,7 @@ export const CtaCardsBlockComponent: React.FC<CtaCards> = ({ cards }) => {
               <h3 className="text-xl font-bold text-foreground mb-2">{card.title}</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">{card.description}</p>
             </div>
-            <Link href={card.url} {...newTabProps}>
+            <Link href={resolvedLink.href} {...newTabProps}>
               <Button variant="outline" className="rounded-full w-full">
                 {card.label}
                 <ChevronRight className="size-4 ml-1" />

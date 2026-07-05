@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { LucideIconField } from '@/lib/fields/lucide-icons'
 
 export const WhyCardsBlock: Block = {
   slug: 'why-cards',
@@ -21,40 +22,28 @@ export const WhyCardsBlock: Block = {
   },
   fields: [
     {
+      name: 'columns',
+      type: 'radio',
+      label: 'Columns',
+      defaultValue: '3',
+      options: [
+        { label: '1', value: '1' },
+        { label: '2', value: '2' },
+        { label: '3', value: '3' },
+        { label: '4', value: '4' },
+      ],
+      admin: {
+        layout: 'horizontal',
+      },
+    },
+    {
       name: 'cards',
       type: 'array',
       label: 'Cards',
       minRows: 1,
       required: true,
       fields: [
-        {
-          name: 'icon',
-          type: 'select',
-          label: 'Icon',
-          required: true,
-          options: [
-            { label: 'Trending Up', value: 'trending-up' },
-            { label: 'Shield Check', value: 'shield-check' },
-            { label: 'Handshake', value: 'handshake' },
-            { label: 'Check Circle', value: 'check-circle' },
-            { label: 'Star', value: 'star' },
-            { label: 'Shield', value: 'shield' },
-            { label: 'Car', value: 'car' },
-            { label: 'Wrench (Service)', value: 'wrench' },
-            { label: 'Info', value: 'info' },
-            { label: 'Calendar', value: 'calendar' },
-            { label: 'Fuel', value: 'fuel' },
-            { label: 'Map Pin (Location)', value: 'map-pin' },
-            { label: 'Phone', value: 'phone' },
-            { label: 'Mail (Email)', value: 'mail' },
-            { label: 'Clock (Hours)', value: 'clock' },
-            { label: 'Award', value: 'award' },
-            { label: 'Zap', value: 'zap' },
-            { label: 'Heart', value: 'heart' },
-            { label: 'Thumbs Up', value: 'thumbs-up' },
-            { label: 'Dollar Sign', value: 'dollar-sign' },
-          ],
-        },
+        LucideIconField(),
         {
           name: 'title',
           type: 'text',

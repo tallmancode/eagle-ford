@@ -1,59 +1,24 @@
 import type { WhyCards } from '@/payload-types'
-import {
-  TrendingUp,
-  ShieldCheck,
-  Handshake,
-  CheckCircle,
-  Star,
-  Shield,
-  Car,
-  Wrench,
-  Info,
-  Calendar,
-  Fuel,
-  MapPin,
-  Phone,
-  Mail,
-  Clock,
-  Award,
-  Zap,
-  Heart,
-  ThumbsUp,
-  DollarSign,
-} from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
+import { lucideIconMap } from '@/lib/fields/lucide-icons'
+import { cn } from '@/utilities/ui'
 import React from 'react'
 
-const iconMap: Record<string, LucideIcon> = {
-  'trending-up': TrendingUp,
-  'shield-check': ShieldCheck,
-  handshake: Handshake,
-  'check-circle': CheckCircle,
-  star: Star,
-  shield: Shield,
-  car: Car,
-  wrench: Wrench,
-  info: Info,
-  calendar: Calendar,
-  fuel: Fuel,
-  'map-pin': MapPin,
-  phone: Phone,
-  mail: Mail,
-  clock: Clock,
-  award: Award,
-  zap: Zap,
-  heart: Heart,
-  'thumbs-up': ThumbsUp,
-  'dollar-sign': DollarSign,
+const columnClasses: Record<string, string> = {
+  '1': 'grid-cols-1',
+  '2': 'grid-cols-1 md:grid-cols-2',
+  '3': 'grid-cols-1 md:grid-cols-3',
+  '4': 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
 }
 
-export const WhyCardsBlockComponent: React.FC<WhyCards> = ({ cards }) => {
+export const WhyCardsBlockComponent: React.FC<WhyCards> = ({ columns = '3', cards }) => {
   if (!cards || cards.length === 0) return null
 
+  const gridClass = columnClasses[columns ?? '3'] ?? columnClasses['3']
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className={cn('grid gap-6', gridClass)}>
       {cards.map((card, index) => {
-        const Icon = iconMap[card.icon]
+        const Icon = lucideIconMap[card.icon]
         return (
           <div
             key={card.id ?? index}
