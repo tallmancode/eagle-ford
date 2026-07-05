@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
+import { sanitizePageNullBlocks } from './hooks/sanitizePageNullBlocks'
 import { revalidateDelete, revalidatePage } from './hooks/revalidatePage'
 
 import {
@@ -118,7 +119,7 @@ export const PagesCollection: CollectionConfig<'pages'> = {
   ],
   hooks: {
     afterChange: [revalidatePage],
-    beforeChange: [populatePublishedAt],
+    beforeChange: [sanitizePageNullBlocks, populatePublishedAt],
     afterDelete: [revalidateDelete],
   },
   versions: {
