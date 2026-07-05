@@ -1332,19 +1332,7 @@ export interface ContactInfo {
  * via the `definition` "icon-text".
  */
 export interface IconText {
-  icon:
-    | 'map-pin'
-    | 'phone'
-    | 'mail'
-    | 'clock'
-    | 'car'
-    | 'wrench'
-    | 'check-circle'
-    | 'info'
-    | 'star'
-    | 'calendar'
-    | 'shield'
-    | 'fuel';
+  icon: string;
   text: string;
   color?: ('default' | 'primary' | 'neutral' | 'success' | 'danger' | 'warning' | 'white') | null;
   enableLink?: boolean | null;
@@ -1407,28 +1395,9 @@ export interface BackButton {
  * via the `definition` "WhyCards".
  */
 export interface WhyCards {
+  columns?: ('1' | '2' | '3' | '4') | null;
   cards: {
-    icon:
-      | 'trending-up'
-      | 'shield-check'
-      | 'handshake'
-      | 'check-circle'
-      | 'star'
-      | 'shield'
-      | 'car'
-      | 'wrench'
-      | 'info'
-      | 'calendar'
-      | 'fuel'
-      | 'map-pin'
-      | 'phone'
-      | 'mail'
-      | 'clock'
-      | 'award'
-      | 'zap'
-      | 'heart'
-      | 'thumbs-up'
-      | 'dollar-sign';
+    icon: string;
     title: string;
     description: string;
     id?: string | null;
@@ -1498,11 +1467,15 @@ export interface CtaCards {
     title: string;
     description: string;
     label: string;
-    /**
-     * e.g. /new/, /showroom/, https://example.com
-     */
-    url: string;
-    newTab?: boolean | null;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+    };
     id?: string | null;
   }[];
   id?: string | null;

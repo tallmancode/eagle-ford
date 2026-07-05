@@ -26,6 +26,9 @@ import {
   Settings,
   Package,
   GraduationCap,
+  Wifi,
+  Truck,
+  Coffee,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -62,6 +65,9 @@ export const LUCIDE_ICONS: Record<string, LucideIconEntry> = {
   settings: { label: 'Settings', Icon: Settings },
   package: { label: 'Package', Icon: Package },
   'graduation-cap': { label: 'Graduation Cap', Icon: GraduationCap },
+  wifi: { label: 'Wi-Fi', Icon: Wifi },
+  truck: { label: 'Truck (Delivery)', Icon: Truck },
+  coffee: { label: 'Coffee', Icon: Coffee },
 }
 
 export const LUCIDE_ICON_KEYS = Object.keys(LUCIDE_ICONS)

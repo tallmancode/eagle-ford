@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { LinkField } from '@/lib/fields/link/LinkField'
 
 export const CtaCardsBlock: Block = {
   slug: 'cta-cards',
@@ -45,21 +46,7 @@ export const CtaCardsBlock: Block = {
           label: 'Button Label',
           required: true,
         },
-        {
-          name: 'url',
-          type: 'text',
-          label: 'URL',
-          required: true,
-          admin: {
-            description: 'e.g. /new/, /showroom/, https://example.com',
-          },
-        },
-        {
-          name: 'newTab',
-          type: 'checkbox',
-          label: 'Open in new tab',
-          defaultValue: false,
-        },
+        LinkField({ name: 'link', relationTo: ['pages'], includeLabel: false }),
       ],
     },
   ],

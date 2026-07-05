@@ -4,9 +4,15 @@ type LinkFieldOptions = {
   name: string
   relationTo: CollectionSlug[]
   label?: string
+  includeLabel?: boolean
 }
 
-export const LinkField = ({ name, relationTo, label = 'Link' }: LinkFieldOptions): GroupField => ({
+export const LinkField = ({
+  name,
+  relationTo,
+  label = 'Link',
+  includeLabel = true,
+}: LinkFieldOptions): GroupField => ({
   name,
   type: 'group',
   label,
@@ -56,10 +62,14 @@ export const LinkField = ({ name, relationTo, label = 'Link' }: LinkFieldOptions
         condition: (_data, siblingData) => siblingData?.type === 'custom',
       },
     },
-    {
-      name: 'label',
-      type: 'text',
-      label: 'Label',
-    },
+    ...(includeLabel
+      ? [
+          {
+            name: 'label',
+            type: 'text' as const,
+            label: 'Label',
+          },
+        ]
+      : []),
   ],
 })
