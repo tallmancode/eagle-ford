@@ -9,6 +9,7 @@ const allBlockRefs: BlockSlug[] = [
   'contact-info',
   'icon-text',
   'cta-button',
+  'back-button',
   'why-cards',
   'map',
   'team-grid',
@@ -20,6 +21,7 @@ const allBlockRefs: BlockSlug[] = [
   'contact-footer',
   'feature-grid',
   'benefits',
+  'benefits-grid',
   'popup-cards',
   'financeCalculatorBlock',
 ]
