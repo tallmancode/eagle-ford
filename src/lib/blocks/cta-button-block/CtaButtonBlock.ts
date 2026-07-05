@@ -6,6 +6,14 @@ export const CtaButtonBlock: Block = {
     singular: 'CTA Button',
     plural: 'CTA Buttons',
   },
+  admin: {
+    images: {
+      thumbnail: {
+        url: '/blocks/cta-button-block.jpg',
+        alt: 'CTA Button block - single call-to-action button',
+      },
+    },
+  },
   fields: [
     {
       name: 'label',
@@ -24,6 +32,7 @@ export const CtaButtonBlock: Block = {
           defaultValue: 'url',
           options: [
             { label: 'URL', value: 'url' },
+            { label: 'Internal link', value: 'reference' },
             { label: 'Anchor (same page)', value: 'anchor' },
           ],
           admin: {
@@ -60,12 +69,24 @@ export const CtaButtonBlock: Block = {
       },
     },
     {
+      name: 'reference',
+      type: 'relationship',
+      label: 'Document to link to',
+      relationTo: ['pages'],
+      maxDepth: 2,
+      required: true,
+      admin: {
+        condition: (_data, siblingData) => siblingData?.linkType === 'reference',
+      },
+    },
+    {
       name: 'newTab',
       type: 'checkbox',
       label: 'Open in new tab',
       defaultValue: false,
       admin: {
-        condition: (_data, siblingData) => siblingData?.linkType === 'url',
+        condition: (_data, siblingData) =>
+          siblingData?.linkType === 'url' || siblingData?.linkType === 'reference',
       },
     },
     {

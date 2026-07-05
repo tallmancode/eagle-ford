@@ -11,6 +11,12 @@ export const FinanceCalculatorBlock: Block = {
     components: {
       Label: '/lib/blocks/finance-calculator-block/components/FinanceCalculatorBlockLabel',
     },
+    images: {
+      thumbnail: {
+        url: '/blocks/finance-calculator-block.jpg',
+        alt: 'Finance Calculator block - loan calculator with inputs and results',
+      },
+    },
   },
   fields: [
     {

@@ -20,6 +20,12 @@ export const RichTextBlock: Block = {
     components: {
       Label: '/lib/blocks/rich-text-block/components/RichTextBlockLabel',
     },
+    images: {
+      thumbnail: {
+        url: '/blocks/rich-text-block.jpg',
+        alt: 'Rich Text block - heading and paragraph content',
+      },
+    },
   },
   fields: [
     {

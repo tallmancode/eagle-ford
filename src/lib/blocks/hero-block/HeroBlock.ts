@@ -14,7 +14,10 @@ export const HeroBlock: Block = {
       Label: '/lib/blocks/hero-block/components/HeroBlockLabel',
     },
     images: {
-      thumbnail: '/blocks/hero-block.jpg',
+      thumbnail: {
+        url: '/blocks/hero-block.jpg',
+        alt: 'Hero block - full-width banner with headline and CTAs',
+      },
     },
   },
   fields: [

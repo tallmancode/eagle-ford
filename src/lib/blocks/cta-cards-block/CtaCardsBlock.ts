@@ -8,8 +8,15 @@ export const CtaCardsBlock: Block = {
     plural: 'CTA Cards',
   },
   admin: {
+    group: 'Cards',
     components: {
       Label: '/lib/blocks/cta-cards-block/components/CtaCardsBlockLabel',
+    },
+    images: {
+      thumbnail: {
+        url: '/blocks/cta-cards-block.jpg',
+        alt: 'CTA Cards block - grid of cards with outline buttons',
+      },
     },
   },
   fields: [

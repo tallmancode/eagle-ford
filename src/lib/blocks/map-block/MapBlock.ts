@@ -8,8 +8,15 @@ export const MapBlock: Block = {
     plural: 'Maps',
   },
   admin: {
+    group: 'Google Maps',
     components: {
       Label: '/lib/blocks/map-block/components/MapBlockLabel',
+    },
+    images: {
+      thumbnail: {
+        url: '/blocks/map-block.jpg',
+        alt: 'Map block - embedded Google Maps iframe',
+      },
     },
   },
   fields: [

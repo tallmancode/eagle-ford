@@ -11,6 +11,12 @@ export const ContactFooterBlock: Block = {
     components: {
       Label: '/lib/blocks/contact-footer-block/components/ContactFooterBlockLabel',
     },
+    images: {
+      thumbnail: {
+        url: '/blocks/contact-footer-block.jpg',
+        alt: 'Contact Footer block - footer strip with address and hours',
+      },
+    },
   },
   fields: [],
 }

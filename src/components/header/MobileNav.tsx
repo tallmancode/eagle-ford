@@ -54,9 +54,9 @@ export const MobileNav = ({ links, logo, className }: MobileNavProps) => {
     <div className={className}>
       <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
         <SheetTrigger className={mobileMenuTriggerClass} aria-label="Open navigation menu">
-          <Menu className="size-8" aria-hidden="true" />
+          <Menu className="size-10" aria-hidden="true" />
         </SheetTrigger>
-        <SheetContent className="overflow-y-auto data-[side=right]:w-full data-[side=right]:border-0 bg-light-50/75">
+        <SheetContent className="overflow-y-auto data-[side=right]:w-full w-full data-[side=right]:border-0 bg-light-50/75">
           <SheetHeader>
             <SheetTitle>
               {typeof logo === 'object' && logo && (
@@ -66,7 +66,7 @@ export const MobileNav = ({ links, logo, className }: MobileNavProps) => {
                   aria-label="Home"
                   onClick={closeMobileMenu}
                 >
-                  <Media resource={logo} imgClassName="h-auto w-auto max-h-8 object-contain" />
+                  <Media resource={logo} imgClassName="h-auto w-auto h-12" />
                 </Link>
               )}
             </SheetTitle>
