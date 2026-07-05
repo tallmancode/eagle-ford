@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
+import { generateNavHref, getNavLinkTarget } from '@/lib/fields/navigation/resolveNavHref'
 import {
   SocialIconSvg,
   getSocialIconHref,
@@ -8,20 +9,45 @@ import {
   SOCIAL_ICONS,
 } from '@/lib/fields/social-icons'
 import { getMediaUrl } from '@/lib/utils/getMediaUrl'
-import type { Footer, Media, NavLinks, Page } from '@/payload-types'
+import type { Footer, Media, NavLinks } from '@/payload-types'
 
 const columnHeadingClass = 'text-white text-sm font-bold uppercase tracking-widest mb-4'
 const linkClass =
   'text-gray-300 hover:text-white text-sm leading-relaxed transition-colors duration-200'
 
-function resolveNavLinkHref(link: NonNullable<NavLinks>[number]): string {
-  if (link.type === 'reference' && link.reference?.value) {
-    const page = link.reference.value
-    if (typeof page === 'object') {
-      return `/${(page as Page).slug}`
-    }
+type NavLink = NonNullable<NavLinks>[number]
+
+function FooterLink({
+  link,
+  className,
+  fallbackLabel,
+}: {
+  link: NavLink
+  className?: string
+  fallbackLabel?: string
+}) {
+  const href = generateNavHref(link)
+  if (!href || href === '#') return null
+
+  const target = getNavLinkTarget(link)
+  const opensNewTab = target === '_blank'
+  const label = link.label?.trim() ? link.label : fallbackLabel
+
+  if (!label) return null
+
+  if (opensNewTab) {
+    return (
+      <a href={href} target={target} rel="noopener noreferrer" className={className}>
+        {label}
+      </a>
+    )
   }
-  return link.url ?? '#'
+
+  return (
+    <Link href={href} className={className}>
+      {label}
+    </Link>
+  )
 }
 
 function renderStars(rating: number): string {
@@ -48,9 +74,7 @@ export const SiteFooter = async () => {
                   <ul className="space-y-2">
                     {(col.links ?? []).map((link) => (
                       <li key={link.id}>
-                        <Link href={resolveNavLinkHref(link)} className={linkClass}>
-                          {link.label}
-                        </Link>
+                        <FooterLink link={link} className={linkClass} />
                       </li>
                     ))}
                   </ul>
@@ -187,12 +211,12 @@ export const SiteFooter = async () => {
           {(() => {
             const barLink = footer.bottomBarLink?.[0]
             if (!barLink) return null
-            const href = resolveNavLinkHref(barLink)
-            if (!href || href === '#') return null
             return (
-              <Link href={href} className="hover:text-white transition-colors duration-200">
-                {barLink.label ?? 'Privacy Policy'}
-              </Link>
+              <FooterLink
+                link={barLink}
+                fallbackLabel="Privacy Policy"
+                className="hover:text-white transition-colors duration-200"
+              />
             )
           })()}
         </div>
