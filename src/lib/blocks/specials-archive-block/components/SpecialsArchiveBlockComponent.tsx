@@ -9,9 +9,9 @@ import { Button } from '@/components/ui/button'
 
 function SpecialCard({ special }: { special: Special }) {
   return (
-    <div className={'bg-light-200 shadow-card rounded-lg p-2'}>
+    <div className={'bg-light-200 shadow-card rounded-lg p-4'}>
       <h2 className={'font-bold text-primary text-xl mb-4'}>{special.title}</h2>
-      <div className="relative aspect-[4/3] w-full mb-4">
+      <div className="relative aspect-square w-full mb-4">
         <MediaImage
           resource={special.cardImage}
           fill
