@@ -128,6 +128,7 @@ export interface Config {
     'back-button': BackButton;
     'benefits-grid': BenefitsGrid;
     'specials-archive': SpecialsArchive;
+    partners: Partners;
   };
   collections: {
     users: User;
@@ -250,6 +251,7 @@ export interface Section {
         | PopupCards
         | FinanceCalculatorBlockType
         | SpecialsArchive
+        | Partners
       )[]
     | null;
   backgroundColor?:
@@ -373,6 +375,7 @@ export interface SectionInner {
         | PopupCards
         | FinanceCalculatorBlockType
         | SpecialsArchive
+        | Partners
       )[]
     | null;
   backgroundColor?:
@@ -493,6 +496,7 @@ export interface Row {
         | PopupCards
         | FinanceCalculatorBlockType
         | SpecialsArchive
+        | Partners
       )[]
     | null;
   backgroundColor?:
@@ -1843,6 +1847,23 @@ export interface SpecialsArchive {
   id?: string | null;
   blockName?: string | null;
   blockType: 'specials-archive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Partners".
+ */
+export interface Partners {
+  partners: {
+    logo: string | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'partners';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
