@@ -67,6 +67,7 @@ import { default as default_d4671d0eaa4897481b54a72d51acf32f } from '../../../li
 import { default as default_ee0932451d1029052bbbc48e80ff3d1d } from '../../../lib/blocks/finance-calculator-block/components/FinanceCalculatorBlockLabel'
 import { default as default_9b2f9673a6e70f24b1fb0fe373703cc1 } from '../../../lib/blocks/benefits-grid-block/components/BenefitsGridBlockLabel'
 import { default as default_0cf04772da2df0165a47381d21356e11 } from '../../../lib/blocks/specials-archive-block/components/SpecialsArchiveBlockLabel'
+import { default as default_bacf9c6f1edd235d0a5b232acada4d25 } from '../../../lib/blocks/partners-block/components/PartnersBlockLabel'
 import { default as default_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/components/BeforeLogin'
 import { default as default_410252c7292359409637c465dfeb7f50 } from '@/views/Login'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -208,6 +209,8 @@ export const importMap = {
     default_9b2f9673a6e70f24b1fb0fe373703cc1,
   '/lib/blocks/specials-archive-block/components/SpecialsArchiveBlockLabel#default':
     default_0cf04772da2df0165a47381d21356e11,
+  '/lib/blocks/partners-block/components/PartnersBlockLabel#default':
+    default_bacf9c6f1edd235d0a5b232acada4d25,
   '@/components/BeforeLogin#default': default_8a7ab0eb7ab5c511aba12e68480bfe5e,
   '@/views/Login#default': default_410252c7292359409637c465dfeb7f50,
   '@payloadcms/next/rsc#CollectionCards': CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,

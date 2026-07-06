@@ -26,6 +26,7 @@ import type {
   BackButton,
   BenefitsGrid,
   SpecialsArchive,
+  Partners,
   Row,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
@@ -54,6 +55,7 @@ import { FinanceCalculatorBlockComponent } from '@/lib/blocks/finance-calculator
 import { BackButtonBlockComponent } from '@/lib/blocks/back-button-block/components/BackButtonBlockComponent'
 import { BenefitsGridBlockComponent } from '@/lib/blocks/benefits-grid-block/components/BenefitsGridBlockComponent'
 import { SpecialsArchiveBlockComponent } from '@/lib/blocks/specials-archive-block/components/SpecialsArchiveBlockComponent'
+import { PartnersBlockComponent } from '@/lib/blocks/partners-block/components/PartnersBlockComponent'
 import { RowBlockComponent } from '@/lib/blocks/row-block/components/RowBlockComponent'
 import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 
@@ -85,6 +87,7 @@ type BlockComponentMap = {
   'popup-cards': PopupCards
   financeCalculatorBlock: FinanceCalculatorBlockType
   'specials-archive': SpecialsArchive
+  partners: Partners
 }
 
 type WithMeta<T> = T & { meta?: BlockRenderMeta }
@@ -123,6 +126,7 @@ const blockComponents: {
   'popup-cards': PopupCardsBlockComponent,
   financeCalculatorBlock: FinanceCalculatorBlockComponent,
   'specials-archive': SpecialsArchiveBlockComponent,
+  partners: PartnersBlockComponent,
 } as const
 
 type Blocks = Config['blocks']
