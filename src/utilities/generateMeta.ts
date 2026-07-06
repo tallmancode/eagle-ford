@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 
-import type { Media, Page, Blog, Config } from '../payload-types'
+import type { Media, Page, Blog, Config, Special } from '../payload-types'
 
 import { CRAWLER_BLOCK_ROBOTS } from '@/constants/crawlerPolicy'
 import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
+import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getServerSideURL } from './getURL'
 
 const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
@@ -20,10 +21,35 @@ const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   return url
 }
 
+function isSpecial(
+  doc: Partial<Page> | Partial<Blog> | Partial<Special> | null,
+): doc is Partial<Special> {
+  return doc != null && 'offerType' in doc
+}
+
 export const generateMeta = async (args: {
-  doc: Partial<Page> | Partial<Blog> | null
+  doc: Partial<Page> | Partial<Blog> | Partial<Special> | null
 }): Promise<Metadata> => {
   const { doc } = args
+
+  if (isSpecial(doc)) {
+    const displayTitle = getSpecialDisplayTitle(doc as Special)
+    const title = `${displayTitle} | Payload Website Template`
+    const cardImage = typeof doc.cardImage === 'object' ? doc.cardImage : undefined
+    const ogImage = getImageURL(cardImage)
+    const url = doc.slug ? `/specials/${doc.slug}` : '/'
+
+    return {
+      robots: CRAWLER_BLOCK_ROBOTS,
+      openGraph: mergeOpenGraph({
+        description: '',
+        images: ogImage ? [{ url: ogImage }] : undefined,
+        title,
+        url,
+      }),
+      title,
+    }
+  }
 
   const ogImage = getImageURL(doc?.meta?.image)
 

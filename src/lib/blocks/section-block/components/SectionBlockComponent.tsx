@@ -27,6 +27,7 @@ import {
   sectionDividerVisibilityClass,
 } from '@/lib/blocks/section-block/sectionDividerUtils'
 import { cn } from '@/lib/utils/cn'
+import type { FormBlockMeta } from '@/lib/blocks/form-block/types/formContext'
 
 const verticalAlignClassMap: Record<string, string> = {
   center: 'flex flex-col h-full justify-center',
@@ -53,13 +54,16 @@ const landmarkElementMap: Record<string, keyof JSX.IntrinsicElements> = {
 function renderSectionContent(
   props: Section | SectionInner,
   gridCols: Section['gridCols'] | undefined,
+  meta?: FormBlockMeta,
 ): React.ReactNode {
   const { content } = props
   const showDivider = 'showDivider' in props ? props.showDivider : false
   const dividerColor = 'dividerColor' in props ? props.dividerColor : undefined
 
   if (!showDivider || !gridCols || gridCols === '1' || !content?.length) {
-    return <RenderBlocks blocks={content as Parameters<typeof RenderBlocks>[0]['blocks']} />
+    return (
+      <RenderBlocks blocks={content as Parameters<typeof RenderBlocks>[0]['blocks']} meta={meta} />
+    )
   }
 
   const dividerColorClass = sectionDividerColorToClass(dividerColor)
@@ -83,7 +87,7 @@ function renderSectionContent(
                 aria-hidden
               />
             )}
-            {renderBlock(block, index)}
+            {renderBlock(block, index, meta)}
           </div>
         )
       })}
@@ -91,19 +95,22 @@ function renderSectionContent(
   )
 }
 
-export const SectionBlock: React.FC<Section | SectionInner> = (props) => {
-  const { container, accessibility, backgroundColor, backgroundStyle } = props
+export const SectionBlock: React.FC<(Section | SectionInner) & { meta?: FormBlockMeta }> = (
+  props,
+) => {
+  const { meta, ...sectionProps } = props
+  const { container, accessibility, backgroundColor, backgroundStyle } = sectionProps
 
-  const gridCols = 'gridCols' in props ? props.gridCols : undefined
-  const verticalAlign = 'verticalAlign' in props ? props.verticalAlign : undefined
+  const gridCols = 'gridCols' in sectionProps ? sectionProps.gridCols : undefined
+  const verticalAlign = 'verticalAlign' in sectionProps ? sectionProps.verticalAlign : undefined
 
-  const raw = props.layout?.spacing
+  const raw = sectionProps.layout?.spacing
   const layoutSpacingNormalized =
     raw !== null && raw !== undefined && typeof raw === 'object' && !Array.isArray(raw)
       ? mergeLayoutSpacingWithDefaults(raw as LayoutSpacingValue, [])
       : null
 
-  const rawFlex = props.layout?.flex
+  const rawFlex = sectionProps.layout?.flex
   const layoutFlexNormalized =
     rawFlex !== null &&
     rawFlex !== undefined &&
@@ -150,7 +157,7 @@ export const SectionBlock: React.FC<Section | SectionInner> = (props) => {
   const backgroundClass = backgroundColorToClass(backgroundColor)
   const backgroundStyleClass = sectionBackgroundStyleToClass(backgroundStyle)
 
-  const rawVisibility = props.layout?.visibility
+  const rawVisibility = sectionProps.layout?.visibility
   const visibilityClass =
     rawVisibility !== null &&
     rawVisibility !== undefined &&
@@ -199,7 +206,9 @@ export const SectionBlock: React.FC<Section | SectionInner> = (props) => {
       .join(' ')
     return (
       <Tag className={outerClassName} style={spacingStyle} {...ariaProps}>
-        <div className={contentClasses || undefined}>{renderSectionContent(props, gridCols)}</div>
+        <div className={contentClasses || undefined}>
+          {renderSectionContent(sectionProps, gridCols, meta)}
+        </div>
       </Tag>
     )
   }
@@ -221,7 +230,7 @@ export const SectionBlock: React.FC<Section | SectionInner> = (props) => {
 
   return (
     <Tag className={className} style={spacingStyle} {...ariaProps}>
-      {renderSectionContent(props, gridCols)}
+      {renderSectionContent(sectionProps, gridCols, meta)}
     </Tag>
   )
 }

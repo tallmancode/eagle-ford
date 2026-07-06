@@ -3,27 +3,23 @@ import { blockRefs } from '@/lib/blocks/section-block/blockRefs'
 import { LayoutField } from '@/lib/fields/layout-field'
 import { AccessibilityFields } from '@/lib/fields/accessibility/AccessibilityFields'
 import { BackgroundColorField } from '@/lib/fields/background-color/backgroundColorField'
-import { SectionBackgroundStyleField } from '@/lib/blocks/section-block/sectionBackgroundStyleField'
 
-/**
- * Flat section wrapper for nested layouts. Only this block may contain Row blocks.
- * Does not allow 'section' or 'sectionInner' to prevent circular blockReferences.
- */
-export const SectionInnerBlock: Block = {
-  slug: 'sectionInner',
+export const RowBlock: Block = {
+  slug: 'row',
+  interfaceName: 'Row',
   labels: {
-    singular: 'Section (Inner)',
-    plural: 'Sections (Inner)',
+    singular: 'Row',
+    plural: 'Rows',
   },
   admin: {
     group: 'Block Wrappers',
     components: {
-      Label: '/lib/blocks/section-block/components/SectionBlockLabel',
+      Label: '/lib/blocks/row-block/components/RowBlockLabel',
     },
     images: {
       thumbnail: {
-        url: '/blocks/section-inner-block-thumbnail.png',
-        alt: 'Section Inner block - nested section wrapper for row layouts',
+        url: '/blocks/row-block.jpg',
+        alt: 'Row block - horizontal layout for blocks such as CTA buttons',
       },
     },
   },
@@ -42,7 +38,7 @@ export const SectionInnerBlock: Block = {
                 initCollapsed: true,
               },
               blocks: [],
-              blockReferences: ['row', ...blockRefs(['section', 'sectionInner'])],
+              blockReferences: blockRefs(['row', 'section', 'sectionInner']),
             },
           ],
         },
@@ -50,26 +46,52 @@ export const SectionInnerBlock: Block = {
           label: 'Layout',
           fields: [
             BackgroundColorField(),
-            SectionBackgroundStyleField(),
             {
               name: 'container',
               type: 'checkbox',
               defaultValue: false,
             },
             {
+              name: 'align',
+              type: 'select',
+              label: 'Horizontal Alignment',
+              defaultValue: 'left',
+              options: [
+                { label: 'Left', value: 'left' },
+                { label: 'Center', value: 'center' },
+                { label: 'Right', value: 'right' },
+              ],
+            },
+            {
               name: 'verticalAlign',
               type: 'select',
               label: 'Vertical Alignment',
-              defaultValue: 'top',
-              admin: {
-                description:
-                  'Aligns content vertically within the block. Most effective when used inside a Row block.',
-              },
+              defaultValue: 'center',
               options: [
                 { label: 'Top', value: 'top' },
                 { label: 'Center', value: 'center' },
                 { label: 'Bottom', value: 'bottom' },
               ],
+            },
+            {
+              name: 'gap',
+              type: 'select',
+              label: 'Gap',
+              defaultValue: 'md',
+              options: [
+                { label: 'Small', value: 'sm' },
+                { label: 'Medium', value: 'md' },
+                { label: 'Large', value: 'lg' },
+              ],
+            },
+            {
+              name: 'wrap',
+              type: 'checkbox',
+              label: 'Wrap',
+              defaultValue: true,
+              admin: {
+                description: 'Allow items to wrap onto the next line on smaller screens.',
+              },
             },
             LayoutField({ name: 'layout', label: false }),
           ],

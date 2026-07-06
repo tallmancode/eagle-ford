@@ -22,7 +22,7 @@ export const TopNav = ({
         <div className="flex space-x-2 items-center">
           {topNavProps?.homeLinkText && (
             <>
-              <Link href="/" aria-label="Home">
+              <Link href="/" aria-label="Home" className={'hover:text-light-400 transition-colors'}>
                 {topNavProps?.homeLinkText}
               </Link>
               <Separator orientation="vertical" />
@@ -35,7 +35,7 @@ export const TopNav = ({
                 href={address.mapsLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex space-x-2 items-center"
+                className="flex space-x-2 items-center hover:text-light-400 transition-colors"
               >
                 <MapPin />
                 <span>{addressLine}</span>
@@ -52,14 +52,18 @@ export const TopNav = ({
               <Separator orientation="vertical" />
               <a
                 href={`tel:${settings.contactInfo.phone.replace(/\D/g, '')}`}
-                className="flex space-x-2 items-center"
+                className="flex space-x-2 items-center hover:text-light-400 transition-colors"
               >
                 <PhoneCall /> <span>{formatPhoneNumber(settings.contactInfo.phone)}</span>
               </a>
             </>
           )}
         </div>
-        <NavMenuItems links={topNavProps?.topNavLinks} className="flex justify-end" />
+        <NavMenuItems
+          links={topNavProps?.topNavLinks}
+          className="flex justify-end"
+          linkClassName={'hover:text-light-400'}
+        />
       </div>
     </div>
   )

@@ -10,6 +10,7 @@ export const HeroBlock: Block = {
     plural: 'Heroes',
   },
   admin: {
+    group: 'Heroes and Banners',
     components: {
       Label: '/lib/blocks/hero-block/components/HeroBlockLabel',
     },

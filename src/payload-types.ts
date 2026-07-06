@@ -103,6 +103,7 @@ export interface Config {
   blocks: {
     section: Section;
     sectionInner: SectionInner;
+    row: Row;
     hero: Hero;
     heading: Heading;
     'rich-text': RichText;
@@ -126,11 +127,13 @@ export interface Config {
     financeCalculatorBlock: FinanceCalculatorBlockType;
     'back-button': BackButton;
     'benefits-grid': BenefitsGrid;
+    'specials-archive': SpecialsArchive;
   };
   collections: {
     users: User;
     pages: Page;
     blogs: Blog;
+    specials: Special;
     media: Media;
     categories: Category;
     redirects: Redirect;
@@ -148,6 +151,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     blogs: BlogsSelect<false> | BlogsSelect<true>;
+    specials: SpecialsSelect<false> | SpecialsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
@@ -239,6 +243,7 @@ export interface Section {
         | BenefitsGrid
         | PopupCards
         | FinanceCalculatorBlockType
+        | SpecialsArchive
       )[]
     | null;
   backgroundColor?:
@@ -337,6 +342,7 @@ export interface Section {
 export interface SectionInner {
   content?:
     | (
+        | Row
         | Heading
         | Hero
         | RichText
@@ -360,6 +366,7 @@ export interface SectionInner {
         | BenefitsGrid
         | PopupCards
         | FinanceCalculatorBlockType
+        | SpecialsArchive
       )[]
     | null;
   backgroundColor?:
@@ -448,6 +455,125 @@ export interface SectionInner {
   id?: string | null;
   blockName?: string | null;
   blockType: 'sectionInner';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Row".
+ */
+export interface Row {
+  content?:
+    | (
+        | Heading
+        | Hero
+        | RichText
+        | FeatureList
+        | FormBlockType
+        | ContactInfo
+        | IconText
+        | CtaButton
+        | BackButton
+        | WhyCards
+        | Map
+        | TeamGrid
+        | ImageBlock
+        | CtaCards
+        | StatsBlock
+        | HoursTabs
+        | Faq
+        | ContactFooter
+        | FeatureGrid
+        | Benefits
+        | BenefitsGrid
+        | PopupCards
+        | FinanceCalculatorBlockType
+        | SpecialsArchive
+      )[]
+    | null;
+  backgroundColor?:
+    | ('none' | 'card' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
+    | null;
+  container?: boolean | null;
+  align?: ('left' | 'center' | 'right') | null;
+  verticalAlign?: ('top' | 'center' | 'bottom') | null;
+  gap?: ('sm' | 'md' | 'lg') | null;
+  /**
+   * Allow items to wrap onto the next line on smaller screens.
+   */
+  wrap?: boolean | null;
+  layout?: {
+    /**
+     * Padding and margin per breakpoint (top, right, bottom, left).
+     */
+    spacing?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    flex?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hide this section at specific screen sizes.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  accessibility?: {
+    /**
+     * Sets the semantic HTML element or ARIA landmark role. "region" requires a label to be announced by screen readers.
+     */
+    landmark?:
+      | ('' | 'main' | 'region' | 'banner' | 'contentinfo' | 'navigation' | 'complementary' | 'search' | 'form')
+      | null;
+    /**
+     * Provides a human-readable, localised description of the element's role (aria-roledescription). Overrides how assistive technology announces the landmark role — e.g. "Promotional banner" instead of "region". Use sparingly; requires a meaningful role to be set.
+     */
+    ariaRoleDescription?: string | null;
+    /**
+     * Provides an accessible name for the section (aria-label). Required when using "region" landmark and no visible heading is present.
+     */
+    ariaLabel?: string | null;
+    /**
+     * References the ID of a visible heading element that labels this section (aria-labelledby). Preferred over ARIA Label when a heading exists.
+     */
+    ariaLabelledBy?: string | null;
+    /**
+     * References the ID of an element that provides an extended description of this section (aria-describedby).
+     */
+    ariaDescribedBy?: string | null;
+    /**
+     * Hides this section entirely from screen readers. Use only for purely decorative sections that add no informational value.
+     */
+    ariaHidden?: boolean | null;
+    /**
+     * Sets the HTML id attribute. Used as an anchor target and can be referenced by aria-labelledby / aria-describedby on other elements.
+     */
+    sectionId?: string | null;
+    /**
+     * Controls whether the section itself is focusable. Rarely needed — only set if the section is a scroll target or managed focus container.
+     */
+    tabIndex?: ('' | '0' | '-1') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'row';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1351,6 +1477,7 @@ export interface IconText {
  */
 export interface CtaButton {
   label: string;
+  icon?: string | null;
   linkType: 'url' | 'reference' | 'anchor';
   variant?: ('default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'white') | null;
   /**
@@ -1704,6 +1831,15 @@ export interface FinanceCalculatorBlockType {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SpecialsArchive".
+ */
+export interface SpecialsArchive {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'specials-archive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -1804,6 +1940,47 @@ export interface Category {
     | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "specials".
+ */
+export interface Special {
+  id: string;
+  offerType: 'price-point' | 'payment' | 'service' | 'enquiry';
+  /**
+   * Optional. Defaults to the offer type label if left blank.
+   */
+  title?: string | null;
+  /**
+   * Optional. Defaults to the offer type label if left blank.
+   */
+  subTitle?: string | null;
+  cardImage: string | Media;
+  /**
+   * Cash price in Rand, e.g. 489900 for R489 900
+   */
+  pricingLabel?: string | null;
+  /**
+   * Cash price in Rand, e.g. 489900 for R489 900
+   */
+  specialOffer?: number | null;
+  content?: {
+    section?: Section[] | null;
+  };
+  /**
+   * Lower numbers appear first within a section.
+   */
+  sortOrder?: number | null;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2018,6 +2195,10 @@ export interface PayloadLockedDocument {
         value: string | Blog;
       } | null)
     | ({
+        relationTo: 'specials';
+        value: string | Special;
+      } | null)
+    | ({
         relationTo: 'media';
         value: string | Media;
       } | null)
@@ -2160,6 +2341,30 @@ export interface BlogsSelect<T extends boolean = true> {
         id?: T;
         name?: T;
       };
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "specials_select".
+ */
+export interface SpecialsSelect<T extends boolean = true> {
+  offerType?: T;
+  title?: T;
+  subTitle?: T;
+  cardImage?: T;
+  pricingLabel?: T;
+  specialOffer?: T;
+  content?:
+    | T
+    | {
+        section?: T | {};
+      };
+  sortOrder?: T;
+  publishedAt?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
@@ -3076,6 +3281,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'blogs';
           value: string | Blog;
+        } | null)
+      | ({
+          relationTo: 'specials';
+          value: string | Special;
         } | null);
     global?: string | null;
     user?: (string | null) | User;
