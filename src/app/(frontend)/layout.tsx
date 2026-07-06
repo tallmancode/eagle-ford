@@ -18,6 +18,7 @@ import { SiteHeader } from '@/components/header/SiteHeader'
 import { SiteFooter } from '@/components/footer/SiteFooter'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import type { Header as GlobalHeader, Setting as GlobalSettings } from '@/payload-types'
+import { PrivacyProvider } from '@/lib/providers/privacy'
 
 const fordF1 = localFont({
   src: [
@@ -44,19 +45,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       lang="en"
       suppressHydrationWarning
     >
-      <body className="font-ford">
-        <Providers>
-          <AdminBar
-            adminBarProps={{
-              preview: isEnabled,
-            }}
-          />
+      <PrivacyProvider>
+        <body className="font-ford">
+          <Providers>
+            <AdminBar
+              adminBarProps={{
+                preview: isEnabled,
+              }}
+            />
 
-          <SiteHeader globalHeader={globalHeader} globalSettings={globalSettings} />
-          {children}
-          <SiteFooter />
-        </Providers>
-      </body>
+            <SiteHeader globalHeader={globalHeader} globalSettings={globalSettings} />
+            {children}
+            <SiteFooter />
+          </Providers>
+        </body>
+      </PrivacyProvider>
     </html>
   )
 }

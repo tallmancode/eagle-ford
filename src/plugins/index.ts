@@ -20,6 +20,7 @@ import {
 } from '@/plugins/form-builder/formInputBlocks'
 import { SubheadingBlock } from '@/lib/blocks/form-block/SubheadingBlock'
 import { handleMultiStepFormUploads } from '@/lib/blocks/form-block/hooks/handleMultiStepFormUploads'
+import { importExportPlugin } from '@payloadcms/plugin-import-export'
 
 const formStepRowLabelPath = '@/lib/blocks/form-block/components/FormStepRowLabel#FormStepRowLabel'
 
@@ -200,5 +201,26 @@ export const plugins: Plugin[] = [
         return [...defaultFields, ...searchFields]
       },
     },
+  }),
+  importExportPlugin({
+    overrideExportCollection: ({ collection }) => ({
+      ...collection,
+      admin: {
+        ...collection.admin,
+        group: 'Data Management',
+      },
+      depth: 5,
+    }),
+    overrideImportCollection: ({ collection }) => ({
+      ...collection,
+      admin: {
+        ...collection.admin,
+        group: 'Data Management',
+      },
+    }),
+    collections: [
+      { slug: 'users', export: { disableJobsQueue: true }, import: { disableJobsQueue: true } },
+      { slug: 'pages', export: { disableJobsQueue: true }, import: { disableJobsQueue: true } },
+    ],
   }),
 ]

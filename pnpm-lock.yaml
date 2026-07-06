@@ -28,6 +28,9 @@ importers:
       '@payloadcms/plugin-form-builder':
         specifier: 3.85.1
         version: 3.85.1(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.6(@babel/core@7.29.7)(@playwright/test@1.58.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.101.0))(payload@3.85.1(graphql@16.14.2)(typescript@5.7.3))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@5.7.3)
+      '@payloadcms/plugin-import-export':
+        specifier: 3.85.1
+        version: 3.85.1(@payloadcms/ui@3.85.1(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.6(@babel/core@7.29.7)(@playwright/test@1.58.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.101.0))(payload@3.85.1(graphql@16.14.2)(typescript@5.7.3))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@5.7.3))(payload@3.85.1(graphql@16.14.2)(typescript@5.7.3))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@payloadcms/plugin-nested-docs':
         specifier: 3.85.1
         version: 3.85.1(payload@3.85.1(graphql@16.14.2)(typescript@5.7.3))
@@ -130,6 +133,9 @@ importers:
       react-dom:
         specifier: 19.2.6
         version: 19.2.6(react@19.2.6)
+      react-facebook-pixel:
+        specifier: ^1.0.4
+        version: 1.0.4
       react-hook-form:
         specifier: 7.71.1
         version: 7.71.1(react@19.2.6)
@@ -2230,6 +2236,15 @@ packages:
       payload: 3.85.1
       react: ^19.0.1 || ^19.1.2 || ^19.2.1
       react-dom: ^19.0.1 || ^19.1.2 || ^19.2.1
+
+  '@payloadcms/plugin-import-export@3.85.1':
+    resolution:
+      {
+        integrity: sha512-OyeyDh5m4GrGb9tLMv/Xvfz/ZPmx+WiKtcAz54TzFFYk9FuBkhb1aqXywxo7wFw9iMjxxToBR9/IqJT1KGaDBQ==,
+      }
+    peerDependencies:
+      '@payloadcms/ui': 3.85.1
+      payload: 3.85.1
 
   '@payloadcms/plugin-nested-docs@3.85.1':
     resolution:
@@ -4385,6 +4400,18 @@ packages:
     resolution:
       {
         integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==,
+      }
+
+  csv-parse@5.6.0:
+    resolution:
+      {
+        integrity: sha512-l3nz3euub2QMg5ouu5U09Ew9Wf6/wQ8I++ch1loQ0ljmzhmfZYrH9fflS22i/PQEvsPvxCwxgz5q7UB8K1JO4Q==,
+      }
+
+  csv-stringify@6.5.2:
+    resolution:
+      {
+        integrity: sha512-RFPahj0sXcmUyjrObAK+DOWtMvMIFV328n4qZJhgX3x2RqkQgOTU2mCUmiFR0CzM6AzChlRSUErjiJeEt8BaQA==,
       }
 
   damerau-levenshtein@1.0.8:
@@ -6975,6 +7002,12 @@ packages:
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
 
+  react-facebook-pixel@1.0.4:
+    resolution:
+      {
+        integrity: sha512-givZY8MS0v/mdbRzvcvouBo/j0TtDiu/93f4gIjJXwDDgwlf6bYUiQvb2qcqjluOOD/hIKUQHNYLNsSOnoEklg==,
+      }
+
   react-hook-form@7.71.1:
     resolution:
       {
@@ -9374,6 +9407,19 @@ snapshots:
       - supports-color
       - typescript
 
+  '@payloadcms/plugin-import-export@3.85.1(@payloadcms/ui@3.85.1(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.6(@babel/core@7.29.7)(@playwright/test@1.58.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.101.0))(payload@3.85.1(graphql@16.14.2)(typescript@5.7.3))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@5.7.3))(payload@3.85.1(graphql@16.14.2)(typescript@5.7.3))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+    dependencies:
+      '@faceless-ui/modal': 3.0.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@payloadcms/translations': 3.85.1
+      '@payloadcms/ui': 3.85.1(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.6(@babel/core@7.29.7)(@playwright/test@1.58.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.101.0))(payload@3.85.1(graphql@16.14.2)(typescript@5.7.3))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@5.7.3)
+      csv-parse: 5.6.0
+      csv-stringify: 6.5.2
+      payload: 3.85.1(graphql@16.14.2)(typescript@5.7.3)
+      qs-esm: 8.0.1
+    transitivePeerDependencies:
+      - react
+      - react-dom
+
   '@payloadcms/plugin-nested-docs@3.85.1(payload@3.85.1(graphql@16.14.2)(typescript@5.7.3))':
     dependencies:
       payload: 3.85.1(graphql@16.14.2)(typescript@5.7.3)
@@ -10762,6 +10808,10 @@ snapshots:
   csstype@3.1.3: {}
 
   csstype@3.2.3: {}
+
+  csv-parse@5.6.0: {}
+
+  csv-stringify@6.5.2: {}
 
   damerau-levenshtein@1.0.8: {}
 
@@ -12600,6 +12650,8 @@ snapshots:
   react-error-boundary@6.1.2(react@19.2.6):
     dependencies:
       react: 19.2.6
+
+  react-facebook-pixel@1.0.4: {}
 
   react-hook-form@7.71.1(react@19.2.6):
     dependencies:
