@@ -9,6 +9,7 @@ export const FormBlock: Block = {
     singular: 'Form Block',
   },
   admin: {
+    group: 'Forms',
     images: {
       thumbnail: {
         url: '/blocks/form-block.jpg',

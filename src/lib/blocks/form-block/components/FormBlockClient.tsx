@@ -28,10 +28,16 @@ import {
   isMultiStepForm,
   type FormInputField,
 } from '@/lib/blocks/form-block/utils/getFormSteps'
+import type { FormBlockContextValues } from '@/lib/blocks/form-block/types/formContext'
+import {
+  getHiddenFieldNames,
+  mergeFormDefaultValues,
+} from '@/lib/blocks/form-block/types/formContext'
 
 export type FormBlockLayout = 'default' | 'hero'
 
 export type FormBlockClientProps = {
+  contextValues?: FormBlockContextValues
   enableIntro?: boolean | null
   form: Form
   introContent?: SerializedEditorState | null
@@ -73,9 +79,17 @@ function renderFormField(
   field: FormInputField,
   index: number,
   formMethods: ReturnType<typeof useForm<FormData>>,
-  options?: { layout?: FormBlockLayout; wrapperClassName?: string },
+  options?: {
+    hiddenFieldNames?: Set<string>
+    layout?: FormBlockLayout
+    wrapperClassName?: string
+  },
 ) {
   if (!field.blockType) {
+    return null
+  }
+
+  if ('name' in field && field.name && options?.hiddenFieldNames?.has(field.name)) {
     return null
   }
 
@@ -125,21 +139,23 @@ function renderFormField(
 function renderHeroFormFields(
   fields: FormInputField[],
   formMethods: ReturnType<typeof useForm<FormData>>,
+  hiddenFieldNames?: Set<string>,
 ) {
   const { mainFields, textareaField, otherFields } = partitionFieldsForHeroLayout(fields)
 
   let fieldIndex = 0
+  const renderOptions = { hiddenFieldNames, layout: 'hero' as const }
 
   return (
     <>
       <div className="grid grid-cols-1 gap-4 lg:col-span-2 lg:grid-cols-2">
         {mainFields.map((field) => {
-          const node = renderFormField(field, fieldIndex++, formMethods, { layout: 'hero' })
+          const node = renderFormField(field, fieldIndex++, formMethods, renderOptions)
           return node
         })}
         {otherFields.map((field) => {
           const node = renderFormField(field, fieldIndex++, formMethods, {
-            layout: 'hero',
+            ...renderOptions,
             wrapperClassName: 'lg:col-span-2',
           })
           return node
@@ -153,7 +169,7 @@ function renderHeroFormFields(
             '[&_textarea]:min-h-32 lg:[&_textarea]:min-h-full lg:[&_textarea]:h-full',
           )}
         >
-          {renderFormField(textareaField, fieldIndex++, formMethods, { layout: 'hero' })}
+          {renderFormField(textareaField, fieldIndex++, formMethods, renderOptions)}
         </div>
       )}
     </>
@@ -161,6 +177,7 @@ function renderHeroFormFields(
 }
 
 type FormActionsProps = {
+  hiddenFieldNames?: Set<string>
   isMultiStep: boolean
   isFirstStep: boolean
   isLastStep: boolean
@@ -176,6 +193,7 @@ type FormActionsProps = {
 }
 
 function FormActions({
+  hiddenFieldNames,
   isMultiStep,
   isFirstStep,
   isLastStep,
@@ -204,7 +222,10 @@ function FormActions({
       <div className={cn('flex flex-col gap-3', isHero && 'flex-1')}>
         {isHero &&
           checkboxFields.map((field) => {
-            const node = renderFormField(field, fieldIndex++, formMethods, { layout: 'hero' })
+            const node = renderFormField(field, fieldIndex++, formMethods, {
+              hiddenFieldNames,
+              layout: 'hero',
+            })
             return node
           })}
 
@@ -239,6 +260,7 @@ function FormActions({
 }
 
 export function FormBlockClient({
+  contextValues,
   enableIntro,
   form,
   introContent,
@@ -248,9 +270,10 @@ export function FormBlockClient({
   const steps = getFormSteps(form)
   const isMultiStep = isMultiStepForm(form)
   const useHeroLayout = layout === 'hero' && !isMultiStep
+  const hiddenFieldNames = getHiddenFieldNames(contextValues)
 
   const formMethods = useForm<FormData>({
-    defaultValues: buildInitialFormState(form),
+    defaultValues: mergeFormDefaultValues(buildInitialFormState(form), contextValues),
   })
 
   const { handleSubmit, setError: setFieldError, trigger } = formMethods
@@ -439,8 +462,9 @@ export function FormBlockClient({
               onSubmit={handleFormAction}
               noValidate
             >
-              {renderHeroFormFields(currentStep.fields ?? [], formMethods)}
+              {renderHeroFormFields(currentStep.fields ?? [], formMethods, hiddenFieldNames)}
               <FormActions
+                hiddenFieldNames={hiddenFieldNames}
                 isMultiStep={isMultiStep}
                 isFirstStep={isFirstStep}
                 isLastStep={isLastStep}
@@ -519,9 +543,10 @@ export function FormBlockClient({
                 noValidate
               >
                 {currentStep.fields?.map((field, index) =>
-                  renderFormField(field, index, formMethods),
+                  renderFormField(field, index, formMethods, { hiddenFieldNames }),
                 )}
                 <FormActions
+                  hiddenFieldNames={hiddenFieldNames}
                   isMultiStep={isMultiStep}
                   isFirstStep={isFirstStep}
                   isLastStep={isLastStep}

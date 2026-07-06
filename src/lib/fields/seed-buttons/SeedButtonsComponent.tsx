@@ -54,6 +54,22 @@ export const SeedButtonsComponent = ({ payload: _payload }: { payload: Payload }
           />
           {' to add the service booking form to your Forms collection.'}
         </li>
+        <li>
+          <CreateFormButton
+            endpoint="/next/create-test-drive-form"
+            label="Create Test Drive Booking Form"
+            successText="Test Drive Booking Form created!"
+          />
+          {' to add the test drive booking form to your Forms collection.'}
+        </li>
+        <li>
+          <CreateFormButton
+            endpoint="/next/create-special-offer-form"
+            label="Create Special Offer Enquiry Form"
+            successText="Special Offer Enquiry Form created!"
+          />
+          {' to add the special offer enquiry form to your Forms collection.'}
+        </li>
       </ul>
     </div>
   )

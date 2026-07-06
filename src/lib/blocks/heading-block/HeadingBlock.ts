@@ -12,6 +12,7 @@ export const HeadingBlock: Block = {
     plural: 'Headings',
   },
   admin: {
+    group: 'Text',
     components: {
       Label: '/lib/blocks/heading-block/components/HeadingBlockLabel',
     },

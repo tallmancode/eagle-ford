@@ -9,6 +9,7 @@ export const FaqBlock: Block = {
     plural: 'FAQs',
   },
   admin: {
+    group: 'Text',
     components: {
       Label: '/lib/blocks/faq-block/components/FaqBlockLabel',
     },

@@ -25,6 +25,8 @@ import type {
   FinanceCalculatorBlockType,
   BackButton,
   BenefitsGrid,
+  SpecialsArchive,
+  Row,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -51,10 +53,14 @@ import { PopupCardsBlockComponent } from '@/lib/blocks/popup-cards-block/compone
 import { FinanceCalculatorBlockComponent } from '@/lib/blocks/finance-calculator-block/components/FinanceCalculatorBlockComponent'
 import { BackButtonBlockComponent } from '@/lib/blocks/back-button-block/components/BackButtonBlockComponent'
 import { BenefitsGridBlockComponent } from '@/lib/blocks/benefits-grid-block/components/BenefitsGridBlockComponent'
+import { SpecialsArchiveBlockComponent } from '@/lib/blocks/specials-archive-block/components/SpecialsArchiveBlockComponent'
+import { RowBlockComponent } from '@/lib/blocks/row-block/components/RowBlockComponent'
+import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 
 type BlockComponentMap = {
   section: Section
   sectionInner: SectionInner
+  row: Row
   heading: Heading
   hero: Hero
   'rich-text': RichText
@@ -78,15 +84,17 @@ type BlockComponentMap = {
   'benefits-grid': BenefitsGrid
   'popup-cards': PopupCards
   financeCalculatorBlock: FinanceCalculatorBlockType
+  'specials-archive': SpecialsArchive
 }
 
-type WithMeta<T> = T & { meta?: unknown }
+type WithMeta<T> = T & { meta?: BlockRenderMeta }
 
 const blockComponents: {
   [K in keyof BlockComponentMap]: React.ComponentType<WithMeta<BlockComponentMap[K]>>
 } = {
   section: SectionBlock,
   sectionInner: SectionBlock as unknown as React.ComponentType<WithMeta<SectionInner>>,
+  row: RowBlockComponent,
   heading: HeadingBlockComponent,
   hero: HeroBlock,
   'rich-text': RichTextBlockComponent,
@@ -114,6 +122,7 @@ const blockComponents: {
   'benefits-grid': BenefitsGridBlockComponent,
   'popup-cards': PopupCardsBlockComponent,
   financeCalculatorBlock: FinanceCalculatorBlockComponent,
+  'specials-archive': SpecialsArchiveBlockComponent,
 } as const
 
 type Blocks = Config['blocks']
@@ -121,7 +130,11 @@ type Blocks = Config['blocks']
 type BlockTypes = Blocks[keyof Blocks]
 type BlockComponentKey = keyof typeof blockComponents
 
-export function renderBlock(block: BlockTypes, index: number, meta?: unknown): React.ReactNode {
+export function renderBlock(
+  block: BlockTypes,
+  index: number,
+  meta?: BlockRenderMeta,
+): React.ReactNode {
   const { blockType } = block
   if (blockType && blockType in blockComponents) {
     const Block = blockComponents[block.blockType as BlockComponentKey] as React.ComponentType<
@@ -136,9 +149,10 @@ export function renderBlock(block: BlockTypes, index: number, meta?: unknown): R
   return null
 }
 
-export const RenderBlocks: React.FC<{ blocks: BlockTypes[] | null | undefined; meta?: unknown }> = (
-  props,
-) => {
+export const RenderBlocks: React.FC<{
+  blocks: BlockTypes[] | null | undefined
+  meta?: BlockRenderMeta
+}> = (props) => {
   const { blocks } = props
 
   const hasBlocks = blocks && Array.isArray(blocks) && blocks.length > 0

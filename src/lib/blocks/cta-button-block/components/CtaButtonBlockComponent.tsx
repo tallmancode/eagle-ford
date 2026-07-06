@@ -1,6 +1,7 @@
 import type { CtaButton } from '@/payload-types'
 import { Button } from '@/components/ui/button'
 import { resolveNavHref } from '@/lib/fields/navigation/resolveNavHref'
+import { lucideIconMap } from '@/lib/fields/lucide-icons'
 import { cn } from '@/utilities/ui'
 import Link from 'next/link'
 import React from 'react'
@@ -11,8 +12,9 @@ const alignClass: Record<string, string> = {
   right: 'justify-end',
 }
 
-export const CtaButtonBlockComponent: React.FC<CtaButton> = ({
+export const CtaButtonBlockComponent: React.FC<CtaButton & { meta?: unknown }> = ({
   label,
+  icon,
   linkType,
   url,
   reference,
@@ -21,16 +23,27 @@ export const CtaButtonBlockComponent: React.FC<CtaButton> = ({
   variant = 'default',
   size = 'default',
   align = 'left',
+  meta,
 }) => {
-  const wrapperClass = cn('flex w-full', alignClass[align ?? 'left'])
+  const inRow = (meta as { inRow?: boolean } | undefined)?.inRow === true
+  const wrapperClass = inRow ? undefined : cn('flex w-full', alignClass[align ?? 'left'])
+  const Icon = icon ? lucideIconMap[icon] : undefined
+
+  const buttonContent = (
+    <>
+      {Icon ? <Icon /> : null}
+      {label}
+    </>
+  )
+
+  const wrap = (node: React.ReactNode) =>
+    wrapperClass ? <div className={wrapperClass}>{node}</div> : node
 
   if (linkType === 'anchor') {
-    return (
-      <div className={wrapperClass}>
-        <Button asChild variant={variant ?? 'default'} size={size ?? 'default'}>
-          <a href={`#${anchorId}`}>{label}</a>
-        </Button>
-      </div>
+    return wrap(
+      <Button asChild variant={variant ?? 'default'} size={size ?? 'default'}>
+        <a href={`#${anchorId}`}>{buttonContent}</a>
+      </Button>,
     )
   }
 
@@ -48,13 +61,11 @@ export const CtaButtonBlockComponent: React.FC<CtaButton> = ({
 
   const newTabProps = newTab ? { rel: 'noopener noreferrer', target: '_blank' } : {}
 
-  return (
-    <div className={wrapperClass}>
-      <Button asChild variant={variant ?? 'default'} size={size ?? 'default'}>
-        <Link href={href} {...newTabProps}>
-          {label}
-        </Link>
-      </Button>
-    </div>
+  return wrap(
+    <Button asChild variant={variant ?? 'default'} size={size ?? 'default'}>
+      <Link href={href} {...newTabProps}>
+        {buttonContent}
+      </Link>
+    </Button>,
   )
 }
