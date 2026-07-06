@@ -8,6 +8,7 @@ export const RichTextBlock: Block = {
     plural: 'Rich Text',
   },
   admin: {
+    group: 'Text',
     components: {
       Label: '/lib/blocks/rich-text-block/components/RichTextBlockLabel',
     },

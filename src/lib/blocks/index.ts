@@ -1,5 +1,6 @@
 import { SectionBlock } from '@/lib/blocks/section-block/SectionBlock'
 import { SectionInnerBlock } from '@/lib/blocks/section-block/SectionInnerBlock'
+import { RowBlock } from '@/lib/blocks/row-block/RowBlock'
 import { HeroBlock } from '@/lib/blocks/hero-block/HeroBlock'
 import { HeadingBlock } from '@/lib/blocks/heading-block/HeadingBlock'
 import { RichTextBlock } from '@/lib/blocks/rich-text-block/RichTextBlock'
@@ -23,10 +24,12 @@ import { PopupCardsBlock } from '@/lib/blocks/popup-cards-block/PopupCardsBlock'
 import { FinanceCalculatorBlock } from '@/lib/blocks/finance-calculator-block/FinanceCalculatorBlock'
 import { BackButtonBlock } from '@/lib/blocks/back-button-block/BackButtonBlock'
 import { BenefitsGridBlock } from '@/lib/blocks/benefits-grid-block/BenefitsGridBlock'
+import { SpecialsArchiveBlock } from '@/lib/blocks/specials-archive-block/SpecialsArchiveBlock'
 
 const Blocks = [
   SectionBlock,
   SectionInnerBlock,
+  RowBlock,
   HeroBlock,
   HeadingBlock,
   RichTextBlock,
@@ -50,6 +53,7 @@ const Blocks = [
   FinanceCalculatorBlock,
   BackButtonBlock,
   BenefitsGridBlock,
+  SpecialsArchiveBlock,
 ]
 
 export default Blocks

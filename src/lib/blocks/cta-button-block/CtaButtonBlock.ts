@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { LucideIconField } from '@/lib/fields/lucide-icons'
 
 export const CtaButtonBlock: Block = {
   slug: 'cta-button',
@@ -21,6 +22,7 @@ export const CtaButtonBlock: Block = {
       label: 'Button Label',
       required: true,
     },
+    LucideIconField({ required: false }),
     {
       type: 'row',
       fields: [

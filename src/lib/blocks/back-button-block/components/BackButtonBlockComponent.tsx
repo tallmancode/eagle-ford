@@ -13,16 +13,18 @@ const alignClass: Record<string, string> = {
   right: 'justify-end',
 }
 
-export const BackButtonBlockComponent: React.FC<BackButton> = ({
+export const BackButtonBlockComponent: React.FC<BackButton & { meta?: unknown }> = ({
   label = 'Back',
   variant = 'default',
   size = 'default',
   align = 'left',
   fallbackUrl = '/',
   showIcon = true,
+  meta,
 }) => {
   const router = useRouter()
-  const wrapperClass = cn('flex w-full', alignClass[align ?? 'left'])
+  const inRow = (meta as { inRow?: boolean } | undefined)?.inRow === true
+  const wrapperClass = inRow ? undefined : cn('flex w-full', alignClass[align ?? 'left'])
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -32,17 +34,17 @@ export const BackButtonBlockComponent: React.FC<BackButton> = ({
     }
   }
 
-  return (
-    <div className={wrapperClass}>
-      <Button
-        type="button"
-        variant={variant ?? 'default'}
-        size={size ?? 'default'}
-        onClick={handleBack}
-      >
-        {showIcon ? <ArrowLeft /> : null}
-        {label}
-      </Button>
-    </div>
+  const button = (
+    <Button
+      type="button"
+      variant={variant ?? 'default'}
+      size={size ?? 'default'}
+      onClick={handleBack}
+    >
+      {showIcon ? <ArrowLeft /> : null}
+      {label}
+    </Button>
   )
+
+  return wrapperClass ? <div className={wrapperClass}>{button}</div> : button
 }
