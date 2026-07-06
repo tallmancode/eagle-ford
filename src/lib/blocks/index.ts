@@ -25,6 +25,7 @@ import { FinanceCalculatorBlock } from '@/lib/blocks/finance-calculator-block/Fi
 import { BackButtonBlock } from '@/lib/blocks/back-button-block/BackButtonBlock'
 import { BenefitsGridBlock } from '@/lib/blocks/benefits-grid-block/BenefitsGridBlock'
 import { SpecialsArchiveBlock } from '@/lib/blocks/specials-archive-block/SpecialsArchiveBlock'
+import { PartnersBlock } from '@/lib/blocks/partners-block/PartnersBlock'
 
 const Blocks = [
   SectionBlock,
@@ -54,6 +55,7 @@ const Blocks = [
   BackButtonBlock,
   BenefitsGridBlock,
   SpecialsArchiveBlock,
+  PartnersBlock,
 ]
 
 export default Blocks
