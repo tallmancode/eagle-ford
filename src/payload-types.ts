@@ -2180,6 +2180,14 @@ export interface VehicleModel {
    */
   price: number;
   /**
+   * Full-width hero for this model variant. Falls back to the parent vehicle hero image if not set.
+   */
+  heroImage?: (string | null) | Media;
+  /**
+   * Card/listing image for this model variant. Falls back to model hero, then parent vehicle feature/hero images.
+   */
+  featureImage?: (string | null) | Media;
+  /**
    * Key feature bullet points shown on the model overview page.
    */
   highlights?:
@@ -2906,6 +2914,8 @@ export interface VehicleModelsSelect<T extends boolean = true> {
   name?: T;
   vehicle?: T;
   price?: T;
+  heroImage?: T;
+  featureImage?: T;
   highlights?:
     | T
     | {

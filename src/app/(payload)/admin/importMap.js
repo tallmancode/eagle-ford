@@ -20,6 +20,7 @@ import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { LinkFeatureClient as LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { HeadingFeatureClient as HeadingFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { MediaDescription as MediaDescription_bb74f08ef291af65d747d73b27358139 } from '../../../lib/components/media-description/MediaDescription'
+import { MediaAltField as MediaAltField_0a93eb78e36d9bee47d81accd7e33eb0 } from '@/lib/components/media-alt-field/MediaAltField'
 import { FormFieldNameInput as FormFieldNameInput_5007207a7f34924ed7587506bd56b263 } from '@/lib/blocks/form-block/components/FormFieldNameInput'
 import { FormFieldRowLabel as FormFieldRowLabel_a109948c17002fcd236dfd1580ad32fc } from '@/lib/blocks/form-block/components/FormFieldRowLabel'
 import { FormStepRowLabel as FormStepRowLabel_4877ce19d078fdaae63ddc21b2694074 } from '@/lib/blocks/form-block/components/FormStepRowLabel'
@@ -133,6 +134,8 @@ export const importMap = {
     HeadingFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   '/lib/components/media-description/MediaDescription#MediaDescription':
     MediaDescription_bb74f08ef291af65d747d73b27358139,
+  '@/lib/components/media-alt-field/MediaAltField#MediaAltField':
+    MediaAltField_0a93eb78e36d9bee47d81accd7e33eb0,
   '@/lib/blocks/form-block/components/FormFieldNameInput#FormFieldNameInput':
     FormFieldNameInput_5007207a7f34924ed7587506bd56b263,
   '@/lib/blocks/form-block/components/FormFieldRowLabel#FormFieldRowLabel':

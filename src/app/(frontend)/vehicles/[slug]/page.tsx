@@ -108,7 +108,7 @@ export default async function Page({ params: paramsPromise }: Args) {
             <a href="#models">
               <Button
                 variant="outline"
-                className="rounded-full border-white text-white hover:bg-white/10"
+                className="rounded-full border-white text-white bg-transparent hover:bg-white/10"
               >
                 View Models
               </Button>
@@ -172,6 +172,8 @@ export default async function Page({ params: paramsPromise }: Args) {
         colours={vehicle.colours ?? []}
         gallery={vehicle.gallery ?? []}
         models={models}
+        vehicleFeatureImage={vehicle.featureImage ?? vehicle.heroImage ?? null}
+        vehicleHeroImage={vehicle.heroImage ?? null}
       />
 
       {/* ── CMS Blocks ── */}

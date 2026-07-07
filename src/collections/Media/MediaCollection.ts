@@ -9,6 +9,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 import { isAnyone, isAuthenticated } from '@/lib/utils/accessUtil'
+import { altFromFilename } from '@/lib/utils/altFromFilename'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -21,12 +22,26 @@ export const MediaCollection: CollectionConfig = {
     read: isAnyone,
     update: isAuthenticated,
   },
+  hooks: {
+    beforeChange: [
+      ({ data, req }) => {
+        if (!data.alt?.trim()) {
+          const source = req.file?.name ?? data.filename
+          if (typeof source === 'string' && source.trim()) {
+            data.alt = altFromFilename(source)
+          }
+        }
+        return data
+      },
+    ],
+  },
   fields: [
     {
       name: 'alt',
       type: 'text',
       admin: {
         components: {
+          Field: '@/lib/components/media-alt-field/MediaAltField#MediaAltField',
           Description: {
             path: '/lib/components/media-description/MediaDescription',
             exportName: 'MediaDescription',
