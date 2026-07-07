@@ -30,7 +30,7 @@ const triggerClassName = (linkClassName?: string) =>
   )
 
 const megaMenuContentClassName =
-  '!fixed !left-0 !right-0 !w-screen !max-w-none !top-[var(--site-header-height,7.5rem)] border-0 border-t bg-background p-0 shadow-lg rounded-b-xl data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in-0 data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out-0'
+  'container !fixed !inset-x-0 !mx-auto !top-[var(--site-header-height,7.5rem)] border-0 border-t bg-background p-0 shadow-lg rounded-b-xl data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in-0 data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out-0'
 
 function renderFlyoutTrigger(item: NavLink, linkClassName?: string, ariaLabel?: string) {
   const parentHref = getDropdownParentHref(item)
