@@ -249,7 +249,10 @@ export function DefaultVehicleLayout({ vehicle, models }: DefaultVehicleLayoutPr
       <VehicleFaq faqs={faqs} />
 
       {/* ── CMS Blocks ── */}
-      <RenderBlocks blocks={vehicle.content?.section ?? null} />
+      <RenderBlocks
+        blocks={vehicle.content?.section ?? null}
+        meta={{ vehicle, contextValues: { vehicleName: vehicle.name } }}
+      />
     </>
   )
 }

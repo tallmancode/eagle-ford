@@ -84,7 +84,10 @@ export default async function Page({ params: paramsPromise }: Args) {
       {draft && <LivePreviewListener />}
 
       {useTemplate ? (
-        <RenderBlocks blocks={templateSections} meta={{ vehicle }} />
+        <RenderBlocks
+          blocks={templateSections}
+          meta={{ vehicle, contextValues: { vehicleName: vehicle.name } }}
+        />
       ) : (
         <DefaultVehicleLayout vehicle={vehicle} models={models} />
       )}

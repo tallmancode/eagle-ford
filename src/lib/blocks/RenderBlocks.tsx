@@ -31,6 +31,7 @@ import type {
   VehicleTabsBlock,
   VehicleHeroBlock,
   VehicleModelsBlock,
+  VehicleFaqBlock,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -63,6 +64,7 @@ import { RowBlockComponent } from '@/lib/blocks/row-block/components/RowBlockCom
 import { VehicleTabsBlockComponent } from '@/lib/blocks/vehicle-tabs-block/components/VehicleTabsBlockComponent'
 import { VehicleHeroBlockComponent } from '@/lib/blocks/vehicle-hero-block/components/VehicleHeroBlockComponent'
 import { VehicleModelsBlockComponent } from '@/lib/blocks/vehicle-models-block/components/VehicleModelsBlockComponent'
+import { VehicleFaqBlockComponent } from '@/lib/blocks/vehicle-faq-block/components/VehicleFaqBlockComponent'
 import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 
 type BlockComponentMap = {
@@ -97,6 +99,7 @@ type BlockComponentMap = {
   'vehicle-tabs': VehicleTabsBlock
   'vehicle-hero': VehicleHeroBlock
   'vehicle-models': VehicleModelsBlock
+  'vehicle-faq': VehicleFaqBlock
 }
 
 type WithMeta<T> = T & { meta?: BlockRenderMeta }
@@ -144,6 +147,9 @@ const blockComponents: {
   >,
   'vehicle-models': VehicleModelsBlockComponent as unknown as React.ComponentType<
     WithMeta<VehicleModelsBlock>
+  >,
+  'vehicle-faq': VehicleFaqBlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleFaqBlock>
   >,
 } as const
 

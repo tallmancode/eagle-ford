@@ -29,6 +29,7 @@ import { PartnersBlock } from '@/lib/blocks/partners-block/PartnersBlock'
 import { VehicleTabsBlock } from '@/lib/blocks/vehicle-tabs-block/VehicleTabsBlock'
 import { VehicleHeroBlock } from '@/lib/blocks/vehicle-hero-block/VehicleHeroBlock'
 import { VehicleModelsBlock } from '@/lib/blocks/vehicle-models-block/VehicleModelsBlock'
+import { VehicleFaqBlock } from '@/lib/blocks/vehicle-faq-block/VehicleFaqBlock'
 
 const Blocks = [
   SectionBlock,
@@ -62,6 +63,7 @@ const Blocks = [
   VehicleTabsBlock,
   VehicleHeroBlock,
   VehicleModelsBlock,
+  VehicleFaqBlock,
 ]
 
 export default Blocks
