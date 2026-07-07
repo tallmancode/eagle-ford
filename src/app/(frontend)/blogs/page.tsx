@@ -1,5 +1,6 @@
 import type { Metadata } from 'next/types'
 
+import { formatPageTitle } from '@/constants/site'
 import { CollectionArchive } from '@/components/CollectionArchive'
 import { PageRange } from '@/components/PageRange'
 import { Pagination } from '@/components/Pagination'
@@ -58,6 +59,6 @@ export default async function Page() {
 
 export function generateMetadata(): Metadata {
   return {
-    title: `Payload Website Template Blogs`,
+    title: formatPageTitle('Blogs'),
   }
 }

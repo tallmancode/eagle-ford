@@ -10,7 +10,7 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from '@/components/ui/carousel'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 
 type Review = {
   id: number

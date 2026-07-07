@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import localFont from 'next/font/local'
@@ -10,7 +10,7 @@ import { Providers } from '@/providers'
 import { draftMode } from 'next/headers'
 
 import './globals.css'
-import { getServerSideURL } from '@/utilities/getURL'
+import { getServerSideURL } from '@/lib/utils/getServerSideURL'
 import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
 import { CRAWLER_BLOCK_ROBOTS } from '@/constants/crawlerPolicy'
 import { SITE_FAVICON_ICONS } from '@/constants/siteIcons'
@@ -85,6 +85,5 @@ export const metadata: Metadata = {
   icons: SITE_FAVICON_ICONS,
   twitter: {
     card: 'summary_large_image',
-    creator: '@payloadcms',
   },
 }

@@ -1,4 +1,4 @@
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 import * as React from 'react'
 
 const Input: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({

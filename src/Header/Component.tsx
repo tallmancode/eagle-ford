@@ -1,5 +1,5 @@
 import { HeaderClient } from './Component.client'
-import { getCachedGlobal } from '@/utilities/getGlobals'
+import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import React from 'react'
 
 export async function Header() {

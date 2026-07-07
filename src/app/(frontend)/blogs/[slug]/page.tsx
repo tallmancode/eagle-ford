@@ -9,7 +9,7 @@ import React, { cache } from 'react'
 import RichText from '@/components/RichText'
 
 import { PostHero } from '@/heros/PostHero'
-import { generateMeta } from '@/utilities/generateMeta'
+import { generateMeta } from '@/lib/utils/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 

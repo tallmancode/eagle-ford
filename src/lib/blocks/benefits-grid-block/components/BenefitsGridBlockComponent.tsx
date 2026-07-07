@@ -2,7 +2,7 @@ import type { BenefitsGrid, Media } from '@/payload-types'
 import { Button } from '@/components/ui/button'
 import { MediaImage } from '@/components/ui/media-image'
 import { resolveLinkFieldHref } from '@/lib/utils/resolveLinkFieldHref'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 import Link from 'next/link'
 import React from 'react'
 

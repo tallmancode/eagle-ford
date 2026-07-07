@@ -5,7 +5,7 @@ import { ChevronRight } from 'lucide-react'
 import { VehicleMegaMenuCard } from '@/components/header/VehicleMegaMenuCard'
 import type { VehicleMegaMenuData } from '@/lib/data/vehicleMegaMenuTypes'
 import { getMegaMenuDataForMode } from '@/lib/data/vehicleMegaMenuTypes'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 
 type VehicleMegaMenuProps = {
   data: VehicleMegaMenuData
@@ -23,14 +23,12 @@ export function VehicleMegaMenu({ data, displayMode }: VehicleMegaMenuProps) {
 
   if (!categories.length) {
     return (
-      <div className="container py-8 text-center text-sm text-muted-foreground">
-        No vehicles available.
-      </div>
+      <div className="py-8 text-center text-sm text-muted-foreground">No vehicles available.</div>
     )
   }
 
   return (
-    <div className="container py-6">
+    <div className="py-6">
       <div className="flex min-h-[280px] gap-0">
         <div
           role="tablist"
