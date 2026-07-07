@@ -72,6 +72,14 @@ export const SeedButtonsComponent = ({ payload: _payload }: { payload: Payload }
         </li>
         <li>
           <CreateFormButton
+            endpoint="/next/create-vehicle-quote-form"
+            label="Create Vehicle Quote Form"
+            successText="Vehicle Quote Form created!"
+          />
+          {' to add the vehicle quote form to your Forms collection.'}
+        </li>
+        <li>
+          <CreateFormButton
             endpoint="/next/import-vehicles"
             label="Import Vehicle Catalog"
             successText="Vehicle catalog imported successfully!"
