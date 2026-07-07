@@ -58,8 +58,6 @@ const PrivacyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
       }
       const gdpr = await fetch('/next/locate').then((res) => res.json())
 
-      console.log(gdpr)
-
       setCountry(gdpr.country || '')
       if (!gdpr.isGDPR) {
         setCookieConsent(true)
