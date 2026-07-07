@@ -8,6 +8,7 @@ export const CtaButtonBlock: Block = {
     plural: 'CTA Buttons',
   },
   admin: {
+    group: 'Buttons',
     images: {
       thumbnail: {
         url: '/blocks/cta-button-block.jpg',

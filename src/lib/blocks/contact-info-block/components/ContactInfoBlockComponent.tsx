@@ -2,7 +2,9 @@ import type { ContactInfo } from '@/payload-types'
 import { Phone, Mail, MapPin, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { backgroundColorToClass } from '@/lib/fields/background-color/backgroundColorUtils'
+import { resolveLinkFieldHref } from '@/lib/utils/resolveLinkFieldHref'
 import { cn } from '@/lib/utils/cn'
+import Link from 'next/link'
 import React from 'react'
 
 export const ContactInfoBlockComponent: React.FC<ContactInfo> = ({
@@ -12,7 +14,7 @@ export const ContactInfoBlockComponent: React.FC<ContactInfo> = ({
   addressLine1,
   addressLine2,
   businessHours,
-  directionsUrl,
+  ctaButtons,
   backgroundColor,
   border,
 }) => {
@@ -78,12 +80,28 @@ export const ContactInfoBlockComponent: React.FC<ContactInfo> = ({
         </div>
       )}
 
-      {directionsUrl && (
-        <a href={directionsUrl} target="_blank" rel="noopener noreferrer">
-          <Button variant="outline" className="w-full rounded-full mt-2">
-            Get Directions
-          </Button>
-        </a>
+      {ctaButtons && ctaButtons.length > 0 && (
+        <div className="flex flex-col gap-2 mt-2">
+          {ctaButtons.map((btn, index) => {
+            const resolved = resolveLinkFieldHref(btn.link)
+            if (!resolved) return null
+            const newTabProps = resolved.openInNewTab
+              ? { target: '_blank' as const, rel: 'noopener noreferrer' }
+              : {}
+            return (
+              <Button
+                key={btn.id ?? index}
+                variant="outline"
+                className="w-full rounded-full"
+                asChild
+              >
+                <Link href={resolved.href} {...newTabProps}>
+                  {btn.link?.label}
+                </Link>
+              </Button>
+            )
+          })}
+        </div>
       )}
     </div>
   )

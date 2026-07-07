@@ -4,6 +4,9 @@ import { Blogs } from '@/collections/Blogs'
 import { MediaCollection } from '@/collections/Media/MediaCollection'
 import { Categories } from '@/collections/Categories'
 import { SpecialsCollection } from '@/collections/Specials'
+import { VehicleCategories } from '@/collections/VehicleCategories'
+import { VehiclesCollection } from '@/collections/Vehicles'
+import { VehicleModelsCollection } from '@/collections/VehicleModels'
 
 const collections: CollectionConfig[] = [
   PagesCollection,
@@ -11,6 +14,9 @@ const collections: CollectionConfig[] = [
   SpecialsCollection,
   MediaCollection,
   Categories,
+  VehicleCategories,
+  VehiclesCollection,
+  VehicleModelsCollection,
 ]
 
 export default collections

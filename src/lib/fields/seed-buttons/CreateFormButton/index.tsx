@@ -2,6 +2,7 @@
 
 import React, { Fragment, useCallback, useState } from 'react'
 import { toast } from '@payloadcms/ui'
+import { Button } from '@/components/ui/button'
 
 import '../SeedButton/index.scss'
 
@@ -82,9 +83,9 @@ export const CreateFormButton: React.FC<Props> = ({ endpoint, label, successText
 
   return (
     <Fragment>
-      <button className="seedButton" onClick={handleClick}>
+      <Button className="seedButton" onClick={handleClick}>
         {label}
-      </button>
+      </Button>
       {message}
     </Fragment>
   )
