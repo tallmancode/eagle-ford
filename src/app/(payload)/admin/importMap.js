@@ -1,3 +1,5 @@
+import { ExportListMenuItem as ExportListMenuItem_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { ImportListMenuItem as ImportListMenuItem_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { OverviewComponent as OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
@@ -23,6 +25,18 @@ import { FormFieldRowLabel as FormFieldRowLabel_a109948c17002fcd236dfd1580ad32fc
 import { FormStepRowLabel as FormStepRowLabel_4877ce19d078fdaae63ddc21b2694074 } from '@/lib/blocks/form-block/components/FormStepRowLabel'
 import { LinkToDoc as LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
 import { ReindexButton as ReindexButton_aead06e4cbf6b2620c5c51c9ab283634 } from '@payloadcms/plugin-search/client'
+import { FormatField as FormatField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { LimitField as LimitField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { Page as Page_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { SortBy as SortBy_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { SortOrder as SortOrder_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { SelectionToUseField as SelectionToUseField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { FieldsToExport as FieldsToExport_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { CollectionField as CollectionField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { ExportPreview as ExportPreview_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { ExportSaveButton as ExportSaveButton_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { ImportPreview as ImportPreview_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { ImportSaveButton as ImportSaveButton_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { default as default_86286278ce5a0b2c8f2e1898d6246a28 } from '../../../lib/fields/navigation/Components/NavLinkRowLabel'
 import { SocialIconPicker as SocialIconPicker_25c02dffa7af99e062dc453e0db76697 } from '@/lib/fields/social-icons/components/SocialIconPicker'
 import { ColorField as ColorField_31c0780c96066ad2689556a239466438 } from '@/lib/fields/social-icons/components/ColorField'
@@ -68,12 +82,18 @@ import { default as default_ee0932451d1029052bbbc48e80ff3d1d } from '../../../li
 import { default as default_9b2f9673a6e70f24b1fb0fe373703cc1 } from '../../../lib/blocks/benefits-grid-block/components/BenefitsGridBlockLabel'
 import { default as default_0cf04772da2df0165a47381d21356e11 } from '../../../lib/blocks/specials-archive-block/components/SpecialsArchiveBlockLabel'
 import { default as default_bacf9c6f1edd235d0a5b232acada4d25 } from '../../../lib/blocks/partners-block/components/PartnersBlockLabel'
+import { default as default_c4459d653230b67c2c4fe8ec95131ba0 } from '../../../lib/blocks/vehicle-tabs-block/components/VehicleTabsBlockLabel'
 import { default as default_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/components/BeforeLogin'
+import { ImportExportProvider as ImportExportProvider_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { default as default_410252c7292359409637c465dfeb7f50 } from '@/views/Login'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  '@payloadcms/plugin-import-export/rsc#ExportListMenuItem':
+    ExportListMenuItem_cdf7e044479f899a31f804427d568b36,
+  '@payloadcms/plugin-import-export/rsc#ImportListMenuItem':
+    ImportListMenuItem_cdf7e044479f899a31f804427d568b36,
   '@payloadcms/plugin-seo/client#OverviewComponent':
     OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   '@payloadcms/plugin-seo/client#MetaTitleComponent':
@@ -121,6 +141,25 @@ export const importMap = {
     FormStepRowLabel_4877ce19d078fdaae63ddc21b2694074,
   '@payloadcms/plugin-search/client#LinkToDoc': LinkToDoc_aead06e4cbf6b2620c5c51c9ab283634,
   '@payloadcms/plugin-search/client#ReindexButton': ReindexButton_aead06e4cbf6b2620c5c51c9ab283634,
+  '@payloadcms/plugin-import-export/rsc#FormatField': FormatField_cdf7e044479f899a31f804427d568b36,
+  '@payloadcms/plugin-import-export/rsc#LimitField': LimitField_cdf7e044479f899a31f804427d568b36,
+  '@payloadcms/plugin-import-export/rsc#Page': Page_cdf7e044479f899a31f804427d568b36,
+  '@payloadcms/plugin-import-export/rsc#SortBy': SortBy_cdf7e044479f899a31f804427d568b36,
+  '@payloadcms/plugin-import-export/rsc#SortOrder': SortOrder_cdf7e044479f899a31f804427d568b36,
+  '@payloadcms/plugin-import-export/rsc#SelectionToUseField':
+    SelectionToUseField_cdf7e044479f899a31f804427d568b36,
+  '@payloadcms/plugin-import-export/rsc#FieldsToExport':
+    FieldsToExport_cdf7e044479f899a31f804427d568b36,
+  '@payloadcms/plugin-import-export/rsc#CollectionField':
+    CollectionField_cdf7e044479f899a31f804427d568b36,
+  '@payloadcms/plugin-import-export/rsc#ExportPreview':
+    ExportPreview_cdf7e044479f899a31f804427d568b36,
+  '@payloadcms/plugin-import-export/rsc#ExportSaveButton':
+    ExportSaveButton_cdf7e044479f899a31f804427d568b36,
+  '@payloadcms/plugin-import-export/rsc#ImportPreview':
+    ImportPreview_cdf7e044479f899a31f804427d568b36,
+  '@payloadcms/plugin-import-export/rsc#ImportSaveButton':
+    ImportSaveButton_cdf7e044479f899a31f804427d568b36,
   '/lib/fields/navigation/Components/NavLinkRowLabel#default':
     default_86286278ce5a0b2c8f2e1898d6246a28,
   '@/lib/fields/social-icons/components/SocialIconPicker#SocialIconPicker':
@@ -211,7 +250,11 @@ export const importMap = {
     default_0cf04772da2df0165a47381d21356e11,
   '/lib/blocks/partners-block/components/PartnersBlockLabel#default':
     default_bacf9c6f1edd235d0a5b232acada4d25,
+  '/lib/blocks/vehicle-tabs-block/components/VehicleTabsBlockLabel#default':
+    default_c4459d653230b67c2c4fe8ec95131ba0,
   '@/components/BeforeLogin#default': default_8a7ab0eb7ab5c511aba12e68480bfe5e,
+  '@payloadcms/plugin-import-export/rsc#ImportExportProvider':
+    ImportExportProvider_cdf7e044479f899a31f804427d568b36,
   '@/views/Login#default': default_410252c7292359409637c465dfeb7f50,
   '@payloadcms/next/rsc#CollectionCards': CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
 }

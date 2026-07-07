@@ -8,6 +8,7 @@ export const SpecialsArchiveBlock: Block = {
     plural: 'Specials Archive',
   },
   admin: {
+    group: 'Archives',
     components: {
       Label: '/lib/blocks/specials-archive-block/components/SpecialsArchiveBlockLabel',
     },

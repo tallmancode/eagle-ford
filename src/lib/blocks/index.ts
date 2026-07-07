@@ -26,6 +26,7 @@ import { BackButtonBlock } from '@/lib/blocks/back-button-block/BackButtonBlock'
 import { BenefitsGridBlock } from '@/lib/blocks/benefits-grid-block/BenefitsGridBlock'
 import { SpecialsArchiveBlock } from '@/lib/blocks/specials-archive-block/SpecialsArchiveBlock'
 import { PartnersBlock } from '@/lib/blocks/partners-block/PartnersBlock'
+import { VehicleTabsBlock } from '@/lib/blocks/vehicle-tabs-block/VehicleTabsBlock'
 
 const Blocks = [
   SectionBlock,
@@ -56,6 +57,7 @@ const Blocks = [
   BenefitsGridBlock,
   SpecialsArchiveBlock,
   PartnersBlock,
+  VehicleTabsBlock,
 ]
 
 export default Blocks

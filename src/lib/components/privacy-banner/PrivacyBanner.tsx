@@ -32,7 +32,7 @@ export const PrivacyBanner: React.FC = () => {
   return (
     <div
       className={cn(
-        'fixed bottom-4 right-5 md:right-8 z-50 w-max max-w-xl border border-border transition-transform duration-300 ease-out',
+        'fixed bottom-4 right-5 md:right-8 z-50 w-max max-w-[80vw] lg:max-w-xl border border-border transition-transform duration-300 ease-out',
         animateOut && 'translate-y-full',
       )}
     >

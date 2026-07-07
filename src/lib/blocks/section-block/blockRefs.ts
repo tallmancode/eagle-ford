@@ -26,6 +26,7 @@ const allBlockRefs: BlockSlug[] = [
   'financeCalculatorBlock',
   'specials-archive',
   'partners',
+  'vehicle-tabs',
 ]
 
 /** Nested block slugs for section content. Pass `exclude` to prevent circular blockReferences (stack overflow in admin). */
