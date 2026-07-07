@@ -1,6 +1,7 @@
 import { Media } from '@/components/Media'
 import { MobileNav } from '@/components/header/MobileNav'
 import { NavMenuItems } from '@/components/header/NavMenuItems'
+import type { VehicleMegaMenuData } from '@/lib/data/vehicleMegaMenuTypes'
 import { Header as GlobalHeader } from '@/payload-types'
 import Link from 'next/link'
 
@@ -8,9 +9,15 @@ type MainNavProps = {
   headerLogo: GlobalHeader['headerLogo']
   leftLinks?: GlobalHeader['leftLinks']
   rightLinks?: GlobalHeader['rightLinks']
+  vehicleMegaMenuData?: VehicleMegaMenuData | null
 }
 
-export const MainNav = ({ headerLogo, leftLinks, rightLinks }: MainNavProps) => {
+export const MainNav = ({
+  headerLogo,
+  leftLinks,
+  rightLinks,
+  vehicleMegaMenuData,
+}: MainNavProps) => {
   const mobileLinks = [...(leftLinks ?? []), ...(rightLinks ?? [])]
 
   return (
@@ -20,6 +27,7 @@ export const MainNav = ({ headerLogo, leftLinks, rightLinks }: MainNavProps) => 
           links={leftLinks}
           className="hidden lg:flex space-x-4 items-center"
           linkClassName="text-secondary font-bold text-sm"
+          vehicleMegaMenuData={vehicleMegaMenuData}
         />
       </div>
       {typeof headerLogo === 'object' && headerLogo && (
@@ -36,10 +44,12 @@ export const MainNav = ({ headerLogo, leftLinks, rightLinks }: MainNavProps) => 
           links={rightLinks}
           className="hidden lg:flex space-x-4 items-center"
           linkClassName="text-secondary font-bold text-sm"
+          vehicleMegaMenuData={vehicleMegaMenuData}
         />
         <MobileNav
           links={mobileLinks}
           logo={headerLogo}
+          vehicleMegaMenuData={vehicleMegaMenuData}
           className="lg:hidden flex items-center justify-end w-full"
         />
       </div>

@@ -68,7 +68,7 @@ export function VehicleTabsClient({ heading, categories, vehicles }: Props) {
         </TabsList>
 
         <TabsContent value="all">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {vehicles.map((vehicle) => (
               <VehicleCard key={vehicle.id} vehicle={vehicle} />
             ))}

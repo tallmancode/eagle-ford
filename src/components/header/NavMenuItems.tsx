@@ -11,11 +11,13 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
+import { VehicleMegaMenu } from '@/components/header/VehicleMegaMenu'
 import {
   generateNavHref,
   getDropdownParentHref,
   getNavLinkTarget,
 } from '@/lib/fields/navigation/resolveNavHref'
+import type { VehicleMegaMenuData } from '@/lib/data/vehicleMegaMenuTypes'
 import type { NavLinks } from '@/payload-types'
 import { cn } from '@/utilities/ui'
 
@@ -27,36 +29,61 @@ const triggerClassName = (linkClassName?: string) =>
     linkClassName,
   )
 
-export const renderNavItem = (item: NavLink, index: number, linkClassName?: string) => {
-  if (item.type === 'dropdown') {
-    const parentHref = getDropdownParentHref(item)
+const megaMenuContentClassName =
+  '!fixed !left-0 !right-0 !w-screen !max-w-none !top-[var(--site-header-height,7.5rem)] border-0 border-t bg-background p-0 shadow-lg rounded-b-xl data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in-0 data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out-0'
 
+function renderFlyoutTrigger(item: NavLink, linkClassName?: string, ariaLabel?: string) {
+  const parentHref = getDropdownParentHref(item)
+
+  if (parentHref) {
+    return (
+      <div className="flex items-center gap-0">
+        <Link
+          href={parentHref}
+          target={getNavLinkTarget(item)}
+          className={cn(linkClassName, 'px-4 py-2')}
+        >
+          {item.label}
+        </Link>
+        <NavigationMenuTrigger
+          hideChevron
+          className={cn(triggerClassName(linkClassName), 'px-1')}
+          aria-label={ariaLabel ?? `Open ${item.label} menu`}
+        >
+          <ChevronDown className="h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
+        </NavigationMenuTrigger>
+      </div>
+    )
+  }
+
+  return (
+    <NavigationMenuTrigger className={triggerClassName(linkClassName)}>
+      {item.label}
+    </NavigationMenuTrigger>
+  )
+}
+
+export const renderNavItem = (
+  item: NavLink,
+  index: number,
+  linkClassName?: string,
+  vehicleMegaMenuData?: VehicleMegaMenuData | null,
+) => {
+  if (item.type === 'vehicleMegaMenu' && vehicleMegaMenuData) {
     return (
       <NavigationMenuItem key={item.id ?? index}>
-        <div className="flex items-center gap-0">
-          {parentHref ? (
-            <>
-              <Link
-                href={parentHref}
-                target={getNavLinkTarget(item)}
-                className={cn(linkClassName, 'px-4 py-2')}
-              >
-                {item.label}
-              </Link>
-              <NavigationMenuTrigger
-                hideChevron
-                className={cn(triggerClassName(linkClassName), 'px-1')}
-                aria-label={`Open ${item.label} menu`}
-              >
-                <ChevronDown className="h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
-              </NavigationMenuTrigger>
-            </>
-          ) : (
-            <NavigationMenuTrigger className={triggerClassName(linkClassName)}>
-              {item.label}
-            </NavigationMenuTrigger>
-          )}
-        </div>
+        {renderFlyoutTrigger(item, linkClassName, `Open ${item.label} vehicle menu`)}
+        <NavigationMenuContent className={megaMenuContentClassName}>
+          <VehicleMegaMenu data={vehicleMegaMenuData} displayMode={item.displayMode} />
+        </NavigationMenuContent>
+      </NavigationMenuItem>
+    )
+  }
+
+  if (item.type === 'dropdown') {
+    return (
+      <NavigationMenuItem key={item.id ?? index}>
+        {renderFlyoutTrigger(item, linkClassName)}
         <NavigationMenuContent className="bg-light-50">
           <ul className="flex flex-col min-w-[160px] p-2">
             {item.children?.map((child, childIndex) => {
@@ -82,7 +109,6 @@ export const renderNavItem = (item: NavLink, index: number, linkClassName?: stri
   }
 
   const href = generateNavHref(item)
-
   const target = getNavLinkTarget(item)
 
   if (item.variant === 'button') {
@@ -121,17 +147,19 @@ export const NavMenuItems = ({
   links,
   className,
   linkClassName,
+  vehicleMegaMenuData,
 }: {
   links?: NavLinks
   className?: string
   linkClassName?: string
+  vehicleMegaMenuData?: VehicleMegaMenuData | null
 }) => {
   if (!links?.length) return null
 
   return (
     <NavigationMenu viewport={false} className={className}>
       <NavigationMenuList className="space-x-4">
-        {links.map((item, index) => renderNavItem(item, index, linkClassName))}
+        {links.map((item, index) => renderNavItem(item, index, linkClassName, vehicleMegaMenuData))}
       </NavigationMenuList>
     </NavigationMenu>
   )

@@ -131,7 +131,7 @@ export const FooterGlobal: GlobalConfig = {
                     NavLinksField({
                       name: 'links',
                       maxRows: 20,
-                      relationTo: ['pages'],
+                      relationTo: ['pages', 'vehicles'],
                       enableUploadLink: true,
                     }),
                   ],

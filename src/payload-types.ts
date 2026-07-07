@@ -12,16 +12,25 @@
  */
 export type NavLinks =
   | {
-      type?: ('reference' | 'custom' | 'dropdown' | 'upload') | null;
+      type?: ('reference' | 'custom' | 'dropdown' | 'vehicleMegaMenu' | 'upload') | null;
       variant?: ('link' | 'button') | null;
       target?: ('_blank' | '_self' | '_parent' | '_top') | null;
       label?: string | null;
-      reference?: {
-        relationTo: 'pages';
-        value: string | Page;
-      } | null;
+      reference?:
+        | ({
+            relationTo: 'pages';
+            value: string | Page;
+          } | null)
+        | ({
+            relationTo: 'vehicles';
+            value: string | Vehicle;
+          } | null);
       url?: string | null;
       document?: (string | null) | Media;
+      /**
+       * Show vehicle families or individual model variants in the mega menu.
+       */
+      displayMode?: ('vehicles' | 'models') | null;
       /**
        * Optional link for the parent menu label
        */
@@ -30,10 +39,15 @@ export type NavLinks =
         | {
             type?: ('reference' | 'custom') | null;
             label?: string | null;
-            reference?: {
-              relationTo: 'pages';
-              value: string | Page;
-            } | null;
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: string | Page;
+                } | null)
+              | ({
+                  relationTo: 'vehicles';
+                  value: string | Vehicle;
+                } | null);
             url?: string | null;
             id?: string | null;
           }[]
@@ -3671,6 +3685,7 @@ export interface NavLinksSelect<T extends boolean = true> {
   reference?: T;
   url?: T;
   document?: T;
+  displayMode?: T;
   parentLinkType?: T;
   children?:
     | T
