@@ -63,6 +63,26 @@ export const VehicleModelsCollection: CollectionConfig<'vehicle-models'> = {
               },
             },
             {
+              name: 'heroImage',
+              label: 'Hero Image',
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                description:
+                  'Full-width hero for this model variant. Falls back to the parent vehicle hero image if not set.',
+              },
+            },
+            {
+              name: 'featureImage',
+              label: 'Feature Image',
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                description:
+                  'Card/listing image for this model variant. Falls back to model hero, then parent vehicle feature/hero images.',
+              },
+            },
+            {
               name: 'highlights',
               label: 'Highlights',
               type: 'array',

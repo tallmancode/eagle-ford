@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { MediaImage } from '@/components/ui/media-image'
-import type { Vehicle, VehicleModel } from '@/payload-types'
+import type { Media, Vehicle, VehicleModel } from '@/payload-types'
 
 type ColourItem = NonNullable<NonNullable<Vehicle['colours']>[number]>
 type GalleryItem = NonNullable<NonNullable<Vehicle['gallery']>[number]>
@@ -34,6 +34,14 @@ function formatPrice(price: number): string {
   return 'R\u00a0' + price.toLocaleString('en-ZA')
 }
 
+function getModelCardImage(
+  model: VehicleModel,
+  vehicleFeatureImage: string | Media | null,
+  vehicleHeroImage: string | Media | null,
+) {
+  return model.featureImage ?? model.heroImage ?? vehicleFeatureImage ?? vehicleHeroImage ?? null
+}
+
 const MODELS_PER_PAGE = 3
 
 type Props = {
@@ -41,9 +49,18 @@ type Props = {
   colours: ColourItem[]
   gallery: GalleryItem[]
   models: VehicleModel[]
+  vehicleFeatureImage: string | Media | null
+  vehicleHeroImage: string | Media | null
 }
 
-export default function VehicleRangePage({ vehicleName, colours, gallery, models }: Props) {
+export default function VehicleRangePage({
+  vehicleName,
+  colours,
+  gallery,
+  models,
+  vehicleFeatureImage,
+  vehicleHeroImage,
+}: Props) {
   const [selectedColour, setSelectedColour] = useState(0)
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [modelPage, setModelPage] = useState(0)
@@ -176,35 +193,49 @@ export default function VehicleRangePage({ vehicleName, colours, gallery, models
 
               {/* Cards grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {visibleModels.map((model) => (
-                  <div
-                    key={model.id}
-                    className="bg-card border rounded-2xl p-6 shadow-sm flex flex-col"
-                  >
-                    <h3 className="font-semibold text-base mb-1 leading-snug">{model.name}</h3>
-                    <p className="text-primary text-2xl font-bold mb-4">
-                      {formatPrice(model.price)}
-                    </p>
-                    {model.highlights && model.highlights.length > 0 && (
-                      <ul className="space-y-1.5 flex-1 mb-6">
-                        {model.highlights.map((h, i) => (
-                          <li
-                            key={h.id ?? i}
-                            className="flex items-start gap-2 text-sm text-muted-foreground"
-                          >
-                            <span className="text-primary mt-0.5 shrink-0">•</span>
-                            <span>{h.highlight}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    <a href="#enquire">
-                      <Button variant="outline" className="rounded-full w-full mt-auto">
-                        View Details
-                      </Button>
-                    </a>
-                  </div>
-                ))}
+                {visibleModels.map((model) => {
+                  const cardImage = getModelCardImage(model, vehicleFeatureImage, vehicleHeroImage)
+
+                  return (
+                    <div
+                      key={model.id}
+                      className="bg-card border rounded-2xl p-6 shadow-sm flex flex-col"
+                    >
+                      {cardImage && (
+                        <div className="relative w-full aspect-[3/2] mb-4">
+                          <MediaImage
+                            resource={cardImage}
+                            fill
+                            imgClassName="object-contain"
+                            size="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw"
+                          />
+                        </div>
+                      )}
+                      <h3 className="font-semibold text-base mb-1 leading-snug">{model.name}</h3>
+                      <p className="text-primary text-2xl font-bold mb-4">
+                        {formatPrice(model.price)}
+                      </p>
+                      {model.highlights && model.highlights.length > 0 && (
+                        <ul className="space-y-1.5 flex-1 mb-6">
+                          {model.highlights.map((h, i) => (
+                            <li
+                              key={h.id ?? i}
+                              className="flex items-start gap-2 text-sm text-muted-foreground"
+                            >
+                              <span className="text-primary mt-0.5 shrink-0">•</span>
+                              <span>{h.highlight}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      <a href="#enquire">
+                        <Button variant="outline" className="rounded-full w-full mt-auto">
+                          View Details
+                        </Button>
+                      </a>
+                    </div>
+                  )
+                })}
               </div>
 
               {/* Next arrow */}
