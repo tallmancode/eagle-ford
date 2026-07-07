@@ -23,9 +23,7 @@ const BADGE_LABELS: Record<string, string> = {
   limited: 'Limited',
 }
 
-function formatPrice(price: number): string {
-  return 'R\u00a0' + price.toLocaleString('en-ZA')
-}
+import { formatPrice } from '@/lib/utils/formatPrice'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })

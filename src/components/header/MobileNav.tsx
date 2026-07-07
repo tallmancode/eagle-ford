@@ -19,6 +19,8 @@ import {
   getDropdownParentHref,
   getNavLinkTarget,
 } from '@/lib/fields/navigation/resolveNavHref'
+import { VehicleMegaMenuMobile } from '@/components/header/VehicleMegaMenuMobile'
+import type { VehicleMegaMenuData } from '@/lib/data/vehicleMegaMenuTypes'
 import type { Header as GlobalHeader, NavLinks } from '@/payload-types'
 import { cn } from '@/utilities/ui'
 
@@ -29,6 +31,7 @@ type MobileNavProps = {
   links?: NavLinks
   logo: GlobalHeader['headerLogo']
   className?: string
+  vehicleMegaMenuData?: VehicleMegaMenuData | null
 }
 
 const mobileMenuTriggerClass = cn(
@@ -38,7 +41,7 @@ const mobileMenuTriggerClass = cn(
 
 const mobileLinkClass = 'text-2xl font-semibold text-secondary'
 
-export const MobileNav = ({ links, logo, className }: MobileNavProps) => {
+export const MobileNav = ({ links, logo, className, vehicleMegaMenuData }: MobileNavProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
 
@@ -73,7 +76,9 @@ export const MobileNav = ({ links, logo, className }: MobileNavProps) => {
           </SheetHeader>
           <div className="flex flex-col gap-6 p-4 flex-1">
             <Accordion type="multiple" className="flex w-full flex-col gap-4">
-              {links.map((link, index) => renderMobileMenuItem(link, index, closeMobileMenu))}
+              {links.map((link, index) =>
+                renderMobileMenuItem(link, index, closeMobileMenu, vehicleMegaMenuData),
+              )}
             </Accordion>
           </div>
         </SheetContent>
@@ -103,7 +108,35 @@ function MobileAccordionTrigger({
   )
 }
 
-const renderMobileMenuItem = (item: NavLink, index: number, onNavigate: () => void) => {
+const renderMobileMenuItem = (
+  item: NavLink,
+  index: number,
+  onNavigate: () => void,
+  vehicleMegaMenuData?: VehicleMegaMenuData | null,
+) => {
+  if (item.type === 'vehicleMegaMenu' && vehicleMegaMenuData) {
+    return (
+      <AccordionItem
+        key={item.id ?? index}
+        value={item.label ?? String(item.id ?? index)}
+        className="border-b-0"
+      >
+        <MobileAccordionTrigger
+          className={cn(mobileLinkClass, 'py-0 no-underline hover:no-underline')}
+        >
+          {item.label}
+        </MobileAccordionTrigger>
+        <AccordionContent className="mt-2">
+          <VehicleMegaMenuMobile
+            data={vehicleMegaMenuData}
+            displayMode={item.displayMode}
+            onNavigate={onNavigate}
+          />
+        </AccordionContent>
+      </AccordionItem>
+    )
+  }
+
   if (item.type === 'dropdown') {
     const parentHref = getDropdownParentHref(item)
 
