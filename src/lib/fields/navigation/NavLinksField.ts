@@ -5,6 +5,7 @@ const typeOptions = (enableUploadLink?: boolean) => {
     { label: 'Internal link', value: 'reference' },
     { label: 'Custom URL', value: 'custom' },
     { label: 'Dropdown', value: 'dropdown' },
+    { label: 'Vehicle Mega Menu', value: 'vehicleMegaMenu' },
   ]
 
   if (enableUploadLink) {
@@ -40,7 +41,8 @@ export const NavLinksField = ({
       admin: {
         condition: (_, siblingData) =>
           siblingData?.type === 'reference' ||
-          (siblingData?.type === 'dropdown' && siblingData?.parentLinkType === 'reference'),
+          (siblingData?.type === 'dropdown' && siblingData?.parentLinkType === 'reference') ||
+          (siblingData?.type === 'vehicleMegaMenu' && siblingData?.parentLinkType === 'reference'),
       },
       label: 'Document to link to',
       maxDepth: 2,
@@ -53,7 +55,8 @@ export const NavLinksField = ({
       admin: {
         condition: (_, siblingData) =>
           siblingData?.type === 'custom' ||
-          (siblingData?.type === 'dropdown' && siblingData?.parentLinkType === 'custom'),
+          (siblingData?.type === 'dropdown' && siblingData?.parentLinkType === 'custom') ||
+          (siblingData?.type === 'vehicleMegaMenu' && siblingData?.parentLinkType === 'custom'),
       },
       label: 'Custom URL',
       required: true,
@@ -127,7 +130,9 @@ export const NavLinksField = ({
               width: '50%',
               condition: (_, siblingData) =>
                 siblingData?.type === 'custom' ||
-                (siblingData?.type === 'dropdown' && siblingData?.parentLinkType === 'custom'),
+                (siblingData?.type === 'dropdown' && siblingData?.parentLinkType === 'custom') ||
+                (siblingData?.type === 'vehicleMegaMenu' &&
+                  siblingData?.parentLinkType === 'custom'),
             },
             defaultValue: '_blank',
             options: [
@@ -153,7 +158,24 @@ export const NavLinksField = ({
       },
       {
         type: 'row',
-        fields: linkRowFields,
+        fields: [
+          ...linkRowFields,
+          {
+            name: 'displayMode',
+            type: 'radio',
+            defaultValue: 'vehicles',
+            admin: {
+              layout: 'horizontal',
+              width: '50%',
+              condition: (_, siblingData) => siblingData?.type === 'vehicleMegaMenu',
+              description: 'Show vehicle families or individual model variants in the mega menu.',
+            },
+            options: [
+              { label: 'Vehicles', value: 'vehicles' },
+              { label: 'Models', value: 'models' },
+            ],
+          },
+        ],
       },
       {
         name: 'parentLinkType',
@@ -162,7 +184,8 @@ export const NavLinksField = ({
         admin: {
           layout: 'horizontal',
           width: '100%',
-          condition: (_, siblingData) => siblingData?.type === 'dropdown',
+          condition: (_, siblingData) =>
+            siblingData?.type === 'dropdown' || siblingData?.type === 'vehicleMegaMenu',
           description: 'Optional link for the parent menu label',
         },
         options: [

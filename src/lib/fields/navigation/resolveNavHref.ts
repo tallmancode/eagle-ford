@@ -31,8 +31,8 @@ export const resolveNavHref = ({
       return getPagePath(reference.value)
     }
 
-    if (reference.relationTo === 'blogs') {
-      return `/blogs/${reference.value.slug}`
+    if (reference.relationTo === 'vehicles') {
+      return `/vehicles/${reference.value.slug}`
     }
   }
 
@@ -42,7 +42,7 @@ export const resolveNavHref = ({
 }
 
 export const generateNavHref = (item: NavLink | NavLinkChild) => {
-  if (item.type === 'dropdown') return '/'
+  if (item.type === 'dropdown' || item.type === 'vehicleMegaMenu') return '/'
 
   return resolveNavHref({
     linkType: item.type,
@@ -53,7 +53,11 @@ export const generateNavHref = (item: NavLink | NavLinkChild) => {
 }
 
 export const getDropdownParentHref = (item: NavLink) => {
-  if (item.type !== 'dropdown' || !item.parentLinkType || item.parentLinkType === 'none') {
+  if (
+    (item.type !== 'dropdown' && item.type !== 'vehicleMegaMenu') ||
+    !item.parentLinkType ||
+    item.parentLinkType === 'none'
+  ) {
     return null
   }
 
@@ -68,7 +72,9 @@ export const getNavLinkTarget = (item: NavLink | NavLinkChild) => {
   if (item.type === 'upload') return '_blank'
 
   const isCustom =
-    item.type === 'custom' || (item.type === 'dropdown' && item.parentLinkType === 'custom')
+    item.type === 'custom' ||
+    (item.type === 'dropdown' && item.parentLinkType === 'custom') ||
+    (item.type === 'vehicleMegaMenu' && item.parentLinkType === 'custom')
 
   if (!isCustom) return '_self'
 

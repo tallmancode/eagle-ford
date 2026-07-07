@@ -30,9 +30,7 @@ const INITIAL_FORM: FormData = {
   message: '',
 }
 
-function formatPrice(price: number): string {
-  return 'R\u00a0' + price.toLocaleString('en-ZA')
-}
+import { formatPrice } from '@/lib/utils/formatPrice'
 
 function getModelCardImage(
   model: VehicleModel,

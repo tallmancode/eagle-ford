@@ -17,6 +17,8 @@ import { SITE_FAVICON_ICONS } from '@/constants/siteIcons'
 import { SiteHeader } from '@/components/header/SiteHeader'
 import { SiteFooter } from '@/components/footer/SiteFooter'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
+import { navNeedsVehicleMegaMenu } from '@/lib/data/vehicleMegaMenuTypes'
+import { getVehicleMegaMenuData } from '@/lib/data/getVehicleMegaMenuData'
 import type { Header as GlobalHeader, Setting as GlobalSettings } from '@/payload-types'
 import { PrivacyProvider } from '@/lib/providers/privacy'
 import { PrivacyBanner } from '@/lib/components/privacy-banner/PrivacyBanner'
@@ -41,6 +43,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     getCachedGlobal('settings', 1)(),
   ])) as [GlobalHeader, unknown, GlobalSettings]
 
+  const allNavLinks = [...(globalHeader.leftLinks ?? []), ...(globalHeader.rightLinks ?? [])]
+  const vehicleMegaMenuData = navNeedsVehicleMegaMenu(allNavLinks)
+    ? await getVehicleMegaMenuData()
+    : null
+
   return (
     <html
       className={cn(GeistSans.variable, GeistMono.variable, fordF1.variable)}
@@ -55,7 +62,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 preview: isEnabled,
               }}
             />
-            <SiteHeader globalHeader={globalHeader} globalSettings={globalSettings} />
+            <SiteHeader
+              globalHeader={globalHeader}
+              globalSettings={globalSettings}
+              vehicleMegaMenuData={vehicleMegaMenuData}
+            />
             {children}
             <BackToTopButton />
             <PrivacyBanner></PrivacyBanner>
