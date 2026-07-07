@@ -8,7 +8,7 @@ import React, { cache } from 'react'
 import { homeStatic } from '@/endpoints/seed/home-static'
 
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
-import { generateMeta } from '@/utilities/generateMeta'
+import { generateMeta } from '@/lib/utils/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 

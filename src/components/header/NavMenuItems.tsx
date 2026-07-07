@@ -19,7 +19,7 @@ import {
 } from '@/lib/fields/navigation/resolveNavHref'
 import type { VehicleMegaMenuData } from '@/lib/data/vehicleMegaMenuTypes'
 import type { NavLinks } from '@/payload-types'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 
 type NavLink = NonNullable<NavLinks>[number]
 

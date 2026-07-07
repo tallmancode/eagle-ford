@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import { MediaImage } from '@/components/ui/media-image'
 import { lucideIconMap } from '@/lib/fields/lucide-icons'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 import React from 'react'
 import { PopupCardSection } from './PopupCardSection'
 

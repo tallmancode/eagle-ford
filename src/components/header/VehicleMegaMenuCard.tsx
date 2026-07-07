@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { MediaImage } from '@/components/ui/media-image'
 import { formatPrice } from '@/lib/utils/formatPrice'
 import type { VehicleMegaMenuItem } from '@/lib/data/vehicleMegaMenuTypes'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 
 type VehicleMegaMenuCardProps = {
   item: VehicleMegaMenuItem

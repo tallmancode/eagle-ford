@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { VehicleMegaMenuCard } from '@/components/header/VehicleMegaMenuCard'
 import type { VehicleMegaMenuData } from '@/lib/data/vehicleMegaMenuTypes'
 import { getMegaMenuDataForMode } from '@/lib/data/vehicleMegaMenuTypes'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 
 type VehicleMegaMenuMobileProps = {
   data: VehicleMegaMenuData

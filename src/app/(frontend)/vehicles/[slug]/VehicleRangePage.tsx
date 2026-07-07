@@ -96,13 +96,12 @@ export default function VehicleRangePage({
             </h2>
 
             {/* Main colour display */}
-            <div className="relative aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden mb-4 bg-muted">
+            <div className="relative aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden mb-4 bg-muted flex items-center justify-center">
               {colours[selectedColour]?.colourSwatch ? (
                 <MediaImage
                   resource={colours[selectedColour].colourSwatch}
-                  fill
-                  imgClassName="object-cover object-center"
-                  size="100vw"
+                  imgClassName="w-auto h-auto max-w-full max-h-full object-contain"
+                  size="(max-width: 768px) 100vw, 1280px"
                   priority
                 />
               ) : (
