@@ -6,13 +6,14 @@ import { searchPlugin } from '@payloadcms/plugin-search'
 import { Plugin } from 'payload'
 import type { Field } from 'payload'
 import { revalidateRedirects } from '@/hooks/revalidateRedirects'
-import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
+import { GenerateURL } from '@payloadcms/plugin-seo/types'
+import generateTitle from '@/lib/utils/generateTitle'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 
 import { Page, Blog } from '@/payload-types'
-import { getServerSideURL } from '@/utilities/getURL'
+import { getServerSideURL } from '@/lib/utils/getServerSideURL'
 import {
   FORM_UPLOAD_COLLECTIONS,
   getFormInputBlocks,
@@ -23,10 +24,6 @@ import { handleMultiStepFormUploads } from '@/lib/blocks/form-block/hooks/handle
 import { importExportPlugin } from '@payloadcms/plugin-import-export'
 
 const formStepRowLabelPath = '@/lib/blocks/form-block/components/FormStepRowLabel#FormStepRowLabel'
-
-const generateTitle: GenerateTitle<Blog | Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
-}
 
 const generateURL: GenerateURL<Blog | Page> = ({ doc }) => {
   const url = getServerSideURL()

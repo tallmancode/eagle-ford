@@ -2,7 +2,7 @@ import { Separator } from '@/components/ui/separator'
 import { MapPin, PhoneCall } from 'lucide-react'
 import { Header as GlobalHeader, Setting as GlobalSettings } from '@/payload-types'
 import { formatContactAddress } from '@/lib/utils/formatContactAddress'
-import { formatPhoneNumber } from '@/utilities/formatPhoneNumber'
+import { formatPhoneNumber } from '@/lib/utils/formatPhoneNumber'
 import Link from 'next/link'
 import { NavMenuItems } from '@/components/header/NavMenuItems'
 

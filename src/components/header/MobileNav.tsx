@@ -22,8 +22,8 @@ import { VehicleMegaMenuMobile } from '@/components/header/VehicleMegaMenuMobile
 import type { VehicleMegaMenuData } from '@/lib/data/vehicleMegaMenuTypes'
 import { formatContactAddress } from '@/lib/utils/formatContactAddress'
 import type { Header as GlobalHeader, NavLinks, Setting } from '@/payload-types'
-import { formatPhoneNumber } from '@/utilities/formatPhoneNumber'
-import { cn } from '@/utilities/ui'
+import { formatPhoneNumber } from '@/lib/utils/formatPhoneNumber'
+import { cn } from '@/lib/utils/cn'
 
 type NavLink = NonNullable<NavLinks>[number]
 type NavLinkChild = NonNullable<NonNullable<NavLink['children']>[number]>

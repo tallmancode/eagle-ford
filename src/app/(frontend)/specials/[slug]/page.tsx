@@ -6,7 +6,7 @@ import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 
-import { generateMeta } from '@/utilities/generateMeta'
+import { generateMeta } from '@/lib/utils/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'

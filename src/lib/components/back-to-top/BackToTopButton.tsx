@@ -4,7 +4,7 @@ import * as React from 'react'
 import { ChevronUp } from 'lucide-react'
 
 import { Button } from '@/lib/components/ui/button'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 
 const SCROLL_THRESHOLD = 400
 

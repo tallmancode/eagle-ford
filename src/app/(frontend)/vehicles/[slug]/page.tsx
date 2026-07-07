@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { formatPageTitle } from '@/constants/site'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
@@ -185,11 +186,11 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const decodedSlug = decodeURIComponent(slug)
   const vehicle = await queryVehicleBySlug({ slug: decodedSlug })
 
-  if (!vehicle) return { title: 'Vehicle | Eagle Ford' }
+  if (!vehicle) return { title: formatPageTitle('Vehicle') }
 
   const title = vehicle.meta?.metaTitle
-    ? `${vehicle.meta.metaTitle} | Eagle Ford`
-    : `${vehicle.name} | Eagle Ford`
+    ? formatPageTitle(vehicle.meta.metaTitle)
+    : formatPageTitle(vehicle.name)
 
   const metaImage = vehicle.meta?.metaImage
   const imageUrl =

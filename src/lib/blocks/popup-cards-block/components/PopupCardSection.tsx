@@ -6,7 +6,7 @@ import { RichText as ConvertRichText } from '@payloadcms/richtext-lexical/react'
 import { CheckCircle2 } from 'lucide-react'
 import React from 'react'
 import { richTextConverters } from '@/components/rich-text/richTextConverters'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 
 type PopupSection = NonNullable<NonNullable<PopupCards['cards']>[number]['popupSections']>[number]
 

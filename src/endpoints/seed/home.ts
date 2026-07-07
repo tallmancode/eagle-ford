@@ -1,5 +1,6 @@
 import type { RequiredDataFromCollectionSlug } from 'payload'
 import type { Media } from '@/payload-types'
+import { DEFAULT_OG_DESCRIPTION } from '@/constants/site'
 
 type HomeArgs = {
   heroImage: Media
@@ -47,7 +48,7 @@ export const home: (args: HomeArgs) => RequiredDataFromCollectionSlug<'pages'> =
                   format: 0,
                   mode: 'normal',
                   style: '',
-                  text: 'Payload Website Template',
+                  text: 'Eagle Ford',
                   version: 1,
                 },
               ],
@@ -666,9 +667,9 @@ export const home: (args: HomeArgs) => RequiredDataFromCollectionSlug<'pages'> =
       },
     ],
     meta: {
-      description: 'An open-source website built with Payload and Next.js.',
+      description: 'Quality pre-owned vehicles and trusted service at Eagle Motor City.',
       image: heroImage.id,
-      title: 'Payload Website Template',
+      title: 'Eagle Ford',
     },
     title: 'Home',
   }

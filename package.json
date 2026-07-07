@@ -1,7 +1,7 @@
 {
   "name": "eagle-ford",
   "version": "1.0.0",
-  "description": "Website template for Payload",
+  "description": "Eagle Ford dealership website powered by Payload CMS and Next.js",
   "license": "MIT",
   "type": "module",
   "scripts": {

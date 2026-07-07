@@ -2,7 +2,7 @@
 
 import type { BackButton } from '@/payload-types'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React from 'react'
