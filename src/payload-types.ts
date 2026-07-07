@@ -146,6 +146,7 @@ export interface Config {
     'vehicle-tabs': VehicleTabsBlock;
     'vehicle-hero': VehicleHeroBlock;
     'vehicle-models': VehicleModelsBlock;
+    'vehicle-faq': VehicleFaqBlock;
   };
   collections: {
     users: User;
@@ -280,6 +281,7 @@ export interface Section {
         | VehicleTabsBlock
         | VehicleHeroBlock
         | VehicleModelsBlock
+        | VehicleFaqBlock
       )[]
     | null;
   backgroundColor?:
@@ -407,6 +409,7 @@ export interface SectionInner {
         | VehicleTabsBlock
         | VehicleHeroBlock
         | VehicleModelsBlock
+        | VehicleFaqBlock
       )[]
     | null;
   backgroundColor?:
@@ -531,6 +534,7 @@ export interface Row {
         | VehicleTabsBlock
         | VehicleHeroBlock
         | VehicleModelsBlock
+        | VehicleFaqBlock
       )[]
     | null;
   backgroundColor?:
@@ -1943,6 +1947,15 @@ export interface VehicleModelsBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'vehicle-models';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleFaqBlock".
+ */
+export interface VehicleFaqBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-faq';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
