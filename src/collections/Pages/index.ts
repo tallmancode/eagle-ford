@@ -1,16 +1,9 @@
 import type { CollectionConfig } from 'payload'
 
-import { authenticated } from '../../access/authenticated'
-import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
-import { Archive } from '../../blocks/ArchiveBlock/config'
-import { CallToAction } from '../../blocks/CallToAction/config'
-import { Content } from '../../blocks/Content/config'
-import { FormBlock } from '../../blocks/Form/config'
-import { MediaBlock } from '../../blocks/MediaBlock/config'
-import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
 import { generatePreviewPath } from '../../utilities/generatePreviewPath'
+import { sanitizePageNullBlocks } from './hooks/sanitizePageNullBlocks'
 import { revalidateDelete, revalidatePage } from './hooks/revalidatePage'
 
 import {
@@ -20,21 +13,15 @@ import {
   OverviewField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
+import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
 
-export const Pages: CollectionConfig<'pages'> = {
+export const PagesCollection: CollectionConfig<'pages'> = {
   slug: 'pages',
   access: {
-    create: authenticated,
-    delete: authenticated,
-    read: authenticatedOrPublished,
-    update: authenticated,
-  },
-  // This config controls what's populated by default when a page is referenced
-  // https://payloadcms.com/docs/queries/select#defaultpopulate-collection-config-property
-  // Type safe if the collection slug generic is passed to `CollectionConfig` - `CollectionConfig<'pages'>
-  defaultPopulate: {
-    title: true,
-    slug: true,
+    create: isAuthenticated,
+    delete: isAuthenticated,
+    read: isAuthenticatedOrPublished,
+    update: isAuthenticated,
   },
   admin: {
     defaultColumns: ['title', 'slug', 'updatedAt'],
@@ -56,30 +43,41 @@ export const Pages: CollectionConfig<'pages'> = {
   },
   fields: [
     {
-      name: 'title',
-      type: 'text',
-      required: true,
-    },
-    {
       type: 'tabs',
       tabs: [
         {
-          fields: [hero],
-          label: 'Hero',
-        },
-        {
+          label: 'General',
           fields: [
             {
-              name: 'layout',
-              type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive, FormBlock],
+              name: 'title',
+              label: 'Page Title',
+              type: 'text',
               required: true,
+            },
+            {
+              name: 'overlayHeader',
+              type: 'checkbox',
+              label: 'Overlay header on hero',
+              defaultValue: false,
               admin: {
-                initCollapsed: true,
+                description:
+                  'When enabled, the header is transparent at the top of the page (for hero blocks) and turns solid white on scroll. When disabled (default), the header is always solid white with dark navigation links.',
               },
             },
           ],
+        },
+        {
+          name: 'content',
           label: 'Content',
+          fields: [
+            {
+              name: 'section',
+              label: false,
+              type: 'blocks',
+              blocks: [],
+              blockReferences: ['section'],
+            },
+          ],
         },
         {
           name: 'meta',
@@ -97,7 +95,7 @@ export const Pages: CollectionConfig<'pages'> = {
               relationTo: 'media',
             }),
 
-            MetaDescriptionField({}),
+            MetaDescriptionField({ hasGenerateFn: true }),
             PreviewField({
               // if the `generateUrl` function is configured
               hasGenerateFn: true,
@@ -121,14 +119,12 @@ export const Pages: CollectionConfig<'pages'> = {
   ],
   hooks: {
     afterChange: [revalidatePage],
-    beforeChange: [populatePublishedAt],
+    beforeChange: [sanitizePageNullBlocks, populatePublishedAt],
     afterDelete: [revalidateDelete],
   },
   versions: {
     drafts: {
-      autosave: {
-        interval: 100, // We set this interval for optimal live preview
-      },
+      autosave: false,
       schedulePublish: true,
     },
     maxPerDoc: 50,

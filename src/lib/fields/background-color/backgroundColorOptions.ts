@@ -2,6 +2,7 @@ import type { Option } from 'payload'
 
 export const backgroundColorOptions: Option[] = [
   { label: 'None', value: 'none' },
+  { label: 'Card', value: 'card' },
   { label: 'White', value: 'white' },
   { label: 'Light gray', value: 'light' },
   { label: 'Neutral', value: 'neutral' },
@@ -13,6 +14,7 @@ export const backgroundColorOptions: Option[] = [
 
 export type BackgroundColorValue =
   | 'none'
+  | 'card'
   | 'white'
   | 'light'
   | 'neutral'

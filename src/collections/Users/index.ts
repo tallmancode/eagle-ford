@@ -1,25 +1,79 @@
 import type { CollectionConfig } from 'payload'
+import { isAuthenticated } from '@/lib/utils/accessUtil'
 
-import { authenticated } from '../../access/authenticated'
-
-export const Users: CollectionConfig = {
+export const UsersCollection: CollectionConfig = {
   slug: 'users',
   access: {
-    admin: authenticated,
-    create: authenticated,
-    delete: authenticated,
-    read: authenticated,
-    update: authenticated,
+    create: isAuthenticated,
+    delete: isAuthenticated,
+    read: isAuthenticated,
+    update: isAuthenticated,
   },
   admin: {
-    defaultColumns: ['name', 'email'],
-    useAsTitle: 'name',
+    defaultColumns: ['firstName', 'lastName', 'username', 'email', 'roles'],
+    useAsTitle: 'username',
+    group: 'Settings',
   },
   auth: true,
   fields: [
     {
-      name: 'name',
+      type: 'row',
+      fields: [
+        {
+          name: 'firstName',
+          type: 'text',
+          required: true,
+          admin: {
+            width: '50%',
+          },
+        },
+        {
+          name: 'lastName',
+          type: 'text',
+          required: true,
+          admin: {
+            width: '50%',
+          },
+        },
+      ],
+    },
+    {
+      name: 'username',
       type: 'text',
+    },
+    {
+      name: 'roles',
+      type: 'select',
+      hasMany: true,
+      saveToJWT: true,
+      options: [
+        {
+          label: 'Developer',
+          value: 'developer',
+        },
+        {
+          label: 'Admin',
+          value: 'admin',
+        },
+        {
+          label: 'Marketing',
+          value: 'marketing',
+        },
+        {
+          label: 'Manager',
+          value: 'manager',
+        },
+        {
+          label: 'Staff',
+          value: 'staff',
+        },
+      ],
+      filterOptions: ({ options, req }) =>
+        req.user?.roles?.includes('developer') || req.user?.roles?.includes('admin')
+          ? options
+          : options.filter(
+              (option) => (typeof option === 'string' ? options : option.value) !== 'developer',
+            ),
     },
   ],
   timestamps: true,

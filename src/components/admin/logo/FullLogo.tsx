@@ -1,6 +1,6 @@
 import fullLogo from '@/assets/Media/logo/eagle-ford-logo.png'
 import Image from 'next/image'
-import { SITE_NAME } from '@/lib/constants/site'
+import { SITE_NAME } from '@/constants/site'
 
 type FullLogoProps = {
   className?: string

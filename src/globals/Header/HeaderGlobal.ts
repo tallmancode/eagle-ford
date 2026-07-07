@@ -2,7 +2,6 @@ import type { GlobalConfig } from 'payload'
 import { revalidateGlobalHeader } from '@/globals/Header/hooks/revalidateGlobalHeader'
 import { NavLinksField } from '@/lib/fields/navigation/NavLinksField'
 import { isAdmin } from '@/lib/utils/accessUtil'
-import { SocialAccountsField } from '@/lib/fields/social-icons'
 
 export const HeaderGlobal: GlobalConfig = {
   slug: 'header',
@@ -21,11 +20,14 @@ export const HeaderGlobal: GlobalConfig = {
           label: 'Brand',
           fields: [
             {
-              name: 'logoImage',
+              name: 'headerLogo',
               type: 'upload',
-              label: 'logo Image',
+              label: 'Header Logo',
               relationTo: 'media',
               hasMany: false,
+              admin: {
+                width: '25%',
+              },
             },
           ],
         },
@@ -33,26 +35,16 @@ export const HeaderGlobal: GlobalConfig = {
           label: 'Top Navigation',
           name: 'topNav',
           fields: [
-            {
-              type: 'group',
-              label: 'Address',
-              fields: [
-                {
-                  name: 'address',
-                  type: 'text',
-                },
-                {
-                  name: 'mapsLink',
-                  type: 'text',
-                },
-              ],
-            },
-            SocialAccountsField({ name: 'socials', maxRows: 8 }),
+            { type: 'text', label: 'Home Link Text', name: 'homeLinkText' },
+            NavLinksField({ name: 'topNavLinks', maxRows: 10, relationTo: ['pages'] }),
           ],
         },
         {
           label: 'Navigation',
-          fields: [NavLinksField({ name: 'links', maxRows: 10, relationTo: ['pages'] })],
+          fields: [
+            NavLinksField({ name: 'leftLinks', maxRows: 10, relationTo: ['pages'] }),
+            NavLinksField({ name: 'rightLinks', maxRows: 10, relationTo: ['pages'] }),
+          ],
         },
       ],
     },
