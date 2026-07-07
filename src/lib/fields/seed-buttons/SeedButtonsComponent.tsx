@@ -70,6 +70,14 @@ export const SeedButtonsComponent = ({ payload: _payload }: { payload: Payload }
           />
           {' to add the special offer enquiry form to your Forms collection.'}
         </li>
+        <li>
+          <CreateFormButton
+            endpoint="/next/import-vehicles"
+            label="Import Vehicle Catalog"
+            successText="Vehicle catalog imported successfully!"
+          />
+          {' to import all vehicles, models and categories from the Eagle Ford range.'}
+        </li>
       </ul>
     </div>
   )

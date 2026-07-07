@@ -1,5 +1,6 @@
 import type { Block } from 'payload'
 import { BackgroundColorField } from '@/lib/fields/background-color/backgroundColorField'
+import { LinkField } from '@/lib/fields/link/LinkField'
 
 export const ContactInfoBlock: Block = {
   slug: 'contact-info',
@@ -67,9 +68,11 @@ export const ContactInfoBlock: Block = {
       ],
     },
     {
-      name: 'directionsUrl',
-      type: 'text',
-      label: 'Directions URL (Google Maps)',
+      name: 'ctaButtons',
+      type: 'array',
+      label: 'CTA Buttons',
+      maxRows: 2,
+      fields: [LinkField({ name: 'link', relationTo: ['pages'], label: 'Button' })],
     },
     {
       type: 'collapsible',

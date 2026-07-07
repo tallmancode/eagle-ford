@@ -129,6 +129,7 @@ export interface Config {
     'benefits-grid': BenefitsGrid;
     'specials-archive': SpecialsArchive;
     partners: Partners;
+    'vehicle-tabs': VehicleTabsBlock;
   };
   collections: {
     users: User;
@@ -137,6 +138,9 @@ export interface Config {
     specials: Special;
     media: Media;
     categories: Category;
+    'vehicle-categories': VehicleCategory;
+    vehicles: Vehicle;
+    'vehicle-models': VehicleModel;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -157,6 +161,9 @@ export interface Config {
     specials: SpecialsSelect<false> | SpecialsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    'vehicle-categories': VehicleCategoriesSelect<false> | VehicleCategoriesSelect<true>;
+    vehicles: VehiclesSelect<false> | VehiclesSelect<true>;
+    'vehicle-models': VehicleModelsSelect<false> | VehicleModelsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -252,6 +259,7 @@ export interface Section {
         | FinanceCalculatorBlockType
         | SpecialsArchive
         | Partners
+        | VehicleTabsBlock
       )[]
     | null;
   backgroundColor?:
@@ -376,6 +384,7 @@ export interface SectionInner {
         | FinanceCalculatorBlockType
         | SpecialsArchive
         | Partners
+        | VehicleTabsBlock
       )[]
     | null;
   backgroundColor?:
@@ -497,6 +506,7 @@ export interface Row {
         | FinanceCalculatorBlockType
         | SpecialsArchive
         | Partners
+        | VehicleTabsBlock
       )[]
     | null;
   backgroundColor?:
@@ -1454,7 +1464,21 @@ export interface ContactInfo {
     hours: string;
     id?: string | null;
   }[];
-  directionsUrl?: string | null;
+  ctaButtons?:
+    | {
+        link?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?: {
+            relationTo: 'pages';
+            value: string | Page;
+          } | null;
+          url?: string | null;
+          label?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
   backgroundColor?:
     | ('none' | 'card' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
     | null;
@@ -1867,6 +1891,19 @@ export interface Partners {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleTabsBlock".
+ */
+export interface VehicleTabsBlock {
+  /**
+   * Optional heading displayed above the tabs (e.g. "View Our Vehicles")
+   */
+  heading?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-tabs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -1997,6 +2034,202 @@ export interface Special {
   };
   /**
    * Lower numbers appear first within a section.
+   */
+  sortOrder?: number | null;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-categories".
+ */
+export interface VehicleCategory {
+  id: string;
+  title: string;
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicles".
+ */
+export interface Vehicle {
+  id: string;
+  /**
+   * e.g. "Next Level Ranger"
+   */
+  name: string;
+  /**
+   * Optional marketing badge displayed on listing cards.
+   */
+  badge?: ('newly-launched' | 'coming-soon' | 'limited') | null;
+  category: string | VehicleCategory;
+  /**
+   * Full-width background image displayed at the top of the vehicle page.
+   */
+  heroImage: string | Media;
+  /**
+   * Image shown on vehicle listing cards (e.g. a cut-out or top-down shot). Falls back to Hero Image if not set.
+   */
+  featureImage?: (string | null) | Media;
+  /**
+   * Marketing feature cards shown on the vehicle page.
+   */
+  features?:
+    | {
+        featureTitle: string;
+        featureDescription?: string | null;
+        featureImage?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  colours?:
+    | {
+        /**
+         * e.g. "Frozen White"
+         */
+        colourName: string;
+        /**
+         * e.g. "Platinum Only" or "Sport & Tremor Only"
+         */
+        colourNote?: string | null;
+        colourSwatch?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  gallery?:
+    | {
+        image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Lowest variant price as a whole number, e.g. 621000 for R 621,000.
+   */
+  startingPrice?: number | null;
+  priceDisclaimer?: string | null;
+  content?: {
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    section?: Section[] | null;
+  };
+  meta?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    metaImage?: (string | null) | Media;
+  };
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-models".
+ */
+export interface VehicleModel {
+  id: string;
+  /**
+   * e.g. "2.0 SiT Double Cab XL 4x2 6MT"
+   */
+  name: string;
+  /**
+   * The parent vehicle this model belongs to.
+   */
+  vehicle: string | Vehicle;
+  /**
+   * Specific price for this model variant, e.g. 621000 for R 621,000.
+   */
+  price: number;
+  /**
+   * Key feature bullet points shown on the model overview page.
+   */
+  highlights?:
+    | {
+        highlight: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Colour options for this specific model. Leave empty to inherit from the parent vehicle.
+   */
+  colours?:
+    | {
+        colourName: string;
+        /**
+         * e.g. "Platinum Only"
+         */
+        colourNote?: string | null;
+        colourSwatch?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  content?: {
+    /**
+     * Model-specific marketing copy shown on the variant detail page.
+     */
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    section?: Section[] | null;
+  };
+  meta?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    metaImage?: (string | null) | Media;
+  };
+  /**
+   * Lower numbers appear first within a vehicle family.
    */
   sortOrder?: number | null;
   publishedAt?: string | null;
@@ -2308,6 +2541,18 @@ export interface PayloadLockedDocument {
         value: string | Category;
       } | null)
     | ({
+        relationTo: 'vehicle-categories';
+        value: string | VehicleCategory;
+      } | null)
+    | ({
+        relationTo: 'vehicles';
+        value: string | Vehicle;
+      } | null)
+    | ({
+        relationTo: 'vehicle-models';
+        value: string | VehicleModel;
+      } | null)
+    | ({
         relationTo: 'redirects';
         value: string | Redirect;
       } | null)
@@ -2585,6 +2830,116 @@ export interface CategoriesSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-categories_select".
+ */
+export interface VehicleCategoriesSelect<T extends boolean = true> {
+  title?: T;
+  sortOrder?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicles_select".
+ */
+export interface VehiclesSelect<T extends boolean = true> {
+  name?: T;
+  badge?: T;
+  category?: T;
+  heroImage?: T;
+  featureImage?: T;
+  features?:
+    | T
+    | {
+        featureTitle?: T;
+        featureDescription?: T;
+        featureImage?: T;
+        id?: T;
+      };
+  colours?:
+    | T
+    | {
+        colourName?: T;
+        colourNote?: T;
+        colourSwatch?: T;
+        id?: T;
+      };
+  gallery?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  startingPrice?: T;
+  priceDisclaimer?: T;
+  content?:
+    | T
+    | {
+        description?: T;
+        section?: T | {};
+      };
+  meta?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        metaImage?: T;
+      };
+  sortOrder?: T;
+  publishedAt?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-models_select".
+ */
+export interface VehicleModelsSelect<T extends boolean = true> {
+  name?: T;
+  vehicle?: T;
+  price?: T;
+  highlights?:
+    | T
+    | {
+        highlight?: T;
+        id?: T;
+      };
+  colours?:
+    | T
+    | {
+        colourName?: T;
+        colourNote?: T;
+        colourSwatch?: T;
+        id?: T;
+      };
+  content?:
+    | T
+    | {
+        description?: T;
+        section?: T | {};
+      };
+  meta?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        metaImage?: T;
+      };
+  sortOrder?: T;
+  publishedAt?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3440,6 +3795,9 @@ export interface TaskCreateCollectionExport {
       | 'specials'
       | 'media'
       | 'categories'
+      | 'vehicle-categories'
+      | 'vehicles'
+      | 'vehicle-models'
       | 'redirects'
       | 'forms'
       | 'form-submissions'
@@ -3506,6 +3864,14 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'specials';
           value: string | Special;
+        } | null)
+      | ({
+          relationTo: 'vehicles';
+          value: string | Vehicle;
+        } | null)
+      | ({
+          relationTo: 'vehicle-models';
+          value: string | VehicleModel;
         } | null);
     global?: string | null;
     user?: (string | null) | User;

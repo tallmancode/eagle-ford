@@ -28,6 +28,7 @@ import type {
   SpecialsArchive,
   Partners,
   Row,
+  VehicleTabsBlock,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -57,6 +58,7 @@ import { BenefitsGridBlockComponent } from '@/lib/blocks/benefits-grid-block/com
 import { SpecialsArchiveBlockComponent } from '@/lib/blocks/specials-archive-block/components/SpecialsArchiveBlockComponent'
 import { PartnersBlockComponent } from '@/lib/blocks/partners-block/components/PartnersBlockComponent'
 import { RowBlockComponent } from '@/lib/blocks/row-block/components/RowBlockComponent'
+import { VehicleTabsBlockComponent } from '@/lib/blocks/vehicle-tabs-block/components/VehicleTabsBlockComponent'
 import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 
 type BlockComponentMap = {
@@ -88,6 +90,7 @@ type BlockComponentMap = {
   financeCalculatorBlock: FinanceCalculatorBlockType
   'specials-archive': SpecialsArchive
   partners: Partners
+  'vehicle-tabs': VehicleTabsBlock
 }
 
 type WithMeta<T> = T & { meta?: BlockRenderMeta }
@@ -127,6 +130,9 @@ const blockComponents: {
   financeCalculatorBlock: FinanceCalculatorBlockComponent,
   'specials-archive': SpecialsArchiveBlockComponent,
   partners: PartnersBlockComponent,
+  'vehicle-tabs': VehicleTabsBlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleTabsBlock>
+  >,
 } as const
 
 type Blocks = Config['blocks']
