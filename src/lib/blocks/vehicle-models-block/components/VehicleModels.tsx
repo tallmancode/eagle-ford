@@ -10,6 +10,7 @@ import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical
 import { richTextConverters } from '@/components/rich-text/richTextConverters'
 import type { Media, Vehicle, VehicleModel } from '@/payload-types'
 import { formatPrice } from '@/lib/utils/formatPrice'
+import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
 
 type VehicleModelsProps = {
   vehicle: Vehicle
@@ -149,7 +150,7 @@ export function VehicleModels({ vehicle, models }: VehicleModelsProps) {
                   <p className="text-sm text-muted-foreground">Starting From</p>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                  <Link href="#enquire">
+                  <Link href={getVehicleModelPath(vehicle.slug ?? '', selectedModel.slug ?? '')}>
                     <Button variant="outline" className="rounded-full">
                       View Details
                     </Button>

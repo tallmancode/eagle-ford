@@ -93,6 +93,7 @@ export function DefaultVehicleLayout({ vehicle, models }: DefaultVehicleLayoutPr
       {/* ── Interactive sections (models, gallery, enquiry) ── */}
       <VehicleRangePage
         vehicleName={vehicle.name}
+        vehicleSlug={vehicle.slug ?? ''}
         gallery={vehicle.gallery ?? []}
         models={models}
         vehicleFeatureImage={vehicle.featureImage ?? vehicle.heroImage ?? null}

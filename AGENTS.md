@@ -20,6 +20,16 @@ Start with `.agents/skills/payload/SKILL.md` for a quick reference, then see `.a
   - `src/lib/blocks/section-block/blockRefs.ts` (`allBlockRefs` — required for the block to appear in section/template pickers)
 - If schema changes add a new block interface/slug, run `pnpm generate:types`.
 
+### Vehicle Model Template Blocks
+
+- Use this pattern for model detail page sections whose data comes from the active model (and parent vehicle).
+- Create files under `src/lib/blocks/vehicle-model-<name>-block/` with the same split as vehicle blocks.
+- Keep block schema minimal (`fields: []`) unless editors must configure content manually.
+- In render components, read from `meta.vehicleModel` and (when needed) `meta.vehicle`; return `null` if required data is absent.
+- Register every new vehicle-model block in the same three places as vehicle blocks (`index.ts`, `RenderBlocks.tsx`, `blockRefs.ts`).
+- Model page templates live in the `vehicle-model-templates` collection and are selected on the parent vehicle via the sidebar **Model Page Template** field (`modelTemplate`). All models under that vehicle share the same layout.
+- Model pages render at `/vehicles/{vehicleSlug}/{modelSlug}`.
+
 ### Normal Blocks
 
 - Use this pattern for reusable content blocks that editors configure directly.

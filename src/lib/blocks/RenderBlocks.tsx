@@ -36,6 +36,10 @@ import type {
   VehicleColorsBlock,
   VehicleGalleryBlock,
   VehicleFeaturesBlock,
+  VehicleModelHeroBlock,
+  VehicleModelHighlightsBlock,
+  VehicleModelColorsBlock,
+  VehicleModelSiblingsBlock,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -73,6 +77,10 @@ import { VehicleFaqBlockComponent } from '@/lib/blocks/vehicle-faq-block/compone
 import { VehicleColorsBlockComponent } from '@/lib/blocks/vehicle-colors-block/components/VehicleColorsBlockComponent'
 import { VehicleGalleryBlockComponent } from '@/lib/blocks/vehicle-gallery-block/components/VehicleGalleryBlockComponent'
 import { VehicleFeaturesBlockComponent } from '@/lib/blocks/vehicle-features-block/components/VehicleFeaturesBlockComponent'
+import { VehicleModelHeroBlockComponent } from '@/lib/blocks/vehicle-model-hero-block/components/VehicleModelHeroBlockComponent'
+import { VehicleModelHighlightsBlockComponent } from '@/lib/blocks/vehicle-model-highlights-block/components/VehicleModelHighlightsBlockComponent'
+import { VehicleModelColorsBlockComponent } from '@/lib/blocks/vehicle-model-colors-block/components/VehicleModelColorsBlockComponent'
+import { VehicleModelSiblingsBlockComponent } from '@/lib/blocks/vehicle-model-siblings-block/components/VehicleModelSiblingsBlockComponent'
 import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 
 type BlockComponentMap = {
@@ -112,6 +120,10 @@ type BlockComponentMap = {
   'vehicle-colors': VehicleColorsBlock
   'vehicle-gallery': VehicleGalleryBlock
   'vehicle-features': VehicleFeaturesBlock
+  'vehicle-model-hero': VehicleModelHeroBlock
+  'vehicle-model-highlights': VehicleModelHighlightsBlock
+  'vehicle-model-colors': VehicleModelColorsBlock
+  'vehicle-model-siblings': VehicleModelSiblingsBlock
 }
 
 type WithMeta<T> = T & { meta?: BlockRenderMeta }
@@ -174,6 +186,19 @@ const blockComponents: {
   >,
   'vehicle-features': VehicleFeaturesBlockComponent as unknown as React.ComponentType<
     WithMeta<VehicleFeaturesBlock>
+  >,
+  'vehicle-model-hero': VehicleModelHeroBlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleModelHeroBlock>
+  >,
+  'vehicle-model-highlights':
+    VehicleModelHighlightsBlockComponent as unknown as React.ComponentType<
+      WithMeta<VehicleModelHighlightsBlock>
+    >,
+  'vehicle-model-colors': VehicleModelColorsBlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleModelColorsBlock>
+  >,
+  'vehicle-model-siblings': VehicleModelSiblingsBlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleModelSiblingsBlock>
   >,
 } as const
 
