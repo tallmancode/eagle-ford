@@ -58,7 +58,7 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
   }),
-  collections: [UsersCollection, ...Collections],
+  collections: [...Collections, UsersCollection],
   cors: [getServerSideURL()].filter(Boolean),
   globals: Globals,
   blocks: [...Blocks],

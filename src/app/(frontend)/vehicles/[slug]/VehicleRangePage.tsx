@@ -30,6 +30,7 @@ const INITIAL_FORM: FormData = {
 }
 
 import { formatPrice } from '@/lib/utils/formatPrice'
+import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
 
 function getModelCardImage(
   model: VehicleModel,
@@ -43,6 +44,7 @@ const MODELS_PER_PAGE = 3
 
 type Props = {
   vehicleName: string
+  vehicleSlug: string
   gallery: GalleryItem[]
   models: VehicleModel[]
   vehicleFeatureImage: string | Media | null
@@ -51,6 +53,7 @@ type Props = {
 
 export default function VehicleRangePage({
   vehicleName,
+  vehicleSlug,
   gallery,
   models,
   vehicleFeatureImage,
@@ -140,11 +143,11 @@ export default function VehicleRangePage({
                           ))}
                         </ul>
                       )}
-                      <a href="#enquire">
+                      <Link href={getVehicleModelPath(vehicleSlug, model.slug ?? '')}>
                         <Button variant="outline" className="rounded-full w-full mt-auto">
                           View Details
                         </Button>
-                      </a>
+                      </Link>
                     </div>
                   )
                 })}
