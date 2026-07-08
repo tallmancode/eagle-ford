@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { Download } from 'lucide-react'
 import React from 'react'
 
-import { MediaImage } from '@/components/ui/media-image'
 import { Button } from '@/components/ui/button'
 import { RichText as ConvertRichText } from '@payloadcms/richtext-lexical/react'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
@@ -12,6 +11,7 @@ import { getBrochureUrl } from '@/lib/utils/vehicleCta'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { VehicleHero } from '@/lib/blocks/vehicle-hero-block/components/VehicleHero'
 import { VehicleColors } from '@/lib/blocks/vehicle-colors-block/components/VehicleColors'
+import { VehicleFeatures } from '@/lib/blocks/vehicle-features-block/components/VehicleFeatures'
 import VehicleRangePage from './VehicleRangePage'
 import VehicleFaq from './VehicleFaq'
 
@@ -24,7 +24,6 @@ export function DefaultVehicleLayout({ vehicle, models }: DefaultVehicleLayoutPr
   const features = vehicle.features ?? []
   const specHighlights = vehicle.specHighlights ?? []
   const engineOptions = vehicle.engineOptions ?? []
-  const featureSections = vehicle.featureSections ?? []
   const paymentOptions = vehicle.paymentOptions ?? []
   const faqs = vehicle.faqs ?? []
   const brochureUrl = getBrochureUrl(vehicle.brochure)
@@ -85,96 +84,8 @@ export function DefaultVehicleLayout({ vehicle, models }: DefaultVehicleLayoutPr
         </section>
       )}
 
-      {/* ── Feature Sections ── */}
-      {featureSections.length > 0 &&
-        featureSections.map((section, i) => {
-          const imageOnLeft = section.imagePosition === 'left'
-          const stats = section.stats ?? []
-
-          return (
-            <section
-              key={section.id ?? i}
-              className={`py-14 px-4 ${i % 2 === 1 ? 'bg-muted/40' : ''}`}
-            >
-              <div className="container mx-auto">
-                <div
-                  className={`grid grid-cols-1 lg:grid-cols-2 gap-10 items-center ${
-                    imageOnLeft ? '' : 'lg:[&>*:first-child]:order-2'
-                  }`}
-                >
-                  {section.image && (
-                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                      <MediaImage
-                        resource={section.image}
-                        fill
-                        imgClassName="object-cover"
-                        size="(max-width: 1024px) 100vw, 50vw"
-                      />
-                    </div>
-                  )}
-                  <div>
-                    <h2 className="text-primary text-3xl font-bold mb-4">{section.title}</h2>
-                    {section.description && (
-                      <p className="text-muted-foreground leading-relaxed mb-6">
-                        {section.description}
-                      </p>
-                    )}
-                    {stats.length > 0 && (
-                      <div className="flex flex-wrap gap-6 mb-6">
-                        {stats.map((stat, j) => (
-                          <div key={stat.id ?? j}>
-                            <p className="text-primary text-2xl font-bold">{stat.value}</p>
-                            <p className="text-muted-foreground text-sm">{stat.label}</p>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    {section.ctaLabel && section.ctaUrl && (
-                      <Link href={section.ctaUrl}>
-                        <Button className="rounded-full">{section.ctaLabel}</Button>
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </section>
-          )
-        })}
-
       {/* ── Features ── */}
-      {features.length > 0 && (
-        <section className="bg-muted/40 py-14 px-4">
-          <div className="container mx-auto">
-            <h2 className="text-primary text-3xl font-bold text-center mb-10">Features</h2>
-            <div
-              className={`grid grid-cols-1 gap-8 ${
-                features.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'
-              }`}
-            >
-              {features.map((feature, i) => (
-                <div key={feature.id ?? i} className="flex flex-col">
-                  {feature.featureImage && (
-                    <div className="relative h-48 rounded-xl overflow-hidden mb-5">
-                      <MediaImage
-                        resource={feature.featureImage}
-                        fill
-                        imgClassName="object-cover"
-                        size="(max-width: 768px) 100vw, 33vw"
-                      />
-                    </div>
-                  )}
-                  <h3 className="text-lg font-semibold mb-2">{feature.featureTitle}</h3>
-                  {feature.featureDescription && (
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      {feature.featureDescription}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      <VehicleFeatures features={features} />
 
       {/* ── Vehicle Colours ── */}
       <VehicleColors vehicleName={vehicle.name} colours={vehicle.colours ?? []} />

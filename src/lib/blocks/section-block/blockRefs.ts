@@ -27,11 +27,13 @@ const allBlockRefs: BlockSlug[] = [
   'specials-archive',
   'partners',
   'vehicle-tabs',
+  'vehicle-catalog',
   'vehicle-hero',
   'vehicle-models',
   'vehicle-colors',
   'vehicle-faq',
   'vehicle-gallery',
+  'vehicle-features',
 ]
 
 /** Nested block slugs for section content. Pass `exclude` to prevent circular blockReferences (stack overflow in admin). */

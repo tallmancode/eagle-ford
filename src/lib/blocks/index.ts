@@ -27,11 +27,13 @@ import { BenefitsGridBlock } from '@/lib/blocks/benefits-grid-block/BenefitsGrid
 import { SpecialsArchiveBlock } from '@/lib/blocks/specials-archive-block/SpecialsArchiveBlock'
 import { PartnersBlock } from '@/lib/blocks/partners-block/PartnersBlock'
 import { VehicleTabsBlock } from '@/lib/blocks/vehicle-tabs-block/VehicleTabsBlock'
+import { VehicleCatalogBlock } from '@/lib/blocks/vehicle-catalog-block/VehicleCatalogBlock'
 import { VehicleHeroBlock } from '@/lib/blocks/vehicle-hero-block/VehicleHeroBlock'
 import { VehicleModelsBlock } from '@/lib/blocks/vehicle-models-block/VehicleModelsBlock'
 import { VehicleFaqBlock } from '@/lib/blocks/vehicle-faq-block/VehicleFaqBlock'
 import { VehicleColorsBlock } from '@/lib/blocks/vehicle-colors-block/VehicleColorsBlock'
 import { VehicleGalleryBlock } from '@/lib/blocks/vehicle-gallery-block/VehicleGalleryBlock'
+import { VehicleFeaturesBlock } from '@/lib/blocks/vehicle-features-block/VehicleFeaturesBlock'
 
 const Blocks = [
   SectionBlock,
@@ -63,11 +65,13 @@ const Blocks = [
   SpecialsArchiveBlock,
   PartnersBlock,
   VehicleTabsBlock,
+  VehicleCatalogBlock,
   VehicleHeroBlock,
   VehicleModelsBlock,
   VehicleFaqBlock,
   VehicleColorsBlock,
   VehicleGalleryBlock,
+  VehicleFeaturesBlock,
 ]
 
 export default Blocks

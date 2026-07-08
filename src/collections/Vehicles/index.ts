@@ -179,72 +179,6 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
               ],
             },
             {
-              name: 'featureSections',
-              label: 'Feature Sections',
-              type: 'array',
-              admin: {
-                description: 'Large alternating image + copy sections with optional stats and CTA.',
-              },
-              fields: [
-                {
-                  name: 'title',
-                  label: 'Title',
-                  type: 'text',
-                  required: true,
-                },
-                {
-                  name: 'description',
-                  label: 'Description',
-                  type: 'textarea',
-                },
-                {
-                  name: 'image',
-                  label: 'Image',
-                  type: 'upload',
-                  relationTo: 'media',
-                },
-                {
-                  name: 'imagePosition',
-                  label: 'Image Position',
-                  type: 'select',
-                  defaultValue: 'right',
-                  options: [
-                    { label: 'Left', value: 'left' },
-                    { label: 'Right', value: 'right' },
-                  ],
-                },
-                {
-                  name: 'stats',
-                  label: 'Stats',
-                  type: 'array',
-                  fields: [
-                    {
-                      name: 'value',
-                      label: 'Value',
-                      type: 'text',
-                      required: true,
-                    },
-                    {
-                      name: 'label',
-                      label: 'Label',
-                      type: 'text',
-                      required: true,
-                    },
-                  ],
-                },
-                {
-                  name: 'ctaLabel',
-                  label: 'CTA Label',
-                  type: 'text',
-                },
-                {
-                  name: 'ctaUrl',
-                  label: 'CTA URL',
-                  type: 'text',
-                },
-              ],
-            },
-            {
               name: 'brochure',
               label: 'Brochure',
               type: 'upload',
@@ -263,7 +197,8 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
               label: 'Features',
               type: 'array',
               admin: {
-                description: 'Marketing feature cards shown on the vehicle page.',
+                description:
+                  'Marketing feature sections shown on the vehicle page with alternating image and text.',
               },
               fields: [
                 {
