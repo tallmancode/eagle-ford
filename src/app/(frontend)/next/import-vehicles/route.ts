@@ -100,6 +100,7 @@ async function scrapeColourSwatches(
 type ColourDef = { colourName: string; colourNote?: string }
 type FeatureDef = { featureTitle: string; featureDescription: string }
 type VariantDef = { name: string; slug: string; price: number; highlights: string[] }
+type FaqDef = { question: string; answer: string }
 
 type VehicleDef = {
   name: string
@@ -112,6 +113,7 @@ type VehicleDef = {
   colours: ColourDef[]
   pageUrl: string
   variants: VariantDef[]
+  faqs: FaqDef[]
 }
 
 const VEHICLE_DATA: VehicleDef[] = [
@@ -270,6 +272,58 @@ const VEHICLE_DATA: VehicleDef[] = [
         ],
       },
     ],
+    faqs: [
+      {
+        question: 'What is the starting price of the Next Level Ranger?',
+        answer:
+          'The Next Level Ranger range starts from R 621,000 for the 2.0 SiT Double Cab XL 4x2 6MT. Prices include an optional service plan and exclude packs and factory options. Visit Eagle Ford for current pricing and specials.',
+      },
+      {
+        question: 'Which Next Level Ranger trims are available?',
+        answer:
+          'The range spans XL, XLT, Sport, Wildtrak, Tremor, Platinum and Raptor. Engines include the 2.0 SiT, 2.3L and the 3.0L V6 (including the twin-turbo Raptor), with both 4x2 and 4x4 drivetrains depending on the derivative.',
+      },
+      {
+        question: 'What is the difference between 4x2 and 4x4 Ranger models?',
+        answer:
+          '4x2 models are ideal for on-road, light commercial and family use. 4x4 models (such as Tremor, Wildtrak 4x4, Platinum and Raptor) add greater off-road ability, selectable drive modes and stronger towing confidence for tougher terrain.',
+      },
+      {
+        question: 'What makes the Ranger Sport different?',
+        answer:
+          'The new Ford Ranger Sport injects adrenaline into Ranger capability with a bolder look, dynamic handling and lifestyle-focused features such as a 360 camera, Adaptive Cruise Control with Stop/Go, electronic park brake, e-shifter and zone lighting.',
+      },
+      {
+        question: 'Is the Ranger Tremor built for off-road use?',
+        answer:
+          'Yes. The 3.0L V6 Double Cab Tremor 4x4 is oriented toward serious off-road work, with composite off-road side steps, large wheelarch flares, load-box edge protectors, a roll bar and unique vinyl seats with embroidered logos.',
+      },
+      {
+        question: 'What tech comes standard in the Next Level Ranger cabin?',
+        answer:
+          'A coast-to-coast dashboard and integrated 12-inch centre touchscreen deliver a modern truck cabin. Derivatives offer SYNC4 with wireless Apple CarPlay and Android Auto, and higher trims add SYNC4 High with navigation plus premium audio.',
+      },
+      {
+        question: 'How does the Ranger Raptor stand apart from other trims?',
+        answer:
+          'The Raptor is the performance flagship with a 292kW 3.0-litre V6 twin-turbo petrol engine, Performance Fox Suspension, a 12.4-inch digital cluster and selectable modes including Baja and Rock Crawl — built for high-speed off-road thrills.',
+      },
+      {
+        question: 'What exterior colours can I choose?',
+        answer:
+          'Options include Frozen White, Carbonized Grey, Agate Black, Ignite Red, Blue Lighting, Lucid Red, Acacia Green (Platinum only) and Command Grey (Sport and Tremor only). Availability can vary by trim — confirm with Eagle Ford.',
+      },
+      {
+        question: 'Does the Ranger support towing and trailer manoeuvring?',
+        answer:
+          'Higher-spec models such as the 3.0L V6 Wildtrak 4x4 include Pro Trailer Backup Assist to help reverse a trailer with less stress. Spec and tow ratings vary by derivative — speak to Eagle Ford for the right match to your trailer.',
+      },
+      {
+        question: 'Can I finance a Next Level Ranger through Eagle Ford?',
+        answer:
+          'Yes. Eagle Ford can help with Ford finance options, trade-ins and a quote tailored to the trim you want. Contact the dealership for monthly payment estimates, deposit options and current stock.',
+      },
+    ],
   },
   {
     name: 'Ranger Super Cab',
@@ -330,6 +384,58 @@ const VEHICLE_DATA: VehicleDef[] = [
           '360 Degree Camera including 4x4 Offroad Screen',
           'B&O Play Amplifier, Subwoofer and Extra Speaker (10 Speakers)',
         ],
+      },
+    ],
+    faqs: [
+      {
+        question: 'What is a Ranger Super Cab and how does it differ from Double Cab?',
+        answer:
+          'The Super Cab sits between Single and Double Cab layouts — it offers rear-hinged occasional rear access with a longer load box than a Double Cab, making it a strong mix of work payload and everyday practicality.',
+      },
+      {
+        question: 'What is the starting price of the Ranger Super Cab?',
+        answer:
+          'The Ranger Super Cab range starts from R 586,500 for the 2.0 SiT SuperCab XL auto. Confirm current pricing, service plans and factory options with Eagle Ford.',
+      },
+      {
+        question: 'Which Super Cab derivatives are available?',
+        answer:
+          'Available models include the 2.0 SiT SuperCab XL auto, 2.0 SiT SuperCab XLT, and the 2.0 BiTurbo SuperCab Wildtrak 4x4 for buyers who want higher specification and off-road ability.',
+      },
+      {
+        question: 'Is the Super Cab suitable for both work and lifestyle?',
+        answer:
+          'Yes. It is designed as one of Ford’s most versatile Rangers — capable for commercial loads while remaining practical for family and leisure use thanks to its smart cab layout and tough chassis.',
+      },
+      {
+        question: 'What fuel economy can I expect from the Super Cab XL?',
+        answer:
+          'The 2.0 SiT SuperCab XL auto quotes combined fuel economy of around 7.5 L/100km with an 80L fuel tank. Real-world figures vary with load, terrain and driving style.',
+      },
+      {
+        question: 'What tech is in the Ranger Super Cab cabin?',
+        answer:
+          'A coast-to-coast dashboard with an integrated 10-inch centre LED touchscreen gives a modern, truck-inspired cabin. Higher Wildtrak models step up to a 12-inch touchscreen and premium audio.',
+      },
+      {
+        question: 'What makes the Super Cab Wildtrak special?',
+        answer:
+          'The 2.0 BiTurbo SuperCab Wildtrak 4x4 adds lifestyle and capability extras such as 18-inch alloys with A/T tyres, a 360-degree camera with 4x4 off-road screen, and a B&O Play audio system with 10 speakers.',
+      },
+      {
+        question: 'Does the Super Cab look different from other Rangers?',
+        answer:
+          'It shares the bold Built Ford Tough front face with a black grille and halogen daytime running lamps, plus durable 16-inch alloy wheels on work-focused XL derivatives.',
+      },
+      {
+        question: 'Is the Super Cab available in 4x4?',
+        answer:
+          'Yes. The BiTurbo SuperCab Wildtrak is offered as a 4x4 for buyers who need more traction and off-road confidence. XL and XLT variants lean toward efficient on-road and light commercial use.',
+      },
+      {
+        question: 'Can Eagle Ford help me choose between Super Cab and Double Cab?',
+        answer:
+          'Absolutely. Our sales team can match cab style, payload and budget to how you use your bakkie — whether that is fleet work, towing or weekend loads. Visit Eagle Ford for a comparison and quote.',
       },
     ],
   },
@@ -396,6 +502,58 @@ const VEHICLE_DATA: VehicleDef[] = [
           'Drivetrain: 4WD',
           'Transmission: 10AT',
         ],
+      },
+    ],
+    faqs: [
+      {
+        question: 'Who is the Ranger Single Cab best suited for?',
+        answer:
+          'The Single Cab is built for work-first buyers and fleets who need a tough, smart bakkie with a full-size load box — while still offering modern tech for daily driving and site work.',
+      },
+      {
+        question: 'What is the starting price of the Ranger Single Cab?',
+        answer:
+          'Pricing starts from R 590,000 for the Ranger 2.0 SiT Single Cab XL 4x2 auto. Speak to Eagle Ford for current stock, service plans and fleet deals.',
+      },
+      {
+        question: 'Which Single Cab models are available?',
+        answer:
+          'Key derivatives include the 2.0 SiT Single Cab XL 4x2 auto and the 2.0 SiT Single Cab XL 4x4 manual. Related SuperCab 4x4 options are also listed for buyers comparing cab styles.',
+      },
+      {
+        question: 'Is a 4x4 Single Cab available?',
+        answer:
+          'Yes. The 2.0 SiT Single Cab XL 4x4 Manual offers Electronic Shift On The Fly (ESOF) 4x4 with a 6-speed manual — ideal when you need traction on farms, construction sites or gravel routes.',
+      },
+      {
+        question: 'What powertrain does the Single Cab XL use?',
+        answer:
+          'The XL derivatives use a 2.0-litre single turbo diesel producing up to 125kW at 3,500rpm — a proven workhorse pairing for payload and everyday economy.',
+      },
+      {
+        question: 'What cabin technology is included?',
+        answer:
+          'Expect a 10-inch colour touchscreen, an 8-inch digital instrument cluster, cruise control, and a rear-view camera with rear parking sensors to help when reversing on busy sites or driveways.',
+      },
+      {
+        question: 'How does Single Cab compare to Super Cab or Double Cab?',
+        answer:
+          'Single Cab maximises load-box length and keeps the cabin work-focused. Super Cab adds occasional rear access; Double Cab prioritises four proper doors and passenger space. Eagle Ford can help you pick the right layout.',
+      },
+      {
+        question: 'Is the Single Cab comfortable for daily driving?',
+        answer:
+          'Yes. Beyond rugged looks with a black grille and durable alloys, the coast-to-coast dashboard and digital displays make it feel modern when the bakkie doubles as your office between jobs.',
+      },
+      {
+        question: 'Can I use the Single Cab for light recreational towing?',
+        answer:
+          'Many buyers do, depending on derivative and load. Tow ratings and GVM limits vary — ask Eagle Ford for the correct specification and accessories for your trailer or equipment.',
+      },
+      {
+        question: 'Does Eagle Ford offer fleet or business purchasing help?',
+        answer:
+          'Yes. For contractors and fleets, Eagle Ford can advise on derivatives, finance structures and aftersales support so your Single Cab stays earning on the road.',
       },
     ],
   },
@@ -520,6 +678,58 @@ const VEHICLE_DATA: VehicleDef[] = [
         ],
       },
     ],
+    faqs: [
+      {
+        question: 'What is the starting price of the Next Level Everest?',
+        answer:
+          'The Next Level Everest starts from R 825,000 for the 2.0 SiT Active 4x2 10AT. Prices include an optional service plan and exclude packs and factory options unless stated otherwise.',
+      },
+      {
+        question: 'How many seats does the Ford Everest have?',
+        answer:
+          'Higher Wildtrak and Platinum derivatives include 7 seats as standard, making the Everest a strong choice for larger families who still want off-road capability and towing confidence.',
+      },
+      {
+        question: 'Which Everest trims can I choose from?',
+        answer:
+          'The range includes 2.0 SiT Active 4x2 and 4x4, plus 3.0 V6 Sport, Wildtrak and Platinum 4x4 models — stepping up in luxury, wheels, seats and driver assistance as you move through the line-up.',
+      },
+      {
+        question: 'What is the difference between Active 4x2 and Active 4x4?',
+        answer:
+          'Both Active models use the 2.0L turbo (125kW) with a 10-speed automatic, 12-inch SYNC 4A screen and strong safety kit. The 4x4 adds all-wheel traction for gravel, adventure trips and variable weather.',
+      },
+      {
+        question: 'Is the Everest good for towing?',
+        answer:
+          'Yes — features such as Pro-Trailer Backup Assist and a 360-degree camera help take the stress out of reversing with a trailer. Confirm tow ratings for your chosen derivative with Eagle Ford.',
+      },
+      {
+        question: 'What engines are available in the Next Level Everest?',
+        answer:
+          'Choose the efficient 2.0L turbo diesel in Active models, or step up to the 3.0L V6 (184kW) in Sport, Wildtrak and Platinum for stronger performance and presence.',
+      },
+      {
+        question: 'What technology is in the Everest cabin?',
+        answer:
+          'Expect a premium dashboard with a digital instrument cluster and a large 12-inch portrait touchscreen with SYNC 4A, wireless Apple CarPlay/Android Auto and wireless charging on key derivatives.',
+      },
+      {
+        question: 'What makes the Everest Platinum the flagship?',
+        answer:
+          'Platinum adds a luxury-focused cabin with leather-accented heated and ventilated seats, 10-way power driver seat with memory, a 12.4-inch digital cluster, Matrix LED headlamps, ambient lighting and a panoramic roof.',
+      },
+      {
+        question: 'Does the Everest have selectable drive modes?',
+        answer:
+          'Yes. Selectable drive modes help you tackle tougher terrain with more control — ideal for weekend adventures beyond the tar.',
+      },
+      {
+        question: 'Can I arrange a test drive of the Next Level Everest at Eagle Ford?',
+        answer:
+          'Yes. Contact Eagle Ford to book a drive, discuss Active through Platinum specifications, and get a finance quote based on your preferred derivative and extras.',
+      },
+    ],
   },
   {
     name: 'New Level Territory',
@@ -604,6 +814,58 @@ const VEHICLE_DATA: VehicleDef[] = [
         ],
       },
     ],
+    faqs: [
+      {
+        question: 'What is the starting price of the New Level Territory?',
+        answer:
+          'The Territory range starts from R 489,900 for the 1.8T Ambiente. It is Ford’s more accessible SUV option compared with Everest, while still offering bold styling and modern tech.',
+      },
+      {
+        question: 'How does Territory compare to a bakkie like the Ranger?',
+        answer:
+          'Territory is a passenger-focused SUV with a car-like cabin, cargo space and FWD EcoBoost performance. Choose Ranger when you need a load box, higher payloads or serious 4x4 work — Eagle Ford can help you decide.',
+      },
+      {
+        question: 'Which Territory trims are available?',
+        answer:
+          'Choose Ambiente, Trend or Titanium. All use the 1.8L GTDi EcoBoost petrol engine; higher trims add refinement such as a 7-speed automatic (Trend) and premium leather plus a 360-degree camera (Titanium).',
+      },
+      {
+        question: 'What engine does the Territory use?',
+        answer:
+          'Every listed derivative uses Ford’s 1.8L GTDi EcoBoost engine producing 138kW at 5,200rpm and 318Nm between 1,750 and 3,000rpm, with stop/start for efficiency in traffic.',
+      },
+      {
+        question: 'Is the Territory front-wheel drive?',
+        answer:
+          'Yes. The Ambiente, Trend and Titanium models are specified with FWD — ideal for urban commuting, family travel and highway trips without the complexity of a 4x4 platform.',
+      },
+      {
+        question: 'What technology comes with Territory?',
+        answer:
+          'Expect a 12-inch colour touchscreen, Arkamys 3D audio, an electronically powered tailgate, and smartphone connectivity. Higher specs emphasise comfort and camera/safety convenience.',
+      },
+      {
+        question: 'What makes the Titanium the top Territory?',
+        answer:
+          'Titanium adds 19-inch alloys, a 360-degree camera and premium black leather seats with Manuka Tan inserts — a more premium look and everyday convenience package.',
+      },
+      {
+        question: 'Is Territory a good family SUV?',
+        answer:
+          'Yes. It pairs spacious legroom and cargo space with striking LED lighting and a modern interior designed for comfort on school runs, weekends and longer trips.',
+      },
+      {
+        question: 'Does Territory have a powered tailgate?',
+        answer:
+          'Yes — an electronically powered tailgate is listed across Ambiente, Trend and Titanium, making loading shopping or luggage easier when your hands are full.',
+      },
+      {
+        question: 'Can I finance a Territory at Eagle Ford?',
+        answer:
+          'Yes. Eagle Ford can structure Ford finance around Ambiente, Trend or Titanium, including trade-in valuations and monthly payment illustrations for your budget.',
+      },
+    ],
   },
   // ── Passenger Cars ─────────────────────────────────────────────────────────
   {
@@ -662,6 +924,58 @@ const VEHICLE_DATA: VehicleDef[] = [
         ],
       },
     ],
+    faqs: [
+      {
+        question: 'What is the starting price of the Mustang GT?',
+        answer:
+          'The Mustang GT Fastback starts from R 1,350,000 for the 5.0L V8 GT Fastback 10AT. Confirm current pricing, colours and finance options with Eagle Ford.',
+      },
+      {
+        question: 'What engine and power does the Mustang GT offer?',
+        answer:
+          'The 7th-generation Mustang GT uses the Gen-4 5.0L Coyote V8 delivering 328kW and 540Nm — iconic naturally aspirated V8 performance in Fastback form.',
+      },
+      {
+        question: 'What bodystyle is the Mustang GT?',
+        answer:
+          'The listed model is a Fastback with a raised wedge decklid spoiler body-coloured to match — the classic Mustang silhouette for everyday drama and weekend thrills.',
+      },
+      {
+        question: 'Which drive modes are available on the Mustang GT?',
+        answer:
+          'Selectable modes include Normal, Sport, Track, Drag Strip, Slippery and Custom, so you can tailor throttle and chassis character to road or track conditions.',
+      },
+      {
+        question: 'How fast is the Mustang GT?',
+        answer:
+          'The Mustang GT is rated with a top speed of 250 km/h. Always drive responsibly and within legal limits — performance figures are for capability context.',
+      },
+      {
+        question: 'How many seats does the Mustang GT have?',
+        answer:
+          'The Fastback derivative listed is specified with 2 seats in the seed data used here — confirm seating layout and rear packaging when you view the vehicle at Eagle Ford.',
+      },
+      {
+        question: 'What fuel range can I expect?',
+        answer:
+          'Quoted average range is around 469km from a 61L petrol tank, depending on driving style, mode selection and conditions.',
+      },
+      {
+        question: 'What exterior colours are available?',
+        answer:
+          'Colours include Race Red, Adriatic Blue, Orange Fury, Iconic Silver, Carbonized Gray, Vapor Blue, Molten Magenta, Oxford White and Absolute Black — subject to stock.',
+      },
+      {
+        question: 'Does the Mustang GT have keyless / push-button start?',
+        answer:
+          'Yes. Intelligent Access with Push-button Start keeps the iconic drive ready at your fingertips without a traditional key turn.',
+      },
+      {
+        question: 'Should I choose Mustang GT or Dark Horse?',
+        answer:
+          'Choose GT for iconic 328kW V8 Fastback thrills. Dark Horse steps further toward track focus with higher power and MagneRide damping. Eagle Ford can demo both mindsets.',
+      },
+    ],
   },
   {
     name: 'Mustang Dark Horse',
@@ -715,6 +1029,58 @@ const VEHICLE_DATA: VehicleDef[] = [
           '6 Selectable Drive Modes',
           'Active Valve Performance Exhaust System',
         ],
+      },
+    ],
+    faqs: [
+      {
+        question: 'What is the starting price of the Mustang Dark Horse?',
+        answer:
+          'The Mustang Dark Horse starts from R 1,545,000 for the 5.0L V8 Dark Horse 10AT. Contact Eagle Ford for availability, colours and personalised finance.',
+      },
+      {
+        question: 'How does Dark Horse differ from the Mustang GT?',
+        answer:
+          'Dark Horse is the more track-oriented Mustang — producing 334kW versus the GT’s 328kW, with MagneRide® damping, Active Valve Performance Exhaust and signature Dark Horse badging throughout.',
+      },
+      {
+        question: 'What is MagneRide® and why does it matter?',
+        answer:
+          'MagneRide® is an advanced damping system that helps the Dark Horse stay composed and precise through corners — bridging street manners and track-ready control.',
+      },
+      {
+        question: 'How many drive modes does Dark Horse offer?',
+        answer:
+          'Six selectable drive modes let you change the car’s character for everyday roads or more aggressive driving, working together with the performance chassis hardware.',
+      },
+      {
+        question: 'What power and torque does Dark Horse produce?',
+        answer:
+          'Expect 334kW and 540Nm from the 5.0L V8 — street-legal performance with a clear focus on athleticism and drama.',
+      },
+      {
+        question: 'Does Dark Horse have a performance exhaust?',
+        answer:
+          'Yes. An Active Valve Performance Exhaust System (plus Remote Rev) helps deliver the soundtrack and response that Dark Horse owners expect.',
+      },
+      {
+        question: 'What transmission is offered?',
+        answer:
+          'The listed Dark Horse derivative uses a 10-speed automatic transmission for quick, precise shifts whether you’re commuting or pushing harder on a closed circuit.',
+      },
+      {
+        question: 'What colours can I order?',
+        answer:
+          'Available colours include Race Red, Carbonized Gray, Blue Ember and Oxford White. Stock and factory availability can change — verify with Eagle Ford.',
+      },
+      {
+        question: 'Is Dark Horse practical as a daily driver?',
+        answer:
+          'It is street legal and usable day to day, but it is engineered with a track-ready mindset. If you want softer GT character instead, compare both models with Eagle Ford.',
+      },
+      {
+        question: 'Can I book a Dark Horse experience at Eagle Ford?',
+        answer:
+          'Yes. Reach out to arrange a viewing or test drive, discuss specification details and explore Ford finance for this flagship Mustang.',
       },
     ],
   },
@@ -799,6 +1165,58 @@ const VEHICLE_DATA: VehicleDef[] = [
         ],
       },
     ],
+    faqs: [
+      {
+        question: 'What is the New Tourneo Custom best used for?',
+        answer:
+          'Tourneo Custom is a passenger-focused people mover for family travel, shuttle work or business hosting — more comfort-oriented than a pure cargo van, with 8-seat flexibility.',
+      },
+      {
+        question: 'What is the starting price of the Tourneo Custom?',
+        answer:
+          'Pricing starts from R 1,117,500 for Tourneo Trend. Sport and Titanium X step up in power, range and specification — ask Eagle Ford for current quotes.',
+      },
+      {
+        question: 'How many seats does the Tourneo Custom have?',
+        answer:
+          'It is specified as an 8-seater with seating configurations that can adapt for passengers or equipment, depending how you set up the cabin.',
+      },
+      {
+        question: 'Which Tourneo trims are available?',
+        answer:
+          'Choose Trend (100kW), Sport (125kW) or Titanium X (125kW). Higher trims add stronger performance and longer quoted average range with a larger fuel tank.',
+      },
+      {
+        question: 'What engine and transmission does it use?',
+        answer:
+          'Tourneo Custom uses a 2.0L Ford EcoBlue diesel with an 8-speed automatic, balancing torque for passenger loads with strong claimed fuel efficiency.',
+      },
+      {
+        question: 'What drive modes are available?',
+        answer:
+          'Selectable modes include Normal, Eco, Sport, Slippery and Trail, adjusting settings such as throttle response to suit the journey.',
+      },
+      {
+        question: 'What technology is onboard?',
+        answer:
+          'Expect a large 13-inch touchscreen, 5G embedded modem connectivity and a supportive 4-way adjustable driver’s seat with lumbar support for longer trips.',
+      },
+      {
+        question: 'How far can Tourneo Custom travel on a tank?',
+        answer:
+          'Quoted average range is about 946km on Trend (70L tank) and around 1,081km on Sport and Titanium X (80L tank), depending on load and driving style.',
+      },
+      {
+        question: 'What colours can I choose?',
+        answer:
+          'Colours include Magnetic, Chrome Blue, Agate Black, Moondust Silver, Blazer Blue, Race Red and Frozen White — subject to stock at Eagle Ford.',
+      },
+      {
+        question: 'Is Tourneo Custom the same as Transit Custom?',
+        answer:
+          'No. Tourneo Custom prioritises people-carrying comfort; Transit Custom is the commercial cargo sibling focused on load volume and payload. Eagle Ford can compare both for your use case.',
+      },
+    ],
   },
   {
     name: 'New Transit Custom',
@@ -843,6 +1261,58 @@ const VEHICLE_DATA: VehicleDef[] = [
         ],
       },
     ],
+    faqs: [
+      {
+        question: 'What is the starting price of the New Transit Custom?',
+        answer:
+          'The Transit Custom starts from R 770,000 for the 2.0L LWB Van Base 6MT. Eagle Ford can confirm commercial pricing, stock and business finance options.',
+      },
+      {
+        question: 'How much load space and payload does Transit Custom offer?',
+        answer:
+          'Expect around 5.8m³ of load area and up to approximately 1,269kg max gross payload — built to get daily deliveries and trade work done efficiently.',
+      },
+      {
+        question: 'What engine options are available?',
+        answer:
+          'The 2.0L Ford EcoBlue diesel spans roughly 100–125kW and 360–390Nm depending on derivative, with a focus on usable torque and fuel efficiency for business mileage.',
+      },
+      {
+        question: 'Is the listed Base model manual or automatic?',
+        answer:
+          'The seeded Base LWB van uses a 6-speed manual gearbox with 100kW diesel power — ask Eagle Ford about other transmissions or higher specs if available.',
+      },
+      {
+        question: 'How many seats does Transit Custom have?',
+        answer:
+          'The Base van is specified with 2 seats for a pure cargo layout. Passenger-focused transport is better served by Tourneo Custom.',
+      },
+      {
+        question: 'What tech comes with Transit Custom?',
+        answer:
+          'Higher equipment mentions include a 13-inch touchscreen with SYNC® 4, a 12-inch digital instrument cluster, an 8-inch configurable centre display and wireless charging — confirm what is fitted on each derivative.',
+      },
+      {
+        question: 'Does Transit Custom have selectable drive modes?',
+        answer:
+          'Yes — up to five selectable drive modes help you take the van almost anywhere your business needs to go, adapting response to conditions.',
+      },
+      {
+        question: 'What fuel range can I expect?',
+        answer:
+          'The Base model quotes an average range around 671km from a 55L diesel tank. Real-world range depends on payload, traffic and driving style.',
+      },
+      {
+        question: 'Is Transit Custom suitable for trades and SMEs?',
+        answer:
+          'Yes. It is designed as a compact commercial workhorse — strong payload for its size, modern cabin tech and modes that support mixed city and highway routes.',
+      },
+      {
+        question: 'How does Transit Custom compare to Transit Van?',
+        answer:
+          'Transit Custom is the mid-size van with about 5.8m³ load volume. The larger Transit Van steps up to roughly 13.5m³ and higher payloads for bigger commercial loads.',
+      },
+    ],
   },
   {
     name: 'Transit Van',
@@ -879,6 +1349,58 @@ const VEHICLE_DATA: VehicleDef[] = [
         slug: '2.2-tdci-elwb-ambiente-6mt',
         price: 1011500,
         highlights: ['Diesel', 'Fuel Tank size: 80L', 'Manual', 'Number of seats: 3'],
+      },
+    ],
+    faqs: [
+      {
+        question: 'What is the starting price of the Transit Van?',
+        answer:
+          'The Transit Van starts from R 1,011,500 for the 2.2 TDCi ELWB Ambiente 6MT. Speak to Eagle Ford for commercial quotes, stock and aftersales support.',
+      },
+      {
+        question: 'How much load space does the Transit Van offer?',
+        answer:
+          'Expect around 13.5m³ of load area — a big step up from Transit Custom’s roughly 5.8m³ — for bulk deliveries, equipment and large commercial cargo.',
+      },
+      {
+        question: 'What payload can the Transit Van carry?',
+        answer:
+          'Maximum gross payload is quoted up to about 2,270kg depending on configuration. Always match GVM and loading to your specific derivative and body setup.',
+      },
+      {
+        question: 'How does Transit Van compare to Transit Custom?',
+        answer:
+          'Transit Van is the larger workhorse for volume and payload. Transit Custom suits mid-size urban and trade routes. Eagle Ford can size the right van to your routes and loads.',
+      },
+      {
+        question: 'What engine does the listed Ambiente use?',
+        answer:
+          'The ELWB Ambiente is specified with a diesel powertrain and 6-speed manual. Broader Transit messaging also references EcoBlue outputs in the 100–121kW class — confirm the exact engine on the unit you buy.',
+      },
+      {
+        question: 'Does Transit Van have selectable drive modes?',
+        answer:
+          'Yes — up to four selectable drive modes help adapt the van to mixed conditions so you can take business almost anywhere.',
+      },
+      {
+        question: 'How many seats are in the Transit Van Ambiente?',
+        answer:
+          'The 2.2 TDCi ELWB Ambiente is listed with 3 seats — a practical crew-cab feel for a driver plus two without sacrificing the huge rear load space.',
+      },
+      {
+        question: 'What fuel tank size does it have?',
+        answer:
+          'The Ambiente derivative quotes an 80L diesel tank, supporting longer working days between fills when routes are demanding.',
+      },
+      {
+        question: 'Is security a focus on Transit Van?',
+        answer:
+          'Yes. Ford understands a Transit is often a livelihood — multiple security systems help alert you if the vehicle is tampered with or moved from where it should be.',
+      },
+      {
+        question: 'Can Eagle Ford help with commercial Finance and fleet support?',
+        answer:
+          'Yes. From choosing ELWB Ambiente specs to structuring business finance and planning servicing, Eagle Ford supports commercial buyers who need vans that stay earning.',
       },
     ],
   },
@@ -975,12 +1497,23 @@ export async function POST(): Promise<Response> {
         collection: 'vehicles',
         where: { slug: { equals: veh.slug } },
         limit: 1,
+        draft: true,
+        overrideAccess: true,
+        req: payloadReq,
       })
 
       if (existing.totalDocs > 0) {
-        vehicleIdMap[veh.slug] = existing.docs[0].id as string
+        const doc = existing.docs[0]
+        vehicleIdMap[veh.slug] = doc.id as string
+        await payload.update({
+          collection: 'vehicles',
+          id: doc.id,
+          data: { faqs: veh.faqs },
+          req: payloadReq,
+          context: { disableRevalidate: true },
+        })
         result.vehiclesSkipped++
-        payload.logger.info(`Skipped existing vehicle: ${veh.name}`)
+        payload.logger.info(`Updated FAQs for existing vehicle: ${veh.name}`)
         continue
       }
 
@@ -1066,6 +1599,7 @@ export async function POST(): Promise<Response> {
         data: {
           name: veh.name,
           slug: veh.slug,
+          generateSlug: false,
           ...(veh.badge ? { badge: veh.badge } : {}),
           category: categoryIdMap[veh.categorySlug],
           heroImage: heroMediaId as string,
@@ -1075,6 +1609,7 @@ export async function POST(): Promise<Response> {
             featureDescription: f.featureDescription,
           })),
           colours,
+          faqs: veh.faqs,
           startingPrice: veh.startingPrice,
           priceDisclaimer: 'Including Optional Service plan and excluding Packs & factory options',
           sortOrder: index + 1,
@@ -1104,10 +1639,14 @@ export async function POST(): Promise<Response> {
           collection: 'vehicle-models',
           where: { slug: { equals: variant.slug } },
           limit: 1,
+          draft: true,
+          overrideAccess: true,
+          req: payloadReq,
         })
 
         if (existing.totalDocs > 0) {
           result.modelsSkipped++
+          payload.logger.info(`Skipped existing model: ${variant.name}`)
           continue
         }
 
@@ -1146,25 +1685,47 @@ export async function POST(): Promise<Response> {
           }),
         )
 
-        await payload.create({
-          collection: 'vehicle-models',
-          draft: false,
-          data: {
-            name: variant.name,
-            slug: variant.slug,
-            vehicle: vehicleId,
-            price: variant.price,
-            highlights: variant.highlights.map((h) => ({ highlight: h })),
-            colours: variantColours,
-            sortOrder: modelIndex + 1,
-            _status: 'published',
-          },
-          req: payloadReq,
-          context: { disableRevalidate: true },
-        })
+        try {
+          await payload.create({
+            collection: 'vehicle-models',
+            draft: false,
+            data: {
+              name: variant.name,
+              slug: variant.slug,
+              generateSlug: false,
+              vehicle: vehicleId,
+              price: variant.price,
+              highlights: variant.highlights.map((h) => ({ highlight: h })),
+              colours: variantColours,
+              sortOrder: modelIndex + 1,
+              _status: 'published',
+            },
+            req: payloadReq,
+            context: { disableRevalidate: true },
+          })
 
-        result.modelsCreated++
-        payload.logger.info(`Created model: ${variant.name}`)
+          result.modelsCreated++
+          payload.logger.info(`Created model: ${variant.name}`)
+        } catch (modelErr) {
+          const isUniqueSlug =
+            typeof modelErr === 'object' &&
+            modelErr !== null &&
+            'data' in modelErr &&
+            Array.isArray((modelErr as { data?: { errors?: { path?: string }[] } }).data?.errors) &&
+            (modelErr as { data: { errors: { path?: string }[] } }).data.errors.some(
+              (e) => e.path === 'slug',
+            )
+
+          if (isUniqueSlug) {
+            result.modelsSkipped++
+            payload.logger.warn(
+              `Slug already exists for model ${variant.name} (${variant.slug}) — skipping`,
+            )
+            continue
+          }
+
+          throw modelErr
+        }
       }
     }
 

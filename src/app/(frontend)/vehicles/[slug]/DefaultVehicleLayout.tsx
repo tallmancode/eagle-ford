@@ -11,6 +11,7 @@ import type { Vehicle, VehicleModel } from '@/payload-types'
 import { getBrochureUrl } from '@/lib/utils/vehicleCta'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { VehicleHero } from '@/lib/blocks/vehicle-hero-block/components/VehicleHero'
+import { VehicleColors } from '@/lib/blocks/vehicle-colors-block/components/VehicleColors'
 import VehicleRangePage from './VehicleRangePage'
 import VehicleFaq from './VehicleFaq'
 
@@ -175,10 +176,12 @@ export function DefaultVehicleLayout({ vehicle, models }: DefaultVehicleLayoutPr
         </section>
       )}
 
-      {/* ── Interactive sections (colours, models, gallery, enquiry) ── */}
+      {/* ── Vehicle Colours ── */}
+      <VehicleColors vehicleName={vehicle.name} colours={vehicle.colours ?? []} />
+
+      {/* ── Interactive sections (models, gallery, enquiry) ── */}
       <VehicleRangePage
         vehicleName={vehicle.name}
-        colours={vehicle.colours ?? []}
         gallery={vehicle.gallery ?? []}
         models={models}
         vehicleFeatureImage={vehicle.featureImage ?? vehicle.heroImage ?? null}
