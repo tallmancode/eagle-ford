@@ -151,9 +151,12 @@ export interface Config {
     'vehicle-colors': VehicleColorsBlock;
     'vehicle-gallery': VehicleGalleryBlock;
     'vehicle-features': VehicleFeaturesBlock;
+    'vehicle-model-hero': VehicleModelHeroBlock;
+    'vehicle-model-highlights': VehicleModelHighlightsBlock;
+    'vehicle-model-colors': VehicleModelColorsBlock;
+    'vehicle-model-siblings': VehicleModelSiblingsBlock;
   };
   collections: {
-    users: User;
     pages: Page;
     blogs: Blog;
     specials: Special;
@@ -161,8 +164,10 @@ export interface Config {
     categories: Category;
     'vehicle-categories': VehicleCategory;
     'vehicle-templates': VehicleTemplate;
+    'vehicle-model-templates': VehicleModelTemplate;
     vehicles: Vehicle;
     'vehicle-models': VehicleModel;
+    users: User;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -177,7 +182,6 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     blogs: BlogsSelect<false> | BlogsSelect<true>;
     specials: SpecialsSelect<false> | SpecialsSelect<true>;
@@ -185,8 +189,10 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     'vehicle-categories': VehicleCategoriesSelect<false> | VehicleCategoriesSelect<true>;
     'vehicle-templates': VehicleTemplatesSelect<false> | VehicleTemplatesSelect<true>;
+    'vehicle-model-templates': VehicleModelTemplatesSelect<false> | VehicleModelTemplatesSelect<true>;
     vehicles: VehiclesSelect<false> | VehiclesSelect<true>;
     'vehicle-models': VehicleModelsSelect<false> | VehicleModelsSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -290,6 +296,10 @@ export interface Section {
         | VehicleFaqBlock
         | VehicleGalleryBlock
         | VehicleFeaturesBlock
+        | VehicleModelHeroBlock
+        | VehicleModelHighlightsBlock
+        | VehicleModelColorsBlock
+        | VehicleModelSiblingsBlock
       )[]
     | null;
   backgroundColor?:
@@ -422,6 +432,10 @@ export interface SectionInner {
         | VehicleFaqBlock
         | VehicleGalleryBlock
         | VehicleFeaturesBlock
+        | VehicleModelHeroBlock
+        | VehicleModelHighlightsBlock
+        | VehicleModelColorsBlock
+        | VehicleModelSiblingsBlock
       )[]
     | null;
   backgroundColor?:
@@ -551,6 +565,10 @@ export interface Row {
         | VehicleFaqBlock
         | VehicleGalleryBlock
         | VehicleFeaturesBlock
+        | VehicleModelHeroBlock
+        | VehicleModelHighlightsBlock
+        | VehicleModelColorsBlock
+        | VehicleModelSiblingsBlock
       )[]
     | null;
   backgroundColor?:
@@ -2015,32 +2033,39 @@ export interface VehicleFeaturesBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "VehicleModelHeroBlock".
  */
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  username?: string | null;
-  roles?: ('developer' | 'admin' | 'marketing' | 'manager' | 'staff')[] | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
+export interface VehicleModelHeroBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-hero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelHighlightsBlock".
+ */
+export interface VehicleModelHighlightsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-highlights';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelColorsBlock".
+ */
+export interface VehicleModelColorsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-colors';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelSiblingsBlock".
+ */
+export interface VehicleModelSiblingsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-siblings';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2118,6 +2143,35 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  username?: string | null;
+  roles?: ('developer' | 'admin' | 'marketing' | 'manager' | 'staff')[] | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "specials".
  */
 export interface Special {
@@ -2184,6 +2238,20 @@ export interface VehicleTemplate {
   id: string;
   /**
    * e.g. "Standard Vehicle Layout" or "Commercial Vehicle Layout"
+   */
+  title: string;
+  section?: Section[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-model-templates".
+ */
+export interface VehicleModelTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Model Layout" or "Commercial Model Layout"
    */
   title: string;
   section?: Section[] | null;
@@ -2374,6 +2442,10 @@ export interface Vehicle {
    * Optional. Layout template used to render this vehicle page.
    */
   template?: (string | null) | VehicleTemplate;
+  /**
+   * Optional. Layout used for all model detail pages under this vehicle.
+   */
+  modelTemplate?: (string | null) | VehicleModelTemplate;
   publishedAt?: string | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -2748,10 +2820,6 @@ export interface PayloadLockedDocument {
   id: string;
   document?:
     | ({
-        relationTo: 'users';
-        value: string | User;
-      } | null)
-    | ({
         relationTo: 'pages';
         value: string | Page;
       } | null)
@@ -2780,12 +2848,20 @@ export interface PayloadLockedDocument {
         value: string | VehicleTemplate;
       } | null)
     | ({
+        relationTo: 'vehicle-model-templates';
+        value: string | VehicleModelTemplate;
+      } | null)
+    | ({
         relationTo: 'vehicles';
         value: string | Vehicle;
       } | null)
     | ({
         relationTo: 'vehicle-models';
         value: string | VehicleModel;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: string | User;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -2844,32 +2920,6 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
- */
-export interface UsersSelect<T extends boolean = true> {
-  firstName?: T;
-  lastName?: T;
-  username?: T;
-  roles?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3090,6 +3140,16 @@ export interface VehicleTemplatesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-model-templates_select".
+ */
+export interface VehicleModelTemplatesSelect<T extends boolean = true> {
+  title?: T;
+  section?: T | {};
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "vehicles_select".
  */
 export interface VehiclesSelect<T extends boolean = true> {
@@ -3186,6 +3246,7 @@ export interface VehiclesSelect<T extends boolean = true> {
       };
   sortOrder?: T;
   template?: T;
+  modelTemplate?: T;
   publishedAt?: T;
   generateSlug?: T;
   slug?: T;
@@ -3237,6 +3298,32 @@ export interface VehicleModelsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  username?: T;
+  roles?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -4087,7 +4174,6 @@ export interface TaskCreateCollectionExport {
     name: string;
     batchSize?: number | null;
     collectionSlug:
-      | 'users'
       | 'pages'
       | 'blogs'
       | 'specials'
@@ -4095,8 +4181,10 @@ export interface TaskCreateCollectionExport {
       | 'categories'
       | 'vehicle-categories'
       | 'vehicle-templates'
+      | 'vehicle-model-templates'
       | 'vehicles'
       | 'vehicle-models'
+      | 'users'
       | 'redirects'
       | 'forms'
       | 'form-submissions'

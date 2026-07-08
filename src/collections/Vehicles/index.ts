@@ -485,6 +485,16 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
       },
     },
     {
+      name: 'modelTemplate',
+      label: 'Model Page Template',
+      type: 'relationship',
+      relationTo: 'vehicle-model-templates',
+      admin: {
+        position: 'sidebar',
+        description: 'Optional. Layout used for all model detail pages under this vehicle.',
+      },
+    },
+    {
       name: 'publishedAt',
       type: 'date',
       admin: {
