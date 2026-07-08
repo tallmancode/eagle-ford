@@ -147,6 +147,8 @@ export interface Config {
     'vehicle-hero': VehicleHeroBlock;
     'vehicle-models': VehicleModelsBlock;
     'vehicle-faq': VehicleFaqBlock;
+    'vehicle-colors': VehicleColorsBlock;
+    'vehicle-gallery': VehicleGalleryBlock;
   };
   collections: {
     users: User;
@@ -281,7 +283,9 @@ export interface Section {
         | VehicleTabsBlock
         | VehicleHeroBlock
         | VehicleModelsBlock
+        | VehicleColorsBlock
         | VehicleFaqBlock
+        | VehicleGalleryBlock
       )[]
     | null;
   backgroundColor?:
@@ -409,7 +413,9 @@ export interface SectionInner {
         | VehicleTabsBlock
         | VehicleHeroBlock
         | VehicleModelsBlock
+        | VehicleColorsBlock
         | VehicleFaqBlock
+        | VehicleGalleryBlock
       )[]
     | null;
   backgroundColor?:
@@ -534,7 +540,9 @@ export interface Row {
         | VehicleTabsBlock
         | VehicleHeroBlock
         | VehicleModelsBlock
+        | VehicleColorsBlock
         | VehicleFaqBlock
+        | VehicleGalleryBlock
       )[]
     | null;
   backgroundColor?:
@@ -1950,12 +1958,30 @@ export interface VehicleModelsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleColorsBlock".
+ */
+export interface VehicleColorsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-colors';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "VehicleFaqBlock".
  */
 export interface VehicleFaqBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'vehicle-faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleGalleryBlock".
+ */
+export interface VehicleGalleryBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-gallery';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2150,14 +2176,6 @@ export interface Vehicle {
   badge?: ('newly-launched' | 'coming-soon' | 'limited') | null;
   category: string | VehicleCategory;
   /**
-   * Full-width background image displayed at the top of the vehicle page.
-   */
-  heroImage: string | Media;
-  /**
-   * Image shown on vehicle listing cards (e.g. a cut-out or top-down shot). Falls back to Hero Image if not set.
-   */
-  featureImage?: (string | null) | Media;
-  /**
    * Hero subtitle, e.g. "Built here. Built different."
    */
   tagline?: string | null;
@@ -2232,13 +2250,6 @@ export interface Vehicle {
    * PDF brochure available for download on the vehicle page.
    */
   brochure?: (string | null) | Media;
-  faqs?:
-    | {
-        question: string;
-        answer: string;
-        id?: string | null;
-      }[]
-    | null;
   /**
    * Marketing feature cards shown on the vehicle page.
    */
@@ -2264,9 +2275,24 @@ export interface Vehicle {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Full-width background image displayed at the top of the vehicle page.
+   */
+  heroImage: string | Media;
+  /**
+   * Image shown on vehicle listing cards (e.g. a cut-out or top-down shot). Falls back to Hero Image if not set.
+   */
+  featureImage?: (string | null) | Media;
   gallery?:
     | {
         image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
         id?: string | null;
       }[]
     | null;
@@ -3061,8 +3087,6 @@ export interface VehiclesSelect<T extends boolean = true> {
   name?: T;
   badge?: T;
   category?: T;
-  heroImage?: T;
-  featureImage?: T;
   tagline?: T;
   ctaButtons?:
     | T
@@ -3105,13 +3129,6 @@ export interface VehiclesSelect<T extends boolean = true> {
         id?: T;
       };
   brochure?: T;
-  faqs?:
-    | T
-    | {
-        question?: T;
-        answer?: T;
-        id?: T;
-      };
   features?:
     | T
     | {
@@ -3128,10 +3145,19 @@ export interface VehiclesSelect<T extends boolean = true> {
         colourSwatch?: T;
         id?: T;
       };
+  heroImage?: T;
+  featureImage?: T;
   gallery?:
     | T
     | {
         image?: T;
+        id?: T;
+      };
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
         id?: T;
       };
   customFields?:

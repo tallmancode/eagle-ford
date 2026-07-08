@@ -2,16 +2,15 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { ChevronLeft, ChevronRight, X, CheckCircle2, Loader2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, CheckCircle2, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { MediaImage } from '@/components/ui/media-image'
+import { VehicleGallery } from '@/lib/blocks/vehicle-gallery-block/components/VehicleGallery'
 import type { Media, Vehicle, VehicleModel } from '@/payload-types'
-
-type ColourItem = NonNullable<NonNullable<Vehicle['colours']>[number]>
 type GalleryItem = NonNullable<NonNullable<Vehicle['gallery']>[number]>
 
 type FormData = {
@@ -44,7 +43,6 @@ const MODELS_PER_PAGE = 3
 
 type Props = {
   vehicleName: string
-  colours: ColourItem[]
   gallery: GalleryItem[]
   models: VehicleModel[]
   vehicleFeatureImage: string | Media | null
@@ -53,14 +51,11 @@ type Props = {
 
 export default function VehicleRangePage({
   vehicleName,
-  colours,
   gallery,
   models,
   vehicleFeatureImage,
   vehicleHeroImage,
 }: Props) {
-  const [selectedColour, setSelectedColour] = useState(0)
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [modelPage, setModelPage] = useState(0)
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM)
   const [privacyAccepted, setPrivacyAccepted] = useState(false)
@@ -87,86 +82,6 @@ export default function VehicleRangePage({
 
   return (
     <>
-      {/* ── Colours ── */}
-      {colours.length > 0 && (
-        <section className="py-14 px-4">
-          <div className="container mx-auto">
-            <h2 className="text-primary text-3xl font-bold text-center mb-10">
-              {vehicleName} Colours
-            </h2>
-
-            {/* Main colour display */}
-            <div className="relative aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden mb-4 bg-muted flex items-center justify-center">
-              {colours[selectedColour]?.colourSwatch ? (
-                <MediaImage
-                  resource={colours[selectedColour].colourSwatch}
-                  imgClassName="w-auto h-auto max-w-full max-h-full object-contain"
-                  size="(max-width: 768px) 100vw, 1280px"
-                  priority
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full">
-                  <p className="text-muted-foreground text-lg">
-                    {colours[selectedColour]?.colourName}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Colour name + availability note */}
-            <p className="text-center font-semibold mb-0.5">
-              {colours[selectedColour]?.colourName}
-            </p>
-            {colours[selectedColour]?.colourNote && (
-              <p className="text-center text-sm text-muted-foreground mb-6">
-                ({colours[selectedColour].colourNote})
-              </p>
-            )}
-            {!colours[selectedColour]?.colourNote && <div className="mb-6" />}
-
-            {/* Swatch picker */}
-            <div className="flex flex-wrap justify-center gap-3">
-              {colours.map((colour, i) => (
-                <button
-                  key={colour.id ?? i}
-                  onClick={() => setSelectedColour(i)}
-                  className="group flex flex-col items-center gap-1.5 focus:outline-none"
-                  title={colour.colourName}
-                  aria-pressed={selectedColour === i}
-                  aria-label={colour.colourName}
-                >
-                  <div
-                    className={`relative w-16 h-10 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
-                      selectedColour === i
-                        ? 'border-primary shadow-md scale-110'
-                        : 'border-transparent hover:border-muted-foreground/40'
-                    }`}
-                  >
-                    {colour.colourSwatch ? (
-                      <MediaImage
-                        resource={colour.colourSwatch}
-                        fill
-                        imgClassName="object-cover object-center"
-                        size="64px"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-muted-foreground/20 flex items-center justify-center">
-                        <span className="text-[7px] text-center px-0.5 leading-tight text-muted-foreground">
-                          {colour.colourName}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <span className="text-[10px] text-muted-foreground text-center max-w-[64px] leading-tight">
-                    {colour.colourName}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* ── Model Variants ── */}
       {models.length > 0 && (
         <section id="models" className="bg-muted/40 py-14 px-4">
@@ -287,99 +202,7 @@ export default function VehicleRangePage({
       )}
 
       {/* ── Gallery ── */}
-      {gallery.length > 0 && (
-        <section className="py-14 px-4">
-          <div className="container mx-auto">
-            <h2 className="text-primary text-3xl font-bold text-center mb-10">
-              {vehicleName} Gallery
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {gallery.map((item, i) => (
-                <button
-                  key={item.id ?? i}
-                  onClick={() => setLightboxIndex(i)}
-                  aria-label={`Open gallery image ${i + 1}`}
-                  className="relative aspect-[4/3] rounded-xl overflow-hidden group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                >
-                  <MediaImage
-                    resource={item.image}
-                    fill
-                    imgClassName="object-cover group-hover:scale-105 transition-transform duration-300"
-                    size="(max-width: 768px) 50vw, 25vw"
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Lightbox */}
-      {lightboxIndex !== null && (
-        <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-          onClick={() => setLightboxIndex(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Gallery lightbox"
-        >
-          {/* Close */}
-          <button
-            className="absolute top-4 right-4 text-white hover:text-white/70 z-10 p-2"
-            onClick={() => setLightboxIndex(null)}
-            aria-label="Close gallery"
-          >
-            <X className="size-7" />
-          </button>
-
-          {/* Prev */}
-          {lightboxIndex > 0 && (
-            <button
-              className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 text-white hover:text-white/70 z-10 p-2"
-              onClick={(e) => {
-                e.stopPropagation()
-                setLightboxIndex((n) => (n !== null ? n - 1 : null))
-              }}
-              aria-label="Previous image"
-            >
-              <ChevronLeft className="size-9" />
-            </button>
-          )}
-
-          {/* Image */}
-          <div
-            className="relative w-full max-w-5xl aspect-video"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <MediaImage
-              resource={gallery[lightboxIndex]?.image}
-              fill
-              imgClassName="object-contain"
-              size="100vw"
-              priority
-            />
-          </div>
-
-          {/* Next */}
-          {lightboxIndex < gallery.length - 1 && (
-            <button
-              className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 text-white hover:text-white/70 z-10 p-2"
-              onClick={(e) => {
-                e.stopPropagation()
-                setLightboxIndex((n) => (n !== null ? n + 1 : null))
-              }}
-              aria-label="Next image"
-            >
-              <ChevronRight className="size-9" />
-            </button>
-          )}
-
-          {/* Counter */}
-          <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-sm">
-            {lightboxIndex + 1} / {gallery.length}
-          </p>
-        </div>
-      )}
+      <VehicleGallery vehicleName={vehicleName} gallery={gallery} />
 
       {/* ── Enquire Now ── */}
       <section id="enquire" className="bg-muted/40 border-t py-14 px-4">
