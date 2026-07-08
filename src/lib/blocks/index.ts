@@ -30,6 +30,8 @@ import { VehicleTabsBlock } from '@/lib/blocks/vehicle-tabs-block/VehicleTabsBlo
 import { VehicleHeroBlock } from '@/lib/blocks/vehicle-hero-block/VehicleHeroBlock'
 import { VehicleModelsBlock } from '@/lib/blocks/vehicle-models-block/VehicleModelsBlock'
 import { VehicleFaqBlock } from '@/lib/blocks/vehicle-faq-block/VehicleFaqBlock'
+import { VehicleColorsBlock } from '@/lib/blocks/vehicle-colors-block/VehicleColorsBlock'
+import { VehicleGalleryBlock } from '@/lib/blocks/vehicle-gallery-block/VehicleGalleryBlock'
 
 const Blocks = [
   SectionBlock,
@@ -64,6 +66,8 @@ const Blocks = [
   VehicleHeroBlock,
   VehicleModelsBlock,
   VehicleFaqBlock,
+  VehicleColorsBlock,
+  VehicleGalleryBlock,
 ]
 
 export default Blocks

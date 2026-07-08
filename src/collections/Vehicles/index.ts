@@ -74,27 +74,7 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
               relationTo: 'vehicle-categories',
               required: true,
             },
-            {
-              name: 'heroImage',
-              label: 'Hero Image',
-              type: 'upload',
-              relationTo: 'media',
-              required: true,
-              admin: {
-                description:
-                  'Full-width background image displayed at the top of the vehicle page.',
-              },
-            },
-            {
-              name: 'featureImage',
-              label: 'Feature Image',
-              type: 'upload',
-              relationTo: 'media',
-              admin: {
-                description:
-                  'Image shown on vehicle listing cards (e.g. a cut-out or top-down shot). Falls back to Hero Image if not set.',
-              },
-            },
+
             {
               name: 'tagline',
               label: 'Tagline',
@@ -273,25 +253,11 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
                 description: 'PDF brochure available for download on the vehicle page.',
               },
             },
-            {
-              name: 'faqs',
-              label: 'FAQs',
-              type: 'array',
-              fields: [
-                {
-                  name: 'question',
-                  label: 'Question',
-                  type: 'text',
-                  required: true,
-                },
-                {
-                  name: 'answer',
-                  label: 'Answer',
-                  type: 'textarea',
-                  required: true,
-                },
-              ],
-            },
+          ],
+        },
+        {
+          label: 'Features',
+          fields: [
             {
               name: 'features',
               label: 'Features',
@@ -319,6 +285,11 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
                 },
               ],
             },
+          ],
+        },
+        {
+          label: 'Colours',
+          fields: [
             {
               name: 'colours',
               label: 'Available Colours',
@@ -349,6 +320,32 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
                 },
               ],
             },
+          ],
+        },
+        {
+          label: 'Images',
+          fields: [
+            {
+              name: 'heroImage',
+              label: 'Hero Image',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+              admin: {
+                description:
+                  'Full-width background image displayed at the top of the vehicle page.',
+              },
+            },
+            {
+              name: 'featureImage',
+              label: 'Feature Image',
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                description:
+                  'Image shown on vehicle listing cards (e.g. a cut-out or top-down shot). Falls back to Hero Image if not set.',
+              },
+            },
             {
               name: 'gallery',
               label: 'Gallery',
@@ -359,6 +356,30 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
                   label: 'Image',
                   type: 'upload',
                   relationTo: 'media',
+                  required: true,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'FAQ',
+          fields: [
+            {
+              name: 'faqs',
+              label: 'FAQs',
+              type: 'array',
+              fields: [
+                {
+                  name: 'question',
+                  label: 'Question',
+                  type: 'text',
+                  required: true,
+                },
+                {
+                  name: 'answer',
+                  label: 'Answer',
+                  type: 'textarea',
                   required: true,
                 },
               ],
