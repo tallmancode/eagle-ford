@@ -144,11 +144,13 @@ export interface Config {
     'specials-archive': SpecialsArchive;
     partners: Partners;
     'vehicle-tabs': VehicleTabsBlock;
+    'vehicle-catalog': VehicleCatalogBlock;
     'vehicle-hero': VehicleHeroBlock;
     'vehicle-models': VehicleModelsBlock;
     'vehicle-faq': VehicleFaqBlock;
     'vehicle-colors': VehicleColorsBlock;
     'vehicle-gallery': VehicleGalleryBlock;
+    'vehicle-features': VehicleFeaturesBlock;
   };
   collections: {
     users: User;
@@ -281,11 +283,13 @@ export interface Section {
         | SpecialsArchive
         | Partners
         | VehicleTabsBlock
+        | VehicleCatalogBlock
         | VehicleHeroBlock
         | VehicleModelsBlock
         | VehicleColorsBlock
         | VehicleFaqBlock
         | VehicleGalleryBlock
+        | VehicleFeaturesBlock
       )[]
     | null;
   backgroundColor?:
@@ -411,11 +415,13 @@ export interface SectionInner {
         | SpecialsArchive
         | Partners
         | VehicleTabsBlock
+        | VehicleCatalogBlock
         | VehicleHeroBlock
         | VehicleModelsBlock
         | VehicleColorsBlock
         | VehicleFaqBlock
         | VehicleGalleryBlock
+        | VehicleFeaturesBlock
       )[]
     | null;
   backgroundColor?:
@@ -538,11 +544,13 @@ export interface Row {
         | SpecialsArchive
         | Partners
         | VehicleTabsBlock
+        | VehicleCatalogBlock
         | VehicleHeroBlock
         | VehicleModelsBlock
         | VehicleColorsBlock
         | VehicleFaqBlock
         | VehicleGalleryBlock
+        | VehicleFeaturesBlock
       )[]
     | null;
   backgroundColor?:
@@ -1940,6 +1948,19 @@ export interface VehicleTabsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleCatalogBlock".
+ */
+export interface VehicleCatalogBlock {
+  /**
+   * Optional heading displayed above the tabs (e.g. "All Vehicles")
+   */
+  heading?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-catalog';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "VehicleHeroBlock".
  */
 export interface VehicleHeroBlock {
@@ -1982,6 +2003,15 @@ export interface VehicleGalleryBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'vehicle-gallery';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleFeaturesBlock".
+ */
+export interface VehicleFeaturesBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-features';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2226,32 +2256,11 @@ export interface Vehicle {
       }[]
     | null;
   /**
-   * Large alternating image + copy sections with optional stats and CTA.
-   */
-  featureSections?:
-    | {
-        title: string;
-        description?: string | null;
-        image?: (string | null) | Media;
-        imagePosition?: ('left' | 'right') | null;
-        stats?:
-          | {
-              value: string;
-              label: string;
-              id?: string | null;
-            }[]
-          | null;
-        ctaLabel?: string | null;
-        ctaUrl?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
    * PDF brochure available for download on the vehicle page.
    */
   brochure?: (string | null) | Media;
   /**
-   * Marketing feature cards shown on the vehicle page.
+   * Marketing feature sections shown on the vehicle page with alternating image and text.
    */
   features?:
     | {
@@ -3108,24 +3117,6 @@ export interface VehiclesSelect<T extends boolean = true> {
     | {
         name?: T;
         engineType?: T;
-        id?: T;
-      };
-  featureSections?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-        imagePosition?: T;
-        stats?:
-          | T
-          | {
-              value?: T;
-              label?: T;
-              id?: T;
-            };
-        ctaLabel?: T;
-        ctaUrl?: T;
         id?: T;
       };
   brochure?: T;
