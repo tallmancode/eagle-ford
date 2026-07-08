@@ -29,11 +29,13 @@ import type {
   Partners,
   Row,
   VehicleTabsBlock,
+  VehicleCatalogBlock,
   VehicleHeroBlock,
   VehicleModelsBlock,
   VehicleFaqBlock,
   VehicleColorsBlock,
   VehicleGalleryBlock,
+  VehicleFeaturesBlock,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -64,11 +66,13 @@ import { SpecialsArchiveBlockComponent } from '@/lib/blocks/specials-archive-blo
 import { PartnersBlockComponent } from '@/lib/blocks/partners-block/components/PartnersBlockComponent'
 import { RowBlockComponent } from '@/lib/blocks/row-block/components/RowBlockComponent'
 import { VehicleTabsBlockComponent } from '@/lib/blocks/vehicle-tabs-block/components/VehicleTabsBlockComponent'
+import { VehicleCatalogBlockComponent } from '@/lib/blocks/vehicle-catalog-block/components/VehicleCatalogBlockComponent'
 import { VehicleHeroBlockComponent } from '@/lib/blocks/vehicle-hero-block/components/VehicleHeroBlockComponent'
 import { VehicleModelsBlockComponent } from '@/lib/blocks/vehicle-models-block/components/VehicleModelsBlockComponent'
 import { VehicleFaqBlockComponent } from '@/lib/blocks/vehicle-faq-block/components/VehicleFaqBlockComponent'
 import { VehicleColorsBlockComponent } from '@/lib/blocks/vehicle-colors-block/components/VehicleColorsBlockComponent'
 import { VehicleGalleryBlockComponent } from '@/lib/blocks/vehicle-gallery-block/components/VehicleGalleryBlockComponent'
+import { VehicleFeaturesBlockComponent } from '@/lib/blocks/vehicle-features-block/components/VehicleFeaturesBlockComponent'
 import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 
 type BlockComponentMap = {
@@ -101,11 +105,13 @@ type BlockComponentMap = {
   'specials-archive': SpecialsArchive
   partners: Partners
   'vehicle-tabs': VehicleTabsBlock
+  'vehicle-catalog': VehicleCatalogBlock
   'vehicle-hero': VehicleHeroBlock
   'vehicle-models': VehicleModelsBlock
   'vehicle-faq': VehicleFaqBlock
   'vehicle-colors': VehicleColorsBlock
   'vehicle-gallery': VehicleGalleryBlock
+  'vehicle-features': VehicleFeaturesBlock
 }
 
 type WithMeta<T> = T & { meta?: BlockRenderMeta }
@@ -148,6 +154,9 @@ const blockComponents: {
   'vehicle-tabs': VehicleTabsBlockComponent as unknown as React.ComponentType<
     WithMeta<VehicleTabsBlock>
   >,
+  'vehicle-catalog': VehicleCatalogBlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleCatalogBlock>
+  >,
   'vehicle-hero': VehicleHeroBlockComponent as unknown as React.ComponentType<
     WithMeta<VehicleHeroBlock>
   >,
@@ -162,6 +171,9 @@ const blockComponents: {
   >,
   'vehicle-gallery': VehicleGalleryBlockComponent as unknown as React.ComponentType<
     WithMeta<VehicleGalleryBlock>
+  >,
+  'vehicle-features': VehicleFeaturesBlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleFeaturesBlock>
   >,
 } as const
 
