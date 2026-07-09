@@ -23,7 +23,13 @@ export default buildConfig({
         login: {
           Component: '@/views/Login',
         },
+        liveStock: {
+          Component: '@/views/LiveStock',
+          path: '/data-management/live-stock',
+          exact: true,
+        },
       },
+      afterNavLinks: ['@/components/admin/sidebar/LiveStockNavLink#LiveStockNavLink'],
       beforeLogin: ['@/components/BeforeLogin'],
     },
     importMap: {

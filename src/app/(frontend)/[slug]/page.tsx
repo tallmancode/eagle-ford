@@ -9,7 +9,6 @@ import { homeStatic } from '@/endpoints/seed/home-static'
 
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { generateMeta } from '@/lib/utils/generateMeta'
-import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 
 export async function generateStaticParams() {
@@ -65,7 +64,6 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   return (
     <div>
-      <PageClient />
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
