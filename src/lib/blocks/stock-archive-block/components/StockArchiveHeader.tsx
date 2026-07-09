@@ -5,7 +5,6 @@ import type { TaxonomyFilterOption } from '@/lib/motor-city-stock/types'
 
 type Props = {
   heading: string
-  count: number
   bodyTypes: TaxonomyFilterOption[]
   selectedBodyType?: string
   onBodyTypeChange: (bodyType: string | undefined) => void
@@ -13,7 +12,6 @@ type Props = {
 
 export function StockArchiveHeader({
   heading,
-  count,
   bodyTypes,
   selectedBodyType,
   onBodyTypeChange,
@@ -22,12 +20,7 @@ export function StockArchiveHeader({
 
   return (
     <div className="mb-8">
-      <div className="mb-6 flex flex-wrap items-center gap-4">
-        <h2 className="text-3xl font-bold text-neutral-900 md:text-4xl">{heading}</h2>
-        <span className="rounded-full bg-primary-500 px-4 py-1 text-sm font-semibold text-light-50">
-          {count}
-        </span>
-      </div>
+      <h2 className="mb-6 text-3xl font-bold text-neutral-900 md:text-4xl">{heading}</h2>
 
       <div className="flex flex-wrap gap-3">
         <button

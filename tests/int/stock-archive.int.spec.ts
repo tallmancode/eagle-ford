@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest'
 import type { StockArchiveVehicle } from '@/lib/blocks/stock-archive-block/utils'
 import {
   buildEnquireUrl,
+  countActiveFilters,
   filterStock,
   formatMileageCompact,
   formatTransmissionShort,
   getPriceBounds,
+  getShowingRange,
   getStockImageUrl,
   getTaxonomyLabel,
   getUniqueModels,
@@ -16,6 +18,7 @@ import {
   stockArchiveFiltersToSearchParams,
 } from '@/lib/blocks/stock-archive-block/utils'
 import { buildStockUrl } from '@/lib/motor-city-stock/fetchStock'
+import { buildStockVehiclePath } from '@/lib/stock-vehicle/paths'
 
 function makeVehicle(overrides: Partial<StockArchiveVehicle> = {}): StockArchiveVehicle {
   return {
@@ -174,6 +177,35 @@ describe('stock-archive utils', () => {
   it('formatTransmissionShort maps automatic to Auto', () => {
     expect(formatTransmissionShort({ label: 'automatic', name: 'Automatic' })).toBe('Auto')
   })
+
+  it('getShowingRange returns zeros when totalDocs is empty', () => {
+    expect(getShowingRange(1, 12, 0)).toEqual({ start: 0, end: 0, total: 0 })
+  })
+
+  it('getShowingRange returns full page range', () => {
+    expect(getShowingRange(1, 12, 42)).toEqual({ start: 1, end: 12, total: 42 })
+  })
+
+  it('getShowingRange returns partial last page range', () => {
+    expect(getShowingRange(4, 12, 42)).toEqual({ start: 37, end: 42, total: 42 })
+  })
+
+  it('countActiveFilters returns zero when no sheet filters are active', () => {
+    expect(countActiveFilters({})).toBe(0)
+    expect(countActiveFilters({ bodyType: 'suv', page: 2 })).toBe(0)
+  })
+
+  it('countActiveFilters counts sheet filters only', () => {
+    expect(
+      countActiveFilters({
+        fuelType: 'petrol',
+        transmission: 'automatic',
+        model: 'Ranger',
+        priceMin: 100000,
+        mileageMax: 50000,
+      }),
+    ).toBe(5)
+  })
 })
 
 describe('buildStockUrl', () => {
@@ -190,7 +222,7 @@ describe('buildStockUrl', () => {
     })
 
     expect(url.pathname).toBe('/api/stock/EC167')
-    expect(url.searchParams.get('brandKey')).toBe('ford')
+    expect(url.searchParams.get('brandKey')).toBeNull()
     expect(url.searchParams.get('brand')).toBe('ford')
     expect(url.searchParams.get('bodyType')).toBe('hatch')
     expect(url.searchParams.get('fuelType')).toBe('petrol')
@@ -199,5 +231,17 @@ describe('buildStockUrl', () => {
     expect(url.searchParams.get('maxPrice')).toBe('500000')
     expect(url.searchParams.get('page')).toBe('2')
     expect(url.searchParams.get('limit')).toBe('12')
+  })
+})
+
+describe('buildStockVehiclePath', () => {
+  it('builds showroom detail URL from vehicle identifiers', () => {
+    expect(
+      buildStockVehiclePath({
+        stockNo: '752',
+        stockNoDisplay: null,
+        cmsId: 'ec170df60use14458',
+      }),
+    ).toBe('/showroom/752-ec170df60use14458')
   })
 })

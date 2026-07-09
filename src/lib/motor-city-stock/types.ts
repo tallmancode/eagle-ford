@@ -11,6 +11,17 @@ export type MotorCityStockTaxonomy = {
   name: string
 }
 
+export type MotorCityStockDealership = {
+  id: string
+  dealershipID: string
+  name: string
+  region?: string | null
+  email?: string | null
+  phoneNumber?: string | null
+  cellNumber?: string | null
+  contactPerson?: string | null
+}
+
 export type MotorCityStockVehicle = {
   id: string
   title?: string | null
@@ -36,12 +47,28 @@ export type MotorCityStockVehicle = {
   region?: string | null
   features?: string | null
   comments?: string | null
+  monthlyRepayment?: number | null
+  repaymentTerm?: number | null
+  repaymentInterestRate?: number | null
+  repaymentDepositPerc?: number | null
+  repaymentBalloonPerc?: number | null
+  dealership?: string | MotorCityStockDealership | null
   media: MotorCityStockVehicleMedia[]
 }
 
-export type MotorCityStockResponse = {
-  dealerCode: string
+export type MotorCityStockVehicleResponse = {
+  dealerCode: string | null
+  dealerCodes?: string[]
   brandKey?: string | null
+  brandKeys?: string[]
+  vehicle: MotorCityStockVehicle
+}
+
+export type MotorCityStockResponse = {
+  dealerCode: string | null
+  dealerCodes?: string[]
+  brandKey?: string | null
+  brandKeys?: string[]
   page?: number
   totalPages?: number
   totalDocs?: number
@@ -52,7 +79,6 @@ export type MotorCityStockResponse = {
 
 export type FetchStockOptions = {
   dealerCode?: string
-  brandKey?: string
   brand?: string
   bodyType?: string
   fuelType?: string
@@ -76,8 +102,10 @@ export type NewUsedFilterOption = {
 }
 
 export type MotorCityStockFilterOptions = {
-  dealerCode: string
+  dealerCode: string | null
+  dealerCodes?: string[]
   brandKey?: string | null
+  brandKeys?: string[]
   bodyTypes: TaxonomyFilterOption[]
   brands: TaxonomyFilterOption[]
   fuelTypes: TaxonomyFilterOption[]
@@ -88,7 +116,11 @@ export type MotorCityStockFilterOptions = {
 
 export type FetchStockFiltersOptions = {
   dealerCode?: string
-  brandKey?: string
+}
+
+export type FetchStockVehicleOptions = {
+  cmsId: string
+  dealerCode?: string
 }
 
 export class MotorCityStockError extends Error {

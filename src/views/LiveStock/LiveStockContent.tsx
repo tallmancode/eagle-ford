@@ -130,7 +130,9 @@ export async function LiveStockContent({ searchParams }: { searchParams?: Search
               {stock?.totalDocs ?? 0} vehicle{(stock?.totalDocs ?? 0) === 1 ? '' : 's'}
             </span>
             {stock?.dealerCode && <span>Dealer: {stock.dealerCode}</span>}
-            {stock?.brandKey && <span>Brand key: {stock.brandKey}</span>}
+            {stock?.dealerCodes?.length ? (
+              <span>Dealers: {stock.dealerCodes.join(', ')}</span>
+            ) : null}
           </div>
 
           {stock?.docs.length ? (

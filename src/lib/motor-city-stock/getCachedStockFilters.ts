@@ -9,7 +9,6 @@ import type {
 function cacheKeyFromOptions(options: FetchStockFiltersOptions): string {
   return JSON.stringify({
     dealerCode: options.dealerCode ?? 'EC167',
-    brandKey: options.brandKey ?? process.env.MOTOR_CITY_STOCK_BRAND_KEY ?? 'ford',
   })
 }
 

@@ -1,21 +1,20 @@
 import type {
-  FetchStockFiltersOptions,
-  MotorCityStockFilterOptions,
+  FetchStockVehicleOptions,
+  MotorCityStockVehicleResponse,
 } from '@/lib/motor-city-stock/types'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
 import { getStockApiConfig } from '@/lib/motor-city-stock/fetchStock'
 
-function buildStockFiltersUrl(baseUrl: string, options: FetchStockFiltersOptions = {}): URL {
+function buildStockVehicleUrl(baseUrl: string, options: FetchStockVehicleOptions): URL {
   const dealerCode = options.dealerCode ?? 'EC167'
-
-  return new URL(`/api/stock/${dealerCode}/filters`, baseUrl)
+  return new URL(`/api/stock/${dealerCode}/vehicles/${encodeURIComponent(options.cmsId)}`, baseUrl)
 }
 
-export async function fetchStockFilters(
-  options: FetchStockFiltersOptions = {},
-): Promise<MotorCityStockFilterOptions> {
+export async function fetchStockVehicle(
+  options: FetchStockVehicleOptions,
+): Promise<MotorCityStockVehicleResponse> {
   const { baseUrl, apiKey } = getStockApiConfig()
-  const url = buildStockFiltersUrl(baseUrl, options)
+  const url = buildStockVehicleUrl(baseUrl, options)
 
   const response = await fetch(url, {
     headers: {
@@ -25,7 +24,7 @@ export async function fetchStockFilters(
   })
 
   if (!response.ok) {
-    let message = `Stock filters API request failed with status ${response.status}`
+    let message = `Stock vehicle API request failed with status ${response.status}`
 
     try {
       const body = (await response.json()) as { error?: string }
@@ -37,7 +36,7 @@ export async function fetchStockFilters(
     throw new MotorCityStockError(message, response.status)
   }
 
-  return (await response.json()) as MotorCityStockFilterOptions
+  return (await response.json()) as MotorCityStockVehicleResponse
 }
 
-export { buildStockFiltersUrl }
+export { buildStockVehicleUrl }

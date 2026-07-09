@@ -2,14 +2,6 @@
 
 import { useCallback } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination'
 import type { MotorCityStockFilterOptions } from '@/lib/motor-city-stock/types'
 import {
   filterStock,
@@ -17,9 +9,9 @@ import {
   type StockArchiveFilters,
   type StockArchiveVehicle,
 } from '../utils'
-import { StockArchiveFilters as FiltersSidebar } from './StockArchiveFilters'
 import { StockArchiveGrid } from './StockArchiveGrid'
 import { StockArchiveHeader } from './StockArchiveHeader'
+import { StockArchiveToolbar } from './StockArchiveToolbar'
 
 type Props = {
   heading: string
@@ -86,70 +78,29 @@ export function StockArchiveClient({
     <div>
       <StockArchiveHeader
         heading={heading}
-        count={totalDocs}
         bodyTypes={filterOptions.bodyTypes}
         selectedBodyType={activeFilters.bodyType}
         onBodyTypeChange={(bodyType) => navigateWithFilters({ bodyType, page: 1 })}
       />
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
-        <FiltersSidebar
-          vehicles={vehicles}
-          filterOptions={filterOptions}
-          selectedModel={activeFilters.model}
-          selectedFuelType={activeFilters.fuelType}
-          selectedTransmission={activeFilters.transmission}
-          priceMin={activeFilters.priceMin}
-          priceMax={activeFilters.priceMax}
-          mileageMax={activeFilters.mileageMax}
-          onModelChange={(model) => navigateWithFilters({ model, page: 1 })}
-          onFuelTypeChange={(fuelType) => navigateWithFilters({ fuelType, page: 1 })}
-          onTransmissionChange={(transmission) => navigateWithFilters({ transmission, page: 1 })}
-          onPriceChange={(priceMin, priceMax) =>
-            navigateWithFilters({ priceMin, priceMax, page: 1 })
-          }
-          onMileageChange={(mileageMax) => navigateWithFilters({ mileageMax, page: 1 })}
-        />
+      <StockArchiveToolbar
+        vehicles={vehicles}
+        filterOptions={filterOptions}
+        activeFilters={activeFilters}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalDocs={totalDocs}
+        limit={limit}
+        showPagination={showPagination}
+        onPageChange={(page) => navigateWithFilters({ page })}
+        onModelChange={(model) => navigateWithFilters({ model, page: 1 })}
+        onFuelTypeChange={(fuelType) => navigateWithFilters({ fuelType, page: 1 })}
+        onTransmissionChange={(transmission) => navigateWithFilters({ transmission, page: 1 })}
+        onPriceChange={(priceMin, priceMax) => navigateWithFilters({ priceMin, priceMax, page: 1 })}
+        onMileageChange={(mileageMax) => navigateWithFilters({ mileageMax, page: 1 })}
+      />
 
-        <div>
-          <StockArchiveGrid vehicles={paginatedVehicles} enquireUrl={enquireUrl} />
-
-          {showPagination && totalPages > 1 && (
-            <Pagination className="mt-10">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    onClick={() => {
-                      if (currentPage > 1) navigateWithFilters({ page: currentPage - 1 })
-                    }}
-                    className={currentPage <= 1 ? 'pointer-events-none opacity-50' : ''}
-                  />
-                </PaginationItem>
-
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <PaginationItem key={page}>
-                    <PaginationLink
-                      isActive={page === currentPage}
-                      onClick={() => navigateWithFilters({ page })}
-                    >
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-
-                <PaginationItem>
-                  <PaginationNext
-                    onClick={() => {
-                      if (currentPage < totalPages) navigateWithFilters({ page: currentPage + 1 })
-                    }}
-                    className={currentPage >= totalPages ? 'pointer-events-none opacity-50' : ''}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          )}
-        </div>
-      </div>
+      <StockArchiveGrid vehicles={paginatedVehicles} enquireUrl={enquireUrl} />
     </div>
   )
 }

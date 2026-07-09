@@ -18,10 +18,8 @@ function getStockApiConfig() {
 
 function buildStockUrl(baseUrl: string, options: FetchStockOptions): URL {
   const dealerCode = options.dealerCode ?? 'EC167'
-  const brandKey = options.brandKey ?? process.env.MOTOR_CITY_STOCK_BRAND_KEY ?? 'ford'
 
   const url = new URL(`/api/stock/${dealerCode}`, baseUrl)
-  url.searchParams.set('brandKey', brandKey)
 
   if (options.brand) url.searchParams.set('brand', options.brand)
   if (options.bodyType) url.searchParams.set('bodyType', options.bodyType)
