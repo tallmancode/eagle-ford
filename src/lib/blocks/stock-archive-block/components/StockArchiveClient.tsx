@@ -43,6 +43,14 @@ export function StockArchiveClient({
   const pathname = usePathname()
   const router = useRouter()
 
+  const applyFilters = useCallback(
+    (filters: StockArchiveFilters) => {
+      const query = stockArchiveFiltersToSearchParams({ ...filters, page: 1 }).toString()
+      router.push(query ? `${pathname}?${query}` : pathname)
+    },
+    [pathname, router],
+  )
+
   const navigateWithFilters = useCallback(
     (updates: Partial<StockArchiveFilters>) => {
       const next: StockArchiveFilters = { ...activeFilters, ...updates }
@@ -76,12 +84,7 @@ export function StockArchiveClient({
 
   return (
     <div>
-      <StockArchiveHeader
-        heading={heading}
-        bodyTypes={filterOptions.bodyTypes}
-        selectedBodyType={activeFilters.bodyType}
-        onBodyTypeChange={(bodyType) => navigateWithFilters({ bodyType, page: 1 })}
-      />
+      <StockArchiveHeader heading={heading} />
 
       <StockArchiveToolbar
         vehicles={vehicles}
@@ -93,11 +96,7 @@ export function StockArchiveClient({
         limit={limit}
         showPagination={showPagination}
         onPageChange={(page) => navigateWithFilters({ page })}
-        onModelChange={(model) => navigateWithFilters({ model, page: 1 })}
-        onFuelTypeChange={(fuelType) => navigateWithFilters({ fuelType, page: 1 })}
-        onTransmissionChange={(transmission) => navigateWithFilters({ transmission, page: 1 })}
-        onPriceChange={(priceMin, priceMax) => navigateWithFilters({ priceMin, priceMax, page: 1 })}
-        onMileageChange={(mileageMax) => navigateWithFilters({ mileageMax, page: 1 })}
+        onApplyFilters={applyFilters}
       />
 
       <StockArchiveGrid vehicles={paginatedVehicles} enquireUrl={enquireUrl} />

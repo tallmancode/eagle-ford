@@ -65,7 +65,12 @@ export function StockCard({ vehicle, enquireUrl }: Props) {
       <div className="flex flex-1 flex-col">
         <div className="px-4 pt-4 pb-3">
           <Link href={detailsHref}>
-            <h3 className="text-lg font-bold text-primary-900 hover:underline">{title}</h3>
+            <h3
+              className="line-clamp-2 min-h-12 text-base font-bold text-primary-900 hover:underline"
+              title={title}
+            >
+              {title}
+            </h3>
           </Link>
         </div>
 
