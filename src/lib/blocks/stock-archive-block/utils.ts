@@ -22,6 +22,22 @@ export const TRANSMISSION_LABELS: Record<string, string> = {
   other: 'Other',
 }
 
+export const BODY_TYPE_LABELS: Record<string, string> = {
+  hatch: 'Hatch Back',
+  'double-cab': 'Double Cab',
+  'single-cab': 'Single Cab',
+  sedan: 'Sedan',
+  suv: 'SUV',
+  mpv: 'MPV',
+  'panel-van': 'Panel Van',
+  bus: 'Bus',
+  crossover: 'Crossover',
+}
+
+export function formatBodyTypeLabel(option: { label: string; name: string }): string {
+  return BODY_TYPE_LABELS[option.label] ?? option.name
+}
+
 export type StockArchiveFilters = {
   bodyType?: string
   fuelType?: string
@@ -86,6 +102,7 @@ export function getShowingRange(
 export function countActiveFilters(filters: StockArchiveFilters): number {
   let count = 0
 
+  if (filters.bodyType) count += 1
   if (filters.fuelType) count += 1
   if (filters.transmission) count += 1
   if (filters.model) count += 1
