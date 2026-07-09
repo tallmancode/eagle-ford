@@ -6,6 +6,11 @@ export type MotorCityStockVehicleMedia = {
   dtCreated?: string | null
 }
 
+export type MotorCityStockTaxonomy = {
+  label: string
+  name: string
+}
+
 export type MotorCityStockVehicle = {
   id: string
   title?: string | null
@@ -13,7 +18,7 @@ export type MotorCityStockVehicle = {
   sourceDealerCode: string
   isActive?: boolean | null
   newUsed?: ('NEW' | 'USED') | null
-  brand?: string | null
+  brand?: string | MotorCityStockTaxonomy | null
   model?: string | null
   modelRange?: string | null
   year?: number | null
@@ -24,9 +29,9 @@ export type MotorCityStockVehicle = {
   stockNo?: string | null
   stockNoDisplay?: string | null
   vin?: string | null
-  fuelType?: string | null
-  bodyType?: string | null
-  transmission?: string | null
+  fuelType?: string | MotorCityStockTaxonomy | null
+  bodyType?: string | MotorCityStockTaxonomy | null
+  transmission?: string | MotorCityStockTaxonomy | null
   category?: string | null
   region?: string | null
   features?: string | null
@@ -49,11 +54,41 @@ export type FetchStockOptions = {
   dealerCode?: string
   brandKey?: string
   brand?: string
+  bodyType?: string
+  fuelType?: string
+  transmission?: string
   newUsed?: 'NEW' | 'USED'
   minPrice?: number
   maxPrice?: number
   page?: number
   limit?: number
+}
+
+export type TaxonomyFilterOption = {
+  label: string
+  name: string
+  count: number
+}
+
+export type NewUsedFilterOption = {
+  value: string
+  count: number
+}
+
+export type MotorCityStockFilterOptions = {
+  dealerCode: string
+  brandKey?: string | null
+  bodyTypes: TaxonomyFilterOption[]
+  brands: TaxonomyFilterOption[]
+  fuelTypes: TaxonomyFilterOption[]
+  transmissions: TaxonomyFilterOption[]
+  newUsed: NewUsedFilterOption[]
+  priceRange: { min: number | null; max: number | null }
+}
+
+export type FetchStockFiltersOptions = {
+  dealerCode?: string
+  brandKey?: string
 }
 
 export class MotorCityStockError extends Error {

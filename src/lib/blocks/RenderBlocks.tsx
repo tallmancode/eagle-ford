@@ -26,6 +26,7 @@ import type {
   BackButton,
   BenefitsGrid,
   SpecialsArchive,
+  StockArchive,
   Partners,
   Row,
   VehicleTabsBlock,
@@ -67,6 +68,7 @@ import { FinanceCalculatorBlockComponent } from '@/lib/blocks/finance-calculator
 import { BackButtonBlockComponent } from '@/lib/blocks/back-button-block/components/BackButtonBlockComponent'
 import { BenefitsGridBlockComponent } from '@/lib/blocks/benefits-grid-block/components/BenefitsGridBlockComponent'
 import { SpecialsArchiveBlockComponent } from '@/lib/blocks/specials-archive-block/components/SpecialsArchiveBlockComponent'
+import { StockArchiveBlockComponent } from '@/lib/blocks/stock-archive-block/components/StockArchiveBlockComponent'
 import { PartnersBlockComponent } from '@/lib/blocks/partners-block/components/PartnersBlockComponent'
 import { RowBlockComponent } from '@/lib/blocks/row-block/components/RowBlockComponent'
 import { VehicleTabsBlockComponent } from '@/lib/blocks/vehicle-tabs-block/components/VehicleTabsBlockComponent'
@@ -111,6 +113,7 @@ type BlockComponentMap = {
   'popup-cards': PopupCards
   financeCalculatorBlock: FinanceCalculatorBlockType
   'specials-archive': SpecialsArchive
+  'stock-archive': StockArchive
   partners: Partners
   'vehicle-tabs': VehicleTabsBlock
   'vehicle-catalog': VehicleCatalogBlock
@@ -162,6 +165,7 @@ const blockComponents: {
   'popup-cards': PopupCardsBlockComponent,
   financeCalculatorBlock: FinanceCalculatorBlockComponent,
   'specials-archive': SpecialsArchiveBlockComponent,
+  'stock-archive': StockArchiveBlockComponent,
   partners: PartnersBlockComponent,
   'vehicle-tabs': VehicleTabsBlockComponent as unknown as React.ComponentType<
     WithMeta<VehicleTabsBlock>

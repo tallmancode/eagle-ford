@@ -1,0 +1,117 @@
+import type { StockArchive } from '@/payload-types'
+import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
+import { getCachedStock, getCachedStockFilters } from '@/lib/motor-city-stock'
+import { MotorCityStockError } from '@/lib/motor-city-stock/types'
+import {
+  hasClientOnlyFilters,
+  parseStockArchiveSearchParams,
+  stockArchiveFiltersToFetchOptions,
+} from '../utils'
+import { StockArchiveClient } from './StockArchiveClient'
+
+type Props = StockArchive & { meta?: BlockRenderMeta }
+
+export async function StockArchiveBlockComponent(props: Props) {
+  const {
+    heading = 'Our Showroom',
+    conditionFilter = 'all',
+    limit = 12,
+    showPagination = true,
+    enquireUrl = '/contact',
+    meta,
+  } = props
+
+  const brand = process.env.MOTOR_CITY_STOCK_BRAND_KEY ?? 'ford'
+  const activeFilters = parseStockArchiveSearchParams(meta?.searchParams)
+  const clientOnlyMode = hasClientOnlyFilters(activeFilters)
+  const pageLimit = clientOnlyMode ? 1000 : (limit ?? 12)
+
+  const newUsed =
+    conditionFilter === 'new'
+      ? ('NEW' as const)
+      : conditionFilter === 'pre-owned'
+        ? ('USED' as const)
+        : undefined
+
+  let errorMessage: string | null = null
+  let filterOptions: Awaited<ReturnType<typeof getCachedStockFilters>> | null = null
+  let stockResponse: Awaited<ReturnType<typeof getCachedStock>> | null = null
+
+  try {
+    const fetchOptions = stockArchiveFiltersToFetchOptions(activeFilters, {
+      brand,
+      newUsed,
+      limit: pageLimit,
+    })
+
+    const [filtersResult, stockResult] = await Promise.all([
+      getCachedStockFilters(),
+      getCachedStock(fetchOptions),
+    ])
+
+    filterOptions = filtersResult
+    stockResponse = stockResult
+  } catch (error) {
+    if (error instanceof MotorCityStockError) {
+      errorMessage = error.message
+    } else {
+      errorMessage = 'Unable to load stock at this time.'
+    }
+  }
+
+  if (errorMessage) {
+    return (
+      <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
+        <p className="font-medium text-red-800">{errorMessage}</p>
+      </div>
+    )
+  }
+
+  if (!filterOptions || !stockResponse) {
+    return (
+      <div className="rounded-2xl border border-neutral-200 bg-light-50 p-12 text-center">
+        <p className="text-neutral-600">No vehicles available yet.</p>
+      </div>
+    )
+  }
+
+  const vehicles = stockResponse.docs
+
+  if (vehicles.length === 0 && !clientOnlyMode) {
+    return (
+      <StockArchiveClient
+        heading={heading ?? 'Our Showroom'}
+        vehicles={[]}
+        filterOptions={filterOptions}
+        activeFilters={activeFilters}
+        hasClientOnlyFilters={clientOnlyMode}
+        limit={limit ?? 12}
+        showPagination={showPagination ?? true}
+        enquireUrl={enquireUrl ?? '/contact'}
+        pagination={{
+          page: stockResponse.page ?? 1,
+          totalPages: stockResponse.totalPages ?? 1,
+          totalDocs: stockResponse.totalDocs ?? 0,
+        }}
+      />
+    )
+  }
+
+  return (
+    <StockArchiveClient
+      heading={heading ?? 'Our Showroom'}
+      vehicles={vehicles}
+      filterOptions={filterOptions}
+      activeFilters={activeFilters}
+      hasClientOnlyFilters={clientOnlyMode}
+      limit={limit ?? 12}
+      showPagination={showPagination ?? true}
+      enquireUrl={enquireUrl ?? '/contact'}
+      pagination={{
+        page: stockResponse.page ?? 1,
+        totalPages: stockResponse.totalPages ?? 1,
+        totalDocs: stockResponse.totalDocs ?? 0,
+      }}
+    />
+  )
+}
