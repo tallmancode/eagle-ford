@@ -18,6 +18,7 @@ import {
   stockArchiveFiltersToSearchParams,
 } from '@/lib/blocks/stock-archive-block/utils'
 import { buildStockUrl } from '@/lib/motor-city-stock/fetchStock'
+import { buildStockVehiclePath } from '@/lib/stock-vehicle/paths'
 
 function makeVehicle(overrides: Partial<StockArchiveVehicle> = {}): StockArchiveVehicle {
   return {
@@ -230,5 +231,17 @@ describe('buildStockUrl', () => {
     expect(url.searchParams.get('maxPrice')).toBe('500000')
     expect(url.searchParams.get('page')).toBe('2')
     expect(url.searchParams.get('limit')).toBe('12')
+  })
+})
+
+describe('buildStockVehiclePath', () => {
+  it('builds showroom detail URL from vehicle identifiers', () => {
+    expect(
+      buildStockVehiclePath({
+        stockNo: '752',
+        stockNoDisplay: null,
+        cmsId: 'ec170df60use14458',
+      }),
+    ).toBe('/showroom/752-ec170df60use14458')
   })
 })
