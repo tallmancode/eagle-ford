@@ -2,6 +2,7 @@ import { Cog, Fuel, Gauge, Heart, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import { MediaImage } from '@/components/ui/media-image'
 import { Button } from '@/components/ui/button'
+import { buildStockVehiclePath } from '@/lib/stock-vehicle/paths'
 import {
   buildEnquireUrl,
   formatMileageCompact,
@@ -33,14 +34,18 @@ export function StockCard({ vehicle, enquireUrl }: Props) {
   const image = getStockImageUrl(vehicle.media)
   const title = getVehicleDisplayName(vehicle)
   const price = getVehiclePrice(vehicle)
-  const href = buildEnquireUrl(enquireUrl, title)
+  const enquireHref = buildEnquireUrl(enquireUrl, title)
+  const detailsHref = buildStockVehiclePath(vehicle)
 
   const fuelTypeLabel = getTaxonomyLabel(vehicle.fuelType)
   const fuelLabel = FUEL_TYPE_LABELS[fuelTypeLabel?.toLowerCase() ?? ''] ?? fuelTypeLabel ?? '—'
 
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm transition-shadow hover:shadow-md">
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-neutral-100">
+      <Link
+        href={detailsHref}
+        className="relative block aspect-[16/10] w-full overflow-hidden bg-neutral-100"
+      >
         {image ? (
           <MediaImage
             resource={image}
@@ -55,11 +60,13 @@ export function StockCard({ vehicle, enquireUrl }: Props) {
             No image
           </div>
         )}
-      </div>
+      </Link>
 
       <div className="flex flex-1 flex-col">
         <div className="px-4 pt-4 pb-3">
-          <h3 className="text-lg font-bold text-primary-900">{title}</h3>
+          <Link href={detailsHref}>
+            <h3 className="text-lg font-bold text-primary-900 hover:underline">{title}</h3>
+          </Link>
         </div>
 
         <div className="flex items-center bg-primary-900 px-4 py-3 text-light-50">
@@ -80,14 +87,13 @@ export function StockCard({ vehicle, enquireUrl }: Props) {
             variant="outline"
             className="flex-1 rounded-lg border-primary text-primary hover:bg-primary/5"
           >
-            <Link href={href}>Enquire Now</Link>
+            <Link href={enquireHref}>Enquire Now</Link>
           </Button>
           <Button
-            disabled
-            title="Coming soon"
-            className="flex-1 rounded-lg bg-primary text-light-50 hover:bg-primary/90 disabled:opacity-60"
+            asChild
+            className="flex-1 rounded-lg bg-primary text-light-50 hover:bg-primary/90"
           >
-            View Details
+            <Link href={detailsHref}>View Details</Link>
           </Button>
         </div>
 
