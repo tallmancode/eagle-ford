@@ -142,6 +142,7 @@ export interface Config {
     'back-button': BackButton;
     'benefits-grid': BenefitsGrid;
     'specials-archive': SpecialsArchive;
+    'stock-archive': StockArchive;
     partners: Partners;
     'vehicle-tabs': VehicleTabsBlock;
     'vehicle-catalog': VehicleCatalogBlock;
@@ -287,6 +288,7 @@ export interface Section {
         | PopupCards
         | FinanceCalculatorBlockType
         | SpecialsArchive
+        | StockArchive
         | Partners
         | VehicleTabsBlock
         | VehicleCatalogBlock
@@ -423,6 +425,7 @@ export interface SectionInner {
         | PopupCards
         | FinanceCalculatorBlockType
         | SpecialsArchive
+        | StockArchive
         | Partners
         | VehicleTabsBlock
         | VehicleCatalogBlock
@@ -556,6 +559,7 @@ export interface Row {
         | PopupCards
         | FinanceCalculatorBlockType
         | SpecialsArchive
+        | StockArchive
         | Partners
         | VehicleTabsBlock
         | VehicleCatalogBlock
@@ -1933,6 +1937,23 @@ export interface SpecialsArchive {
   id?: string | null;
   blockName?: string | null;
   blockType: 'specials-archive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StockArchive".
+ */
+export interface StockArchive {
+  heading?: string | null;
+  conditionFilter?: ('all' | 'new' | 'pre-owned') | null;
+  limit?: number | null;
+  showPagination?: boolean | null;
+  /**
+   * Internal path (e.g. /contact), tel:, or mailto: link for card CTA buttons.
+   */
+  enquireUrl?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stock-archive';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

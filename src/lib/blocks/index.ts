@@ -25,6 +25,7 @@ import { FinanceCalculatorBlock } from '@/lib/blocks/finance-calculator-block/Fi
 import { BackButtonBlock } from '@/lib/blocks/back-button-block/BackButtonBlock'
 import { BenefitsGridBlock } from '@/lib/blocks/benefits-grid-block/BenefitsGridBlock'
 import { SpecialsArchiveBlock } from '@/lib/blocks/specials-archive-block/SpecialsArchiveBlock'
+import { StockArchiveBlock } from '@/lib/blocks/stock-archive-block/StockArchiveBlock'
 import { PartnersBlock } from '@/lib/blocks/partners-block/PartnersBlock'
 import { VehicleTabsBlock } from '@/lib/blocks/vehicle-tabs-block/VehicleTabsBlock'
 import { VehicleCatalogBlock } from '@/lib/blocks/vehicle-catalog-block/VehicleCatalogBlock'
@@ -67,6 +68,7 @@ const Blocks = [
   BackButtonBlock,
   BenefitsGridBlock,
   SpecialsArchiveBlock,
+  StockArchiveBlock,
   PartnersBlock,
   VehicleTabsBlock,
   VehicleCatalogBlock,

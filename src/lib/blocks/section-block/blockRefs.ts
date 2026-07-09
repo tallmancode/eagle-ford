@@ -25,6 +25,7 @@ const allBlockRefs: BlockSlug[] = [
   'popup-cards',
   'financeCalculatorBlock',
   'specials-archive',
+  'stock-archive',
   'partners',
   'vehicle-tabs',
   'vehicle-catalog',

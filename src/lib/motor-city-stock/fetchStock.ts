@@ -24,6 +24,9 @@ function buildStockUrl(baseUrl: string, options: FetchStockOptions): URL {
   url.searchParams.set('brandKey', brandKey)
 
   if (options.brand) url.searchParams.set('brand', options.brand)
+  if (options.bodyType) url.searchParams.set('bodyType', options.bodyType)
+  if (options.fuelType) url.searchParams.set('fuelType', options.fuelType)
+  if (options.transmission) url.searchParams.set('transmission', options.transmission)
   if (options.newUsed) url.searchParams.set('newUsed', options.newUsed)
   if (typeof options.minPrice === 'number') {
     url.searchParams.set('minPrice', String(options.minPrice))
