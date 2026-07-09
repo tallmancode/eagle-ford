@@ -10,7 +10,6 @@ import React, { cache } from 'react'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import type { Media, Vehicle, VehicleModel, VehicleModelTemplate } from '@/payload-types'
-import PageClient from '../page.client'
 import { DefaultModelLayout } from './DefaultModelLayout'
 import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
 
@@ -108,7 +107,6 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   return (
     <div>
-      <PageClient />
       <PayloadRedirects disableNotFound url={url} />
       {draft && <LivePreviewListener />}
 
