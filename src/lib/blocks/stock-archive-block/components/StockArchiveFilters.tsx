@@ -2,6 +2,7 @@
 
 import { X } from 'lucide-react'
 import type { MotorCityStockFilterOptions } from '@/lib/motor-city-stock/types'
+import { cn } from '@/lib/utils/cn'
 import {
   buildPriceHistogram,
   getMileageBounds,
@@ -20,6 +21,7 @@ type Props = {
   priceMin?: number
   priceMax?: number
   mileageMax?: number
+  className?: string
   onModelChange: (model: string | undefined) => void
   onFuelTypeChange: (fuelType: string | undefined) => void
   onTransmissionChange: (transmission: string | undefined) => void
@@ -52,6 +54,7 @@ export function StockArchiveFilters({
   priceMin,
   priceMax,
   mileageMax,
+  className,
   onModelChange,
   onFuelTypeChange,
   onTransmissionChange,
@@ -71,7 +74,7 @@ export function StockArchiveFilters({
   const currentMileageMax = mileageMax ?? mileageBounds.max
 
   return (
-    <aside className="space-y-8">
+    <div className={cn('space-y-8', className)}>
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-neutral-900">Model</h3>
@@ -189,6 +192,6 @@ export function StockArchiveFilters({
           Up to {new Intl.NumberFormat('en-ZA').format(currentMileageMax)} km
         </p>
       </div>
-    </aside>
+    </div>
   )
 }

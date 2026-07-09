@@ -9,7 +9,6 @@ describe('motor-city-stock fetch utility', () => {
   beforeEach(() => {
     process.env.MOTOR_CITY_STOCK_API_URL = 'http://localhost:3000'
     process.env.MOTOR_CITY_STOCK_API_KEY = 'test-api-key'
-    process.env.MOTOR_CITY_STOCK_BRAND_KEY = 'ford'
   })
 
   afterEach(() => {
@@ -17,10 +16,9 @@ describe('motor-city-stock fetch utility', () => {
     vi.restoreAllMocks()
   })
 
-  it('builds stock URL with brandKey and filters', () => {
+  it('builds stock URL without brand key scoping', () => {
     const url = buildStockUrl('http://localhost:3000', {
       dealerCode: 'EC167',
-      brandKey: 'ford',
       newUsed: 'NEW',
       minPrice: 100000,
       page: 2,
@@ -28,8 +26,10 @@ describe('motor-city-stock fetch utility', () => {
     })
 
     expect(url.toString()).toBe(
-      'http://localhost:3000/api/stock/EC167?brandKey=ford&newUsed=NEW&minPrice=100000&page=2&limit=12',
+      'http://localhost:3000/api/stock/EC167?newUsed=NEW&minPrice=100000&page=2&limit=12',
     )
+    expect(url.searchParams.get('brandKey')).toBeNull()
+    expect(url.searchParams.get('brandKeys')).toBeNull()
   })
 
   it('requires stock API env configuration', () => {
@@ -42,19 +42,18 @@ describe('motor-city-stock fetch utility', () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
-        dealerCode: 'EC167',
-        brandKey: 'ford',
+        dealerCodes: ['EC167', 'EC170'],
         docs: [],
       }),
     })
 
     vi.stubGlobal('fetch', fetchMock)
 
-    await fetchStock({ brandKey: 'ford' })
+    await fetchStock()
 
     expect(fetchMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        href: 'http://localhost:3000/api/stock/EC167?brandKey=ford',
+        href: 'http://localhost:3000/api/stock/EC167',
       }),
       expect.objectContaining({
         headers: {
@@ -69,15 +68,15 @@ describe('motor-city-stock fetch utility', () => {
       'fetch',
       vi.fn().mockResolvedValue({
         ok: false,
-        status: 403,
-        json: async () => ({ error: 'Client is not authorized for brandKey: mahindra' }),
+        status: 500,
+        json: async () => ({ error: 'Stock API request failed' }),
       }),
     )
 
-    await expect(fetchStock({ brandKey: 'mahindra' })).rejects.toMatchObject({
+    await expect(fetchStock()).rejects.toMatchObject({
       name: 'MotorCityStockError',
-      status: 403,
-      message: 'Client is not authorized for brandKey: mahindra',
+      status: 500,
+      message: 'Stock API request failed',
     })
   })
 })

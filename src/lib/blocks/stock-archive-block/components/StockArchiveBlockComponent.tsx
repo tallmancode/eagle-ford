@@ -21,7 +21,6 @@ export async function StockArchiveBlockComponent(props: Props) {
     meta,
   } = props
 
-  const brand = process.env.MOTOR_CITY_STOCK_BRAND_KEY ?? 'ford'
   const activeFilters = parseStockArchiveSearchParams(meta?.searchParams)
   const clientOnlyMode = hasClientOnlyFilters(activeFilters)
   const pageLimit = clientOnlyMode ? 1000 : (limit ?? 12)
@@ -39,7 +38,6 @@ export async function StockArchiveBlockComponent(props: Props) {
 
   try {
     const fetchOptions = stockArchiveFiltersToFetchOptions(activeFilters, {
-      brand,
       newUsed,
       limit: pageLimit,
     })

@@ -71,6 +71,31 @@ export function hasClientOnlyFilters(filters: StockArchiveFilters): boolean {
   return Boolean(filters.model || filters.mileageMax !== undefined)
 }
 
+export function getShowingRange(
+  page: number,
+  limit: number,
+  totalDocs: number,
+): { start: number; end: number; total: number } {
+  if (totalDocs === 0) return { start: 0, end: 0, total: 0 }
+
+  const start = (page - 1) * limit + 1
+  const end = Math.min(page * limit, totalDocs)
+  return { start, end, total: totalDocs }
+}
+
+export function countActiveFilters(filters: StockArchiveFilters): number {
+  let count = 0
+
+  if (filters.fuelType) count += 1
+  if (filters.transmission) count += 1
+  if (filters.model) count += 1
+  if (filters.priceMin !== undefined) count += 1
+  if (filters.priceMax !== undefined) count += 1
+  if (filters.mileageMax !== undefined) count += 1
+
+  return count
+}
+
 export function stockArchiveFiltersToSearchParams(filters: StockArchiveFilters): URLSearchParams {
   const params = new URLSearchParams()
 
@@ -97,13 +122,13 @@ export function stockArchiveFiltersToSearchParams(filters: StockArchiveFilters):
 export function stockArchiveFiltersToFetchOptions(
   filters: StockArchiveFilters,
   options: {
-    brand: string
+    brand?: string
     newUsed?: 'NEW' | 'USED'
     limit: number
   },
 ): FetchStockOptions {
   return {
-    brand: options.brand,
+    ...(options.brand ? { brand: options.brand } : {}),
     newUsed: options.newUsed,
     bodyType: filters.bodyType,
     fuelType: filters.fuelType,

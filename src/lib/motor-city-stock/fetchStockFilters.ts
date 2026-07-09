@@ -7,12 +7,8 @@ import { getStockApiConfig } from '@/lib/motor-city-stock/fetchStock'
 
 function buildStockFiltersUrl(baseUrl: string, options: FetchStockFiltersOptions = {}): URL {
   const dealerCode = options.dealerCode ?? 'EC167'
-  const brandKey = options.brandKey ?? process.env.MOTOR_CITY_STOCK_BRAND_KEY ?? 'ford'
 
-  const url = new URL(`/api/stock/${dealerCode}/filters`, baseUrl)
-  url.searchParams.set('brandKey', brandKey)
-
-  return url
+  return new URL(`/api/stock/${dealerCode}/filters`, baseUrl)
 }
 
 export async function fetchStockFilters(

@@ -6,7 +6,6 @@ import type { FetchStockOptions, MotorCityStockResponse } from '@/lib/motor-city
 function cacheKeyFromOptions(options: FetchStockOptions): string {
   return JSON.stringify({
     dealerCode: options.dealerCode ?? 'EC167',
-    brandKey: options.brandKey ?? process.env.MOTOR_CITY_STOCK_BRAND_KEY ?? 'ford',
     brand: options.brand ?? null,
     bodyType: options.bodyType ?? null,
     fuelType: options.fuelType ?? null,
