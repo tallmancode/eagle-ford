@@ -1,6 +1,6 @@
 {
-  "name": "Eagle Motor City",
-  "short_name": "Eagle Motor City",
+  "name": "MyWebSite",
+  "short_name": "MySite",
   "icons": [
     {
       "src": "/favicon/web-app-manifest-192x192.png",

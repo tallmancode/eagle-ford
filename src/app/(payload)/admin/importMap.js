@@ -82,6 +82,7 @@ import { default as default_d4671d0eaa4897481b54a72d51acf32f } from '../../../li
 import { default as default_ee0932451d1029052bbbc48e80ff3d1d } from '../../../lib/blocks/finance-calculator-block/components/FinanceCalculatorBlockLabel'
 import { default as default_9b2f9673a6e70f24b1fb0fe373703cc1 } from '../../../lib/blocks/benefits-grid-block/components/BenefitsGridBlockLabel'
 import { default as default_0cf04772da2df0165a47381d21356e11 } from '../../../lib/blocks/specials-archive-block/components/SpecialsArchiveBlockLabel'
+import { default as default_0669f44bf6b1be223303986685b8dd8b } from '../../../lib/blocks/stock-archive-block/components/StockArchiveBlockLabel'
 import { default as default_bacf9c6f1edd235d0a5b232acada4d25 } from '../../../lib/blocks/partners-block/components/PartnersBlockLabel'
 import { default as default_c4459d653230b67c2c4fe8ec95131ba0 } from '../../../lib/blocks/vehicle-tabs-block/components/VehicleTabsBlockLabel'
 import { default as default_a7653596fe6e03539b30d7c2a5614de8 } from '../../../lib/blocks/vehicle-catalog-block/components/VehicleCatalogBlockLabel'
@@ -254,6 +255,8 @@ export const importMap = {
     default_9b2f9673a6e70f24b1fb0fe373703cc1,
   '/lib/blocks/specials-archive-block/components/SpecialsArchiveBlockLabel#default':
     default_0cf04772da2df0165a47381d21356e11,
+  '/lib/blocks/stock-archive-block/components/StockArchiveBlockLabel#default':
+    default_0669f44bf6b1be223303986685b8dd8b,
   '/lib/blocks/partners-block/components/PartnersBlockLabel#default':
     default_bacf9c6f1edd235d0a5b232acada4d25,
   '/lib/blocks/vehicle-tabs-block/components/VehicleTabsBlockLabel#default':

@@ -10,6 +10,7 @@ export type BlockRenderMeta = FormBlockMeta & {
   inRow?: boolean
   vehicle?: Vehicle
   vehicleModel?: VehicleModel
+  searchParams?: Record<string, string | string[] | undefined>
 }
 
 export function getHiddenFieldNames(contextValues?: FormBlockContextValues): Set<string> {
