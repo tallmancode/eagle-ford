@@ -3,6 +3,16 @@
 This project uses the Payload CMS skill at `.agents/skills/payload/`.
 Start with `.agents/skills/payload/SKILL.md` for a quick reference, then see `.agents/skills/payload/reference/` for detailed docs.
 
+This app is a **satellite site** that fetches live stock from Eagle Motor City. See the workspace root [`../AGENTS.md`](../AGENTS.md) for the full cross-project stock API architecture and local dev workflow.
+
+## Stock (satellite — no local persistence)
+
+- Fetches live stock from Motor City via `@/lib/motor-city-stock` (`fetchStock`, `getCachedStock`)
+- Admin view: **Live Stock** link in the Payload sidebar (below nav groups)
+- Requires env: `MOTOR_CITY_STOCK_API_URL`, `MOTOR_CITY_STOCK_API_KEY`, `MOTOR_CITY_STOCK_BRAND_KEY=ford`
+- Data is cached in Next.js only — do **not** create stock collections or write to the Ford database
+- Dev server runs on port **3001** (Motor City runs on 3000)
+
 ## Block Creation Rules
 
 ### Vehicle Template Blocks

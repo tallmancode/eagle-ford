@@ -10,7 +10,6 @@ import React, { cache } from 'react'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import type { Media, Vehicle, VehicleTemplate } from '@/payload-types'
-import PageClient from './page.client'
 import { DefaultVehicleLayout } from './DefaultVehicleLayout'
 
 export async function generateStaticParams() {
@@ -79,7 +78,6 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   return (
     <div>
-      <PageClient />
       <PayloadRedirects disableNotFound url={url} />
       {draft && <LivePreviewListener />}
 
