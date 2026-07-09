@@ -11,14 +11,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import type { MotorCityStockFilterOptions } from '@/lib/motor-city-stock/types'
 import { cn } from '@/lib/utils/cn'
 import {
@@ -28,6 +21,8 @@ import {
   type StockArchiveVehicle,
 } from '../utils'
 import { StockArchiveFilters as StockArchiveFiltersPanel } from './StockArchiveFilters'
+
+const EMPTY_FILTERS: StockArchiveFilters = {}
 
 type Props = {
   vehicles: StockArchiveVehicle[]
@@ -39,11 +34,7 @@ type Props = {
   limit: number
   showPagination: boolean
   onPageChange: (page: number) => void
-  onModelChange: (model: string | undefined) => void
-  onFuelTypeChange: (fuelType: string | undefined) => void
-  onTransmissionChange: (transmission: string | undefined) => void
-  onPriceChange: (priceMin: number | undefined, priceMax: number | undefined) => void
-  onMileageChange: (mileageMax: number | undefined) => void
+  onApplyFilters: (filters: StockArchiveFilters) => void
 }
 
 export function StockArchiveToolbar({
@@ -56,15 +47,33 @@ export function StockArchiveToolbar({
   limit,
   showPagination,
   onPageChange,
-  onModelChange,
-  onFuelTypeChange,
-  onTransmissionChange,
-  onPriceChange,
-  onMileageChange,
+  onApplyFilters,
 }: Props) {
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [draftFilters, setDraftFilters] = useState<StockArchiveFilters>(activeFilters)
   const activeFilterCount = countActiveFilters(activeFilters)
   const { start, end, total } = getShowingRange(currentPage, limit, totalDocs)
+
+  const updateDraftFilters = (updates: Partial<StockArchiveFilters>) => {
+    setDraftFilters((prev) => ({ ...prev, ...updates }))
+  }
+
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      setDraftFilters(activeFilters)
+    }
+    setFiltersOpen(open)
+  }
+
+  const handleClear = () => {
+    setDraftFilters(EMPTY_FILTERS)
+    onApplyFilters(EMPTY_FILTERS)
+  }
+
+  const handleApply = () => {
+    onApplyFilters(draftFilters)
+    setFiltersOpen(false)
+  }
 
   return (
     <>
@@ -132,36 +141,39 @@ export function StockArchiveToolbar({
         </div>
       </div>
 
-      <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
-        <SheetContent side="left" className={cn('flex w-full flex-col sm:max-w-md')}>
+      <Sheet open={filtersOpen} onOpenChange={handleOpenChange}>
+        <SheetContent side="left" className={cn('flex w-full flex-col sm:max-w-md z-80')}>
           <SheetHeader>
             <SheetTitle>Filters</SheetTitle>
           </SheetHeader>
 
-          <div className="flex-1 overflow-y-auto py-4">
+          <div className="flex-1 overflow-y-auto py-4 px-2">
             <StockArchiveFiltersPanel
               vehicles={vehicles}
               filterOptions={filterOptions}
-              selectedModel={activeFilters.model}
-              selectedFuelType={activeFilters.fuelType}
-              selectedTransmission={activeFilters.transmission}
-              priceMin={activeFilters.priceMin}
-              priceMax={activeFilters.priceMax}
-              mileageMax={activeFilters.mileageMax}
-              onModelChange={onModelChange}
-              onFuelTypeChange={onFuelTypeChange}
-              onTransmissionChange={onTransmissionChange}
-              onPriceChange={onPriceChange}
-              onMileageChange={onMileageChange}
+              selectedModel={draftFilters.model}
+              selectedBodyType={draftFilters.bodyType}
+              selectedFuelType={draftFilters.fuelType}
+              selectedTransmission={draftFilters.transmission}
+              priceMin={draftFilters.priceMin}
+              priceMax={draftFilters.priceMax}
+              mileageMax={draftFilters.mileageMax}
+              onModelChange={(model) => updateDraftFilters({ model })}
+              onBodyTypeChange={(bodyType) => updateDraftFilters({ bodyType })}
+              onFuelTypeChange={(fuelType) => updateDraftFilters({ fuelType })}
+              onTransmissionChange={(transmission) => updateDraftFilters({ transmission })}
+              onPriceChange={(priceMin, priceMax) => updateDraftFilters({ priceMin, priceMax })}
+              onMileageChange={(mileageMax) => updateDraftFilters({ mileageMax })}
             />
           </div>
 
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button type="button" className="w-full">
-                Done
-              </Button>
-            </SheetClose>
+          <SheetFooter className="flex-row gap-3 sm:flex-row sm:justify-stretch">
+            <Button type="button" variant="outline" className="flex-1" onClick={handleClear}>
+              Clear
+            </Button>
+            <Button type="button" className="flex-1" onClick={handleApply}>
+              Apply
+            </Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>

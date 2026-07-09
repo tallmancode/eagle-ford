@@ -5,6 +5,7 @@ import type { MotorCityStockFilterOptions } from '@/lib/motor-city-stock/types'
 import { cn } from '@/lib/utils/cn'
 import {
   buildPriceHistogram,
+  formatBodyTypeLabel,
   getMileageBounds,
   getPriceBoundsFromRange,
   getUniqueModels,
@@ -16,6 +17,7 @@ type Props = {
   vehicles: StockArchiveVehicle[]
   filterOptions: MotorCityStockFilterOptions
   selectedModel?: string
+  selectedBodyType?: string
   selectedFuelType?: string
   selectedTransmission?: string
   priceMin?: number
@@ -23,6 +25,7 @@ type Props = {
   mileageMax?: number
   className?: string
   onModelChange: (model: string | undefined) => void
+  onBodyTypeChange: (bodyType: string | undefined) => void
   onFuelTypeChange: (fuelType: string | undefined) => void
   onTransmissionChange: (transmission: string | undefined) => void
   onPriceChange: (priceMin: number | undefined, priceMax: number | undefined) => void
@@ -49,6 +52,7 @@ export function StockArchiveFilters({
   vehicles,
   filterOptions,
   selectedModel,
+  selectedBodyType,
   selectedFuelType,
   selectedTransmission,
   priceMin,
@@ -56,6 +60,7 @@ export function StockArchiveFilters({
   mileageMax,
   className,
   onModelChange,
+  onBodyTypeChange,
   onFuelTypeChange,
   onTransmissionChange,
   onPriceChange,
@@ -66,6 +71,7 @@ export function StockArchiveFilters({
   const histogram = buildPriceHistogram(vehicles, priceBounds)
   const models = getUniqueModels(vehicles)
 
+  const visibleBodyTypes = filterOptions.bodyTypes.filter((option) => option.count > 0)
   const visibleFuelTypes = filterOptions.fuelTypes.filter((option) => option.count > 0)
   const visibleTransmissions = filterOptions.transmissions.filter((option) => option.count > 0)
 
@@ -100,6 +106,32 @@ export function StockArchiveFilters({
           {models.map((model) => (
             <option key={model} value={model}>
               {model}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-neutral-900">Body type</h3>
+          <button
+            type="button"
+            onClick={() => onBodyTypeChange(undefined)}
+            className="text-xs font-medium text-primary-500 hover:text-primary-600"
+          >
+            Reset
+          </button>
+        </div>
+
+        <select
+          value={selectedBodyType ?? ''}
+          onChange={(e) => onBodyTypeChange(e.target.value || undefined)}
+          className="w-full rounded-lg border border-neutral-200 bg-light-50 px-3 py-2 text-sm"
+        >
+          <option value="">All body types</option>
+          {visibleBodyTypes.map((option) => (
+            <option key={option.label} value={option.label}>
+              {formatBodyTypeLabel(option)} ({option.count})
             </option>
           ))}
         </select>

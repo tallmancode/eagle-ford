@@ -8,6 +8,7 @@ import {
   stockArchiveFiltersToFetchOptions,
 } from '../utils'
 import { StockArchiveClient } from './StockArchiveClient'
+import { StockArchiveError } from './StockArchiveError'
 
 type Props = StockArchive & { meta?: BlockRenderMeta }
 
@@ -58,11 +59,7 @@ export async function StockArchiveBlockComponent(props: Props) {
   }
 
   if (errorMessage) {
-    return (
-      <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
-        <p className="font-medium text-red-800">{errorMessage}</p>
-      </div>
-    )
+    return <StockArchiveError />
   }
 
   if (!filterOptions || !stockResponse) {

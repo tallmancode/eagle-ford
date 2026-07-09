@@ -4,6 +4,7 @@ import {
   buildEnquireUrl,
   countActiveFilters,
   filterStock,
+  formatBodyTypeLabel,
   formatMileageCompact,
   formatTransmissionShort,
   getPriceBounds,
@@ -128,6 +129,12 @@ describe('stock-archive utils', () => {
     expect(getTaxonomyLabel('automatic')).toBe('automatic')
   })
 
+  it('formatBodyTypeLabel returns human-readable labels from slug', () => {
+    expect(formatBodyTypeLabel({ label: 'hatch', name: 'H/B' })).toBe('Hatch Back')
+    expect(formatBodyTypeLabel({ label: 'suv', name: 'SUV' })).toBe('SUV')
+    expect(formatBodyTypeLabel({ label: 'unknown', name: 'X/Y' })).toBe('X/Y')
+  })
+
   it('buildEnquireUrl appends vehicle query for internal paths', () => {
     expect(buildEnquireUrl('/contact', 'Ford Ranger')).toBe('/contact?vehicle=Ford%20Ranger')
   })
@@ -192,19 +199,21 @@ describe('stock-archive utils', () => {
 
   it('countActiveFilters returns zero when no sheet filters are active', () => {
     expect(countActiveFilters({})).toBe(0)
-    expect(countActiveFilters({ bodyType: 'suv', page: 2 })).toBe(0)
+    expect(countActiveFilters({ page: 2 })).toBe(0)
   })
 
   it('countActiveFilters counts sheet filters only', () => {
+    expect(countActiveFilters({ bodyType: 'suv', page: 2 })).toBe(1)
     expect(
       countActiveFilters({
+        bodyType: 'suv',
         fuelType: 'petrol',
         transmission: 'automatic',
         model: 'Ranger',
         priceMin: 100000,
         mileageMax: 50000,
       }),
-    ).toBe(5)
+    ).toBe(6)
   })
 })
 
