@@ -12,7 +12,8 @@ This app is a **satellite site** that consumes live stock from Eagle Motor City 
 - Fetches live stock from Motor City via `@/lib/motor-city-stock` (`fetchStock`, `getCachedStock`)
 - For filter UIs, call Motor City's `GET /api/stock/[dealerCode]/filters` endpoint — see [`../eagle-motor-city/AGENTS.md`](../eagle-motor-city/AGENTS.md) for query params and response shape
 - Admin view: **Live Stock** link in the Payload sidebar (below nav groups)
-- Requires env: `MOTOR_CITY_STOCK_API_URL`, `MOTOR_CITY_STOCK_API_KEY`, `MOTOR_CITY_STOCK_BRAND_KEY=ford`
+- Requires env: `MOTOR_CITY_STOCK_API_URL`, `MOTOR_CITY_STOCK_API_KEY`
+- Stock requests return all enabled dealer feeds from Motor City (no brand-key scoping on the Ford side)
 - Data is cached in Next.js only — do **not** create stock collections or write to the Ford database
 - Dev server runs on port **3001** (Motor City runs on 3000)
 

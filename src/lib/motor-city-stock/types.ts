@@ -40,8 +40,10 @@ export type MotorCityStockVehicle = {
 }
 
 export type MotorCityStockResponse = {
-  dealerCode: string
+  dealerCode: string | null
+  dealerCodes?: string[]
   brandKey?: string | null
+  brandKeys?: string[]
   page?: number
   totalPages?: number
   totalDocs?: number
@@ -52,7 +54,6 @@ export type MotorCityStockResponse = {
 
 export type FetchStockOptions = {
   dealerCode?: string
-  brandKey?: string
   brand?: string
   bodyType?: string
   fuelType?: string
@@ -76,8 +77,10 @@ export type NewUsedFilterOption = {
 }
 
 export type MotorCityStockFilterOptions = {
-  dealerCode: string
+  dealerCode: string | null
+  dealerCodes?: string[]
   brandKey?: string | null
+  brandKeys?: string[]
   bodyTypes: TaxonomyFilterOption[]
   brands: TaxonomyFilterOption[]
   fuelTypes: TaxonomyFilterOption[]
@@ -88,7 +91,6 @@ export type MotorCityStockFilterOptions = {
 
 export type FetchStockFiltersOptions = {
   dealerCode?: string
-  brandKey?: string
 }
 
 export class MotorCityStockError extends Error {
