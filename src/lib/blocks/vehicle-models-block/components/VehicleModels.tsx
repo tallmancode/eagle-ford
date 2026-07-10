@@ -3,6 +3,12 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 import { MediaImage } from '@/components/ui/media-image'
 import { Button } from '@/components/ui/button'
 import { RichText as ConvertRichText } from '@payloadcms/richtext-lexical/react'
@@ -17,12 +23,105 @@ type VehicleModelsProps = {
   models: VehicleModel[]
 }
 
+type ModelDetailContentProps = {
+  model: VehicleModel
+  vehicle: Vehicle
+  vehicleFeatureImage: string | Media | null
+  vehicleHeroImage: string | Media | null
+}
+
 function getModelImage(
   model: VehicleModel,
   vehicleFeatureImage: string | Media | null,
   vehicleHeroImage: string | Media | null,
 ) {
   return model.featureImage ?? model.heroImage ?? vehicleFeatureImage ?? vehicleHeroImage ?? null
+}
+
+function RequestQuoteCta() {
+  return (
+    <div className="rounded-2xl bg-muted/60 p-6 text-center">
+      <p className="text-sm text-muted-foreground mb-4">
+        Already have a Model in mind? We&apos;ll get you the best deal.
+      </p>
+      <Link href="#enquire">
+        <Button variant="outline" className="rounded-full w-full sm:w-auto">
+          Request a Quote
+        </Button>
+      </Link>
+    </div>
+  )
+}
+
+function ModelDetailContent({
+  model,
+  vehicle,
+  vehicleFeatureImage,
+  vehicleHeroImage,
+}: ModelDetailContentProps) {
+  const detailImage = getModelImage(model, vehicleFeatureImage, vehicleHeroImage)
+  const highlights = model.highlights ?? []
+  const description = model.content?.description
+
+  return (
+    <div className="flex flex-col gap-6">
+      {detailImage && (
+        <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-muted">
+          <MediaImage
+            resource={detailImage}
+            fill
+            imgClassName="object-cover object-center"
+            size="(max-width: 1024px) 100vw, 66vw"
+            priority
+          />
+        </div>
+      )}
+
+      <div>
+        <h3 className="text-primary text-2xl md:text-3xl font-bold mb-3">{model.name}</h3>
+
+        {description && (
+          <div className="text-muted-foreground leading-relaxed mb-6">
+            <ConvertRichText
+              converters={richTextConverters}
+              data={description as SerializedEditorState}
+            />
+          </div>
+        )}
+
+        {highlights.length > 0 && (
+          <div className="mb-8">
+            <h4 className="text-primary font-bold mb-3">Key Features</h4>
+            <ul className="space-y-2">
+              {highlights.map((item, i) => (
+                <li
+                  key={item.id ?? i}
+                  className="flex items-start gap-2 text-sm text-muted-foreground"
+                >
+                  <span className="text-primary mt-0.5 shrink-0">•</span>
+                  <span>{item.highlight}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 pt-4 border-t border-border">
+          <div>
+            <p className="text-primary text-3xl font-bold">{formatPrice(model.price)}</p>
+            <p className="text-sm text-muted-foreground">Starting From</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link href={getVehicleModelPath(vehicle.slug ?? '', model.slug ?? '')}>
+              <Button variant="outline" className="rounded-full">
+                View Details
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export function VehicleModels({ vehicle, models }: VehicleModelsProps) {
@@ -32,9 +131,7 @@ export function VehicleModels({ vehicle, models }: VehicleModelsProps) {
 
   const vehicleFeatureImage = vehicle.featureImage ?? vehicle.heroImage ?? null
   const vehicleHeroImage = vehicle.heroImage ?? null
-  const detailImage = getModelImage(selectedModel, vehicleFeatureImage, vehicleHeroImage)
-  const highlights = selectedModel.highlights ?? []
-  const description = selectedModel.content?.description
+  const firstModelId = String(models[0].id)
 
   return (
     <section id="models" className="py-14 px-4">
@@ -43,8 +140,44 @@ export function VehicleModels({ vehicle, models }: VehicleModelsProps) {
           <h2 className="text-primary text-3xl md:text-4xl font-bold">{vehicle.name} Models</h2>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,440px)_1fr] gap-8 lg:gap-12 items-start">
-          {/* Left: model list */}
+        {/* Mobile: accordion */}
+        <div className="lg:hidden flex flex-col gap-6">
+          <div className="border-b border-border">
+            <div className="grid grid-cols-[1fr_auto] gap-4 px-4 pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <span>Models</span>
+              <span>Starting From</span>
+            </div>
+            <Accordion type="single" collapsible={false} defaultValue={firstModelId}>
+              {models.map((model) => (
+                <AccordionItem key={model.id} value={String(model.id)} className="border-b-0">
+                  <AccordionTrigger className="group hover:no-underline w-full px-4 py-4 text-left transition-colors border-l-4 border-l-transparent data-[state=open]:bg-primary/5 data-[state=open]:border-l-primary hover:bg-muted/50 [&>svg]:text-muted-foreground group-data-[state=open]:[&>svg]:text-primary">
+                    <span className="grid grid-cols-[1fr_auto] gap-4 flex-1 items-center">
+                      <span className="font-semibold text-sm group-data-[state=open]:text-primary">
+                        {model.name}
+                      </span>
+                      <span className="text-sm font-medium whitespace-nowrap text-muted-foreground group-data-[state=open]:text-primary">
+                        {formatPrice(model.price)}
+                      </span>
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 pt-2 pb-6">
+                    <ModelDetailContent
+                      model={model}
+                      vehicle={vehicle}
+                      vehicleFeatureImage={vehicleFeatureImage}
+                      vehicleHeroImage={vehicleHeroImage}
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+
+          <RequestQuoteCta />
+        </div>
+
+        {/* Desktop: two-column layout */}
+        <div className="hidden lg:grid grid-cols-[minmax(0,440px)_1fr] gap-12 items-start">
           <div className="flex flex-col gap-6">
             <div className="border-b border-border">
               <div className="grid grid-cols-[1fr_auto] gap-4 px-4 pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -85,80 +218,15 @@ export function VehicleModels({ vehicle, models }: VehicleModelsProps) {
               </ul>
             </div>
 
-            <div className="rounded-2xl bg-muted/60 p-6 text-center">
-              <p className="text-sm text-muted-foreground mb-4">
-                Already have a Model in mind? We&apos;ll get you the best deal.
-              </p>
-              <Link href="#enquire">
-                <Button variant="outline" className="rounded-full w-full sm:w-auto">
-                  Request a Quote
-                </Button>
-              </Link>
-            </div>
+            <RequestQuoteCta />
           </div>
 
-          {/* Right: selected model detail */}
-          <div className="flex flex-col gap-6">
-            {detailImage && (
-              <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-muted">
-                <MediaImage
-                  resource={detailImage}
-                  fill
-                  imgClassName="object-cover object-center"
-                  size="(max-width: 1024px) 100vw, 66vw"
-                  priority
-                />
-              </div>
-            )}
-
-            <div>
-              <h3 className="text-primary text-2xl md:text-3xl font-bold mb-3">
-                {selectedModel.name}
-              </h3>
-
-              {description && (
-                <div className="text-muted-foreground leading-relaxed mb-6">
-                  <ConvertRichText
-                    converters={richTextConverters}
-                    data={description as SerializedEditorState}
-                  />
-                </div>
-              )}
-
-              {highlights.length > 0 && (
-                <div className="mb-8">
-                  <h4 className="text-primary font-bold mb-3">Key Features</h4>
-                  <ul className="space-y-2">
-                    {highlights.map((item, i) => (
-                      <li
-                        key={item.id ?? i}
-                        className="flex items-start gap-2 text-sm text-muted-foreground"
-                      >
-                        <span className="text-primary mt-0.5 shrink-0">•</span>
-                        <span>{item.highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 pt-4 border-t border-border">
-                <div>
-                  <p className="text-primary text-3xl font-bold">
-                    {formatPrice(selectedModel.price)}
-                  </p>
-                  <p className="text-sm text-muted-foreground">Starting From</p>
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  <Link href={getVehicleModelPath(vehicle.slug ?? '', selectedModel.slug ?? '')}>
-                    <Button variant="outline" className="rounded-full">
-                      View Details
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ModelDetailContent
+            model={selectedModel}
+            vehicle={vehicle}
+            vehicleFeatureImage={vehicleFeatureImage}
+            vehicleHeroImage={vehicleHeroImage}
+          />
         </div>
       </div>
     </section>

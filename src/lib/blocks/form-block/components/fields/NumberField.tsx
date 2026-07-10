@@ -13,11 +13,22 @@ type NumberFieldProps = {
   label?: string | null
   width?: number | null
   required?: boolean | null
+  min?: number | null
+  max?: number | null
   errors: Partial<FieldErrors<FieldValues>>
   register: UseFormRegister<FieldValues>
 }
 
-export function NumberField({ name, label, width, required, errors, register }: NumberFieldProps) {
+export function NumberField({
+  name,
+  label,
+  width,
+  required,
+  min,
+  max,
+  errors,
+  register,
+}: NumberFieldProps) {
   const error = errors[name]
 
   return (
@@ -33,9 +44,32 @@ export function NumberField({ name, label, width, required, errors, register }: 
         type="number"
         className={formControlClassName}
         aria-invalid={Boolean(error)}
+        min={min ?? undefined}
+        max={max ?? undefined}
         {...register(name, {
           required: required ? `${label || name} is required` : false,
           valueAsNumber: false,
+          validate: (value) => {
+            if (value === '' || value === undefined || value === null) {
+              return true
+            }
+
+            const num = Number(value)
+
+            if (Number.isNaN(num)) {
+              return `${label || name} must be a number`
+            }
+
+            if (min != null && num < min) {
+              return `${label || name} must be at least ${min.toLocaleString()}`
+            }
+
+            if (max != null && num > max) {
+              return `${label || name} must be at most ${max.toLocaleString()}`
+            }
+
+            return true
+          },
         })}
       />
       <FieldError message={error?.message as string | undefined} />

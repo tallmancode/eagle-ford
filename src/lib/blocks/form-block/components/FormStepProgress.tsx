@@ -2,24 +2,52 @@
 
 import React from 'react'
 
+import { Button } from '@/lib/components/ui/button'
 import { cn } from '@/lib/utils/cn'
 import type { FormStep } from '@/lib/blocks/form-block/utils/getFormSteps'
 
 type FormStepProgressProps = {
   steps: FormStep[]
   currentIndex: number
+  backLabel?: string
+  isLoading?: boolean
+  onBack?: () => void
+  showBackButton?: boolean
 }
 
-export function FormStepProgress({ steps, currentIndex }: FormStepProgressProps) {
+export function FormStepProgress({
+  steps,
+  currentIndex,
+  backLabel = 'Back',
+  isLoading = false,
+  onBack,
+  showBackButton = false,
+}: FormStepProgressProps) {
   if (steps.length < 2) {
     return null
   }
 
   return (
-    <div className="my-4 flex items-center justify-between" aria-label="Form progress">
-      <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-        Step {currentIndex + 1} of {steps.length}
-      </p>
+    <div
+      className="my-4 flex flex-wrap items-center justify-between gap-3"
+      aria-label="Form progress"
+    >
+      <div className="flex flex-wrap items-center gap-3">
+        {showBackButton && onBack && (
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={isLoading}
+            onClick={onBack}
+            className="rounded-full"
+          >
+            {backLabel}
+          </Button>
+        )}
+        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+          Step {currentIndex + 1} of {steps.length}
+        </p>
+      </div>
       <div className="flex gap-1.5">
         {steps.map((step, index) => (
           <span

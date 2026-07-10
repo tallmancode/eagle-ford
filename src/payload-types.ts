@@ -1153,6 +1153,8 @@ export interface Form {
             width?: number | null;
             defaultValue?: number | null;
             required?: boolean | null;
+            min?: number | null;
+            max?: number | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'number';
@@ -1345,6 +1347,8 @@ export interface Form {
               width?: number | null;
               defaultValue?: number | null;
               required?: boolean | null;
+              min?: number | null;
+              max?: number | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'number';
@@ -3458,6 +3462,8 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               defaultValue?: T;
               required?: T;
+              min?: T;
+              max?: T;
               id?: T;
               blockName?: T;
             };
@@ -3628,6 +3634,8 @@ export interface FormsSelect<T extends boolean = true> {
                     width?: T;
                     defaultValue?: T;
                     required?: T;
+                    min?: T;
+                    max?: T;
                     id?: T;
                     blockName?: T;
                   };
