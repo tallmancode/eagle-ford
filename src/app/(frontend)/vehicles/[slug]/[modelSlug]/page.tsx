@@ -12,6 +12,7 @@ import { LivePreviewListener } from '@/components/LivePreviewListener'
 import type { Media, Vehicle, VehicleModel, VehicleModelTemplate } from '@/payload-types'
 import { DefaultModelLayout } from './DefaultModelLayout'
 import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
+import { getVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -85,15 +86,18 @@ export default async function Page({ params: paramsPromise }: Args) {
   const useTemplate = Array.isArray(templateSections) && templateSections.length > 0
 
   const payload = await getPayload({ config: configPromise })
-  const modelsResult = await payload.find({
-    collection: 'vehicle-models',
-    draft: false,
-    depth: 1,
-    sort: 'sortOrder',
-    overrideAccess: false,
-    pagination: false,
-    where: { vehicle: { equals: vehicle.id } },
-  })
+  const [modelsResult, enquiryForm] = await Promise.all([
+    payload.find({
+      collection: 'vehicle-models',
+      draft: false,
+      depth: 1,
+      sort: 'sortOrder',
+      overrideAccess: false,
+      pagination: false,
+      where: { vehicle: { equals: vehicle.id } },
+    }),
+    getVehicleQuoteForm(),
+  ])
   const siblingModels = modelsResult.docs
 
   const meta = {
@@ -113,7 +117,12 @@ export default async function Page({ params: paramsPromise }: Args) {
       {useTemplate ? (
         <RenderBlocks blocks={templateSections} meta={meta} />
       ) : (
-        <DefaultModelLayout vehicle={vehicle} model={model} siblingModels={siblingModels} />
+        <DefaultModelLayout
+          vehicle={vehicle}
+          model={model}
+          siblingModels={siblingModels}
+          enquiryForm={enquiryForm}
+        />
       )}
     </div>
   )

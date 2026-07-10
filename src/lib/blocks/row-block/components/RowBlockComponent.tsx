@@ -1,16 +1,16 @@
 import type { Row } from '@/payload-types'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
-import type { LayoutSpacingValue } from '@/lib/fields/layout-field/utils/layout-utils'
+import React, { JSX } from 'react'
+import type {
+  LayoutSpacingValue,
+  LayoutVisibilityValue,
+} from '@/lib/fields/layout-field/utils/layout-utils'
 import {
   layoutVisibilityToClassName,
   mergeLayoutSpacingWithDefaults,
-} from '@/lib/fields/layout-field/utils/layout-utils'
-import type { LayoutVisibilityValue } from '@/lib/fields/layout-field/utils/layout-utils'
-import React, { JSX } from 'react'
-import {
   layoutSpacingHasVars,
   layoutSpacingToCssVars,
-} from '@/lib/blocks/section-block/utils/layout-utils'
+} from '@/lib/fields/layout-field/utils/layout-utils'
 import { backgroundColorToClass } from '@/lib/fields/background-color/backgroundColorUtils'
 import { cn } from '@/lib/utils/cn'
 

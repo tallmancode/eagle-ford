@@ -171,43 +171,18 @@ const blockComponents: {
   'specials-archive': SpecialsArchiveBlockComponent,
   'stock-archive': StockArchiveBlockComponent,
   partners: PartnersBlockComponent,
-  'vehicle-tabs': VehicleTabsBlockComponent as unknown as React.ComponentType<
-    WithMeta<VehicleTabsBlock>
-  >,
-  'vehicle-catalog': VehicleCatalogBlockComponent as unknown as React.ComponentType<
-    WithMeta<VehicleCatalogBlock>
-  >,
-  'vehicle-hero': VehicleHeroBlockComponent as unknown as React.ComponentType<
-    WithMeta<VehicleHeroBlock>
-  >,
-  'vehicle-models': VehicleModelsBlockComponent as unknown as React.ComponentType<
-    WithMeta<VehicleModelsBlock>
-  >,
-  'vehicle-faq': VehicleFaqBlockComponent as unknown as React.ComponentType<
-    WithMeta<VehicleFaqBlock>
-  >,
-  'vehicle-colors': VehicleColorsBlockComponent as unknown as React.ComponentType<
-    WithMeta<VehicleColorsBlock>
-  >,
-  'vehicle-gallery': VehicleGalleryBlockComponent as unknown as React.ComponentType<
-    WithMeta<VehicleGalleryBlock>
-  >,
-  'vehicle-features': VehicleFeaturesBlockComponent as unknown as React.ComponentType<
-    WithMeta<VehicleFeaturesBlock>
-  >,
-  'vehicle-model-hero': VehicleModelHeroBlockComponent as unknown as React.ComponentType<
-    WithMeta<VehicleModelHeroBlock>
-  >,
-  'vehicle-model-highlights':
-    VehicleModelHighlightsBlockComponent as unknown as React.ComponentType<
-      WithMeta<VehicleModelHighlightsBlock>
-    >,
-  'vehicle-model-colors': VehicleModelColorsBlockComponent as unknown as React.ComponentType<
-    WithMeta<VehicleModelColorsBlock>
-  >,
-  'vehicle-model-siblings': VehicleModelSiblingsBlockComponent as unknown as React.ComponentType<
-    WithMeta<VehicleModelSiblingsBlock>
-  >,
+  'vehicle-tabs': VehicleTabsBlockComponent,
+  'vehicle-catalog': VehicleCatalogBlockComponent,
+  'vehicle-hero': VehicleHeroBlockComponent,
+  'vehicle-models': VehicleModelsBlockComponent,
+  'vehicle-faq': VehicleFaqBlockComponent,
+  'vehicle-colors': VehicleColorsBlockComponent,
+  'vehicle-gallery': VehicleGalleryBlockComponent,
+  'vehicle-features': VehicleFeaturesBlockComponent,
+  'vehicle-model-hero': VehicleModelHeroBlockComponent,
+  'vehicle-model-highlights': VehicleModelHighlightsBlockComponent,
+  'vehicle-model-colors': VehicleModelColorsBlockComponent,
+  'vehicle-model-siblings': VehicleModelSiblingsBlockComponent,
 } as const
 
 type Blocks = Config['blocks']

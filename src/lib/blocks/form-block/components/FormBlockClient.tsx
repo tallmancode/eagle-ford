@@ -481,9 +481,6 @@ export function FormBlockClient({
           showProgress && !hasSubmitted ? 'max-w-4xl' : 'max-w-3xl',
         )}
       >
-        {/*<CardHeader className="pb-4">*/}
-        {/*  <CardTitle className="text-2xl text-primary">{form.title}</CardTitle>*/}
-        {/*</CardHeader>*/}
         <CardContent>
           {error && (
             <div

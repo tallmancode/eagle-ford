@@ -83,10 +83,6 @@ export function parseStockArchiveSearchParams(
   }
 }
 
-export function hasClientOnlyFilters(filters: StockArchiveFilters): boolean {
-  return Boolean(filters.model || filters.mileageMax !== undefined)
-}
-
 export function getShowingRange(
   page: number,
   limit: number,
@@ -150,6 +146,8 @@ export function stockArchiveFiltersToFetchOptions(
     bodyType: filters.bodyType,
     fuelType: filters.fuelType,
     transmission: filters.transmission,
+    model: filters.model,
+    maxMileage: filters.mileageMax,
     minPrice: filters.priceMin,
     maxPrice: filters.priceMax,
     page: filters.page ?? 1,
@@ -242,29 +240,6 @@ export function getUniqueModels(vehicles: StockArchiveVehicle[]): string[] {
   }
 
   return Array.from(models).sort((a, b) => a.localeCompare(b))
-}
-
-export function filterStock(
-  vehicles: StockArchiveVehicle[],
-  filters: Pick<StockArchiveFilters, 'model' | 'mileageMax'>,
-): StockArchiveVehicle[] {
-  return vehicles.filter((vehicle) => {
-    if (filters.model) {
-      const modelName = vehicle.modelRange ?? vehicle.model
-      if (modelName?.toLowerCase() !== filters.model.toLowerCase()) return false
-    }
-
-    if (
-      filters.mileageMax !== undefined &&
-      vehicle.mileage !== null &&
-      vehicle.mileage !== undefined &&
-      vehicle.mileage > filters.mileageMax
-    ) {
-      return false
-    }
-
-    return true
-  })
 }
 
 export function getPriceBounds(vehicles: StockArchiveVehicle[]): { min: number; max: number } {
