@@ -43,6 +43,9 @@ const mobileMenuTriggerClass = cn(
 
 const mobileLinkClass = 'text-2xl font-semibold text-secondary'
 
+const mobileNavSurfaceClass =
+  'bg-light-50/70 backdrop-blur-md supports-[backdrop-filter]:bg-light-50/75'
+
 function MenuToggleIcon({ open }: { open: boolean }) {
   return (
     <span className="relative block size-8" aria-hidden>
@@ -76,8 +79,8 @@ function MobileNavContactFooter({ settings }: { settings: Setting }) {
   if (!addressLine && !phone) return null
 
   return (
-    <footer className="shrink-0 border-t border-border bg-light-50 px-4 py-4">
-      <div className="flex flex-col gap-3 text-sm text-primary text-center">
+    <footer className={cn('shrink-0 border-t border-border px-4 py-4')}>
+      <div className="flex flex-col gap-3 text-sm text-primary text-center font-bold">
         {phone && (
           <a
             href={`tel:${phone.replace(/\D/g, '')}`}
@@ -136,7 +139,15 @@ export const MobileNav = ({ links, className, settings, vehicleMegaMenuData }: M
         >
           <MenuToggleIcon open={mobileMenuOpen} />
         </Button>
-        <SheetContent className="flex flex-col gap-0 p-0 bottom-0 h-[calc(100dvh-56px)] data-[side=right]:w-full w-full data-[side=right]:border-0 bg-light-50 top-[56px] [&>button.absolute]:hidden">
+        <SheetContent
+          overlayClassName="bg-transparent"
+          className={cn(
+            'flex flex-col gap-0 p-0 bottom-0 h-[calc(100dvh-56px)]',
+            'data-[side=right]:w-full w-full data-[side=right]:border-0',
+            'top-[56px] [&>button.absolute]:hidden',
+            mobileNavSurfaceClass,
+          )}
+        >
           <div className="flex-1 min-h-0 overflow-y-auto p-4">
             <Accordion
               type="multiple"

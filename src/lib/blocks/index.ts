@@ -14,6 +14,7 @@ import { MapBlock } from '@/lib/blocks/map-block/MapBlock'
 import { TeamGridBlock } from '@/lib/blocks/team-grid-block/TeamGridBlock'
 import { ImageBlock } from '@/lib/blocks/image-block/ImageBlock'
 import { CtaCardsBlock } from '@/lib/blocks/cta-cards-block/CtaCardsBlock'
+import { ImageCardsBlock } from '@/lib/blocks/image-cards-block/ImageCardsBlock'
 import { StatsBlock } from '@/lib/blocks/stats-block/StatsBlock'
 import { HoursTabsBlock } from '@/lib/blocks/hours-tabs-block/HoursTabsBlock'
 import { FaqBlock } from '@/lib/blocks/faq-block/FaqBlock'
@@ -57,6 +58,7 @@ const Blocks = [
   TeamGridBlock,
   ImageBlock,
   CtaCardsBlock,
+  ImageCardsBlock,
   StatsBlock,
   HoursTabsBlock,
   FaqBlock,

@@ -131,6 +131,7 @@ export interface Config {
     'team-grid': TeamGrid;
     'image-block': ImageBlock;
     'cta-cards': CtaCards;
+    'image-cards': ImageCards;
     statsBlock: StatsBlock;
     'hours-tabs': HoursTabs;
     faq: Faq;
@@ -278,6 +279,7 @@ export interface Section {
         | TeamGrid
         | ImageBlock
         | CtaCards
+        | ImageCards
         | StatsBlock
         | HoursTabs
         | Faq
@@ -415,6 +417,7 @@ export interface SectionInner {
         | TeamGrid
         | ImageBlock
         | CtaCards
+        | ImageCards
         | StatsBlock
         | HoursTabs
         | Faq
@@ -549,6 +552,7 @@ export interface Row {
         | TeamGrid
         | ImageBlock
         | CtaCards
+        | ImageCards
         | StatsBlock
         | HoursTabs
         | Faq
@@ -1711,6 +1715,46 @@ export interface CtaCards {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImageCards".
+ */
+export interface ImageCards {
+  columns?: ('1' | '2' | '3' | '4') | null;
+  items: {
+    image: string | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    imageLink?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+      label?: string | null;
+    };
+    title: string;
+    description: string;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+      label?: string | null;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'image-cards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "StatsBlock".
  */
 export interface StatsBlock {
@@ -1977,10 +2021,6 @@ export interface Partners {
  * via the `definition` "VehicleTabsBlock".
  */
 export interface VehicleTabsBlock {
-  /**
-   * Optional heading displayed above the tabs (e.g. "View Our Vehicles")
-   */
-  heading?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'vehicle-tabs';
