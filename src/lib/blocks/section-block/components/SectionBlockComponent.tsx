@@ -1,5 +1,6 @@
 import { Section, SectionInner } from '@/payload-types'
 import { RenderBlocks, renderBlock } from '@/lib/blocks/RenderBlocks'
+import React, { JSX } from 'react'
 import type {
   FlexLayoutValue,
   LayoutSpacingValue,
@@ -12,14 +13,10 @@ import {
   layoutVisibilityToClassName,
   mergeFlexLayoutWithDefaults,
   mergeLayoutSpacingWithDefaults,
-} from '@/lib/fields/layout-field/utils/layout-utils'
-import type { LayoutVisibilityValue } from '@/lib/fields/layout-field/utils/layout-utils'
-
-import React, { JSX } from 'react'
-import {
   layoutSpacingHasVars,
   layoutSpacingToCssVars,
-} from '@/lib/blocks/section-block/utils/layout-utils'
+} from '@/lib/fields/layout-field/utils/layout-utils'
+import type { LayoutVisibilityValue } from '@/lib/fields/layout-field/utils/layout-utils'
 import { backgroundColorToClass } from '@/lib/fields/background-color/backgroundColorUtils'
 import { sectionBackgroundStyleToClass } from '@/lib/blocks/section-block/sectionBackgroundStyleUtils'
 import {

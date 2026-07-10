@@ -84,6 +84,8 @@ export type FetchStockOptions = {
   fuelType?: string
   transmission?: string
   newUsed?: 'NEW' | 'USED'
+  model?: string
+  maxMileage?: number
   minPrice?: number
   maxPrice?: number
   page?: number

@@ -2,9 +2,11 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { formatPageTitle } from '@/constants/site'
+import { StockArchiveError } from '@/lib/blocks/stock-archive-block/components/StockArchiveError'
 import { getTaxonomySlug } from '@/lib/blocks/stock-archive-block/utils'
 import { getCachedStock } from '@/lib/motor-city-stock/getCachedStock'
 import { getCachedStockVehicle } from '@/lib/motor-city-stock/getCachedStockVehicle'
+import { MotorCityStockError } from '@/lib/motor-city-stock/types'
 import { getVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
 import { buildStockVehiclePath, getStockVehicleCmsIdFromSlug } from '@/lib/stock-vehicle/paths'
 import { getStockHeroImage } from '@/lib/stock-vehicle/media'
@@ -23,13 +25,17 @@ async function getSimilarVehicles(
   const bodyType = getTaxonomySlug(vehicle.bodyType)
   if (!bodyType) return []
 
-  const response = await getCachedStock({
-    bodyType,
-    limit: 5,
-    page: 1,
-  })
+  try {
+    const response = await getCachedStock({
+      bodyType,
+      limit: 5,
+      page: 1,
+    })
 
-  return response.docs.filter((item) => item.cmsId !== vehicle.cmsId).slice(0, 4)
+    return response.docs.filter((item) => item.cmsId !== vehicle.cmsId).slice(0, 4)
+  } catch {
+    return []
+  }
 }
 
 export default async function ShowroomVehiclePage({ params: paramsPromise }: Args) {
@@ -41,10 +47,20 @@ export default async function ShowroomVehiclePage({ params: paramsPromise }: Arg
     notFound()
   }
 
-  const [vehicle, enquiryForm] = await Promise.all([
-    getCachedStockVehicle(cmsId),
-    getVehicleQuoteForm(),
-  ])
+  let vehicle: Awaited<ReturnType<typeof getCachedStockVehicle>>
+  let enquiryForm: Awaited<ReturnType<typeof getVehicleQuoteForm>>
+
+  try {
+    ;[vehicle, enquiryForm] = await Promise.all([
+      getCachedStockVehicle(cmsId),
+      getVehicleQuoteForm(),
+    ])
+  } catch (error) {
+    if (error instanceof MotorCityStockError) {
+      return <StockArchiveError />
+    }
+    throw error
+  }
 
   if (!vehicle) {
     notFound()
@@ -70,21 +86,28 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
     return { title: formatPageTitle('Vehicle') }
   }
 
-  const vehicle = await getCachedStockVehicle(cmsId)
-  if (!vehicle) {
-    return { title: formatPageTitle('Vehicle') }
-  }
+  try {
+    const vehicle = await getCachedStockVehicle(cmsId)
+    if (!vehicle) {
+      return { title: formatPageTitle('Vehicle') }
+    }
 
-  const title = formatPageTitle(getStockVehiclePageTitle(vehicle))
-  const heroImage = getStockHeroImage(vehicle.media)
-  const url = buildStockVehiclePath(vehicle)
+    const title = formatPageTitle(getStockVehiclePageTitle(vehicle))
+    const heroImage = getStockHeroImage(vehicle.media)
+    const url = buildStockVehiclePath(vehicle)
 
-  return {
-    title,
-    openGraph: {
+    return {
       title,
-      url,
-      images: heroImage?.url ? [{ url: heroImage.url }] : undefined,
-    },
+      openGraph: {
+        title,
+        url,
+        images: heroImage?.url ? [{ url: heroImage.url }] : undefined,
+      },
+    }
+  } catch (error) {
+    if (error instanceof MotorCityStockError) {
+      return { title: formatPageTitle('Vehicle') }
+    }
+    throw error
   }
 }

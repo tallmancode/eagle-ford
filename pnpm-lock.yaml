@@ -164,9 +164,6 @@ importers:
       '@testing-library/react':
         specifier: 16.3.0
         version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      '@types/escape-html':
-        specifier: ^1.0.2
-        version: 1.0.4
       '@types/node':
         specifier: 22.19.9
         version: 22.19.9
@@ -3359,12 +3356,6 @@ packages:
     resolution:
       {
         integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==,
-      }
-
-  '@types/escape-html@1.0.4':
-    resolution:
-      {
-        integrity: sha512-qZ72SFTgUAZ5a7Tj6kf2SHLetiH5S6f8G5frB2SPQ3EyF02kxdyBFf4Tz4banE3xCgGnKgWLt//a6VuYHKYJTg==,
       }
 
   '@types/estree-jsx@1.0.5':
@@ -10204,8 +10195,6 @@ snapshots:
       '@types/ms': 2.1.0
 
   '@types/deep-eql@4.0.2': {}
-
-  '@types/escape-html@1.0.4': {}
 
   '@types/estree-jsx@1.0.5':
     dependencies:

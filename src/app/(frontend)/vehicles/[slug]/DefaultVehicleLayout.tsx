@@ -6,21 +6,23 @@ import { Button } from '@/components/ui/button'
 import { RichText as ConvertRichText } from '@payloadcms/richtext-lexical/react'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { richTextConverters } from '@/components/rich-text/richTextConverters'
-import type { Vehicle, VehicleModel } from '@/payload-types'
+import type { Form, Vehicle, VehicleModel } from '@/payload-types'
+import { VehicleEnquireSection } from '@/lib/vehicles/components/VehicleEnquireSection'
 import { getBrochureUrl } from '@/lib/utils/vehicleCta'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { VehicleHero } from '@/lib/blocks/vehicle-hero-block/components/VehicleHero'
 import { VehicleColors } from '@/lib/blocks/vehicle-colors-block/components/VehicleColors'
 import { VehicleFeatures } from '@/lib/blocks/vehicle-features-block/components/VehicleFeatures'
+import { VehicleFaq } from '@/lib/blocks/vehicle-faq-block/components/VehicleFaq'
 import VehicleRangePage from './VehicleRangePage'
-import VehicleFaq from './VehicleFaq'
 
 type DefaultVehicleLayoutProps = {
   vehicle: Vehicle
   models: VehicleModel[]
+  enquiryForm: Form | null
 }
 
-export function DefaultVehicleLayout({ vehicle, models }: DefaultVehicleLayoutProps) {
+export function DefaultVehicleLayout({ vehicle, models, enquiryForm }: DefaultVehicleLayoutProps) {
   const features = vehicle.features ?? []
   const specHighlights = vehicle.specHighlights ?? []
   const engineOptions = vehicle.engineOptions ?? []
@@ -99,6 +101,8 @@ export function DefaultVehicleLayout({ vehicle, models }: DefaultVehicleLayoutPr
         vehicleFeatureImage={vehicle.featureImage ?? vehicle.heroImage ?? null}
         vehicleHeroImage={vehicle.heroImage ?? null}
       />
+
+      {enquiryForm && <VehicleEnquireSection form={enquiryForm} vehicleName={vehicle.name} />}
 
       {/* ── Payment Options ── */}
       {paymentOptions.length > 0 && (

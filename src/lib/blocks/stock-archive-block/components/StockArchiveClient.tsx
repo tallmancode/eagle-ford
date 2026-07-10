@@ -4,7 +4,6 @@ import { useCallback } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import type { MotorCityStockFilterOptions } from '@/lib/motor-city-stock/types'
 import {
-  filterStock,
   stockArchiveFiltersToSearchParams,
   type StockArchiveFilters,
   type StockArchiveVehicle,
@@ -18,7 +17,6 @@ type Props = {
   vehicles: StockArchiveVehicle[]
   filterOptions: MotorCityStockFilterOptions
   activeFilters: StockArchiveFilters
-  hasClientOnlyFilters: boolean
   limit: number
   showPagination: boolean
   enquireUrl: string
@@ -34,7 +32,6 @@ export function StockArchiveClient({
   vehicles,
   filterOptions,
   activeFilters,
-  hasClientOnlyFilters,
   limit,
   showPagination,
   enquireUrl,
@@ -65,22 +62,7 @@ export function StockArchiveClient({
     [activeFilters, pathname, router],
   )
 
-  const clientFilteredVehicles = hasClientOnlyFilters
-    ? filterStock(vehicles, {
-        model: activeFilters.model,
-        mileageMax: activeFilters.mileageMax,
-      })
-    : vehicles
-
-  const totalDocs = hasClientOnlyFilters ? clientFilteredVehicles.length : pagination.totalDocs
-  const totalPages = hasClientOnlyFilters
-    ? Math.max(1, Math.ceil(clientFilteredVehicles.length / limit))
-    : pagination.totalPages
-  const currentPage = Math.min(activeFilters.page ?? 1, totalPages)
-
-  const paginatedVehicles = hasClientOnlyFilters
-    ? clientFilteredVehicles.slice((currentPage - 1) * limit, currentPage * limit)
-    : clientFilteredVehicles
+  const currentPage = Math.min(activeFilters.page ?? 1, pagination.totalPages)
 
   return (
     <div>
@@ -91,15 +73,15 @@ export function StockArchiveClient({
         filterOptions={filterOptions}
         activeFilters={activeFilters}
         currentPage={currentPage}
-        totalPages={totalPages}
-        totalDocs={totalDocs}
+        totalPages={pagination.totalPages}
+        totalDocs={pagination.totalDocs}
         limit={limit}
         showPagination={showPagination}
         onPageChange={(page) => navigateWithFilters({ page })}
         onApplyFilters={applyFilters}
       />
 
-      <StockArchiveGrid vehicles={paginatedVehicles} enquireUrl={enquireUrl} />
+      <StockArchiveGrid vehicles={vehicles} enquireUrl={enquireUrl} />
     </div>
   )
 }
