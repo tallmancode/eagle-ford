@@ -3,7 +3,7 @@
 import React, { Fragment, useCallback, useState } from 'react'
 import { toast } from '@payloadcms/ui'
 
-import '../SeedButton/index.scss'
+import './index.scss'
 
 type Props = {
   endpoint: string

@@ -84,7 +84,9 @@ export const SeedButtonsComponent = ({ payload: _payload }: { payload: Payload }
             label="Import Vehicle Catalog"
             successText="Vehicle catalog imported successfully!"
           />
-          {' to import all vehicles, models and categories from the Eagle Ford range.'}
+          {
+            ' to import all vehicles, models, categories, and refresh images from bundled seed assets.'
+          }
         </li>
       </ul>
     </div>
