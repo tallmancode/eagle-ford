@@ -1,13 +1,4 @@
-import {
-  buildSeedMediaFilename,
-  getColourSwatch,
-  getModelHeroImage,
-  getVehicleFeatureImage,
-  getVehicleGallery,
-  getVehicleHero,
-  toPayloadFile,
-  type SeedImage,
-} from '@/lib/vehicle-seed-images'
+import { buildSeedMediaFilename, toPayloadFile, type SeedImage } from '@/lib/vehicle-seed-images'
 import { createLocalReq, getPayload } from 'payload'
 import config from '@payload-config'
 import { headers } from 'next/headers'
@@ -64,6 +55,21 @@ async function findSeedMediaId(
   return existing.totalDocs > 0 ? (existing.docs[0].id as string) : null
 }
 
+async function fetchRemoteImage(url: string): Promise<SeedImage | null> {
+  try {
+    const response = await fetch(url)
+    if (!response.ok) return null
+
+    const buffer = Buffer.from(await response.arrayBuffer())
+    const pathname = new URL(url).pathname
+    const filename = decodeURIComponent(pathname.split('/').pop() ?? 'feature.webp')
+
+    return { buffer, filename }
+  } catch {
+    return null
+  }
+}
+
 async function uploadSeedImage(
   payload: Payload,
   req: PayloadRequest,
@@ -73,7 +79,16 @@ async function uploadSeedImage(
   stats: ImageImportStats,
 ): Promise<string> {
   const existingId = await findSeedMediaId(payload, req, mediaFilename)
-  if (existingId) return existingId
+  if (existingId) {
+    await payload.update({
+      collection: 'media',
+      id: existingId,
+      data: { alt },
+      req,
+      context: { disableRevalidate: true },
+    })
+    return existingId
+  }
 
   try {
     const media = await payload.create({
@@ -87,10 +102,79 @@ async function uploadSeedImage(
   } catch (err) {
     if (isDuplicateFilenameError(err)) {
       const retryId = await findSeedMediaId(payload, req, mediaFilename)
-      if (retryId) return retryId
+      if (retryId) {
+        await payload.update({
+          collection: 'media',
+          id: retryId,
+          data: { alt },
+          req,
+          context: { disableRevalidate: true },
+        })
+        return retryId
+      }
     }
     throw err
   }
+}
+
+function seoHeroImageAlt(vehicleName: string): string {
+  return `${vehicleName} hero banner — new Ford model at Eagle Ford South Africa`
+}
+
+function seoFeatureCardImageAlt(vehicleName: string): string {
+  return `${vehicleName} model overview — new Ford vehicles at Eagle Ford`
+}
+
+function seoFeatureSectionImageAlt(vehicleName: string, featureTitle: string): string {
+  return `${vehicleName} ${featureTitle} — Ford feature and technology highlight`
+}
+
+function seoColourImageAlt(vehicleName: string, colourName: string, colourNote?: string): string {
+  const trimNote = colourNote ? ` (${colourNote})` : ''
+  return `${vehicleName} exterior in ${colourName}${trimNote} paint colour option`
+}
+
+function seoGalleryImageAlt(vehicleName: string, index: number): string {
+  return `${vehicleName} gallery photo ${index + 1} — exterior and interior views`
+}
+
+function seoModelFeatureImageAlt(vehicleName: string, variantName: string): string {
+  return `Ford ${variantName} — ${vehicleName} model variant at Eagle Ford South Africa`
+}
+
+function seoBrochureAlt(vehicleName: string): string {
+  return `Ford ${vehicleName} brochure PDF download — Eagle Ford South Africa`
+}
+
+function brochureMediaFilename(vehicleSlug: string): string {
+  return `${vehicleSlug}-brochure.pdf`
+}
+
+async function uploadVehicleBrochure(
+  payload: Payload,
+  req: PayloadRequest,
+  vehicleSlug: string,
+  vehicleName: string,
+  brochureUrl: string | undefined,
+  brochureAlt: string | undefined,
+  stats: ImageImportStats,
+): Promise<string | null> {
+  if (!brochureUrl) return null
+
+  const remoteFile = await fetchRemoteImage(brochureUrl)
+  if (!remoteFile) {
+    stats.imagesMissing++
+    return null
+  }
+
+  return uploadSeedImage(
+    payload,
+    req,
+    remoteFile,
+    brochureMediaFilename(vehicleSlug),
+    brochureAlt ?? seoBrochureAlt(vehicleName),
+    stats,
+  )
 }
 
 async function buildVehicleImages(
@@ -98,54 +182,80 @@ async function buildVehicleImages(
   req: PayloadRequest,
   vehicleName: string,
   vehicleSlug: string,
+  heroImageUrl: string | undefined,
+  heroImageAlt: string | undefined,
+  featureImageUrl: string | undefined,
+  featureImageAlt: string | undefined,
+  gallery: GalleryDef[],
   colours: ColourDef[],
   stats: ImageImportStats,
 ): Promise<BuiltVehicleImages> {
-  const heroImage = getVehicleHero(vehicleSlug)
-  const heroMediaId = heroImage
-    ? await uploadSeedImage(
+  const heroAlt = heroImageAlt ?? seoHeroImageAlt(vehicleName)
+  const featureCardAlt = featureImageAlt ?? seoFeatureCardImageAlt(vehicleName)
+
+  let heroMediaId: string | null = null
+  if (heroImageUrl) {
+    const remoteHeroImage = await fetchRemoteImage(heroImageUrl)
+    if (remoteHeroImage) {
+      heroMediaId = await uploadSeedImage(
         payload,
         req,
-        heroImage,
+        remoteHeroImage,
         buildSeedMediaFilename(vehicleSlug, 'hero', 'banner'),
-        `${vehicleName} hero image`,
+        heroAlt,
         stats,
       )
-    : (stats.imagesMissing++, null)
+    } else {
+      stats.imagesMissing++
+    }
+  } else {
+    stats.imagesMissing++
+  }
 
-  const featureImage = getVehicleFeatureImage(vehicleSlug)
-  const featureMediaId = featureImage
-    ? await uploadSeedImage(
+  let featureMediaId: string | null = null
+  if (featureImageUrl) {
+    const remoteFeatureImage = await fetchRemoteImage(featureImageUrl)
+    if (remoteFeatureImage) {
+      featureMediaId = await uploadSeedImage(
         payload,
         req,
-        featureImage,
+        remoteFeatureImage,
         buildSeedMediaFilename(vehicleSlug, 'feature', 'card'),
-        `${vehicleName} feature image`,
+        featureCardAlt,
         stats,
       )
-    : (stats.imagesMissing++, null)
-
-  const galleryImages = getVehicleGallery(vehicleSlug)
-  if (galleryImages.length === 0) stats.imagesMissing++
+    } else {
+      stats.imagesMissing++
+    }
+  } else {
+    stats.imagesMissing++
+  }
 
   const galleryIds: string[] = []
-  for (const [index, galleryImage] of galleryImages.slice(0, 8).entries()) {
-    galleryIds.push(
-      await uploadSeedImage(
-        payload,
-        req,
-        galleryImage,
-        buildSeedMediaFilename(vehicleSlug, 'gallery', String(index + 1).padStart(2, '0')),
-        `${vehicleName} gallery image`,
-        stats,
-      ),
-    )
+  for (const [index, item] of gallery.entries()) {
+    const remoteGalleryImage = await fetchRemoteImage(item.imageUrl)
+    if (remoteGalleryImage) {
+      galleryIds.push(
+        await uploadSeedImage(
+          payload,
+          req,
+          remoteGalleryImage,
+          buildSeedMediaFilename(vehicleSlug, 'gallery', String(index + 1).padStart(2, '0')),
+          item.imageAlt || seoGalleryImageAlt(vehicleName, index),
+          stats,
+        ),
+      )
+    } else {
+      stats.imagesMissing++
+    }
   }
 
   const builtColours: BuiltColour[] = []
   for (const colour of colours) {
-    const swatchImage = getColourSwatch(vehicleSlug, colour.colourName)
+    const swatchImage = await resolveColourSwatchImage(colour)
     let swatchMediaId: string | undefined
+    const colourAlt =
+      colour.colourImageAlt ?? seoColourImageAlt(vehicleName, colour.colourName, colour.colourNote)
 
     if (swatchImage) {
       swatchMediaId = await uploadSeedImage(
@@ -153,7 +263,7 @@ async function buildVehicleImages(
         req,
         swatchImage,
         buildSeedMediaFilename(vehicleSlug, 'colour', colour.colourName),
-        `${colour.colourName} colour swatch`,
+        colourAlt,
         stats,
       )
     } else {
@@ -170,9 +280,15 @@ async function buildVehicleImages(
   return { heroMediaId, featureMediaId, galleryIds, colours: builtColours }
 }
 
+async function resolveColourSwatchImage(colour: ColourDef): Promise<SeedImage | null> {
+  if (!colour.colourImageUrl) return null
+  return fetchRemoteImage(colour.colourImageUrl)
+}
+
 async function buildModelColours(
   payload: Payload,
   req: PayloadRequest,
+  vehicleName: string,
   vehicleSlug: string,
   colours: ColourDef[],
   stats: ImageImportStats,
@@ -181,22 +297,32 @@ async function buildModelColours(
 
   for (const colour of colours) {
     const mediaFilename = buildSeedMediaFilename(vehicleSlug, 'colour', colour.colourName)
+    const colourAlt =
+      colour.colourImageAlt ?? seoColourImageAlt(vehicleName, colour.colourName, colour.colourNote)
     let swatchMediaId = (await findSeedMediaId(payload, req, mediaFilename)) ?? undefined
 
     if (!swatchMediaId) {
-      const swatchImage = getColourSwatch(vehicleSlug, colour.colourName)
+      const swatchImage = await resolveColourSwatchImage(colour)
       if (swatchImage) {
         swatchMediaId = await uploadSeedImage(
           payload,
           req,
           swatchImage,
           mediaFilename,
-          `${colour.colourName} colour swatch`,
+          colourAlt,
           stats,
         )
       } else {
         stats.imagesMissing++
       }
+    } else {
+      await payload.update({
+        collection: 'media',
+        id: swatchMediaId,
+        data: { alt: colourAlt },
+        req,
+        context: { disableRevalidate: true },
+      })
     }
 
     builtColours.push({
@@ -209,13 +335,82 @@ async function buildModelColours(
   return builtColours
 }
 
+type BuiltFeature = {
+  featureTitle: string
+  featureDescription: string
+  featureImage?: string
+}
+
+async function buildVehicleFeatures(
+  payload: Payload,
+  req: PayloadRequest,
+  vehicleSlug: string,
+  vehicleName: string,
+  features: FeatureDef[],
+  stats: ImageImportStats,
+): Promise<BuiltFeature[]> {
+  const builtFeatures: BuiltFeature[] = []
+
+  for (const [index, feature] of features.entries()) {
+    let featureImageId: string | undefined
+
+    if (feature.featureImageUrl) {
+      const image = await fetchRemoteImage(feature.featureImageUrl)
+      if (image) {
+        const featureAlt =
+          feature.featureImageAlt ?? seoFeatureSectionImageAlt(vehicleName, feature.featureTitle)
+        featureImageId = await uploadSeedImage(
+          payload,
+          req,
+          image,
+          buildSeedMediaFilename(
+            vehicleSlug,
+            'feature-section',
+            String(index + 1).padStart(2, '0'),
+          ),
+          featureAlt,
+          stats,
+        )
+      } else {
+        stats.imagesMissing++
+      }
+    }
+
+    builtFeatures.push({
+      featureTitle: feature.featureTitle,
+      featureDescription: feature.featureDescription,
+      ...(featureImageId ? { featureImage: featureImageId } : {}),
+    })
+  }
+
+  return builtFeatures
+}
+
 // ---------------------------------------------------------------------------
 // Vehicle seed data
 // ---------------------------------------------------------------------------
 
-type ColourDef = { colourName: string; colourNote?: string }
-type FeatureDef = { featureTitle: string; featureDescription: string }
-type VariantDef = { name: string; slug: string; price: number; highlights: string[] }
+type ColourDef = {
+  colourName: string
+  colourNote?: string
+  colourImageUrl?: string
+  colourImageAlt?: string
+}
+type FeatureDef = {
+  featureTitle: string
+  featureDescription: string
+  featureImageUrl?: string
+  featureImageAlt?: string
+}
+type GalleryDef = { imageUrl: string; imageAlt: string }
+type VariantDef = {
+  name: string
+  slug: string
+  price: number
+  highlights: string[]
+  featureImageUrl?: string
+  featureImageAlt?: string
+}
 type FaqDef = { question: string; answer: string }
 
 type VehicleDef = {
@@ -227,6 +422,13 @@ type VehicleDef = {
   description: string
   features: FeatureDef[]
   colours: ColourDef[]
+  heroImageUrl: string
+  heroImageAlt: string
+  featureImageUrl: string
+  featureImageAlt: string
+  gallery: GalleryDef[]
+  brochureUrl?: string
+  brochureAlt?: string
   pageUrl: string
   variants: VariantDef[]
   faqs: FaqDef[]
@@ -244,36 +446,144 @@ const VEHICLE_DATA: VehicleDef[] = [
       "Tougher looks. Same unstoppable DNA. A refined Ranger has arrived in Mzansi, and introducing the new Ford Ranger Sport, taking capability and injecting it with adrenaline. Featuring a bold new look and dynamic handling, it's designed for those who refuse to blend in. It's the Ranger you trust, refined for the drive you crave.",
     features: [
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Next%20Level%20Ranger_img_2.webp',
+        featureImageAlt: 'Next Level Ranger 12″ IP Screen — Ford feature and technology highlight',
         featureTitle: '12″ IP Screen',
         featureDescription:
           'New coast-to-coast dashboard increases the sense of space and width in the cabin. The integrated 12-inch centre LED touchscreen is hi-tech with a tough truck inspired look.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Next%20Level%20Ranger_img_3.webp',
+        featureImageAlt:
+          'Next Level Ranger Dark Interior Finish — Ford feature and technology highlight',
         featureTitle: 'Dark Interior Finish',
         featureDescription:
           'Experience a sanctuary of modern focus with an interior finished in deep, tonal accents that exude a premium feel. These sophisticated dark materials are designed to resist the rigors of daily use while maintaining a sleek, cohesive look throughout the cabin.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Next%20Level%20Ranger_img_1.webp',
+        featureImageAlt:
+          'Next Level Ranger raising the bar — Ford bakkie design and capability highlight',
         featureTitle: 'Ranger Raising the Bar Again',
         featureDescription:
           "Ranger raises the stakes for 2026. Tougher in stance, sharper in design and finished with bold black accents for XLT, Wildtrak and Platinum series that give it serious presence. It's built from the same hard-working DNA that has made it Mzansi's number one 4x4.",
       },
     ],
     colours: [
-      { colourName: 'Frozen White' },
-      { colourName: 'Carbonized Grey' },
-      { colourName: 'Agate Black' },
-      { colourName: 'Ignite Red' },
-      { colourName: 'Blue Lighting' },
-      { colourName: 'Acacia Green', colourNote: 'Platinum Only' },
-      { colourName: 'Lucid Red' },
-      { colourName: 'Command Grey', colourNote: 'Sport & Tremor Only' },
+      {
+        colourName: 'Frozen White',
+        colourImageAlt: 'Next Level Ranger exterior in Frozen White paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/c202169b-7f2b-40b0-a27d-d2b3786509f8_Next-Gen-Ford-Ranger-Colour-Frozen-White.webp',
+      },
+      {
+        colourName: 'Carbonized Grey',
+        colourImageAlt: 'Next Level Ranger exterior in Carbonized Grey paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/a43d7824-c608-453a-adbb-9e3b20495449_Next-Gen-Ford-Ranger-Colour-Carbonized-Grey.webp',
+      },
+      {
+        colourName: 'Agate Black',
+        colourImageAlt: 'Next Level Ranger exterior in Agate Black paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/50816176-2616-4188-a94d-786a23784b91_Next-Gen-Ford-Ranger-Colour-Agate-Black.webp',
+      },
+      {
+        colourName: 'Ignite Red',
+        colourImageAlt: 'Next Level Ranger exterior in Ignite Red paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/4bbd014a-07a7-415c-9d77-5a1bc0b2306a_Next-Gen-Ford-Ranger-Colour-Ignite-Red.webp',
+      },
+      {
+        colourName: 'Blue Lighting',
+        colourImageAlt: 'Next Level Ranger exterior in Blue Lighting paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/a325b8ac-2030-4c1e-a60b-fcbf9f084daa_Next-Gen-Ford-Ranger-Colour-Blue-Lighting.webp',
+      },
+      {
+        colourName: 'Acacia Green',
+        colourNote: 'Platinum Only',
+        colourImageAlt:
+          'Next Level Ranger exterior in Acacia Green (Platinum Only) paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/4f2aa4ed-b78d-41c2-9a2f-40ed24fcc77c_Next-Gen-Ford-Ranger-Colour-Acacia-Green.webp',
+      },
+      {
+        colourName: 'Lucid Red',
+        colourImageAlt: 'Next Level Ranger exterior in Lucid Red paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/b5bba215-7438-406f-937d-63667935f5be_Next-Gen-Ford-Ranger-Colour-Lucid-Red.webp',
+      },
+      {
+        colourName: 'Command Grey',
+        colourNote: 'Sport & Tremor Only',
+        colourImageAlt:
+          'Next Level Ranger exterior in Command Grey (Sport & Tremor Only) paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/09652c1b-a63f-4522-a037-9866b738430f_Next-Gen-Ford-Ranger-Colour-Command-Grey.webp',
+      },
     ],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/banner.webp',
+    heroImageAlt: 'Ford Next Level Ranger bakkie hero banner on South African roads — Eagle Ford',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/hero.webp',
+    featureImageAlt: 'Ford Next Level Ranger side profile — new Ford bakkies at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/gallery/img_0.webp',
+        imageAlt: 'Next Level Ford Ranger Gallery 1',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/gallery/img_1.webp',
+        imageAlt: 'Next Level Ford Ranger Gallery 2',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/gallery/img_2.webp',
+        imageAlt: 'Next Level Ford Ranger Gallery 3',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/gallery/img_3.webp',
+        imageAlt: 'Next Level Ford Ranger Gallery 4',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/gallery/img_4.webp',
+        imageAlt: 'Next Level Ford Ranger Gallery 5',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/gallery/img_5.webp',
+        imageAlt: 'Next Level Ford Ranger Gallery 6',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/gallery/img_6.webp',
+        imageAlt: 'Next Level Ford Ranger Gallery 7',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/gallery/img_7.webp',
+        imageAlt: 'Next Level Ford Ranger Gallery 8',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/gallery/img_8.webp',
+        imageAlt: 'Next Level Ford Ranger Gallery 9',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/gallery/img_9.webp',
+        imageAlt: 'Next Level Ford Ranger Gallery 10',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/gallery/img_10.webp',
+        imageAlt: 'Next Level Ford Ranger Gallery 11',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Next-Level-Ranger/./files/brochures/20260609-ranger-brochure.pdf',
+    brochureAlt: 'Ford Next Level Ranger brochure PDF download — Eagle Ford South Africa',
     pageUrl: 'https://www.eagleford.co.za/new/next-level-ranger/',
     variants: [
       {
         name: '2.0 SiT Double Cab XL 4x2 6MT',
         slug: '2.0-sit-double-cab-xl-4x2-6mt',
+        featureImageUrl: 'https://www.eagleford.co.za/252764_image.webp',
+        featureImageAlt:
+          'Ford 2.0 SiT Double Cab XL 4x2 6MT — Next Level Ranger model variant at Eagle Ford South Africa',
         price: 621000,
         highlights: [
           '12" Colour Touchscreen',
@@ -289,6 +599,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: '2.0 SiT Double Cab XLT 4x2 10AT',
         slug: '2.0-sit-double-cab-xlt-4x2-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252765_image.webp',
+        featureImageAlt:
+          'Ford 2.0 SiT Double Cab XLT 4x2 10AT — Next Level Ranger model variant at Eagle Ford South Africa',
         price: 699500,
         highlights: [
           '10AT Replaces 6AT',
@@ -301,6 +614,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: '2.3L Double Cab Sport 4x2 10AT',
         slug: '2.3l-double-cab-sport-4x2-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252766_image.webp',
+        featureImageAlt:
+          'Ford 2.3L Double Cab Sport 4x2 10AT — Next Level Ranger model variant at Eagle Ford South Africa',
         price: 839600,
         highlights: [
           '360 Camera',
@@ -313,6 +629,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: '2.3L Double Cab Wildtrak 4x2 10AT',
         slug: '2.3l-double-cab-wildtrak-4x2-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252767_image.webp',
+        featureImageAlt:
+          'Ford 2.3L Double Cab Wildtrak 4x2 10AT — Next Level Ranger model variant at Eagle Ford South Africa',
         price: 899000,
         highlights: [
           '12" Colour Touchscreen',
@@ -330,6 +649,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: '3.0L V6 Double Cab Tremor 4x4 10AT',
         slug: '3.0l-v6-double-cab-tremor-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252768_image.webp',
+        featureImageAlt:
+          'Ford 3.0L V6 Double Cab Tremor 4x4 10AT — Next Level Ranger model variant at Eagle Ford South Africa',
         price: 1039000,
         highlights: [
           '3.0L V6 LION 184kW With 10AT (E-Shifter) Only',
@@ -345,6 +667,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: '3.0L V6 Double Cab Wildtrak 4x4 10AT',
         slug: '3.0l-v6-double-cab-wildtrak-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252773_image.webp',
+        featureImageAlt:
+          'Ford 3.0L V6 Double Cab Wildtrak 4x4 10AT — Next Level Ranger model variant at Eagle Ford South Africa',
         price: 1070000,
         highlights: [
           '18" Alloy Wheels',
@@ -363,6 +688,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: '3.0L V6 Double Cab Platinum 4x4 10AT',
         slug: '3.0l-v6-double-cab-platinum-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252769_image.webp',
+        featureImageAlt:
+          'Ford 3.0L V6 Double Cab Platinum 4x4 10AT — Next Level Ranger model variant at Eagle Ford South Africa',
         price: 1179500,
         highlights: [
           '10-Way Power, Heating/Ventilation & Memory Function',
@@ -378,6 +706,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: '3.0L V6 TT Double Cab Raptor 4x4 10AT',
         slug: '3.0l-v6-tt-double-cab-raptor-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252770_image.webp',
+        featureImageAlt:
+          'Ford 3.0L V6 TT Double Cab Raptor 4x4 10AT — Next Level Ranger model variant at Eagle Ford South Africa',
         price: 1299000,
         highlights: [
           '12.4-Inch Digital Instrument Cluster',
@@ -450,27 +781,46 @@ const VEHICLE_DATA: VehicleDef[] = [
       'Meet our smartest, most capable, most versatile Ranger ever. Designed for over 180 countries, this is the bakkie the world will turn to – for work, family and play. Get ready to unlimit your Ranger life.',
     features: [
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Super%20Cab_img_1.webp',
+        featureImageAlt:
+          'Ranger Super Cab Bold New Front Face — Ford feature and technology highlight',
         featureTitle: 'Bold New Front Face',
         featureDescription:
           'Capable and reliable, the Ranger Super Cab is ready to work. The new black grille and halogen daytime running lamps showcase the global Built Ford Tough design.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Super%20Cab_img_2.webp',
+        featureImageAlt: 'Ranger Super Cab Durable Wheels — Ford feature and technology highlight',
         featureTitle: 'Durable Wheels',
         featureDescription:
           'Perfect for driving in rugged conditions, the Ranger Super Cab comes with solid and durable 16-inch alloy wheels.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Super%20Cab_img_3.webp',
+        featureImageAlt:
+          'Ranger Super Cab Coast-to-Coast Dashboard — Ford feature and technology highlight',
         featureTitle: 'Coast-to-Coast Dashboard',
         featureDescription:
           'New coast-to-coast dashboard increases the sense of space and width in the cabin. The integrated 10-inch centre LED touchscreen is hi-tech with a tough, truck-inspired look.',
       },
     ],
     colours: [],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-Super-Cab/./images/banner.webp',
+    heroImageAlt: 'Ford Ranger Super Cab work bakkie hero banner — Eagle Ford South Africa',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-Super-Cab/./images/hero.webp',
+    featureImageAlt: 'Ford Ranger Super Cab model overview — commercial Ford bakkies at Eagle Ford',
+    gallery: [],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Ranger-Super-Cab/./files/brochures/20260609-ranger-brochure.pdf',
+    brochureAlt: 'Ford Ranger Super Cab brochure PDF download — Eagle Ford South Africa',
     pageUrl: 'https://www.eagleford.co.za/new/ranger-super-cab/',
     variants: [
       {
         name: 'Ranger 2.0 SiT SuperCab XL auto',
         slug: 'ranger-2.0-sit-supercab-xl-auto',
+        featureImageUrl: 'https://www.eagleford.co.za/159411_image.webp',
+        featureImageAlt:
+          'Ford Ranger 2.0 SiT SuperCab XL auto — Ranger Super Cab model variant at Eagle Ford South Africa',
         price: 586500,
         highlights: [
           '6-speed automatic transmission',
@@ -482,6 +832,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: 'Ranger 2.0 SiT SuperCab XLT',
         slug: 'ranger-2.0-sit-supercab-xlt',
+        featureImageUrl: 'https://www.eagleford.co.za/159412_image.webp',
+        featureImageAlt:
+          'Ford Ranger 2.0 SiT SuperCab XLT — Ranger Super Cab model variant at Eagle Ford South Africa',
         price: 623000,
         highlights: [
           '6-speed automatic transmission',
@@ -493,6 +846,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: 'Ford Ranger 2.0 BiTurbo SuperCab Wildtrak 4x4',
         slug: 'ford-ranger-2.0-biturbo-supercab-wildtrak-4x4',
+        featureImageUrl: 'https://www.eagleford.co.za/252771_image.webp',
+        featureImageAlt:
+          'Ford Ford Ranger 2.0 BiTurbo SuperCab Wildtrak 4x4 — Ranger Super Cab model variant at Eagle Ford South Africa',
         price: 842500,
         highlights: [
           '12″ Colour Touchscreen',
@@ -563,27 +919,75 @@ const VEHICLE_DATA: VehicleDef[] = [
     description: 'Tough, smart, versatile. Perfect for work, family and play.',
     features: [
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Single%20Cab_img_1.webp',
+        featureImageAlt:
+          'Ranger Single Cab Bold New Front Face — Ford feature and technology highlight',
         featureTitle: 'Bold New Front Face',
         featureDescription:
           'Capable and reliable, the XL is ready to work. The new black grille and halogen daytime running lamps showcase the global Built Ford Tough design.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Single%20Cab_img_2.webp',
+        featureImageAlt: 'Ranger Single Cab Durable Wheels — Ford feature and technology highlight',
         featureTitle: 'Durable Wheels',
         featureDescription:
           'Perfect for driving in rugged conditions, the XL comes with solid and durable 16-inch alloy wheels.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Single%20Cab_img_3.webp',
+        featureImageAlt:
+          'Ranger Single Cab Coast-to-Coast Dashboard — Ford feature and technology highlight',
         featureTitle: 'Coast-to-Coast Dashboard',
         featureDescription:
           'When your bakkie doubles as your office, a smart design makes all the difference. Packed with technology and features to help you work smarter and play harder. Built tough. Built safe.',
       },
     ],
     colours: [],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-Single-Cab/./images/banner.webp',
+    heroImageAlt: 'Ford Ranger Single Cab commercial bakkie hero banner — Eagle Ford',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-Single-Cab/./images/hero.webp',
+    featureImageAlt: 'Ford Ranger Single Cab model overview — fleet Ford bakkies at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Single-Cab/./images/gallery/img_0.webp',
+        imageAlt: 'Ford Ranger XL Single Cab Gallery 1',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Single-Cab/./images/gallery/img_1.webp',
+        imageAlt: 'Ford Ranger XL Single Cab Gallery 2',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Single-Cab/./images/gallery/img_2.webp',
+        imageAlt: 'Ford Ranger XL Single Cab Gallery 3',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Single-Cab/./images/gallery/img_3.webp',
+        imageAlt: 'Ford Ranger XL Single Cab Gallery 4',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Single-Cab/./images/gallery/img_4.webp',
+        imageAlt: 'Ford Ranger XL Single Cab Gallery 5',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Single-Cab/./images/gallery/img_5.webp',
+        imageAlt: 'Ford Ranger XL Single Cab Gallery 6',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Single-Cab/./images/gallery/img_6.webp',
+        imageAlt: 'Ford Ranger XL Single Cab Gallery 7',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Ranger-Single-Cab/./files/brochures/20260609-ranger-brochure.pdf',
+    brochureAlt: 'Ford Ranger Single Cab brochure PDF download — Eagle Ford South Africa',
     pageUrl: 'https://www.eagleford.co.za/new/ranger-single-cab/',
     variants: [
       {
         name: 'Ranger 2.0 SiT Single Cab XL 4x2 auto',
         slug: 'ranger-2.0-sit-single-cab-xl-4x2-auto',
+        featureImageUrl: 'https://www.eagleford.co.za/252886_image.webp',
+        featureImageAlt:
+          'Ford Ranger 2.0 SiT single cab XL 4x2 auto — Ranger Single Cab model variant at Eagle Ford South Africa',
         price: 590000,
         highlights: [
           '10″ Colour Touchscreen',
@@ -598,6 +1002,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: '2.0 SiT Single Cab XL 4x4 Manual',
         slug: '2.0-sit-single-cab-xl-4x4-manual',
+        featureImageUrl: 'https://www.eagleford.co.za/252887_image.webp',
+        featureImageAlt:
+          'Ford 2.0 SiT single cab XL 4x4 manual — Ranger Single Cab model variant at Eagle Ford South Africa',
         price: 635200,
         highlights: [
           '10″ Colour Touchscreen',
@@ -612,6 +1019,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: 'Ranger 2.0 SiT SuperCab XL 4x4',
         slug: 'ranger-2.0-sit-supercab-xl-4x4',
+        featureImageUrl: 'https://www.eagleford.co.za/252888_image.webp',
+        featureImageAlt:
+          'Ford Ranger 2.0 SiT SuperCab XL 4x4 — Ranger Single Cab model variant at Eagle Ford South Africa',
         price: 675500,
         highlights: [
           'Digital Instrument Cluster with Configurable Display: 8″',
@@ -684,32 +1094,72 @@ const VEHICLE_DATA: VehicleDef[] = [
       'The new 2026 Ford Everest combines rugged capability with modern refinement, featuring a bold front-end design with a distinctive grille, signature C-Clamp LED lighting, steel underbody protection and black exterior accents. Gloss black 18-inch alloy wheels enhance its commanding road presence, while the spacious cabin is equipped with a premium high-tech dashboard, a digital instrument cluster and a large 12-inch touchscreen infotainment system.',
     features: [
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Next%20Level%20Everest_img_1.webp',
+        featureImageAlt:
+          'Next Level Everest Distinctive Front Design — Ford feature and technology highlight',
         featureTitle: 'Distinctive Front Design',
         featureDescription:
           'The distinctive grille with black centre bar and the iconic C-Clamp LEDs creates a rugged look. Steel underbody protection and black fog lamp rings bring it all together.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Next%20Level%20Everest_img_2.webp',
+        featureImageAlt:
+          'Next Level Everest Built for Weekend Adventures — Ford feature and technology highlight',
         featureTitle: 'Built for Weekend Adventures',
         featureDescription:
           'The Ford Everest features selectable drive modes to help you tackle tough terrain and make you feel more in control.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Next%20Level%20Everest_img_3.webp',
+        featureImageAlt:
+          'Next Level Everest Eyes Where You Need Them — Ford feature and technology highlight',
         featureTitle: 'Eyes Where You Need Them',
         featureDescription:
           'With Pro-Trailer Backup Assist and 360-Degree Camera, you can reverse your trailer without the pressure.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Next%20Level%20Everest_img_4.webp',
+        featureImageAlt:
+          'Next Level Everest Flagship Interior — Ford feature and technology highlight',
         featureTitle: 'Flagship Interior',
         featureDescription:
           'The elevated luxury interior features driver & passenger heated & ventilated leather accented seats with driver 10-way power and memory, bespoke inserts, quilt design and signature Platinum badging. A Panoramic Roof adds to the spacious feel.',
       },
     ],
     colours: [],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Next-Level-Everest/./images/banner.webp',
+    heroImageAlt: 'Ford Next Level Everest SUV adventure hero banner — Eagle Ford',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Next-Level-Everest/./images/hero.webp',
+    featureImageAlt: 'Ford Next Level Everest model overview — new Ford SUVs at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Everest/./images/gallery/img_0.webp',
+        imageAlt: 'Next Level Everest gallery photo 1 — exterior and interior views',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Everest/./images/gallery/img_1.webp',
+        imageAlt: 'Next Level Everest gallery photo 2 — exterior and interior views',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Everest/./images/gallery/img_2.webp',
+        imageAlt: 'Next Level Everest gallery photo 3 — exterior and interior views',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Next-Level-Everest/./images/gallery/img_3.webp',
+        imageAlt: 'Next Level Everest gallery photo 4 — exterior and interior views',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Next-Level-Everest/./files/brochures/22-may-2026-everest-brochure.pdf',
+    brochureAlt: 'Ford Next Level Everest brochure PDF download — Eagle Ford South Africa',
     pageUrl: 'https://www.eagleford.co.za/new/next-level-everest/',
     variants: [
       {
         name: '2.0 SiT Active 4x2 10AT',
         slug: '2.0-sit-active-4x2-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/253070_image.webp',
+        featureImageAlt:
+          'Ford 2.0 SiT Active 4x2 10 AT — Next Level Everest model variant at Eagle Ford South Africa',
         price: 825000,
         highlights: [
           '10-speed automatic',
@@ -728,6 +1178,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: '2.0 SiT Active 4x4 10AT',
         slug: '2.0-sit-active-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/253089_image.webp',
+        featureImageAlt:
+          'Ford 2.0 SiT Active 4x4 10 AT — Next Level Everest model variant at Eagle Ford South Africa',
         price: 875000,
         highlights: [
           '10-speed automatic',
@@ -744,6 +1197,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: '3.0 V6 Sport 4x4 10AT',
         slug: '3.0-v6-sport-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/253090_image.webp',
+        featureImageAlt:
+          'Ford 3.0 V6 Sport 4x4 10 AT — Next Level Everest model variant at Eagle Ford South Africa',
         price: 1149000,
         highlights: [
           '10-speed automatic',
@@ -760,6 +1216,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: '3.0 V6 Wildtrak 4x4 10AT',
         slug: '3.0-v6-wildtrak-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/253091_image.webp',
+        featureImageAlt:
+          'Ford 3.0 V6 Wildtrak 4x4 10 AT — Next Level Everest model variant at Eagle Ford South Africa',
         price: 1244000,
         highlights: [
           '10-speed automatic',
@@ -777,6 +1236,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: '3.0 V6 Platinum 4x4 10AT',
         slug: '3.0-v6-platinum-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/253092_image.webp',
+        featureImageAlt:
+          'Ford 3.0 V6 Platinum 4x4 10 AT — Next Level Everest model variant at Eagle Ford South Africa',
         price: 1340000,
         highlights: [
           '10-speed automatic',
@@ -857,27 +1319,88 @@ const VEHICLE_DATA: VehicleDef[] = [
       'Command looks everywhere you go with a bold new grille design and sharp, illuminating LED headlamps giving Territory an unmistakable character on any road.',
     features: [
       {
+        featureImageUrl: 'https://www.eagleford.co.za/New%20Level%20Territory_img_1.webp',
+        featureImageAlt:
+          'New Level Territory Striking Exterior and Cutting-Edge Features — Ford feature and technology highlight',
         featureTitle: 'Striking Exterior and Cutting-Edge Features',
         featureDescription:
           'The dynamic Ford Territory catches your eye instantly with its imposing exterior, sleek interior, available 19-inch alloy wheels, full LED headlamps and tail lamps, and LED daytime running lights.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/New%20Level%20Territory_img_3.webp',
+        featureImageAlt:
+          'New Level Territory More Space, Advanced Tech and Safety — Ford feature and technology highlight',
         featureTitle: 'More Space, Advanced Tech and Safety',
         featureDescription:
           'Next-level Technology including 12″ Digital touchscreen, 12.3″ Digital cluster, Arkamys 3D audio system and Apple CarPlay & Android Auto.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/New%20Level%20Territory_img_2.webp',
+        featureImageAlt:
+          'New Level Territory Spacious Interior and Premium Design — Ford feature and technology highlight',
         featureTitle: 'Spacious Interior and Premium Design',
         featureDescription:
           "Designed with your comfort in mind, Territory's interior gives you ample legroom and cargo space.",
       },
     ],
     colours: [],
+    heroImageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/banner.webp',
+    heroImageAlt: 'Ford New Level Territory family SUV hero banner — Eagle Ford',
+    featureImageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/hero.webp',
+    featureImageAlt: 'Ford New Level Territory model overview — Ford SUVs at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/gallery/img_0.webp',
+        imageAlt: 'Ford Territory Gallery 1',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/gallery/img_1.webp',
+        imageAlt: 'Ford Territory Gallery 2',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/gallery/img_2.webp',
+        imageAlt: 'Ford Territory Gallery 3',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/gallery/img_3.webp',
+        imageAlt: 'Ford Territory Gallery 5',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/gallery/img_4.webp',
+        imageAlt: 'Ford Territory Gallery 6',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/gallery/img_5.webp',
+        imageAlt: 'Ford Territory Gallery 7',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/gallery/img_6.webp',
+        imageAlt: 'Ford Territory Gallery 8',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/gallery/img_7.webp',
+        imageAlt: 'Ford Territory Gallery 9',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/gallery/img_8.webp',
+        imageAlt: 'Ford Territory Gallery 11',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/gallery/img_9.webp',
+        imageAlt: 'Ford Territory Gallery 10',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/New-Level-Territory/./files/brochures/20260410-territory-brochure.pdf',
+    brochureAlt: 'Ford New Level Territory brochure PDF download — Eagle Ford South Africa',
     pageUrl: 'https://www.eagleford.co.za/new/new-level-territory/',
     variants: [
       {
         name: 'Territory 1.8T Ambiente',
         slug: 'territory-1.8t-ambiente',
+        featureImageUrl: 'https://www.eagleford.co.za/252953_image.webp',
+        featureImageAlt:
+          'Ford Territory 1.8T Ambiente — New Level Territory model variant at Eagle Ford South Africa',
         price: 489900,
         highlights: [
           '12″ Colour Touchscreen',
@@ -895,6 +1418,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: 'Territory 1.8T Trend',
         slug: 'territory-1.8t-trend',
+        featureImageUrl: 'https://www.eagleford.co.za/252954_image.webp',
+        featureImageAlt:
+          'Ford Territory 1.8T Trend — New Level Territory model variant at Eagle Ford South Africa',
         price: 539900,
         highlights: [
           '12″ Colour Touchscreen',
@@ -913,6 +1439,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: '1.8T Titanium',
         slug: '1.8t-titanium',
+        featureImageUrl: 'https://www.eagleford.co.za/252955_image.webp',
+        featureImageAlt:
+          'Ford 1.8T Titanium — New Level Territory model variant at Eagle Ford South Africa',
         price: 599900,
         highlights: [
           '12″ Colour Touchscreen',
@@ -993,42 +1522,156 @@ const VEHICLE_DATA: VehicleDef[] = [
       'Stay ahead of the pack. Choose iconic power with an elegant style. Mustang GT 5.0L V8 Engine. Fastback Bodystyle. Top Speed 250 km/h. 7th Generation. Iconic legacy.',
     features: [
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Mustang%20GT_img_1.webp',
+        featureImageAlt: 'Mustang GT Flexible Drive Modes — Ford feature and technology highlight',
         featureTitle: 'Flexible Drive Modes',
         featureDescription:
           'Get familiar with fearlessness and move better on various terrains with Normal, Sport, Track, Drag Strip, Slippery or Custom drive modes.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Mustang%20GT_img_2.webp',
+        featureImageAlt:
+          'Mustang GT Pulse-Raising 5.0L V8 Engine — Ford feature and technology highlight',
         featureTitle: 'Pulse-Raising 5.0L V8 Engine',
         featureDescription:
           'The 2024 Mustang GT with the Gen-4 5.0L Coyote V8 engine generates a track-ready 328kW of power and 540Nm of torque.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Mustang%20GT_img_3.webp',
+        featureImageAlt:
+          'Mustang GT Styled for Performance — Ford feature and technology highlight',
         featureTitle: 'Styled for Performance',
         featureDescription:
           "Every 2024 Mustang GT Model comes with a distinctive, raised wedge decklid spoiler that's painted to match the selected body colour.",
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Mustang%20GT_img_4.webp',
+        featureImageAlt:
+          'Mustang GT Intelligent and Good Looking — Ford feature and technology highlight',
         featureTitle: 'Intelligent and Good Looking',
         featureDescription:
           'An iconic drive is always at your fingertips. The Mustang GT is here with Intelligent Access through its Push-button Start function.',
       },
     ],
     colours: [
-      { colourName: 'Race Red' },
-      { colourName: 'Adriatic Blue' },
-      { colourName: 'Orange Fury' },
-      { colourName: 'Iconic Silver' },
-      { colourName: 'Carbonized Gray' },
-      { colourName: 'Vapor Blue' },
-      { colourName: 'Molten Magenta' },
-      { colourName: 'Oxford White' },
-      { colourName: 'Absolute Black' },
+      {
+        colourName: 'Race Red',
+        colourImageAlt: 'Mustang GT exterior in Race Red paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/e96c8de2-92ec-4a05-940a-611012f6da14_image-700x400.webp',
+      },
+      {
+        colourName: 'Adriatic Blue',
+        colourImageAlt: 'Mustang GT exterior in Adriatic Blue paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/cedf4b06-9706-42e0-8160-c6f7747b4644_image-700x400-1-.webp',
+      },
+      {
+        colourName: 'Orange Fury',
+        colourImageAlt: 'Mustang GT exterior in Orange Fury paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/66d6c52a-fee1-4888-8934-18f2c10cb243_image-700x400-2-.webp',
+      },
+      {
+        colourName: 'Iconic Silver',
+        colourImageAlt: 'Mustang GT exterior in Iconic Silver paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/4d36cbc7-b8a7-4a84-aa3c-b5a0a96721fa_image-700x400-3-.webp',
+      },
+      {
+        colourName: 'Carbonized Gray',
+        colourImageAlt: 'Mustang GT exterior in Carbonized Gray paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/f01f2692-22cd-49f5-b141-7d4322e3df86_image-700x400-4-.webp',
+      },
+      {
+        colourName: 'Vapor Blue',
+        colourImageAlt: 'Mustang GT exterior in Vapor Blue paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/b5bbfbe7-463c-4483-896e-0f7eb72e1368_image-700x400-5-.webp',
+      },
+      {
+        colourName: 'Molten Magenta',
+        colourImageAlt: 'Mustang GT exterior in Molten Magenta paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/b384d21e-147d-4b6d-a0b2-95027fad205d_image-700x400-6-.webp',
+      },
+      {
+        colourName: 'Oxford White',
+        colourImageAlt: 'Mustang GT exterior in Oxford White paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/ffdd41e7-de44-496d-9f72-2c63275c3231_image-700x400-7-.webp',
+      },
+      {
+        colourName: 'Absolute Black',
+        colourImageAlt: 'Mustang GT exterior in Absolute Black paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/c2727cd6-91bc-4450-a956-d1945bef3f05_image-700x400-8-.webp',
+      },
     ],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Mustang-GT/./images/banner.webp',
+    heroImageAlt: 'Ford Mustang GT 5.0L V8 Fastback performance hero banner — Eagle Ford',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Mustang-GT/./images/hero.webp',
+    featureImageAlt: 'Ford Mustang GT model overview — Ford performance cars at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-GT/./images/gallery/img_0.webp',
+        imageAlt: 'Red Ford Mustang GT Front 3/4 action shot',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-GT/./images/gallery/img_1.webp',
+        imageAlt:
+          'Red Ford Mustang GT rear action shot driving through on an open mountain pass road',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-GT/./images/gallery/img_2.webp',
+        imageAlt:
+          'Red Ford Mustang GT Front 3/4 action shot driving through on an open mountain pass road',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-GT/./images/gallery/img_3.webp',
+        imageAlt:
+          'Ford Mustang GT Interior shot pov is from the backset looking towards the whole front dashboard showcasing modern interior',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-GT/./images/gallery/img_4.webp',
+        imageAlt: 'Ford Mustang GT wireless phone on charger close up shot',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-GT/./images/gallery/img_5.webp',
+        imageAlt:
+          'Ford Mustang GT steering wheel close up shot pov showcasing modern leather steering wheel with multifunctionaility media buttons',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-GT/./images/gallery/img_6.webp',
+        imageAlt:
+          'Ford Mustang GT close up shot from the passenger door looking towards the driver side area',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-GT/./images/gallery/img_7.webp',
+        imageAlt:
+          'Ford Mustang GT close up shot from the passenger door looking into the backseat area',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-GT/./images/gallery/img_8.webp',
+        imageAlt: 'Red Ford Mustang GT Front close up shot with lights on in the evening',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-GT/./images/gallery/img_9.webp',
+        imageAlt: 'Red Ford Mustang GT rear close up shot with lights on in the evening',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Mustang-GT/./files/brochures/mustang-reader-proof.pdf',
+    brochureAlt: 'Ford Mustang GT brochure PDF download — Eagle Ford South Africa',
     pageUrl: 'https://www.eagleford.co.za/new/mustang-gt/',
     variants: [
       {
         name: 'MUSTANG 5.0L V8 GT FASTBACK 10AT',
         slug: 'mustang-5.0l-v8-gt-fastback-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/120158_image.webp',
+        featureImageAlt:
+          'Ford MUSTANG 5.0L V8 GT FASTBACK 10AT — Mustang GT model variant at Eagle Ford South Africa',
         price: 1350000,
         highlights: [
           'Automatic',
@@ -1102,37 +1745,124 @@ const VEHICLE_DATA: VehicleDef[] = [
       'Street legal. Track ready. Experience the thrill of the New Mustang Dark Horse as it roars to life, drowning out all distractions with its exhilarating athleticism.',
     features: [
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Mustang%20Dark%20Horse_img_1.webp',
+        featureImageAlt:
+          'Mustang Dark Horse A Track-Ready Powerhouse — Ford feature and technology highlight',
         featureTitle: 'A Track-Ready Powerhouse',
         featureDescription:
           'Kick out 334kW of power and 540Nm of torque, and leave behind the pack in the Mustang Dark Horse.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Mustang%20Dark%20Horse_img_2.webp',
+        featureImageAlt: 'Mustang Dark Horse Iconic Looks — Ford feature and technology highlight',
         featureTitle: 'Iconic Looks',
         featureDescription:
           'Signature Dark Horse Lettering and badging throughout the Dark Horse make for an iconic aesthetic.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Mustang%20Dark%20Horse_img_3.webp',
+        featureImageAlt:
+          'Mustang Dark Horse Precision Shifting at Every Turn — Ford feature and technology highlight',
         featureTitle: 'Precision Shifting at Every Turn',
         featureDescription:
           'Take the streets by surprise and let the Mustang Dark Horse do the talking with its MagneRide® Damping System and 6 Selectable Drive Modes.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Mustang%20Dark%20Horse_img_4.webp',
+        featureImageAlt:
+          'Mustang Dark Horse Feel The Flow of Pure Power — Ford feature and technology highlight',
         featureTitle: 'Feel The Flow of Pure Power',
         featureDescription:
           'Harness precision and unbridled power in the Mustang Dark Horse. Featuring Active Valve Performance Exhaust System and Remote Rev.',
       },
     ],
     colours: [
-      { colourName: 'Race Red' },
-      { colourName: 'Carbonized Gray' },
-      { colourName: 'Blue Ember' },
-      { colourName: 'Oxford White' },
+      {
+        colourName: 'Race Red',
+        colourImageAlt: 'Mustang Dark Horse exterior in Race Red paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/99bff3b9-68a1-49f8-9738-9136f3a017be_image-700x400--2-.webp',
+      },
+      {
+        colourName: 'Carbonized Gray',
+        colourImageAlt: 'Mustang Dark Horse exterior in Carbonized Gray paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/2940f1a4-f76b-44a0-9a9a-a29900de91e0_image-700x400.webp',
+      },
+      {
+        colourName: 'Blue Ember',
+        colourImageAlt: 'Mustang Dark Horse exterior in Blue Ember paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/0e5c6cce-0bf1-46a5-bb86-ed501015cdbd_image-700x400--1-.webp',
+      },
+      {
+        colourName: 'Oxford White',
+        colourImageAlt: 'Mustang Dark Horse exterior in Oxford White paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/aa957a98-80e0-49ce-862d-7442de26ec0b_image-700x400.webp',
+      },
     ],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./images/banner.webp',
+    heroImageAlt: 'Ford Mustang Dark Horse track-ready performance hero banner — Eagle Ford',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./images/hero.webp',
+    featureImageAlt: 'Ford Mustang Dark Horse model overview — Ford performance at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./images/gallery/img_0.webp',
+        imageAlt: 'Mustang Dark Horse gallery photo 1 — exterior and interior views',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./images/gallery/img_1.webp',
+        imageAlt: 'Mustang Dark Horse gallery photo 2 — exterior and interior views',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./images/gallery/img_2.webp',
+        imageAlt: 'Mustang Dark Horse gallery photo 3 — exterior and interior views',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./images/gallery/img_3.webp',
+        imageAlt: 'Mustang Dark Horse gallery photo 4 — exterior and interior views',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./images/gallery/img_4.webp',
+        imageAlt: 'Mustang Dark Horse gallery photo 5 — exterior and interior views',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./images/gallery/img_5.webp',
+        imageAlt: 'Mustang Dark Horse gallery photo 6 — exterior and interior views',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./images/gallery/img_6.webp',
+        imageAlt: 'Mustang Dark Horse gallery photo 7 — exterior and interior views',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./images/gallery/img_7.webp',
+        imageAlt: 'Mustang Dark Horse gallery photo 8 — exterior and interior views',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./images/gallery/img_8.webp',
+        imageAlt: 'Mustang Dark Horse gallery photo 9 — exterior and interior views',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./images/gallery/img_9.webp',
+        imageAlt: 'Mustang Dark Horse gallery photo 10 — exterior and interior views',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./images/gallery/img_10.webp',
+        imageAlt: 'Mustang Dark Horse gallery photo 11 — exterior and interior views',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Mustang-Dark-Horse/./files/brochures/mustang-reader-proof.pdf',
+    brochureAlt: 'Ford Mustang Dark Horse brochure PDF download — Eagle Ford South Africa',
     pageUrl: 'https://www.eagleford.co.za/new/mustang-dark-horse/',
     variants: [
       {
         name: 'MUSTANG 5.0L V8 DARK HORSE 10AT',
         slug: 'mustang-5.0l-v8-dark-horse-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/159410_image.webp',
+        featureImageAlt:
+          'Ford MUSTANG 5.0L V8 DARK HORSE 10AT — Mustang Dark Horse model variant at Eagle Ford South Africa',
         price: 1545000,
         highlights: [
           'Automatic',
@@ -1210,40 +1940,107 @@ const VEHICLE_DATA: VehicleDef[] = [
       'Ford Tourneo Custom. Feels like home. With an elevated look and increased passenger comfort, the Tourneo Custom is for family, play or business.',
     features: [
       {
+        featureImageUrl: 'https://www.eagleford.co.za/New%20Tourneo%20Custom_img_1.webp',
+        featureImageAlt:
+          'New Tourneo Custom Power and Torque Meet Efficiency — Ford feature and technology highlight',
         featureTitle: 'Power and Torque Meet Efficiency',
         featureDescription:
           '2.0L Ford EcoBlue Diesel Engine. 7.4l/180 KM outstanding fuel efficiency. 8-Speed Automatic transmission.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/New%20Tourneo%20Custom_img_2.webp',
+        featureImageAlt:
+          'New Tourneo Custom Space for Any Tour — Ford feature and technology highlight',
         featureTitle: 'Space for Any Tour',
         featureDescription:
           'With a modern platform, the Tourneo Custom 8-seater provides a range of seating configurations, making it ideal for transporting passengers or equipment.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/New%20Tourneo%20Custom_img_3.webp',
+        featureImageAlt:
+          'New Tourneo Custom A Mode for Your Every Muse — Ford feature and technology highlight',
         featureTitle: 'A Mode for Your Every Muse',
         featureDescription:
           'Enjoy a choice of Drive Modes: Normal, Eco, Sport, Slippery, and Trail. The system adjusts various settings including throttle response.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/New%20Tourneo%20Custom_img_4.webp',
+        featureImageAlt:
+          'New Tourneo Custom Comfort and Tech — Ford feature and technology highlight',
         featureTitle: 'Comfort and Tech',
         featureDescription:
           "13\u2033 Touchscreen display. 5G Embedded modem. 4-Way Adjustable driver's seat with lumbar support.",
       },
     ],
     colours: [
-      { colourName: 'Magnetic' },
-      { colourName: 'Chrome Blue' },
-      { colourName: 'Agate Black' },
-      { colourName: 'Moondust Silver' },
-      { colourName: 'Blazer Blue' },
-      { colourName: 'Race Red' },
-      { colourName: 'Frozen White' },
+      {
+        colourName: 'Magnetic',
+        colourImageAlt: 'New Tourneo Custom exterior in Magnetic paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/34fce414-d503-404b-8e3c-007f1c930d39default.webp',
+      },
+      {
+        colourName: 'Chrome Blue',
+        colourImageAlt: 'New Tourneo Custom exterior in Chrome Blue paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/3cf5ff4c-af7b-4054-aaf7-a06b5c28355edefault.webp',
+      },
+      {
+        colourName: 'Agate Black',
+        colourImageAlt: 'New Tourneo Custom exterior in Agate Black paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/0cdb5a9c-e3df-4ed6-a01e-e89cb8fb0be5default.webp',
+      },
+      {
+        colourName: 'Moondust Silver',
+        colourImageAlt: 'New Tourneo Custom exterior in Moondust Silver paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/c03c239f-18e6-44cd-981d-4bb8c4e4b46fdefault.webp',
+      },
+      {
+        colourName: 'Blazer Blue',
+        colourImageAlt: 'New Tourneo Custom exterior in Blazer Blue paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/74b06af3-93f1-4075-a3fa-4e9313b51667default.webp',
+      },
+      {
+        colourName: 'Race Red',
+        colourImageAlt: 'New Tourneo Custom exterior in Race Red paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/c46911e6-6835-44e8-9d08-83d603c429f1_image-700x400--2-.webp',
+      },
+      {
+        colourName: 'Frozen White',
+        colourImageAlt: 'New Tourneo Custom exterior in Frozen White paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/4ed0abdf-86cd-44d7-9b58-2f0d04f81bc6_image-700x400.webp',
+      },
     ],
+    heroImageUrl: 'https://www.eagleford.co.za/new/New-Tourneo-Custom/./images/banner.webp',
+    heroImageAlt: 'Ford Tourneo Custom 8-seater people mover hero banner — Eagle Ford',
+    featureImageUrl: 'https://www.eagleford.co.za/new/New-Tourneo-Custom/./images/hero.webp',
+    featureImageAlt: 'Ford Tourneo Custom model overview — Ford vans and buses at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/New-Tourneo-Custom/./images/gallery/img_0.webp',
+        imageAlt: 'Ford Tourneo Custom',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/New-Tourneo-Custom/./images/gallery/img_1.webp',
+        imageAlt: 'Ford Tourneo Custom — photo 2',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/New-Tourneo-Custom/./files/brochures/14-may-2026-tourneo-bus.pdf',
+    brochureAlt: 'Ford New Tourneo Custom brochure PDF download — Eagle Ford South Africa',
     pageUrl: 'https://www.eagleford.co.za/new/new-tourneo-custom/',
     variants: [
       {
         name: 'Tourneo Trend',
         slug: 'tourneo-trend',
+        featureImageUrl: 'https://www.eagleford.co.za/112033_image.webp',
+        featureImageAlt:
+          'Ford Tourneo Trend — New Tourneo Custom model variant at Eagle Ford South Africa',
         price: 1117500,
         highlights: [
           'Automatic',
@@ -1257,6 +2054,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: 'Tourneo Sport',
         slug: 'tourneo-sport',
+        featureImageUrl: 'https://www.eagleford.co.za/146995_image.webp',
+        featureImageAlt:
+          'Ford Tourneo Sport — New Tourneo Custom model variant at Eagle Ford South Africa',
         price: 1232000,
         highlights: [
           'Automatic',
@@ -1270,6 +2070,9 @@ const VEHICLE_DATA: VehicleDef[] = [
       {
         name: 'Tourneo Titanium X',
         slug: 'tourneo-titanium-x',
+        featureImageUrl: 'https://www.eagleford.co.za/146996_image.webp',
+        featureImageAlt:
+          'Ford Tourneo Titanium X — New Tourneo Custom model variant at Eagle Ford South Africa',
         price: 1278500,
         highlights: [
           'Automatic',
@@ -1342,30 +2145,64 @@ const VEHICLE_DATA: VehicleDef[] = [
     description: 'The Ford Transit Custom, Always Delivers. Built to get the job done.',
     features: [
       {
+        featureImageUrl: 'https://www.eagleford.co.za/New%20Transit%20Custom_img_1.webp',
+        featureImageAlt:
+          'New Transit Custom Load Capacity and Payload — Ford feature and technology highlight',
         featureTitle: 'Load Capacity and Payload',
         featureDescription: '5.8m³ of load area space. Up to 1,269kg max gross payload.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/New%20Transit%20Custom_img_2.webp',
+        featureImageAlt:
+          'New Transit Custom Selectable Drive Modes — Ford feature and technology highlight',
         featureTitle: 'Selectable Drive Modes',
         featureDescription:
           'The Transit Custom Always Delivers, with up to 5 Selectable Drive Modes to choose from that enables you to take your business almost anywhere.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/New%20Transit%20Custom_img_3.webp',
+        featureImageAlt:
+          'New Transit Custom 2.0L Ford EcoBlue Engine — Ford feature and technology highlight',
         featureTitle: '2.0L Ford EcoBlue Engine',
         featureDescription: '100–125kW. 360–390Nm. Outstanding fuel efficiency.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/New%20Transit%20Custom_img_5.webp',
+        featureImageAlt: 'New Transit Custom Tech-Savvy — Ford feature and technology highlight',
         featureTitle: 'Tech-Savvy',
         featureDescription:
           '13″ Touchscreen Display with SYNC® 4. 12″ Digital Instrument Cluster. 8″ Configurable Center Display. Wireless Charger.',
       },
     ],
-    colours: [{ colourName: 'Frozen White' }],
+    colours: [
+      {
+        colourName: 'Frozen White',
+        colourImageAlt: 'New Transit Custom exterior in Frozen White paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/cdffda4d-5e76-4661-a896-ae68c683d00b_Ford%20Transit%20Custom%20Panel%20Van%20Vehicle%20Colour.webp',
+      },
+    ],
+    heroImageUrl: 'https://www.eagleford.co.za/new/New-Transit-Custom/./images/banner.webp',
+    heroImageAlt: 'Ford Transit Custom commercial panel van hero banner — Eagle Ford',
+    featureImageUrl: 'https://www.eagleford.co.za/new/New-Transit-Custom/./images/hero.webp',
+    featureImageAlt: 'Ford Transit Custom model overview — Ford commercial vans at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/New-Transit-Custom/./images/gallery/img_0.webp',
+        imageAlt: 'New Transit Custom gallery photo 1 — exterior and interior views',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/New-Transit-Custom/./files/brochures/2-jun-2026-transit-brochure.pdf',
+    brochureAlt: 'Ford New Transit Custom brochure PDF download — Eagle Ford South Africa',
     pageUrl: 'https://www.eagleford.co.za/new/new-transit-custom/',
     variants: [
       {
         name: 'TRANSIT CUSTOM 2.0L LWB VAN BASE 6MT',
         slug: 'transit-custom-2.0l-lwb-van-base-6mt',
+        featureImageUrl: 'https://www.eagleford.co.za/112034_image.webp',
+        featureImageAlt:
+          'Ford TRANSIT CUSTOM 2.0L LWB VAN BASE 6MT — New Transit Custom model variant at Eagle Ford South Africa',
         price: 770000,
         highlights: [
           'Average Range: 671km',
@@ -1439,30 +2276,68 @@ const VEHICLE_DATA: VehicleDef[] = [
       'The Ford Transit Van. Built to deliver on your needs. Big space. Tough build. Ready to work.',
     features: [
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Transit%20Van_img_1.webp',
+        featureImageAlt:
+          'Transit Van Load Capacity and Payload — Ford feature and technology highlight',
         featureTitle: 'Load Capacity and Payload',
         featureDescription: '13.5m³ of load area space. Up to 2,270kg max gross payload.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Transit%20Van_img_2.webp',
+        featureImageAlt:
+          'Transit Van Selectable Drive Modes — Ford feature and technology highlight',
         featureTitle: 'Selectable Drive Modes',
         featureDescription:
           'The Transit Van has up to 4 Selectable Drive Modes to choose from, enabling you to take your business almost anywhere.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Transit%20Van_img_3.webp',
+        featureImageAlt:
+          'Transit Van 2.0L Ford EcoBlue Engine Diesel — Ford feature and technology highlight',
         featureTitle: '2.0L Ford EcoBlue Engine Diesel',
         featureDescription: '100–121kW. 360–390Nm.',
       },
       {
+        featureImageUrl: 'https://www.eagleford.co.za/Transit%20Van_img_4.webp',
+        featureImageAlt: 'Transit Van Security at its Core — Ford feature and technology highlight',
         featureTitle: 'Security at its Core',
         featureDescription:
           'Ford knows your Transit is your livelihood. Multiple security systems alert you if your vehicle is being tampered with or moved from where it should be.',
       },
     ],
-    colours: [{ colourName: 'Frozen White' }],
+    colours: [
+      {
+        colourName: 'Frozen White',
+        colourImageAlt: 'Transit Van exterior in Frozen White paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/269be3f2-e91b-497d-b5c9-d1b65293ebf5default.webp',
+      },
+    ],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Transit-Van/./images/banner.webp',
+    heroImageAlt: 'Ford Transit Van large capacity commercial van hero banner — Eagle Ford',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Transit-Van/./images/hero.webp',
+    featureImageAlt: 'Ford Transit Van model overview — Ford commercial vehicles at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Transit-Van/./images/gallery/img_0.webp',
+        imageAlt: 'Transit',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Transit-Van/./images/gallery/img_1.webp',
+        imageAlt: 'Transit — photo 2',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Transit-Van/./files/brochures/2-jun-2026-transit-brochure.pdf',
+    brochureAlt: 'Ford Transit Van brochure PDF download — Eagle Ford South Africa',
     pageUrl: 'https://www.eagleford.co.za/new/transit-van/',
     variants: [
       {
         name: '2.2 TDCi ELWB Ambiente 6MT',
         slug: '2.2-tdci-elwb-ambiente-6mt',
+        featureImageUrl: 'https://www.eagleford.co.za/158671_image.webp',
+        featureImageAlt:
+          'Ford 2.2 TDCi ELWB Ambiente 6MT — Transit Van model variant at Eagle Ford South Africa',
         price: 1011500,
         highlights: ['Diesel', 'Fuel Tank size: 80L', 'Manual', 'Number of seats: 3'],
       },
@@ -1605,7 +2480,29 @@ export async function POST(): Promise<Response> {
         payloadReq,
         veh.name,
         veh.slug,
+        veh.heroImageUrl,
+        veh.heroImageAlt,
+        veh.featureImageUrl,
+        veh.featureImageAlt,
+        veh.gallery,
         veh.colours,
+        result,
+      )
+      const features = await buildVehicleFeatures(
+        payload,
+        payloadReq,
+        veh.slug,
+        veh.name,
+        veh.features,
+        result,
+      )
+      const brochureMediaId = await uploadVehicleBrochure(
+        payload,
+        payloadReq,
+        veh.slug,
+        veh.name,
+        veh.brochureUrl,
+        veh.brochureAlt,
         result,
       )
 
@@ -1615,11 +2512,13 @@ export async function POST(): Promise<Response> {
 
         const updateData: {
           faqs: typeof veh.faqs
+          features: BuiltFeature[]
           heroImage?: string
           featureImage?: string
           gallery?: { image: string }[]
           colours?: BuiltColour[]
-        } = { faqs: veh.faqs }
+          brochure?: string
+        } = { faqs: veh.faqs, features }
 
         if (images.heroMediaId) updateData.heroImage = images.heroMediaId
         if (images.featureMediaId) updateData.featureImage = images.featureMediaId
@@ -1627,6 +2526,7 @@ export async function POST(): Promise<Response> {
           updateData.gallery = images.galleryIds.map((id) => ({ image: id }))
         }
         if (veh.colours.length > 0) updateData.colours = images.colours
+        if (brochureMediaId) updateData.brochure = brochureMediaId
 
         await payload.update({
           collection: 'vehicles',
@@ -1658,12 +2558,10 @@ export async function POST(): Promise<Response> {
           heroImage: images.heroMediaId,
           ...(images.featureMediaId ? { featureImage: images.featureMediaId } : {}),
           gallery: images.galleryIds.map((id) => ({ image: id })),
-          features: veh.features.map((f) => ({
-            featureTitle: f.featureTitle,
-            featureDescription: f.featureDescription,
-          })),
+          features,
           colours: images.colours,
           faqs: veh.faqs,
+          ...(brochureMediaId ? { brochure: brochureMediaId } : {}),
           startingPrice: veh.startingPrice,
           priceDisclaimer: 'Including Optional Service plan and excluding Packs & factory options',
           sortOrder: index + 1,
@@ -1698,21 +2596,34 @@ export async function POST(): Promise<Response> {
           req: payloadReq,
         })
 
-        const modelHeroImage = getModelHeroImage(veh.slug, variant.slug)
-        const heroMediaId = modelHeroImage
-          ? await uploadSeedImage(
+        const modelFeatureAlt =
+          variant.featureImageAlt ?? seoModelFeatureImageAlt(veh.name, variant.name)
+
+        let featureMediaId: string | null = null
+        if (variant.featureImageUrl) {
+          const remoteModelFeature = await fetchRemoteImage(variant.featureImageUrl)
+          if (remoteModelFeature) {
+            featureMediaId = await uploadSeedImage(
               payload,
               payloadReq,
-              modelHeroImage,
-              buildSeedMediaFilename(veh.slug, 'model', variant.slug),
-              `${variant.name} hero image`,
+              remoteModelFeature,
+              buildSeedMediaFilename(veh.slug, 'model-feature', variant.slug),
+              modelFeatureAlt,
               result,
             )
-          : (result.imagesMissing++, null)
+          } else {
+            result.imagesMissing++
+          }
+        } else {
+          result.imagesMissing++
+        }
+
+        const heroMediaId = featureMediaId
 
         const variantColours = await buildModelColours(
           payload,
           payloadReq,
+          veh.name,
           veh.slug,
           veh.colours,
           result,
@@ -1721,10 +2632,12 @@ export async function POST(): Promise<Response> {
         if (existing.totalDocs > 0) {
           const updateData: {
             heroImage?: string
+            featureImage?: string
             colours?: BuiltColour[]
           } = {}
 
           if (heroMediaId) updateData.heroImage = heroMediaId
+          if (featureMediaId) updateData.featureImage = featureMediaId
           if (veh.colours.length > 0) updateData.colours = variantColours
 
           await payload.update({
@@ -1752,6 +2665,7 @@ export async function POST(): Promise<Response> {
               price: variant.price,
               highlights: variant.highlights.map((h) => ({ highlight: h })),
               ...(heroMediaId ? { heroImage: heroMediaId } : {}),
+              ...(featureMediaId ? { featureImage: featureMediaId } : {}),
               colours: variantColours,
               sortOrder: modelIndex + 1,
               _status: 'published',
