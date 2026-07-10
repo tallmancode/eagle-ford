@@ -19,7 +19,7 @@ import {
 } from '@/lib/fields/navigation/resolveNavHref'
 import type { VehicleMegaMenuData } from '@/lib/data/vehicleMegaMenuTypes'
 import type { NavLinks } from '@/payload-types'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 
 type NavLink = NonNullable<NavLinks>[number]
 
@@ -30,29 +30,24 @@ const triggerClassName = (linkClassName?: string) =>
   )
 
 const megaMenuContentClassName =
-  '!fixed !left-0 !right-0 !w-screen !max-w-none !top-[var(--site-header-height,7.5rem)] border-0 border-t bg-background p-0 shadow-lg rounded-b-xl data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in-0 data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out-0'
+  'container !fixed !inset-x-0 !mx-auto !top-[var(--site-header-height,7.5rem)] border-0 border-t bg-background p-0 shadow-lg rounded-b-xl data-[motion^=from-]:animate-in data-[motion^=from-]:fade-in-0 data-[motion^=to-]:animate-out data-[motion^=to-]:fade-out-0'
 
 function renderFlyoutTrigger(item: NavLink, linkClassName?: string, ariaLabel?: string) {
   const parentHref = getDropdownParentHref(item)
 
   if (parentHref) {
     return (
-      <div className="flex items-center gap-0">
-        <Link
-          href={parentHref}
-          target={getNavLinkTarget(item)}
-          className={cn(linkClassName, 'px-4 py-2')}
-        >
+      <NavigationMenuTrigger
+        asChild
+        hideChevron
+        className={triggerClassName(linkClassName)}
+        aria-label={ariaLabel ?? `Open ${item.label} menu`}
+      >
+        <Link href={parentHref} target={getNavLinkTarget(item)}>
           {item.label}
+          <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
         </Link>
-        <NavigationMenuTrigger
-          hideChevron
-          className={cn(triggerClassName(linkClassName), 'px-1')}
-          aria-label={ariaLabel ?? `Open ${item.label} menu`}
-        >
-          <ChevronDown className="h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
-        </NavigationMenuTrigger>
-      </div>
+      </NavigationMenuTrigger>
     )
   }
 

@@ -179,33 +179,27 @@ function renderHeroFormFields(
 type FormActionsProps = {
   hiddenFieldNames?: Set<string>
   isMultiStep: boolean
-  isFirstStep: boolean
   isLastStep: boolean
   isLoading: boolean
   layout: FormBlockLayout
   checkboxFields: FormInputField[]
   formMethods: ReturnType<typeof useForm<FormData>>
   fieldIndexStart: number
-  backLabel: string
   nextLabel: string
   submitButtonLabel?: string | null
-  onBackStep: () => void
 }
 
 function FormActions({
   hiddenFieldNames,
   isMultiStep,
-  isFirstStep,
   isLastStep,
   isLoading,
   layout,
   checkboxFields,
   formMethods,
   fieldIndexStart,
-  backLabel,
   nextLabel,
   submitButtonLabel,
-  onBackStep,
 }: FormActionsProps) {
   const isHero = layout === 'hero'
   let fieldIndex = fieldIndexStart
@@ -228,18 +222,6 @@ function FormActions({
             })
             return node
           })}
-
-        {isMultiStep && !isFirstStep && (
-          <Button
-            type="button"
-            variant="outline"
-            disabled={isLoading}
-            onClick={onBackStep}
-            className="h-12 w-full text-base sm:w-auto"
-          >
-            {backLabel}
-          </Button>
-        )}
       </div>
 
       {!isMultiStep && !isHero && <div className="hidden sm:block" />}
@@ -442,7 +424,16 @@ export function FormBlockClient({
 
         {!hasSubmitted && currentStep && (
           <>
-            {showProgress && <FormStepProgress steps={steps} currentIndex={currentStepIndex} />}
+            {showProgress && (
+              <FormStepProgress
+                steps={steps}
+                currentIndex={currentStepIndex}
+                backLabel={backLabel}
+                isLoading={isLoading}
+                onBack={handleBackStep}
+                showBackButton={!isFirstStep}
+              />
+            )}
 
             {!showProgress && currentStep.title && isMultiStep && (
               <h3 className="mb-6 text-lg font-semibold text-foreground">{currentStep.title}</h3>
@@ -466,17 +457,14 @@ export function FormBlockClient({
               <FormActions
                 hiddenFieldNames={hiddenFieldNames}
                 isMultiStep={isMultiStep}
-                isFirstStep={isFirstStep}
                 isLastStep={isLastStep}
                 isLoading={isLoading}
                 layout={layout}
                 checkboxFields={heroPartition?.checkboxFields ?? []}
                 formMethods={formMethods}
                 fieldIndexStart={heroCheckboxFieldIndexStart}
-                backLabel={backLabel}
                 nextLabel={nextLabel}
                 submitButtonLabel={submitButtonLabel}
-                onBackStep={handleBackStep}
               />
             </form>
           </>
@@ -493,9 +481,6 @@ export function FormBlockClient({
           showProgress && !hasSubmitted ? 'max-w-4xl' : 'max-w-3xl',
         )}
       >
-        {/*<CardHeader className="pb-4">*/}
-        {/*  <CardTitle className="text-2xl text-primary">{form.title}</CardTitle>*/}
-        {/*</CardHeader>*/}
         <CardContent>
           {error && (
             <div
@@ -522,7 +507,16 @@ export function FormBlockClient({
 
           {!hasSubmitted && currentStep && (
             <>
-              {showProgress && <FormStepProgress steps={steps} currentIndex={currentStepIndex} />}
+              {showProgress && (
+                <FormStepProgress
+                  steps={steps}
+                  currentIndex={currentStepIndex}
+                  backLabel={backLabel}
+                  isLoading={isLoading}
+                  onBack={handleBackStep}
+                  showBackButton={!isFirstStep}
+                />
+              )}
 
               {!showProgress && currentStep.title && isMultiStep && (
                 <h3 className="mb-6 text-lg font-semibold text-foreground">{currentStep.title}</h3>
@@ -548,17 +542,14 @@ export function FormBlockClient({
                 <FormActions
                   hiddenFieldNames={hiddenFieldNames}
                   isMultiStep={isMultiStep}
-                  isFirstStep={isFirstStep}
                   isLastStep={isLastStep}
                   isLoading={isLoading}
                   layout={layout}
                   checkboxFields={[]}
                   formMethods={formMethods}
                   fieldIndexStart={0}
-                  backLabel={backLabel}
                   nextLabel={nextLabel}
                   submitButtonLabel={submitButtonLabel}
-                  onBackStep={handleBackStep}
                 />
               </form>
             </>

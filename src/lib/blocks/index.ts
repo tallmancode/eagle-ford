@@ -14,6 +14,7 @@ import { MapBlock } from '@/lib/blocks/map-block/MapBlock'
 import { TeamGridBlock } from '@/lib/blocks/team-grid-block/TeamGridBlock'
 import { ImageBlock } from '@/lib/blocks/image-block/ImageBlock'
 import { CtaCardsBlock } from '@/lib/blocks/cta-cards-block/CtaCardsBlock'
+import { ImageCardsBlock } from '@/lib/blocks/image-cards-block/ImageCardsBlock'
 import { StatsBlock } from '@/lib/blocks/stats-block/StatsBlock'
 import { HoursTabsBlock } from '@/lib/blocks/hours-tabs-block/HoursTabsBlock'
 import { FaqBlock } from '@/lib/blocks/faq-block/FaqBlock'
@@ -25,8 +26,20 @@ import { FinanceCalculatorBlock } from '@/lib/blocks/finance-calculator-block/Fi
 import { BackButtonBlock } from '@/lib/blocks/back-button-block/BackButtonBlock'
 import { BenefitsGridBlock } from '@/lib/blocks/benefits-grid-block/BenefitsGridBlock'
 import { SpecialsArchiveBlock } from '@/lib/blocks/specials-archive-block/SpecialsArchiveBlock'
+import { StockArchiveBlock } from '@/lib/blocks/stock-archive-block/StockArchiveBlock'
 import { PartnersBlock } from '@/lib/blocks/partners-block/PartnersBlock'
 import { VehicleTabsBlock } from '@/lib/blocks/vehicle-tabs-block/VehicleTabsBlock'
+import { VehicleCatalogBlock } from '@/lib/blocks/vehicle-catalog-block/VehicleCatalogBlock'
+import { VehicleHeroBlock } from '@/lib/blocks/vehicle-hero-block/VehicleHeroBlock'
+import { VehicleModelsBlock } from '@/lib/blocks/vehicle-models-block/VehicleModelsBlock'
+import { VehicleFaqBlock } from '@/lib/blocks/vehicle-faq-block/VehicleFaqBlock'
+import { VehicleColorsBlock } from '@/lib/blocks/vehicle-colors-block/VehicleColorsBlock'
+import { VehicleGalleryBlock } from '@/lib/blocks/vehicle-gallery-block/VehicleGalleryBlock'
+import { VehicleFeaturesBlock } from '@/lib/blocks/vehicle-features-block/VehicleFeaturesBlock'
+import { VehicleModelHeroBlock } from '@/lib/blocks/vehicle-model-hero-block/VehicleModelHeroBlock'
+import { VehicleModelHighlightsBlock } from '@/lib/blocks/vehicle-model-highlights-block/VehicleModelHighlightsBlock'
+import { VehicleModelColorsBlock } from '@/lib/blocks/vehicle-model-colors-block/VehicleModelColorsBlock'
+import { VehicleModelSiblingsBlock } from '@/lib/blocks/vehicle-model-siblings-block/VehicleModelSiblingsBlock'
 
 const Blocks = [
   SectionBlock,
@@ -45,6 +58,7 @@ const Blocks = [
   TeamGridBlock,
   ImageBlock,
   CtaCardsBlock,
+  ImageCardsBlock,
   StatsBlock,
   HoursTabsBlock,
   FaqBlock,
@@ -56,8 +70,20 @@ const Blocks = [
   BackButtonBlock,
   BenefitsGridBlock,
   SpecialsArchiveBlock,
+  StockArchiveBlock,
   PartnersBlock,
   VehicleTabsBlock,
+  VehicleCatalogBlock,
+  VehicleHeroBlock,
+  VehicleModelsBlock,
+  VehicleFaqBlock,
+  VehicleColorsBlock,
+  VehicleGalleryBlock,
+  VehicleFeaturesBlock,
+  VehicleModelHeroBlock,
+  VehicleModelHighlightsBlock,
+  VehicleModelColorsBlock,
+  VehicleModelSiblingsBlock,
 ]
 
 export default Blocks

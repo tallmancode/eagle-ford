@@ -15,6 +15,7 @@ import type {
   TeamGrid,
   ImageBlock,
   CtaCards,
+  ImageCards,
   StatsBlock,
   HoursTabs,
   Faq,
@@ -26,9 +27,21 @@ import type {
   BackButton,
   BenefitsGrid,
   SpecialsArchive,
+  StockArchive,
   Partners,
   Row,
   VehicleTabsBlock,
+  VehicleCatalogBlock,
+  VehicleHeroBlock,
+  VehicleModelsBlock,
+  VehicleFaqBlock,
+  VehicleColorsBlock,
+  VehicleGalleryBlock,
+  VehicleFeaturesBlock,
+  VehicleModelHeroBlock,
+  VehicleModelHighlightsBlock,
+  VehicleModelColorsBlock,
+  VehicleModelSiblingsBlock,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -45,6 +58,7 @@ import { MapBlockComponent } from '@/lib/blocks/map-block/components/MapBlockCom
 import { TeamGridBlockComponent } from '@/lib/blocks/team-grid-block/components/TeamGridBlockComponent'
 import { StatsBlockComponent } from '@/lib/blocks/stats-block/components/StatsBlockComponent'
 import { CtaCardsBlockComponent } from '@/lib/blocks/cta-cards-block/components/CtaCardsBlockComponent'
+import { ImageCardsBlockComponent } from '@/lib/blocks/image-cards-block/components/ImageCardsBlockComponent'
 import { ImageBlockComponent } from '@/lib/blocks/image-block/components/ImageBlockComponent'
 import { HoursTabsBlockComponent } from '@/lib/blocks/hours-tabs-block/components/HoursTabsBlockComponent'
 import { FaqBlockComponent } from '@/lib/blocks/faq-block/components/FaqBlockComponent'
@@ -56,9 +70,21 @@ import { FinanceCalculatorBlockComponent } from '@/lib/blocks/finance-calculator
 import { BackButtonBlockComponent } from '@/lib/blocks/back-button-block/components/BackButtonBlockComponent'
 import { BenefitsGridBlockComponent } from '@/lib/blocks/benefits-grid-block/components/BenefitsGridBlockComponent'
 import { SpecialsArchiveBlockComponent } from '@/lib/blocks/specials-archive-block/components/SpecialsArchiveBlockComponent'
+import { StockArchiveBlockComponent } from '@/lib/blocks/stock-archive-block/components/StockArchiveBlockComponent'
 import { PartnersBlockComponent } from '@/lib/blocks/partners-block/components/PartnersBlockComponent'
 import { RowBlockComponent } from '@/lib/blocks/row-block/components/RowBlockComponent'
 import { VehicleTabsBlockComponent } from '@/lib/blocks/vehicle-tabs-block/components/VehicleTabsBlockComponent'
+import { VehicleCatalogBlockComponent } from '@/lib/blocks/vehicle-catalog-block/components/VehicleCatalogBlockComponent'
+import { VehicleHeroBlockComponent } from '@/lib/blocks/vehicle-hero-block/components/VehicleHeroBlockComponent'
+import { VehicleModelsBlockComponent } from '@/lib/blocks/vehicle-models-block/components/VehicleModelsBlockComponent'
+import { VehicleFaqBlockComponent } from '@/lib/blocks/vehicle-faq-block/components/VehicleFaqBlockComponent'
+import { VehicleColorsBlockComponent } from '@/lib/blocks/vehicle-colors-block/components/VehicleColorsBlockComponent'
+import { VehicleGalleryBlockComponent } from '@/lib/blocks/vehicle-gallery-block/components/VehicleGalleryBlockComponent'
+import { VehicleFeaturesBlockComponent } from '@/lib/blocks/vehicle-features-block/components/VehicleFeaturesBlockComponent'
+import { VehicleModelHeroBlockComponent } from '@/lib/blocks/vehicle-model-hero-block/components/VehicleModelHeroBlockComponent'
+import { VehicleModelHighlightsBlockComponent } from '@/lib/blocks/vehicle-model-highlights-block/components/VehicleModelHighlightsBlockComponent'
+import { VehicleModelColorsBlockComponent } from '@/lib/blocks/vehicle-model-colors-block/components/VehicleModelColorsBlockComponent'
+import { VehicleModelSiblingsBlockComponent } from '@/lib/blocks/vehicle-model-siblings-block/components/VehicleModelSiblingsBlockComponent'
 import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 
 type BlockComponentMap = {
@@ -79,6 +105,7 @@ type BlockComponentMap = {
   'team-grid': TeamGrid
   'image-block': ImageBlock
   'cta-cards': CtaCards
+  'image-cards': ImageCards
   statsBlock: StatsBlock
   'hours-tabs': HoursTabs
   faq: Faq
@@ -89,8 +116,20 @@ type BlockComponentMap = {
   'popup-cards': PopupCards
   financeCalculatorBlock: FinanceCalculatorBlockType
   'specials-archive': SpecialsArchive
+  'stock-archive': StockArchive
   partners: Partners
   'vehicle-tabs': VehicleTabsBlock
+  'vehicle-catalog': VehicleCatalogBlock
+  'vehicle-hero': VehicleHeroBlock
+  'vehicle-models': VehicleModelsBlock
+  'vehicle-faq': VehicleFaqBlock
+  'vehicle-colors': VehicleColorsBlock
+  'vehicle-gallery': VehicleGalleryBlock
+  'vehicle-features': VehicleFeaturesBlock
+  'vehicle-model-hero': VehicleModelHeroBlock
+  'vehicle-model-highlights': VehicleModelHighlightsBlock
+  'vehicle-model-colors': VehicleModelColorsBlock
+  'vehicle-model-siblings': VehicleModelSiblingsBlock
 }
 
 type WithMeta<T> = T & { meta?: BlockRenderMeta }
@@ -117,6 +156,7 @@ const blockComponents: {
   'team-grid': TeamGridBlockComponent,
   'image-block': ImageBlockComponent,
   'cta-cards': CtaCardsBlockComponent,
+  'image-cards': ImageCardsBlockComponent,
   statsBlock: StatsBlockComponent,
   'hours-tabs': HoursTabsBlockComponent,
   faq: FaqBlockComponent,
@@ -129,10 +169,20 @@ const blockComponents: {
   'popup-cards': PopupCardsBlockComponent,
   financeCalculatorBlock: FinanceCalculatorBlockComponent,
   'specials-archive': SpecialsArchiveBlockComponent,
+  'stock-archive': StockArchiveBlockComponent,
   partners: PartnersBlockComponent,
-  'vehicle-tabs': VehicleTabsBlockComponent as unknown as React.ComponentType<
-    WithMeta<VehicleTabsBlock>
-  >,
+  'vehicle-tabs': VehicleTabsBlockComponent,
+  'vehicle-catalog': VehicleCatalogBlockComponent,
+  'vehicle-hero': VehicleHeroBlockComponent,
+  'vehicle-models': VehicleModelsBlockComponent,
+  'vehicle-faq': VehicleFaqBlockComponent,
+  'vehicle-colors': VehicleColorsBlockComponent,
+  'vehicle-gallery': VehicleGalleryBlockComponent,
+  'vehicle-features': VehicleFeaturesBlockComponent,
+  'vehicle-model-hero': VehicleModelHeroBlockComponent,
+  'vehicle-model-highlights': VehicleModelHighlightsBlockComponent,
+  'vehicle-model-colors': VehicleModelColorsBlockComponent,
+  'vehicle-model-siblings': VehicleModelSiblingsBlockComponent,
 } as const
 
 type Blocks = Config['blocks']

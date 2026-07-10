@@ -2,7 +2,7 @@ import type { CtaButton } from '@/payload-types'
 import { Button } from '@/components/ui/button'
 import { resolveNavHref } from '@/lib/fields/navigation/resolveNavHref'
 import { lucideIconMap } from '@/lib/fields/lucide-icons'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 import Link from 'next/link'
 import React from 'react'
 

@@ -1,7 +1,7 @@
 import type { IconText } from '@/payload-types'
 import { colorMap } from '@/lib/blocks/heading-block/templates/heading-template-utils'
 import { lucideIconMap } from '@/lib/fields/lucide-icons'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 import Link from 'next/link'
 import React from 'react'
 

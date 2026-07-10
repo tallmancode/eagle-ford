@@ -1,0 +1,111 @@
+.live-stock-view {
+  &__header {
+    margin-bottom: var(--base);
+  }
+
+  &__title {
+    margin: 0 0 calc(var(--base) / 2);
+    font-size: 2rem;
+    font-weight: 600;
+  }
+
+  &__description {
+    margin: 0;
+    color: var(--theme-elevation-500);
+    max-width: 48rem;
+  }
+
+  &__filters {
+    display: flex;
+    gap: calc(var(--base) / 2);
+    margin-bottom: var(--base);
+  }
+
+  &__filter {
+    border: 1px solid var(--theme-elevation-150);
+    border-radius: var(--style-radius-s);
+    color: var(--theme-text);
+    padding: calc(var(--base) / 4) calc(var(--base) / 2);
+    text-decoration: none;
+
+    &--active {
+      background: var(--theme-elevation-100);
+      border-color: var(--theme-elevation-250);
+      font-weight: 600;
+    }
+  }
+
+  &__meta {
+    color: var(--theme-elevation-500);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--base);
+    margin-bottom: var(--base);
+  }
+
+  &__table-wrap {
+    overflow-x: auto;
+  }
+
+  &__table {
+    border-collapse: collapse;
+    width: 100%;
+
+    th,
+    td {
+      border-bottom: 1px solid var(--theme-elevation-150);
+      padding: calc(var(--base) / 2);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--theme-elevation-500);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+  }
+
+  &__thumb {
+    border-radius: var(--style-radius-s);
+    height: 48px;
+    object-fit: cover;
+    width: 72px;
+  }
+
+  &__no-image {
+    color: var(--theme-elevation-400);
+  }
+
+  &__vehicle-title {
+    font-weight: 600;
+  }
+
+  &__vehicle-meta {
+    color: var(--theme-elevation-500);
+    font-size: 0.9rem;
+    margin-top: calc(var(--base) / 4);
+  }
+
+  &__pagination {
+    align-items: center;
+    display: flex;
+    gap: var(--base);
+    justify-content: flex-end;
+    margin-top: var(--base);
+  }
+
+  &__page-link {
+    color: var(--theme-text);
+    text-decoration: none;
+
+    &--disabled {
+      color: var(--theme-elevation-400);
+    }
+  }
+
+  &__page-status {
+    color: var(--theme-elevation-500);
+  }
+}

@@ -1,6 +1,6 @@
 import type { Benefits } from '@/payload-types'
 import { lucideIconMap } from '@/lib/fields/lucide-icons'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 import React from 'react'
 
 const columnClasses: Record<string, string> = {

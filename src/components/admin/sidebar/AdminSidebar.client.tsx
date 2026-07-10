@@ -1,12 +1,13 @@
 'use client'
 import { FC, Fragment } from 'react'
 import type { NavPreferences } from 'payload'
-import { usePathname } from 'next/navigation'
-import { NavGroup, useConfig } from '@payloadcms/ui'
+import { getTranslation } from '@payloadcms/translations'
+import { Link, NavGroup, useConfig, useTranslation } from '@payloadcms/ui'
 import { EntityType, formatAdminURL, NavGroupType } from '@payloadcms/ui/shared'
-import LinkWithDefault from 'next/link'
-import { getNavIcon } from '@/components/admin/sidebar/navIconMap'
-import { baseClass } from '@/components/admin/sidebar/AdminSidebar'
+import { usePathname } from 'next/navigation'
+import { customNavLinks } from '@/components/admin/sidebar/customNavLinks'
+
+const baseClass = 'nav'
 
 type Props = {
   groups: NavGroupType[]
@@ -15,6 +16,7 @@ type Props = {
 
 export const AdminSidebarClient: FC<Props> = ({ groups, navPreferences }) => {
   const pathname = usePathname()
+  const { i18n } = useTranslation()
 
   const {
     config: {
@@ -25,9 +27,11 @@ export const AdminSidebarClient: FC<Props> = ({ groups, navPreferences }) => {
   return (
     <Fragment>
       {groups.map(({ entities, label }, key) => {
+        const groupCustomLinks = customNavLinks.filter((link) => link.group === label)
+
         return (
           <NavGroup isOpen={navPreferences?.groups?.[label]?.open} key={key} label={label}>
-            {entities.map(({ slug, type, label }, i) => {
+            {entities.map(({ slug, type, label: entityLabel }, i) => {
               let href: string
               let id: string
 
@@ -39,28 +43,61 @@ export const AdminSidebarClient: FC<Props> = ({ groups, navPreferences }) => {
                 id = `nav-global-${slug}`
               }
 
-              const Link = LinkWithDefault
-
-              const LinkElement = Link || 'a'
-              const activeCollection =
+              const isActive =
                 pathname.startsWith(href) && ['/', undefined].includes(pathname[href.length])
 
-              const Icon = getNavIcon(slug)
+              const linkLabel = (
+                <>
+                  {isActive && <div className={`${baseClass}__link-indicator`} />}
+                  <span className={`${baseClass}__link-label`}>
+                    {getTranslation(entityLabel, i18n)}
+                  </span>
+                </>
+              )
+
+              if (pathname === href) {
+                return (
+                  <div className={`${baseClass}__link`} id={id} key={i}>
+                    {linkLabel}
+                  </div>
+                )
+              }
 
               return (
-                <LinkElement
-                  className={[`${baseClass}__link`, activeCollection && `active`]
-                    .filter(Boolean)
-                    .join(' ')}
+                <Link className={`${baseClass}__link`} href={href} id={id} key={i} prefetch={false}>
+                  {linkLabel}
+                </Link>
+              )
+            })}
+            {groupCustomLinks.map((link) => {
+              const href = formatAdminURL({ adminRoute, path: link.href })
+              const isActive = pathname === href || pathname.startsWith(`${href}/`)
+
+              const linkLabel = (
+                <>
+                  {isActive && <div className={`${baseClass}__link-indicator`} />}
+                  <span className={`${baseClass}__link-label`}>{link.label}</span>
+                </>
+              )
+
+              if (pathname === href) {
+                return (
+                  <div className={`${baseClass}__link`} id={link.id} key={link.id}>
+                    {linkLabel}
+                  </div>
+                )
+              }
+
+              return (
+                <Link
+                  className={`${baseClass}__link`}
                   href={href}
-                  id={id}
-                  key={i}
+                  id={link.id}
+                  key={link.id}
                   prefetch={false}
                 >
-                  {activeCollection && <div className={`${baseClass}__link-indicator`} />}
-                  {Icon && <Icon className={`${baseClass}__icon`} />}
-                  <span className={`${baseClass}__link-label`}>{label as string}</span>
-                </LinkElement>
+                  {linkLabel}
+                </Link>
               )
             })}
           </NavGroup>

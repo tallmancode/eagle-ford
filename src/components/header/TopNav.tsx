@@ -2,7 +2,7 @@ import { Separator } from '@/components/ui/separator'
 import { MapPin, PhoneCall } from 'lucide-react'
 import { Header as GlobalHeader, Setting as GlobalSettings } from '@/payload-types'
 import { formatContactAddress } from '@/lib/utils/formatContactAddress'
-import { formatPhoneNumber } from '@/utilities/formatPhoneNumber'
+import { formatPhoneNumber } from '@/lib/utils/formatPhoneNumber'
 import Link from 'next/link'
 import { NavMenuItems } from '@/components/header/NavMenuItems'
 
@@ -19,7 +19,7 @@ export const TopNav = ({
   return (
     <div className="w-full bg-primary-500 py-2 text-sm hidden lg:block">
       <div className="flex  text-light-50 container  mx-auto justify-between">
-        <div className="flex space-x-2 items-center">
+        <div className="flex space-x-2 items-center py-2">
           {topNavProps?.homeLinkText && (
             <>
               <Link href="/" aria-label="Home" className={'hover:text-light-400 transition-colors'}>

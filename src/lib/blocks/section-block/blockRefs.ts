@@ -15,6 +15,7 @@ const allBlockRefs: BlockSlug[] = [
   'team-grid',
   'image-block',
   'cta-cards',
+  'image-cards',
   'statsBlock',
   'hours-tabs',
   'faq',
@@ -25,8 +26,20 @@ const allBlockRefs: BlockSlug[] = [
   'popup-cards',
   'financeCalculatorBlock',
   'specials-archive',
+  'stock-archive',
   'partners',
   'vehicle-tabs',
+  'vehicle-catalog',
+  'vehicle-hero',
+  'vehicle-models',
+  'vehicle-colors',
+  'vehicle-faq',
+  'vehicle-gallery',
+  'vehicle-features',
+  'vehicle-model-hero',
+  'vehicle-model-highlights',
+  'vehicle-model-colors',
+  'vehicle-model-siblings',
 ]
 
 /** Nested block slugs for section content. Pass `exclude` to prevent circular blockReferences (stack overflow in admin). */

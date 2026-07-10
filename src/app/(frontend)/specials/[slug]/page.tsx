@@ -6,8 +6,7 @@ import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 
-import { generateMeta } from '@/utilities/generateMeta'
-import PageClient from './page.client'
+import { generateMeta } from '@/lib/utils/generateMeta'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
@@ -50,8 +49,6 @@ export default async function SpecialsPage({ params: paramsPromise }: Args) {
 
   return (
     <div>
-      <PageClient />
-
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 

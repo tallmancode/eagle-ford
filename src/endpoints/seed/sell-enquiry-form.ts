@@ -1,6 +1,6 @@
 import type { RequiredDataFromCollectionSlug } from 'payload'
 
-const YEAR_MODELS = Array.from({ length: 2026 - 1966 + 1 }, (_, i) => ({
+const YEAR_MODELS = Array.from({ length: 2026 - 2016 + 1 }, (_, i) => ({
   label: String(2026 - i),
   value: String(2026 - i),
 }))
@@ -161,28 +161,13 @@ export const sellEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = {
           width: 50,
         },
         {
-          blockType: 'text',
-          blockName: 'vehicleVariant',
-          name: 'vehicleVariant',
-          label: 'Vehicle Variant',
-          required: false,
-          width: 50,
-        },
-        {
-          blockType: 'text',
-          blockName: 'colour',
-          name: 'colour',
-          label: 'Vehicle Colour',
-          required: true,
-          width: 50,
-        },
-        {
           blockType: 'number',
           blockName: 'odometer',
           name: 'odometer',
           label: 'Odometer Reading (km)',
           required: true,
           width: 50,
+          max: 150000,
         },
         {
           blockType: 'select',
@@ -201,45 +186,11 @@ export const sellEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = {
         },
         {
           blockType: 'text',
-          blockName: 'registration',
-          name: 'registration',
-          label: 'Registration Number',
-          required: true,
-          width: 50,
-        },
-        {
-          blockType: 'text',
           blockName: 'vin',
           name: 'vin',
           label: 'VIN Number',
           required: false,
           width: 50,
-        },
-        {
-          blockType: 'select',
-          blockName: 'accident',
-          name: 'accident',
-          label: 'Accident History',
-          placeholder: 'Has the vehicle been in an accident?',
-          required: true,
-          width: 50,
-          options: [
-            { label: 'No', value: 'NO' },
-            { label: 'Yes', value: 'YES' },
-          ],
-        },
-        {
-          blockType: 'select',
-          blockName: 'spareKeys',
-          name: 'spareKeys',
-          label: 'Spare Keys',
-          placeholder: 'Does the vehicle have spare keys?',
-          required: true,
-          width: 50,
-          options: [
-            { label: 'Yes', value: 'YES' },
-            { label: 'No', value: 'NO' },
-          ],
         },
         {
           blockType: 'number',

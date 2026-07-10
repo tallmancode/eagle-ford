@@ -8,9 +8,8 @@ import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 import RichText from '@/components/RichText'
 
-import { PostHero } from '@/heros/PostHero'
-import { generateMeta } from '@/utilities/generateMeta'
-import PageClient from './page.client'
+import { PostHero } from '@/components/blog/PostHero'
+import { generateMeta } from '@/lib/utils/generateMeta'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 
 export async function generateStaticParams() {
@@ -51,8 +50,6 @@ export default async function BlogPage({ params: paramsPromise }: Args) {
 
   return (
     <article className="pt-16 pb-16">
-      <PageClient />
-
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 

@@ -5,7 +5,7 @@ import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu'
 import { cva } from 'class-variance-authority'
 import { ChevronDown } from 'lucide-react'
 
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 
 const NavigationMenu = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Root>,
@@ -61,20 +61,27 @@ const NavigationMenuTrigger = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Trigger> & {
     hideChevron?: boolean
   }
->(({ className, children, hideChevron = false, ...props }, ref) => (
+>(({ className, children, hideChevron = false, asChild, ...props }, ref) => (
   <NavigationMenuPrimitive.Trigger
     ref={ref}
+    asChild={asChild}
     className={cn(navigationMenuTriggerStyle(), 'group', className)}
     {...props}
   >
-    {children}
-    {!hideChevron && (
+    {asChild ? (
+      children
+    ) : (
       <>
-        {' '}
-        <ChevronDown
-          className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
-          aria-hidden="true"
-        />
+        {children}
+        {!hideChevron && (
+          <>
+            {' '}
+            <ChevronDown
+              className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180"
+              aria-hidden="true"
+            />
+          </>
+        )}
       </>
     )}
   </NavigationMenuPrimitive.Trigger>

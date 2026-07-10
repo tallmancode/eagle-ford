@@ -3,6 +3,7 @@ import { slugField } from 'payload'
 
 import { populatePublishedAt } from '@/hooks/populatePublishedAt'
 import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
+import { generatePreviewPath } from '@/lib/utils/generatePreviewPath'
 import { revalidateVehicle, revalidateVehicleDelete } from './hooks/revalidateVehicle'
 
 export const VehiclesCollection: CollectionConfig<'vehicles'> = {
@@ -21,6 +22,20 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
     useAsTitle: 'name',
     defaultColumns: ['name', 'category', 'startingPrice', 'badge', 'updatedAt'],
     group: 'Vehicles',
+    livePreview: {
+      url: ({ data, req }) =>
+        generatePreviewPath({
+          slug: data?.slug,
+          collection: 'vehicles',
+          req,
+        }),
+    },
+    preview: (data, { req }) =>
+      generatePreviewPath({
+        slug: data?.slug as string,
+        collection: 'vehicles',
+        req,
+      }),
   },
   defaultSort: 'sortOrder',
   fields: [
@@ -59,33 +74,131 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
               relationTo: 'vehicle-categories',
               required: true,
             },
+
             {
-              name: 'heroImage',
-              label: 'Hero Image',
-              type: 'upload',
-              relationTo: 'media',
-              required: true,
+              name: 'tagline',
+              label: 'Tagline',
+              type: 'text',
               admin: {
-                description:
-                  'Full-width background image displayed at the top of the vehicle page.',
+                description: 'Hero subtitle, e.g. "Built here. Built different."',
               },
             },
             {
-              name: 'featureImage',
-              label: 'Feature Image',
+              name: 'ctaButtons',
+              label: 'CTA Buttons',
+              type: 'array',
+              admin: {
+                description:
+                  'Hero call-to-action buttons. "Enquiry" scrolls to the form; "Brochure" links to the brochure PDF.',
+              },
+              fields: [
+                {
+                  name: 'label',
+                  label: 'Label',
+                  type: 'text',
+                  required: true,
+                },
+                {
+                  name: 'action',
+                  label: 'Action',
+                  type: 'select',
+                  required: true,
+                  defaultValue: 'link',
+                  options: [
+                    { label: 'Scroll to Enquiry Form', value: 'enquiry' },
+                    { label: 'Download Brochure', value: 'brochure' },
+                    { label: 'Custom Link', value: 'link' },
+                  ],
+                },
+                {
+                  name: 'url',
+                  label: 'URL',
+                  type: 'text',
+                  admin: {
+                    condition: (_, siblingData) => siblingData?.action === 'link',
+                    description: 'Internal path (e.g. /contact) or external URL.',
+                  },
+                },
+              ],
+            },
+            {
+              name: 'specHighlights',
+              label: 'Spec Highlights',
+              type: 'array',
+              admin: {
+                description:
+                  'Key stats shown in a horizontal strip, e.g. towing capacity or payload.',
+              },
+              fields: [
+                {
+                  name: 'value',
+                  label: 'Value',
+                  type: 'text',
+                  required: true,
+                  admin: {
+                    description: 'e.g. "3500kg"',
+                  },
+                },
+                {
+                  name: 'label',
+                  label: 'Label',
+                  type: 'text',
+                  required: true,
+                  admin: {
+                    description: 'e.g. "Towing"',
+                  },
+                },
+              ],
+            },
+            {
+              name: 'engineOptions',
+              label: 'Engine Options',
+              type: 'array',
+              admin: {
+                description: 'Available powertrain options displayed as chips.',
+              },
+              fields: [
+                {
+                  name: 'name',
+                  label: 'Engine Name',
+                  type: 'text',
+                  required: true,
+                  admin: {
+                    description: 'e.g. "3.0L V6"',
+                  },
+                },
+                {
+                  name: 'engineType',
+                  label: 'Engine Type',
+                  type: 'text',
+                  required: true,
+                  admin: {
+                    description: 'e.g. "Turbo Diesel"',
+                  },
+                },
+              ],
+            },
+            {
+              name: 'brochure',
+              label: 'Brochure',
               type: 'upload',
               relationTo: 'media',
               admin: {
-                description:
-                  'Image shown on vehicle listing cards (e.g. a cut-out or top-down shot). Falls back to Hero Image if not set.',
+                description: 'PDF brochure available for download on the vehicle page.',
               },
             },
+          ],
+        },
+        {
+          label: 'Features',
+          fields: [
             {
               name: 'features',
               label: 'Features',
               type: 'array',
               admin: {
-                description: 'Marketing feature cards shown on the vehicle page.',
+                description:
+                  'Marketing feature sections shown on the vehicle page with alternating image and text.',
               },
               fields: [
                 {
@@ -107,6 +220,11 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
                 },
               ],
             },
+          ],
+        },
+        {
+          label: 'Colours',
+          fields: [
             {
               name: 'colours',
               label: 'Available Colours',
@@ -137,6 +255,32 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
                 },
               ],
             },
+          ],
+        },
+        {
+          label: 'Images',
+          fields: [
+            {
+              name: 'heroImage',
+              label: 'Hero Image',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+              admin: {
+                description:
+                  'Full-width background image displayed at the top of the vehicle page.',
+              },
+            },
+            {
+              name: 'featureImage',
+              label: 'Feature Image',
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                description:
+                  'Image shown on vehicle listing cards (e.g. a cut-out or top-down shot). Falls back to Hero Image if not set.',
+              },
+            },
             {
               name: 'gallery',
               label: 'Gallery',
@@ -148,6 +292,60 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
                   type: 'upload',
                   relationTo: 'media',
                   required: true,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'FAQ',
+          fields: [
+            {
+              name: 'faqs',
+              label: 'FAQs',
+              type: 'array',
+              fields: [
+                {
+                  name: 'question',
+                  label: 'Question',
+                  type: 'text',
+                  required: true,
+                },
+                {
+                  name: 'answer',
+                  label: 'Answer',
+                  type: 'textarea',
+                  required: true,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Custom Fields',
+          fields: [
+            {
+              name: 'customFields',
+              label: 'Custom Fields',
+              type: 'array',
+              admin: {
+                description:
+                  'Arbitrary key/value pairs. Reference these by key inside template blocks.',
+              },
+              fields: [
+                {
+                  name: 'key',
+                  label: 'Key',
+                  type: 'text',
+                  required: true,
+                  admin: {
+                    description: 'Unique identifier, e.g. "warrantyYears".',
+                  },
+                },
+                {
+                  name: 'value',
+                  label: 'Value',
+                  type: 'textarea',
                 },
               ],
             },
@@ -170,6 +368,57 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
               label: 'Price Disclaimer',
               type: 'text',
               defaultValue: 'Including Optional Service plan and excluding Packs & factory options',
+            },
+            {
+              name: 'monthlyPrice',
+              label: 'Monthly Price (ZAR)',
+              type: 'number',
+              min: 0,
+              admin: {
+                description:
+                  'Finance monthly payment as a whole number, e.g. 6799 for R 6,799 p/m.',
+              },
+            },
+            {
+              name: 'monthlyPriceNote',
+              label: 'Monthly Price Note',
+              type: 'text',
+              defaultValue: 'When financed. Ts & Cs apply.',
+            },
+            {
+              name: 'paymentOptions',
+              label: 'Payment Options',
+              type: 'array',
+              admin: {
+                description: 'Finance and payment option cards shown on the vehicle page.',
+              },
+              fields: [
+                {
+                  name: 'title',
+                  label: 'Title',
+                  type: 'text',
+                  required: true,
+                },
+                {
+                  name: 'description',
+                  label: 'Description',
+                  type: 'textarea',
+                },
+                {
+                  name: 'ctaLabel',
+                  label: 'CTA Label',
+                  type: 'text',
+                  required: true,
+                },
+                {
+                  name: 'ctaUrl',
+                  label: 'CTA URL',
+                  type: 'text',
+                  admin: {
+                    description: 'Internal path (e.g. #enquire) or external URL.',
+                  },
+                },
+              ],
             },
           ],
         },
@@ -223,6 +472,26 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
       admin: {
         position: 'sidebar',
         description: 'Lower numbers appear first.',
+      },
+    },
+    {
+      name: 'template',
+      label: 'Page Template',
+      type: 'relationship',
+      relationTo: 'vehicle-templates',
+      admin: {
+        position: 'sidebar',
+        description: 'Optional. Layout template used to render this vehicle page.',
+      },
+    },
+    {
+      name: 'modelTemplate',
+      label: 'Model Page Template',
+      type: 'relationship',
+      relationTo: 'vehicle-model-templates',
+      admin: {
+        position: 'sidebar',
+        description: 'Optional. Layout used for all model detail pages under this vehicle.',
       },
     },
     {

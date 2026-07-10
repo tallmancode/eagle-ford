@@ -15,12 +15,13 @@ export const SiteHeader = ({
   vehicleMegaMenuData,
 }: HeaderNavProps) => {
   return (
-    <header className="sticky top-0 z-50 bg-background shadow-bottom [--site-header-height:7.5rem]">
+    <header className="sticky top-0 z-75 bg-background shadow-bottom [--site-header-height:7.5rem]">
       <TopNav topNavProps={globalHeader?.topNav} settings={globalSettings}></TopNav>
       <MainNav
         headerLogo={globalHeader?.headerLogo}
         leftLinks={globalHeader?.leftLinks}
         rightLinks={globalHeader?.rightLinks}
+        settings={globalSettings}
         vehicleMegaMenuData={vehicleMegaMenuData}
       />
     </header>

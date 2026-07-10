@@ -1,10 +1,17 @@
+import type { Vehicle, VehicleModel } from '@/payload-types'
+
 export type FormBlockContextValues = Record<string, string>
 
 export type FormBlockMeta = {
   contextValues?: FormBlockContextValues
 }
 
-export type BlockRenderMeta = FormBlockMeta & { inRow?: boolean }
+export type BlockRenderMeta = FormBlockMeta & {
+  inRow?: boolean
+  vehicle?: Vehicle
+  vehicleModel?: VehicleModel
+  searchParams?: Record<string, string | string[] | undefined>
+}
 
 export function getHiddenFieldNames(contextValues?: FormBlockContextValues): Set<string> {
   if (!contextValues) {

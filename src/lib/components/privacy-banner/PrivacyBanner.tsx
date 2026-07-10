@@ -5,7 +5,7 @@ import * as React from 'react'
 
 import { usePrivacy } from '@/lib/providers/privacy'
 import { Button } from '@/lib/components/ui/button'
-import { cn } from '@/utilities/ui'
+import { cn } from '@/lib/utils/cn'
 
 export const PrivacyBanner: React.FC = () => {
   const [closeBanner, setCloseBanner] = React.useState(false)

@@ -8,8 +8,7 @@ import React, { cache } from 'react'
 import { homeStatic } from '@/endpoints/seed/home-static'
 
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
-import { generateMeta } from '@/utilities/generateMeta'
-import PageClient from './page.client'
+import { generateMeta } from '@/lib/utils/generateMeta'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 
 export async function generateStaticParams() {
@@ -40,11 +39,16 @@ type Args = {
   params: Promise<{
     slug?: string
   }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
-export default async function Page({ params: paramsPromise }: Args) {
+export default async function Page({
+  params: paramsPromise,
+  searchParams: searchParamsPromise,
+}: Args) {
   const { isEnabled: draft } = await draftMode()
   const { slug = 'home' } = await paramsPromise
+  const searchParams = await searchParamsPromise
   // Decode to support slugs with special characters
   const decodedSlug = decodeURIComponent(slug)
   const url = '/' + decodedSlug
@@ -65,13 +69,12 @@ export default async function Page({ params: paramsPromise }: Args) {
 
   return (
     <div>
-      <PageClient />
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
       {draft && <LivePreviewListener />}
 
-      <RenderBlocks blocks={page.content?.section ?? null} />
+      <RenderBlocks blocks={page.content?.section ?? null} meta={{ searchParams }} />
     </div>
   )
 }

@@ -7,6 +7,8 @@ import { SpecialsCollection } from '@/collections/Specials'
 import { VehicleCategories } from '@/collections/VehicleCategories'
 import { VehiclesCollection } from '@/collections/Vehicles'
 import { VehicleModelsCollection } from '@/collections/VehicleModels'
+import { VehicleTemplatesCollection } from '@/collections/VehicleTemplates'
+import { VehicleModelTemplatesCollection } from '@/collections/VehicleModelTemplates'
 
 const collections: CollectionConfig[] = [
   PagesCollection,
@@ -15,6 +17,8 @@ const collections: CollectionConfig[] = [
   MediaCollection,
   Categories,
   VehicleCategories,
+  VehicleTemplatesCollection,
+  VehicleModelTemplatesCollection,
   VehiclesCollection,
   VehicleModelsCollection,
 ]

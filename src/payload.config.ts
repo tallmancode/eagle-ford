@@ -7,8 +7,8 @@ import { fileURLToPath } from 'url'
 import { UsersCollection } from './collections/Users'
 import Collections from '@/collections'
 import { plugins } from './plugins'
-import { defaultLexical } from '@/fields/defaultLexical'
-import { getServerSideURL } from './utilities/getURL'
+import { defaultLexical } from '@/lib/fields/defaultLexical'
+import { getServerSideURL } from './lib/utils/getServerSideURL'
 import Globals from '@/globals'
 import Blocks from '@/lib/blocks'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
@@ -23,7 +23,13 @@ export default buildConfig({
         login: {
           Component: '@/views/Login',
         },
+        liveStock: {
+          Component: '@/views/LiveStock',
+          path: '/data-management/live-stock',
+          exact: true,
+        },
       },
+      afterNavLinks: ['@/components/admin/sidebar/LiveStockNavLink#LiveStockNavLink'],
       beforeLogin: ['@/components/BeforeLogin'],
     },
     importMap: {
@@ -52,13 +58,16 @@ export default buildConfig({
         },
       ],
     },
+    meta: {
+      title: 'Eagle Ford CMS',
+    },
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
   }),
-  collections: [UsersCollection, ...Collections],
+  collections: [...Collections, UsersCollection],
   cors: [getServerSideURL()].filter(Boolean),
   globals: Globals,
   blocks: [...Blocks],
@@ -74,7 +83,7 @@ export default buildConfig({
     // Nodemailer transportOptions
     transportOptions: {
       host: process.env.SMTP_HOST,
-      port: 1025,
+      port: process.env.SMTP_PORT,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,

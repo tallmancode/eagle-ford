@@ -131,6 +131,7 @@ export interface Config {
     'team-grid': TeamGrid;
     'image-block': ImageBlock;
     'cta-cards': CtaCards;
+    'image-cards': ImageCards;
     statsBlock: StatsBlock;
     'hours-tabs': HoursTabs;
     faq: Faq;
@@ -142,19 +143,33 @@ export interface Config {
     'back-button': BackButton;
     'benefits-grid': BenefitsGrid;
     'specials-archive': SpecialsArchive;
+    'stock-archive': StockArchive;
     partners: Partners;
     'vehicle-tabs': VehicleTabsBlock;
+    'vehicle-catalog': VehicleCatalogBlock;
+    'vehicle-hero': VehicleHeroBlock;
+    'vehicle-models': VehicleModelsBlock;
+    'vehicle-faq': VehicleFaqBlock;
+    'vehicle-colors': VehicleColorsBlock;
+    'vehicle-gallery': VehicleGalleryBlock;
+    'vehicle-features': VehicleFeaturesBlock;
+    'vehicle-model-hero': VehicleModelHeroBlock;
+    'vehicle-model-highlights': VehicleModelHighlightsBlock;
+    'vehicle-model-colors': VehicleModelColorsBlock;
+    'vehicle-model-siblings': VehicleModelSiblingsBlock;
   };
   collections: {
-    users: User;
     pages: Page;
     blogs: Blog;
     specials: Special;
     media: Media;
     categories: Category;
     'vehicle-categories': VehicleCategory;
+    'vehicle-templates': VehicleTemplate;
+    'vehicle-model-templates': VehicleModelTemplate;
     vehicles: Vehicle;
     'vehicle-models': VehicleModel;
+    users: User;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -169,15 +184,17 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     blogs: BlogsSelect<false> | BlogsSelect<true>;
     specials: SpecialsSelect<false> | SpecialsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     'vehicle-categories': VehicleCategoriesSelect<false> | VehicleCategoriesSelect<true>;
+    'vehicle-templates': VehicleTemplatesSelect<false> | VehicleTemplatesSelect<true>;
+    'vehicle-model-templates': VehicleModelTemplatesSelect<false> | VehicleModelTemplatesSelect<true>;
     vehicles: VehiclesSelect<false> | VehiclesSelect<true>;
     'vehicle-models': VehicleModelsSelect<false> | VehicleModelsSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -262,6 +279,7 @@ export interface Section {
         | TeamGrid
         | ImageBlock
         | CtaCards
+        | ImageCards
         | StatsBlock
         | HoursTabs
         | Faq
@@ -272,8 +290,20 @@ export interface Section {
         | PopupCards
         | FinanceCalculatorBlockType
         | SpecialsArchive
+        | StockArchive
         | Partners
         | VehicleTabsBlock
+        | VehicleCatalogBlock
+        | VehicleHeroBlock
+        | VehicleModelsBlock
+        | VehicleColorsBlock
+        | VehicleFaqBlock
+        | VehicleGalleryBlock
+        | VehicleFeaturesBlock
+        | VehicleModelHeroBlock
+        | VehicleModelHighlightsBlock
+        | VehicleModelColorsBlock
+        | VehicleModelSiblingsBlock
       )[]
     | null;
   backgroundColor?:
@@ -387,6 +417,7 @@ export interface SectionInner {
         | TeamGrid
         | ImageBlock
         | CtaCards
+        | ImageCards
         | StatsBlock
         | HoursTabs
         | Faq
@@ -397,8 +428,20 @@ export interface SectionInner {
         | PopupCards
         | FinanceCalculatorBlockType
         | SpecialsArchive
+        | StockArchive
         | Partners
         | VehicleTabsBlock
+        | VehicleCatalogBlock
+        | VehicleHeroBlock
+        | VehicleModelsBlock
+        | VehicleColorsBlock
+        | VehicleFaqBlock
+        | VehicleGalleryBlock
+        | VehicleFeaturesBlock
+        | VehicleModelHeroBlock
+        | VehicleModelHighlightsBlock
+        | VehicleModelColorsBlock
+        | VehicleModelSiblingsBlock
       )[]
     | null;
   backgroundColor?:
@@ -509,6 +552,7 @@ export interface Row {
         | TeamGrid
         | ImageBlock
         | CtaCards
+        | ImageCards
         | StatsBlock
         | HoursTabs
         | Faq
@@ -519,8 +563,20 @@ export interface Row {
         | PopupCards
         | FinanceCalculatorBlockType
         | SpecialsArchive
+        | StockArchive
         | Partners
         | VehicleTabsBlock
+        | VehicleCatalogBlock
+        | VehicleHeroBlock
+        | VehicleModelsBlock
+        | VehicleColorsBlock
+        | VehicleFaqBlock
+        | VehicleGalleryBlock
+        | VehicleFeaturesBlock
+        | VehicleModelHeroBlock
+        | VehicleModelHighlightsBlock
+        | VehicleModelColorsBlock
+        | VehicleModelSiblingsBlock
       )[]
     | null;
   backgroundColor?:
@@ -1097,6 +1153,8 @@ export interface Form {
             width?: number | null;
             defaultValue?: number | null;
             required?: boolean | null;
+            min?: number | null;
+            max?: number | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'number';
@@ -1289,6 +1347,8 @@ export interface Form {
               width?: number | null;
               defaultValue?: number | null;
               required?: boolean | null;
+              min?: number | null;
+              max?: number | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'number';
@@ -1659,6 +1719,46 @@ export interface CtaCards {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImageCards".
+ */
+export interface ImageCards {
+  columns?: ('1' | '2' | '3' | '4') | null;
+  items: {
+    image: string | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    imageLink?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+      label?: string | null;
+    };
+    title: string;
+    description: string;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+      label?: string | null;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'image-cards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "StatsBlock".
  */
 export interface StatsBlock {
@@ -1888,6 +1988,23 @@ export interface SpecialsArchive {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StockArchive".
+ */
+export interface StockArchive {
+  heading?: string | null;
+  conditionFilter?: ('all' | 'new' | 'pre-owned') | null;
+  limit?: number | null;
+  showPagination?: boolean | null;
+  /**
+   * Internal path (e.g. /contact), tel:, or mailto: link for card CTA buttons.
+   */
+  enquireUrl?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stock-archive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "Partners".
  */
 export interface Partners {
@@ -1908,42 +2025,112 @@ export interface Partners {
  * via the `definition` "VehicleTabsBlock".
  */
 export interface VehicleTabsBlock {
-  /**
-   * Optional heading displayed above the tabs (e.g. "View Our Vehicles")
-   */
-  heading?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'vehicle-tabs';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "VehicleCatalogBlock".
  */
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  username?: string | null;
-  roles?: ('developer' | 'admin' | 'marketing' | 'manager' | 'staff')[] | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
+export interface VehicleCatalogBlock {
+  /**
+   * Optional heading displayed above the tabs (e.g. "All Vehicles")
+   */
+  heading?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-catalog';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleHeroBlock".
+ */
+export interface VehicleHeroBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-hero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelsBlock".
+ */
+export interface VehicleModelsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-models';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleColorsBlock".
+ */
+export interface VehicleColorsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-colors';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleFaqBlock".
+ */
+export interface VehicleFaqBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleGalleryBlock".
+ */
+export interface VehicleGalleryBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-gallery';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleFeaturesBlock".
+ */
+export interface VehicleFeaturesBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-features';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelHeroBlock".
+ */
+export interface VehicleModelHeroBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-hero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelHighlightsBlock".
+ */
+export interface VehicleModelHighlightsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-highlights';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelColorsBlock".
+ */
+export interface VehicleModelColorsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-colors';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelSiblingsBlock".
+ */
+export interface VehicleModelSiblingsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-siblings';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2021,6 +2208,35 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  username?: string | null;
+  roles?: ('developer' | 'admin' | 'marketing' | 'manager' | 'staff')[] | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "specials".
  */
 export interface Special {
@@ -2081,6 +2297,34 @@ export interface VehicleCategory {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-templates".
+ */
+export interface VehicleTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Vehicle Layout" or "Commercial Vehicle Layout"
+   */
+  title: string;
+  section?: Section[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-model-templates".
+ */
+export interface VehicleModelTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Model Layout" or "Commercial Model Layout"
+   */
+  title: string;
+  section?: Section[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "vehicles".
  */
 export interface Vehicle {
@@ -2095,15 +2339,61 @@ export interface Vehicle {
   badge?: ('newly-launched' | 'coming-soon' | 'limited') | null;
   category: string | VehicleCategory;
   /**
-   * Full-width background image displayed at the top of the vehicle page.
+   * Hero subtitle, e.g. "Built here. Built different."
    */
-  heroImage: string | Media;
+  tagline?: string | null;
   /**
-   * Image shown on vehicle listing cards (e.g. a cut-out or top-down shot). Falls back to Hero Image if not set.
+   * Hero call-to-action buttons. "Enquiry" scrolls to the form; "Brochure" links to the brochure PDF.
    */
-  featureImage?: (string | null) | Media;
+  ctaButtons?:
+    | {
+        label: string;
+        action: 'enquiry' | 'brochure' | 'link';
+        /**
+         * Internal path (e.g. /contact) or external URL.
+         */
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   /**
-   * Marketing feature cards shown on the vehicle page.
+   * Key stats shown in a horizontal strip, e.g. towing capacity or payload.
+   */
+  specHighlights?:
+    | {
+        /**
+         * e.g. "3500kg"
+         */
+        value: string;
+        /**
+         * e.g. "Towing"
+         */
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Available powertrain options displayed as chips.
+   */
+  engineOptions?:
+    | {
+        /**
+         * e.g. "3.0L V6"
+         */
+        name: string;
+        /**
+         * e.g. "Turbo Diesel"
+         */
+        engineType: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * PDF brochure available for download on the vehicle page.
+   */
+  brochure?: (string | null) | Media;
+  /**
+   * Marketing feature sections shown on the vehicle page with alternating image and text.
    */
   features?:
     | {
@@ -2127,9 +2417,37 @@ export interface Vehicle {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Full-width background image displayed at the top of the vehicle page.
+   */
+  heroImage: string | Media;
+  /**
+   * Image shown on vehicle listing cards (e.g. a cut-out or top-down shot). Falls back to Hero Image if not set.
+   */
+  featureImage?: (string | null) | Media;
   gallery?:
     | {
         image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Arbitrary key/value pairs. Reference these by key inside template blocks.
+   */
+  customFields?:
+    | {
+        /**
+         * Unique identifier, e.g. "warrantyYears".
+         */
+        key: string;
+        value?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -2138,6 +2456,26 @@ export interface Vehicle {
    */
   startingPrice?: number | null;
   priceDisclaimer?: string | null;
+  /**
+   * Finance monthly payment as a whole number, e.g. 6799 for R 6,799 p/m.
+   */
+  monthlyPrice?: number | null;
+  monthlyPriceNote?: string | null;
+  /**
+   * Finance and payment option cards shown on the vehicle page.
+   */
+  paymentOptions?:
+    | {
+        title: string;
+        description?: string | null;
+        ctaLabel: string;
+        /**
+         * Internal path (e.g. #enquire) or external URL.
+         */
+        ctaUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   content?: {
     description?: {
       root: {
@@ -2165,6 +2503,14 @@ export interface Vehicle {
    * Lower numbers appear first.
    */
   sortOrder?: number | null;
+  /**
+   * Optional. Layout template used to render this vehicle page.
+   */
+  template?: (string | null) | VehicleTemplate;
+  /**
+   * Optional. Layout used for all model detail pages under this vehicle.
+   */
+  modelTemplate?: (string | null) | VehicleModelTemplate;
   publishedAt?: string | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -2539,10 +2885,6 @@ export interface PayloadLockedDocument {
   id: string;
   document?:
     | ({
-        relationTo: 'users';
-        value: string | User;
-      } | null)
-    | ({
         relationTo: 'pages';
         value: string | Page;
       } | null)
@@ -2567,12 +2909,24 @@ export interface PayloadLockedDocument {
         value: string | VehicleCategory;
       } | null)
     | ({
+        relationTo: 'vehicle-templates';
+        value: string | VehicleTemplate;
+      } | null)
+    | ({
+        relationTo: 'vehicle-model-templates';
+        value: string | VehicleModelTemplate;
+      } | null)
+    | ({
         relationTo: 'vehicles';
         value: string | Vehicle;
       } | null)
     | ({
         relationTo: 'vehicle-models';
         value: string | VehicleModel;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: string | User;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -2631,32 +2985,6 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
- */
-export interface UsersSelect<T extends boolean = true> {
-  firstName?: T;
-  lastName?: T;
-  username?: T;
-  roles?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2867,14 +3195,56 @@ export interface VehicleCategoriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-templates_select".
+ */
+export interface VehicleTemplatesSelect<T extends boolean = true> {
+  title?: T;
+  section?: T | {};
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-model-templates_select".
+ */
+export interface VehicleModelTemplatesSelect<T extends boolean = true> {
+  title?: T;
+  section?: T | {};
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "vehicles_select".
  */
 export interface VehiclesSelect<T extends boolean = true> {
   name?: T;
   badge?: T;
   category?: T;
-  heroImage?: T;
-  featureImage?: T;
+  tagline?: T;
+  ctaButtons?:
+    | T
+    | {
+        label?: T;
+        action?: T;
+        url?: T;
+        id?: T;
+      };
+  specHighlights?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  engineOptions?:
+    | T
+    | {
+        name?: T;
+        engineType?: T;
+        id?: T;
+      };
+  brochure?: T;
   features?:
     | T
     | {
@@ -2891,14 +3261,41 @@ export interface VehiclesSelect<T extends boolean = true> {
         colourSwatch?: T;
         id?: T;
       };
+  heroImage?: T;
+  featureImage?: T;
   gallery?:
     | T
     | {
         image?: T;
         id?: T;
       };
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  customFields?:
+    | T
+    | {
+        key?: T;
+        value?: T;
+        id?: T;
+      };
   startingPrice?: T;
   priceDisclaimer?: T;
+  monthlyPrice?: T;
+  monthlyPriceNote?: T;
+  paymentOptions?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        ctaLabel?: T;
+        ctaUrl?: T;
+        id?: T;
+      };
   content?:
     | T
     | {
@@ -2913,6 +3310,8 @@ export interface VehiclesSelect<T extends boolean = true> {
         metaImage?: T;
       };
   sortOrder?: T;
+  template?: T;
+  modelTemplate?: T;
   publishedAt?: T;
   generateSlug?: T;
   slug?: T;
@@ -2964,6 +3363,32 @@ export interface VehicleModelsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  username?: T;
+  roles?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3037,6 +3462,8 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               defaultValue?: T;
               required?: T;
+              min?: T;
+              max?: T;
               id?: T;
               blockName?: T;
             };
@@ -3207,6 +3634,8 @@ export interface FormsSelect<T extends boolean = true> {
                     width?: T;
                     defaultValue?: T;
                     required?: T;
+                    min?: T;
+                    max?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -3814,15 +4243,17 @@ export interface TaskCreateCollectionExport {
     name: string;
     batchSize?: number | null;
     collectionSlug:
-      | 'users'
       | 'pages'
       | 'blogs'
       | 'specials'
       | 'media'
       | 'categories'
       | 'vehicle-categories'
+      | 'vehicle-templates'
+      | 'vehicle-model-templates'
       | 'vehicles'
       | 'vehicle-models'
+      | 'users'
       | 'redirects'
       | 'forms'
       | 'form-submissions'
