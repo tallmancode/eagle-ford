@@ -108,6 +108,36 @@ function resolveFormBuilderBlock(
   return null
 }
 
+function withNumberMinMax(block: Block): Block {
+  if (block.slug !== 'number') {
+    return block
+  }
+
+  return {
+    ...block,
+    fields: [
+      ...(block.fields ?? []),
+      {
+        type: 'row',
+        fields: [
+          {
+            name: 'min',
+            type: 'number',
+            admin: { width: '50%' },
+            label: 'Minimum Value',
+          },
+          {
+            name: 'max',
+            type: 'number',
+            admin: { width: '50%' },
+            label: 'Maximum Value',
+          },
+        ],
+      },
+    ],
+  }
+}
+
 export function getFormInputBlocks(
   uploadCollections: readonly UploadCollectionSlug[] = FORM_UPLOAD_COLLECTIONS,
 ): Block[] {
@@ -116,6 +146,7 @@ export function getFormInputBlocks(
       resolveFormBuilderBlock(fieldKey, fieldConfig, uploadCollections),
     )
     .filter((block): block is Block => block !== null)
+    .map(withNumberMinMax)
     .map(withFormFieldBlockLabel)
     .map(withFormFieldNameInput)
 }
