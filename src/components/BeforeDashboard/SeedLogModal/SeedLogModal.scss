@@ -1,0 +1,100 @@
+.seed-log-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  &__wrapper {
+    z-index: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--base) * 0.75);
+    padding: calc(var(--base) * 1.5);
+    width: min(90vw, 52rem);
+    max-height: 80vh;
+    background: var(--theme-elevation-0);
+    border: 1px solid var(--theme-border-color);
+    border-radius: var(--style-radius-m);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--base);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  &__status {
+    color: var(--theme-elevation-500);
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  &__status--running {
+    color: var(--theme-elevation-500);
+  }
+
+  &__status--complete {
+    color: var(--theme-success-500);
+  }
+
+  &__status--error {
+    color: var(--theme-error-500);
+  }
+
+  &__panel {
+    margin: 0;
+    padding: calc(var(--base) * 0.75);
+    background: var(--theme-elevation-50);
+    border: 1px solid var(--theme-border-color);
+    border-radius: var(--style-radius-s);
+    overflow: auto;
+    flex: 1;
+    min-height: 12rem;
+    max-height: 50vh;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  &__line {
+    margin: 0;
+  }
+
+  &__line--info {
+    color: var(--theme-text);
+  }
+
+  &__line--warn {
+    color: var(--theme-warning-500);
+  }
+
+  &__line--error {
+    color: var(--theme-error-500);
+  }
+
+  &__empty {
+    margin: 0;
+    color: var(--theme-elevation-500);
+    font-style: italic;
+  }
+
+  &__controls {
+    display: flex;
+    justify-content: flex-end;
+
+    .btn {
+      margin: 0;
+    }
+  }
+}

@@ -45,3 +45,9 @@
 .login .template-minimal__wrap {
   @apply max-w-none h-full flex flex-col;
 }
+
+.seed-wrapper {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 2rem;
+}
