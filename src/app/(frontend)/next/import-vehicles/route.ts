@@ -1,7 +1,17 @@
+import {
+  buildSeedMediaFilename,
+  getColourSwatch,
+  getModelHeroImage,
+  getVehicleFeatureImage,
+  getVehicleGallery,
+  getVehicleHero,
+  toPayloadFile,
+  type SeedImage,
+} from '@/lib/vehicle-seed-images'
 import { createLocalReq, getPayload } from 'payload'
 import config from '@payload-config'
 import { headers } from 'next/headers'
-import type { File } from 'payload'
+import type { Payload, PayloadRequest } from 'payload'
 
 export const maxDuration = 300
 
@@ -9,88 +19,194 @@ export const maxDuration = 300
 // Helpers
 // ---------------------------------------------------------------------------
 
-async function fetchFile(url: string): Promise<File | null> {
+type ImageImportStats = {
+  imagesUploaded: number
+  imagesMissing: number
+}
+
+type BuiltColour = {
+  colourName: string
+  colourNote?: string
+  colourSwatch?: string
+}
+
+type BuiltVehicleImages = {
+  heroMediaId: string | null
+  featureMediaId: string | null
+  galleryIds: string[]
+  colours: BuiltColour[]
+}
+
+function isDuplicateFilenameError(err: unknown): boolean {
+  return (
+    typeof err === 'object' &&
+    err !== null &&
+    'data' in err &&
+    Array.isArray((err as { data?: { errors?: { path?: string }[] } }).data?.errors) &&
+    (err as { data: { errors: { path?: string }[] } }).data.errors.some(
+      (e) => e.path === 'filename',
+    )
+  )
+}
+
+async function findSeedMediaId(
+  payload: Payload,
+  req: PayloadRequest,
+  mediaFilename: string,
+): Promise<string | null> {
+  const existing = await payload.find({
+    collection: 'media',
+    where: { filename: { equals: mediaFilename } },
+    limit: 1,
+    req,
+  })
+
+  return existing.totalDocs > 0 ? (existing.docs[0].id as string) : null
+}
+
+async function uploadSeedImage(
+  payload: Payload,
+  req: PayloadRequest,
+  image: SeedImage,
+  mediaFilename: string,
+  alt: string,
+  stats: ImageImportStats,
+): Promise<string> {
+  const existingId = await findSeedMediaId(payload, req, mediaFilename)
+  if (existingId) return existingId
+
   try {
-    const res = await fetch(url, { method: 'GET' })
-    if (!res.ok) return null
-    const data = await res.arrayBuffer()
-    const ext = url.split('.').pop()?.split('?')[0] ?? 'jpg'
-    const mimeMap: Record<string, string> = {
-      jpg: 'image/jpeg',
-      jpeg: 'image/jpeg',
-      png: 'image/png',
-      webp: 'image/webp',
-      gif: 'image/gif',
+    const media = await payload.create({
+      collection: 'media',
+      data: { alt },
+      file: toPayloadFile(image, mediaFilename),
+      req,
+    })
+    stats.imagesUploaded++
+    return media.id as string
+  } catch (err) {
+    if (isDuplicateFilenameError(err)) {
+      const retryId = await findSeedMediaId(payload, req, mediaFilename)
+      if (retryId) return retryId
     }
-    return {
-      name: url.split('/').pop()?.split('?')[0] ?? `vehicle-image.${ext}`,
-      data: Buffer.from(data),
-      mimetype: mimeMap[ext] ?? 'image/jpeg',
-      size: data.byteLength,
-    }
-  } catch {
-    return null
+    throw err
   }
 }
 
-async function scrapeImages(pageUrl: string): Promise<{ hero: string | null; gallery: string[] }> {
-  try {
-    const html = await fetch(pageUrl, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; EagleFordBot/1.0)' },
-    }).then((r) => r.text())
-
-    // Match all img src attributes on the page
-    const imgRegex = /src="(https?:\/\/(?:www\.)?eagleford\.co\.za[^"]+\.(?:jpg|jpeg|png|webp))"/gi
-    const all = [...html.matchAll(imgRegex)]
-      .map((m) => m[1])
-      // Filter out icons, logos, nav elements
-      .filter(
-        (u) =>
-          !u.includes('logo') &&
-          !u.includes('icon') &&
-          !u.includes('arrow') &&
-          !u.includes('favicon') &&
-          !u.includes('suzuki') &&
-          !u.includes('footer') &&
-          !u.includes('flag') &&
-          !u.includes('whatsapp'),
+async function buildVehicleImages(
+  payload: Payload,
+  req: PayloadRequest,
+  vehicleName: string,
+  vehicleSlug: string,
+  colours: ColourDef[],
+  stats: ImageImportStats,
+): Promise<BuiltVehicleImages> {
+  const heroImage = getVehicleHero(vehicleSlug)
+  const heroMediaId = heroImage
+    ? await uploadSeedImage(
+        payload,
+        req,
+        heroImage,
+        buildSeedMediaFilename(vehicleSlug, 'hero', 'banner'),
+        `${vehicleName} hero image`,
+        stats,
       )
-      // Deduplicate
-      .filter((u, i, arr) => arr.indexOf(u) === i)
+    : (stats.imagesMissing++, null)
 
-    const hero = all[0] ?? null
-    const gallery = all.slice(1)
+  const featureImage = getVehicleFeatureImage(vehicleSlug)
+  const featureMediaId = featureImage
+    ? await uploadSeedImage(
+        payload,
+        req,
+        featureImage,
+        buildSeedMediaFilename(vehicleSlug, 'feature', 'card'),
+        `${vehicleName} feature image`,
+        stats,
+      )
+    : (stats.imagesMissing++, null)
 
-    return { hero, gallery }
-  } catch {
-    return { hero: null, gallery: [] }
+  const galleryImages = getVehicleGallery(vehicleSlug)
+  if (galleryImages.length === 0) stats.imagesMissing++
+
+  const galleryIds: string[] = []
+  for (const [index, galleryImage] of galleryImages.slice(0, 8).entries()) {
+    galleryIds.push(
+      await uploadSeedImage(
+        payload,
+        req,
+        galleryImage,
+        buildSeedMediaFilename(vehicleSlug, 'gallery', String(index + 1).padStart(2, '0')),
+        `${vehicleName} gallery image`,
+        stats,
+      ),
+    )
   }
+
+  const builtColours: BuiltColour[] = []
+  for (const colour of colours) {
+    const swatchImage = getColourSwatch(vehicleSlug, colour.colourName)
+    let swatchMediaId: string | undefined
+
+    if (swatchImage) {
+      swatchMediaId = await uploadSeedImage(
+        payload,
+        req,
+        swatchImage,
+        buildSeedMediaFilename(vehicleSlug, 'colour', colour.colourName),
+        `${colour.colourName} colour swatch`,
+        stats,
+      )
+    } else {
+      stats.imagesMissing++
+    }
+
+    builtColours.push({
+      colourName: colour.colourName,
+      ...(colour.colourNote ? { colourNote: colour.colourNote } : {}),
+      ...(swatchMediaId ? { colourSwatch: swatchMediaId } : {}),
+    })
+  }
+
+  return { heroMediaId, featureMediaId, galleryIds, colours: builtColours }
 }
 
-async function scrapeColourSwatches(
-  pageUrl: string,
-): Promise<{ colourName: string; src: string }[]> {
-  try {
-    const html = await fetch(pageUrl, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; EagleFordBot/1.0)' },
-    }).then((r) => r.text())
+async function buildModelColours(
+  payload: Payload,
+  req: PayloadRequest,
+  vehicleSlug: string,
+  colours: ColourDef[],
+  stats: ImageImportStats,
+): Promise<BuiltColour[]> {
+  const builtColours: BuiltColour[] = []
 
-    // Match img tags that have an alt attribute containing "Colour"
-    const swatchRegex =
-      /<img[^>]+alt="([^"]*Colour[^"]*)"[^>]+src="(https?:\/\/[^"]+\.(?:jpg|jpeg|png|webp))"|<img[^>]+src="(https?:\/\/[^"]+\.(?:jpg|jpeg|png|webp))"[^>]+alt="([^"]*Colour[^"]*)"/gi
+  for (const colour of colours) {
+    const mediaFilename = buildSeedMediaFilename(vehicleSlug, 'colour', colour.colourName)
+    let swatchMediaId = (await findSeedMediaId(payload, req, mediaFilename)) ?? undefined
 
-    const swatches: { colourName: string; src: string }[] = []
-    for (const m of html.matchAll(swatchRegex)) {
-      const alt = m[1] || m[4]
-      const src = m[2] || m[3]
-      if (alt && src) {
-        swatches.push({ colourName: alt.replace(' Colour', '').trim(), src })
+    if (!swatchMediaId) {
+      const swatchImage = getColourSwatch(vehicleSlug, colour.colourName)
+      if (swatchImage) {
+        swatchMediaId = await uploadSeedImage(
+          payload,
+          req,
+          swatchImage,
+          mediaFilename,
+          `${colour.colourName} colour swatch`,
+          stats,
+        )
+      } else {
+        stats.imagesMissing++
       }
     }
-    return swatches
-  } catch {
-    return []
+
+    builtColours.push({
+      colourName: colour.colourName,
+      ...(colour.colourNote ? { colourNote: colour.colourNote } : {}),
+      ...(swatchMediaId ? { colourSwatch: swatchMediaId } : {}),
+    })
   }
+
+  return builtColours
 }
 
 // ---------------------------------------------------------------------------
@@ -1413,10 +1529,6 @@ const CATEGORY_DATA = [
   { title: 'Vans & Buses', slug: 'vans-and-buses', sortOrder: 4 },
 ]
 
-// Reliable placeholder image — Payload template
-const PLACEHOLDER_URL =
-  'https://raw.githubusercontent.com/payloadcms/payload/refs/heads/3.x/templates/website/src/endpoints/seed/image-hero1.webp'
-
 // ---------------------------------------------------------------------------
 // Route handler
 // ---------------------------------------------------------------------------
@@ -1437,32 +1549,17 @@ export async function POST(): Promise<Response> {
     categoriesCreated: 0,
     categoriesSkipped: 0,
     vehiclesCreated: 0,
+    vehiclesUpdated: 0,
     vehiclesSkipped: 0,
     modelsCreated: 0,
+    modelsUpdated: 0,
     modelsSkipped: 0,
     imagesUploaded: 0,
-    imagesFailed: 0,
+    imagesMissing: 0,
   }
 
   try {
-    // ── 1. Upload placeholder image (used as fallback) ──────────────────────
-    payload.logger.info('Fetching placeholder image...')
-    const placeholderFile = await fetchFile(PLACEHOLDER_URL)
-    let placeholderMediaId: string | null = null
-
-    if (placeholderFile) {
-      const placeholderMedia = await payload.create({
-        collection: 'media',
-        data: { alt: 'Vehicle placeholder image' },
-        file: placeholderFile,
-        req: payloadReq,
-      })
-      placeholderMediaId = placeholderMedia.id as string
-      result.imagesUploaded++
-      payload.logger.info('Placeholder image uploaded.')
-    }
-
-    // ── 2. Upsert vehicle categories ────────────────────────────────────────
+    // ── 1. Upsert vehicle categories ────────────────────────────────────────
     payload.logger.info('Seeding vehicle categories...')
     const categoryIdMap: Record<string, string> = {}
 
@@ -1488,7 +1585,7 @@ export async function POST(): Promise<Response> {
       }
     }
 
-    // ── 3. Upsert vehicles ──────────────────────────────────────────────────
+    // ── 2. Upsert vehicles ──────────────────────────────────────────────────
     payload.logger.info('Seeding vehicles...')
     const vehicleIdMap: Record<string, string> = {}
 
@@ -1502,96 +1599,52 @@ export async function POST(): Promise<Response> {
         req: payloadReq,
       })
 
+      payload.logger.info(`Loading seed images for: ${veh.name}`)
+      const images = await buildVehicleImages(
+        payload,
+        payloadReq,
+        veh.name,
+        veh.slug,
+        veh.colours,
+        result,
+      )
+
       if (existing.totalDocs > 0) {
         const doc = existing.docs[0]
         vehicleIdMap[veh.slug] = doc.id as string
+
+        const updateData: {
+          faqs: typeof veh.faqs
+          heroImage?: string
+          featureImage?: string
+          gallery?: { image: string }[]
+          colours?: BuiltColour[]
+        } = { faqs: veh.faqs }
+
+        if (images.heroMediaId) updateData.heroImage = images.heroMediaId
+        if (images.featureMediaId) updateData.featureImage = images.featureMediaId
+        if (images.galleryIds.length > 0) {
+          updateData.gallery = images.galleryIds.map((id) => ({ image: id }))
+        }
+        if (veh.colours.length > 0) updateData.colours = images.colours
+
         await payload.update({
           collection: 'vehicles',
           id: doc.id,
-          data: { faqs: veh.faqs },
+          data: updateData,
           req: payloadReq,
           context: { disableRevalidate: true },
         })
-        result.vehiclesSkipped++
-        payload.logger.info(`Updated FAQs for existing vehicle: ${veh.name}`)
+        result.vehiclesUpdated++
+        payload.logger.info(`Updated vehicle: ${veh.name}`)
         continue
       }
 
-      // Scrape images from the live site
-      payload.logger.info(`Scraping images for: ${veh.name}`)
-      const { hero: heroUrl, gallery: galleryUrls } = await scrapeImages(veh.pageUrl)
-
-      // Hero image
-      let heroMediaId = placeholderMediaId
-      if (heroUrl) {
-        const heroFile = await fetchFile(heroUrl)
-        if (heroFile) {
-          const heroMedia = await payload.create({
-            collection: 'media',
-            data: { alt: `${veh.name} hero image` },
-            file: heroFile,
-            req: payloadReq,
-          })
-          heroMediaId = heroMedia.id as string
-          result.imagesUploaded++
-        } else {
-          result.imagesFailed++
-        }
-      } else {
-        result.imagesFailed++
+      if (!images.heroMediaId) {
+        payload.logger.warn(`No hero image for ${veh.name} — skipping create`)
+        result.vehiclesSkipped++
+        continue
       }
-
-      // Gallery images (cap at 8)
-      const galleryIds: string[] = []
-      for (const galleryUrl of galleryUrls.slice(0, 8)) {
-        const galleryFile = await fetchFile(galleryUrl)
-        if (galleryFile) {
-          const galleryMedia = await payload.create({
-            collection: 'media',
-            data: { alt: `${veh.name} gallery image` },
-            file: galleryFile,
-            req: payloadReq,
-          })
-          galleryIds.push(galleryMedia.id as string)
-          result.imagesUploaded++
-        } else {
-          if (placeholderMediaId) galleryIds.push(placeholderMediaId)
-          result.imagesFailed++
-        }
-      }
-
-      // Build colours — attempt to scrape colour swatches
-      const scrapedSwatches = await scrapeColourSwatches(veh.pageUrl)
-      const colours = await Promise.all(
-        veh.colours.map(async (c) => {
-          const swatch = scrapedSwatches.find((s) =>
-            s.colourName.toLowerCase().includes(c.colourName.toLowerCase()),
-          )
-          let swatchMediaId = placeholderMediaId
-
-          if (swatch) {
-            const swatchFile = await fetchFile(swatch.src)
-            if (swatchFile) {
-              const swatchMedia = await payload.create({
-                collection: 'media',
-                data: { alt: `${c.colourName} colour swatch` },
-                file: swatchFile,
-                req: payloadReq,
-              })
-              swatchMediaId = swatchMedia.id as string
-              result.imagesUploaded++
-            } else {
-              result.imagesFailed++
-            }
-          }
-
-          return {
-            colourName: c.colourName,
-            ...(c.colourNote ? { colourNote: c.colourNote } : {}),
-            ...(swatchMediaId ? { colourSwatch: swatchMediaId } : {}),
-          }
-        }),
-      )
 
       const created = await payload.create({
         collection: 'vehicles',
@@ -1602,13 +1655,14 @@ export async function POST(): Promise<Response> {
           generateSlug: false,
           ...(veh.badge ? { badge: veh.badge } : {}),
           category: categoryIdMap[veh.categorySlug],
-          heroImage: heroMediaId as string,
-          gallery: galleryIds.map((id) => ({ image: id })),
+          heroImage: images.heroMediaId,
+          ...(images.featureMediaId ? { featureImage: images.featureMediaId } : {}),
+          gallery: images.galleryIds.map((id) => ({ image: id })),
           features: veh.features.map((f) => ({
             featureTitle: f.featureTitle,
             featureDescription: f.featureDescription,
           })),
-          colours,
+          colours: images.colours,
           faqs: veh.faqs,
           startingPrice: veh.startingPrice,
           priceDisclaimer: 'Including Optional Service plan and excluding Packs & factory options',
@@ -1624,7 +1678,7 @@ export async function POST(): Promise<Response> {
       payload.logger.info(`Created vehicle: ${veh.name}`)
     }
 
-    // ── 4. Upsert vehicle models ────────────────────────────────────────────
+    // ── 3. Upsert vehicle models ────────────────────────────────────────────
     payload.logger.info('Seeding vehicle models...')
 
     for (const veh of VEHICLE_DATA) {
@@ -1644,46 +1698,47 @@ export async function POST(): Promise<Response> {
           req: payloadReq,
         })
 
+        const modelHeroImage = getModelHeroImage(veh.slug, variant.slug)
+        const heroMediaId = modelHeroImage
+          ? await uploadSeedImage(
+              payload,
+              payloadReq,
+              modelHeroImage,
+              buildSeedMediaFilename(veh.slug, 'model', variant.slug),
+              `${variant.name} hero image`,
+              result,
+            )
+          : (result.imagesMissing++, null)
+
+        const variantColours = await buildModelColours(
+          payload,
+          payloadReq,
+          veh.slug,
+          veh.colours,
+          result,
+        )
+
         if (existing.totalDocs > 0) {
-          result.modelsSkipped++
-          payload.logger.info(`Skipped existing model: ${variant.name}`)
+          const updateData: {
+            heroImage?: string
+            colours?: BuiltColour[]
+          } = {}
+
+          if (heroMediaId) updateData.heroImage = heroMediaId
+          if (veh.colours.length > 0) updateData.colours = variantColours
+
+          await payload.update({
+            collection: 'vehicle-models',
+            id: existing.docs[0].id,
+            data: updateData,
+            req: payloadReq,
+            context: { disableRevalidate: true },
+          })
+
+          result.modelsUpdated++
+          payload.logger.info(`Updated model: ${variant.name}`)
           continue
         }
-
-        // Scrape colour swatches from variant page
-        const variantPageUrl = `${veh.pageUrl}${variant.slug}/`
-        const variantSwatches = await scrapeColourSwatches(variantPageUrl)
-
-        const variantColours = await Promise.all(
-          veh.colours.map(async (c) => {
-            const swatch = variantSwatches.find((s) =>
-              s.colourName.toLowerCase().includes(c.colourName.toLowerCase()),
-            )
-            let swatchMediaId = placeholderMediaId
-
-            if (swatch) {
-              const swatchFile = await fetchFile(swatch.src)
-              if (swatchFile) {
-                const swatchMedia = await payload.create({
-                  collection: 'media',
-                  data: { alt: `${c.colourName} swatch` },
-                  file: swatchFile,
-                  req: payloadReq,
-                })
-                swatchMediaId = swatchMedia.id as string
-                result.imagesUploaded++
-              } else {
-                result.imagesFailed++
-              }
-            }
-
-            return {
-              colourName: c.colourName,
-              ...(c.colourNote ? { colourNote: c.colourNote } : {}),
-              ...(swatchMediaId ? { colourSwatch: swatchMediaId } : {}),
-            }
-          }),
-        )
 
         try {
           await payload.create({
@@ -1696,6 +1751,7 @@ export async function POST(): Promise<Response> {
               vehicle: vehicleId,
               price: variant.price,
               highlights: variant.highlights.map((h) => ({ highlight: h })),
+              ...(heroMediaId ? { heroImage: heroMediaId } : {}),
               colours: variantColours,
               sortOrder: modelIndex + 1,
               _status: 'published',

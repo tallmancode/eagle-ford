@@ -82,6 +82,9 @@ importers:
       '@radix-ui/react-tabs':
         specifier: ^1.1.15
         version: 1.1.15(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      adm-zip:
+        specifier: ^0.5.18
+        version: 0.5.18
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.1
@@ -164,6 +167,9 @@ importers:
       '@testing-library/react':
         specifier: 16.3.0
         version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@types/adm-zip':
+        specifier: ^0.5.8
+        version: 0.5.8
       '@types/node':
         specifier: 22.19.9
         version: 22.19.9
@@ -3304,6 +3310,12 @@ packages:
         integrity: sha512-veQTnWP+1D/xbxVrPC3zHnCZRjSrKfhbMUlEA43iMZLu7EsnTtkJklIuwrCPbOi8YkvDQAiW05VQQFvvz9oieQ==,
       }
 
+  '@types/adm-zip@0.5.8':
+    resolution:
+      {
+        integrity: sha512-RVVH7QvZYbN+ihqZ4kX/dMiowf6o+Jk1fNwiSdx0NahBJLU787zkULhGhJM8mf/obmLGmgdMM0bXsQTmyfbR7Q==,
+      }
+
   '@types/aria-query@5.0.4':
     resolution:
       {
@@ -3845,6 +3857,13 @@ packages:
       }
     engines: { node: '>=0.4.0' }
     hasBin: true
+
+  adm-zip@0.5.18:
+    resolution:
+      {
+        integrity: sha512-ufJnssQGbxzLNS1Ho9bCtX4rQKCCvoVuDLHoJyc3F9dOGDB4BkWs2Ci0kv53lqocAEQ/Cbi+I2XCsNYGqVYqng==,
+      }
+    engines: { node: '>=12.0' }
 
   agent-base@7.1.4:
     resolution:
@@ -10158,6 +10177,10 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.9
 
+  '@types/adm-zip@0.5.8':
+    dependencies:
+      '@types/node': 22.19.9
+
   '@types/aria-query@5.0.4': {}
 
   '@types/babel__core@7.20.5':
@@ -10476,6 +10499,8 @@ snapshots:
   acorn@8.16.0: {}
 
   acorn@8.17.0: {}
+
+  adm-zip@0.5.18: {}
 
   agent-base@7.1.4: {}
 
