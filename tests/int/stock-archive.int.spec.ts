@@ -3,7 +3,6 @@ import type { StockArchiveVehicle } from '@/lib/blocks/stock-archive-block/utils
 import {
   buildEnquireUrl,
   countActiveFilters,
-  filterStock,
   formatBodyTypeLabel,
   formatMileageCompact,
   formatTransmissionShort,
@@ -14,8 +13,8 @@ import {
   getUniqueModels,
   getVehiclePrice,
   getVehicleSubtitle,
-  hasClientOnlyFilters,
   parseStockArchiveSearchParams,
+  stockArchiveFiltersToFetchOptions,
   stockArchiveFiltersToSearchParams,
 } from '@/lib/blocks/stock-archive-block/utils'
 import { buildStockUrl } from '@/lib/motor-city-stock/fetchStock'
@@ -65,14 +64,18 @@ describe('stock-archive utils', () => {
     expect(getUniqueModels(vehicles)).toEqual(['Everest', 'Ranger', 'Territory'])
   })
 
-  it('filterStock filters by model', () => {
-    const result = filterStock(vehicles, { model: 'Ranger' })
-    expect(result.map((v) => v.id)).toEqual(['1'])
-  })
-
-  it('filterStock excludes vehicles above mileage max', () => {
-    const result = filterStock(vehicles, { mileageMax: 20000 })
-    expect(result.map((v) => v.id)).toEqual(['1', '2'])
+  it('stockArchiveFiltersToFetchOptions passes model and mileage to the stock API', () => {
+    expect(
+      stockArchiveFiltersToFetchOptions(
+        { model: 'Ranger', mileageMax: 20000, page: 2 },
+        { limit: 12 },
+      ),
+    ).toEqual({
+      model: 'Ranger',
+      maxMileage: 20000,
+      page: 2,
+      limit: 12,
+    })
   })
 
   it('getPriceBounds uses specialPrice when present', () => {
@@ -116,12 +119,6 @@ describe('stock-archive utils', () => {
     expect(params.toString()).toBe(
       'bodyType=suv&fuelType=diesel&transmission=automatic&priceMin=200000&priceMax=800000&page=3',
     )
-  })
-
-  it('hasClientOnlyFilters is true when model or mileage is set', () => {
-    expect(hasClientOnlyFilters({ model: 'Ranger' })).toBe(true)
-    expect(hasClientOnlyFilters({ mileageMax: 10000 })).toBe(true)
-    expect(hasClientOnlyFilters({ bodyType: 'suv' })).toBe(false)
   })
 
   it('getTaxonomyLabel returns name from populated taxonomy', () => {
@@ -224,6 +221,8 @@ describe('buildStockUrl', () => {
       bodyType: 'hatch',
       fuelType: 'petrol',
       transmission: 'automatic',
+      model: 'Ranger',
+      maxMileage: 50000,
       minPrice: 100000,
       maxPrice: 500000,
       page: 2,
@@ -236,6 +235,8 @@ describe('buildStockUrl', () => {
     expect(url.searchParams.get('bodyType')).toBe('hatch')
     expect(url.searchParams.get('fuelType')).toBe('petrol')
     expect(url.searchParams.get('transmission')).toBe('automatic')
+    expect(url.searchParams.get('model')).toBe('Ranger')
+    expect(url.searchParams.get('maxMileage')).toBe('50000')
     expect(url.searchParams.get('minPrice')).toBe('100000')
     expect(url.searchParams.get('maxPrice')).toBe('500000')
     expect(url.searchParams.get('page')).toBe('2')

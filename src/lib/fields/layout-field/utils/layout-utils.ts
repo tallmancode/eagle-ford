@@ -159,6 +159,56 @@ export function mergeLayoutSpacingWithDefaults(
   return out
 }
 
+const SPACING_SIDES: (keyof SpacingSides)[] = ['top', 'right', 'bottom', 'left']
+
+export function layoutSpacingHasVars(
+  spacing: LayoutSpacingValue | null | undefined,
+  type: 'padding' | 'margin',
+): boolean {
+  if (!spacing || typeof spacing !== 'object') return false
+  const axes =
+    type === 'padding'
+      ? ([spacing.padding].filter(Boolean) as SpacingAxis[])
+      : ([spacing.margin].filter(Boolean) as SpacingAxis[])
+  return axes.some((axis) =>
+    SPACING_BREAKPOINTS.some((bp) =>
+      SPACING_SIDES.some((side) => axis.breakpoints[bp][side] !== ''),
+    ),
+  )
+}
+
+/**
+ * Maps spacing JSON to inline CSS custom properties consumed by `.section-layout-padding` / `.section-layout-margin`.
+ */
+export function layoutSpacingToCssVars(
+  spacing: LayoutSpacingValue | null | undefined,
+): CSSProperties {
+  if (!spacing || typeof spacing !== 'object') return {}
+
+  const out: Record<string, string> = {}
+
+  const writeVars = (prefix: 'pad' | 'mar', axis: SpacingAxis | undefined) => {
+    if (!axis) return
+    const unit = axis.unit
+    for (const bp of SPACING_BREAKPOINTS) {
+      const sides = axis.breakpoints[bp]
+      for (const side of SPACING_SIDES) {
+        const raw = sides[side]
+        if (raw === '' || raw === undefined) continue
+        const cssVal = `${raw}${unit}`
+        const key =
+          bp === 'base' ? `--section-${prefix}-${side}` : `--section-${prefix}-${side}-${bp}`
+        out[key] = cssVal
+      }
+    }
+  }
+
+  writeVars('pad', spacing.padding)
+  writeVars('mar', spacing.margin)
+
+  return out as CSSProperties
+}
+
 // --- Flex layout ---
 
 export type FlexDirection = 'row' | 'column'

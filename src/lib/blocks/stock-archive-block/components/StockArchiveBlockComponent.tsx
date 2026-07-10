@@ -2,11 +2,7 @@ import type { StockArchive } from '@/payload-types'
 import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 import { getCachedStock, getCachedStockFilters } from '@/lib/motor-city-stock'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
-import {
-  hasClientOnlyFilters,
-  parseStockArchiveSearchParams,
-  stockArchiveFiltersToFetchOptions,
-} from '../utils'
+import { parseStockArchiveSearchParams, stockArchiveFiltersToFetchOptions } from '../utils'
 import { StockArchiveClient } from './StockArchiveClient'
 import { StockArchiveError } from './StockArchiveError'
 
@@ -23,8 +19,7 @@ export async function StockArchiveBlockComponent(props: Props) {
   } = props
 
   const activeFilters = parseStockArchiveSearchParams(meta?.searchParams)
-  const clientOnlyMode = hasClientOnlyFilters(activeFilters)
-  const pageLimit = clientOnlyMode ? 1000 : (limit ?? 12)
+  const pageLimit = limit ?? 12
 
   const newUsed =
     conditionFilter === 'new'
@@ -70,36 +65,13 @@ export async function StockArchiveBlockComponent(props: Props) {
     )
   }
 
-  const vehicles = stockResponse.docs
-
-  if (vehicles.length === 0 && !clientOnlyMode) {
-    return (
-      <StockArchiveClient
-        heading={heading ?? 'Our Showroom'}
-        vehicles={[]}
-        filterOptions={filterOptions}
-        activeFilters={activeFilters}
-        hasClientOnlyFilters={clientOnlyMode}
-        limit={limit ?? 12}
-        showPagination={showPagination ?? true}
-        enquireUrl={enquireUrl ?? '/contact'}
-        pagination={{
-          page: stockResponse.page ?? 1,
-          totalPages: stockResponse.totalPages ?? 1,
-          totalDocs: stockResponse.totalDocs ?? 0,
-        }}
-      />
-    )
-  }
-
   return (
     <StockArchiveClient
       heading={heading ?? 'Our Showroom'}
-      vehicles={vehicles}
+      vehicles={stockResponse.docs}
       filterOptions={filterOptions}
       activeFilters={activeFilters}
-      hasClientOnlyFilters={clientOnlyMode}
-      limit={limit ?? 12}
+      limit={pageLimit}
       showPagination={showPagination ?? true}
       enquireUrl={enquireUrl ?? '/contact'}
       pagination={{

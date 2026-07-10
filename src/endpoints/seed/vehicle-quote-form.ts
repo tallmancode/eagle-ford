@@ -231,6 +231,14 @@ export const vehicleQuoteForm: RequiredDataFromCollectionSlug<'forms'> = {
     },
     {
       blockType: 'text',
+      blockName: 'modelName',
+      name: 'modelName',
+      label: 'Model',
+      required: false,
+      width: 100,
+    },
+    {
+      blockType: 'text',
       blockName: 'firstName',
       name: 'firstName',
       label: 'First Name',
