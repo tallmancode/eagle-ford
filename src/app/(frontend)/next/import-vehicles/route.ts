@@ -1,3 +1,4 @@
+import { createSeedStreamResponse } from '@/lib/seed/createSeedStreamResponse'
 import { buildSeedMediaFilename, toPayloadFile, type SeedImage } from '@/lib/vehicle-seed-images'
 import { createLocalReq, getPayload } from 'payload'
 import config from '@payload-config'
@@ -2420,22 +2421,22 @@ export async function POST(): Promise<Response> {
 
   const payloadReq = await createLocalReq({ user }, payload)
 
-  const result = {
-    categoriesCreated: 0,
-    categoriesSkipped: 0,
-    vehiclesCreated: 0,
-    vehiclesUpdated: 0,
-    vehiclesSkipped: 0,
-    modelsCreated: 0,
-    modelsUpdated: 0,
-    modelsSkipped: 0,
-    imagesUploaded: 0,
-    imagesMissing: 0,
-  }
+  return createSeedStreamResponse(async (log) => {
+    const result = {
+      categoriesCreated: 0,
+      categoriesSkipped: 0,
+      vehiclesCreated: 0,
+      vehiclesUpdated: 0,
+      vehiclesSkipped: 0,
+      modelsCreated: 0,
+      modelsUpdated: 0,
+      modelsSkipped: 0,
+      imagesUploaded: 0,
+      imagesMissing: 0,
+    }
 
-  try {
     // ── 1. Upsert vehicle categories ────────────────────────────────────────
-    payload.logger.info('Seeding vehicle categories...')
+    log.info('Seeding vehicle categories...')
     const categoryIdMap: Record<string, string> = {}
 
     for (const cat of CATEGORY_DATA) {
@@ -2456,12 +2457,12 @@ export async function POST(): Promise<Response> {
         })
         categoryIdMap[cat.slug] = created.id as string
         result.categoriesCreated++
-        payload.logger.info(`Created category: ${cat.title}`)
+        log.info(`Created category: ${cat.title}`)
       }
     }
 
     // ── 2. Upsert vehicles ──────────────────────────────────────────────────
-    payload.logger.info('Seeding vehicles...')
+    log.info('Seeding vehicles...')
     const vehicleIdMap: Record<string, string> = {}
 
     for (const [index, veh] of VEHICLE_DATA.entries()) {
@@ -2474,7 +2475,7 @@ export async function POST(): Promise<Response> {
         req: payloadReq,
       })
 
-      payload.logger.info(`Loading seed images for: ${veh.name}`)
+      log.info(`Loading seed images for: ${veh.name}`)
       const images = await buildVehicleImages(
         payload,
         payloadReq,
@@ -2536,12 +2537,12 @@ export async function POST(): Promise<Response> {
           context: { disableRevalidate: true },
         })
         result.vehiclesUpdated++
-        payload.logger.info(`Updated vehicle: ${veh.name}`)
+        log.info(`Updated vehicle: ${veh.name}`)
         continue
       }
 
       if (!images.heroMediaId) {
-        payload.logger.warn(`No hero image for ${veh.name} — skipping create`)
+        log.warn(`No hero image for ${veh.name} — skipping create`)
         result.vehiclesSkipped++
         continue
       }
@@ -2573,16 +2574,16 @@ export async function POST(): Promise<Response> {
 
       vehicleIdMap[veh.slug] = created.id as string
       result.vehiclesCreated++
-      payload.logger.info(`Created vehicle: ${veh.name}`)
+      log.info(`Created vehicle: ${veh.name}`)
     }
 
     // ── 3. Upsert vehicle models ────────────────────────────────────────────
-    payload.logger.info('Seeding vehicle models...')
+    log.info('Seeding vehicle models...')
 
     for (const veh of VEHICLE_DATA) {
       const vehicleId = vehicleIdMap[veh.slug]
       if (!vehicleId) {
-        payload.logger.warn(`No vehicle ID for ${veh.slug} — skipping models`)
+        log.warn(`No vehicle ID for ${veh.slug} — skipping models`)
         continue
       }
 
@@ -2649,7 +2650,7 @@ export async function POST(): Promise<Response> {
           })
 
           result.modelsUpdated++
-          payload.logger.info(`Updated model: ${variant.name}`)
+          log.info(`Updated model: ${variant.name}`)
           continue
         }
 
@@ -2675,7 +2676,7 @@ export async function POST(): Promise<Response> {
           })
 
           result.modelsCreated++
-          payload.logger.info(`Created model: ${variant.name}`)
+          log.info(`Created model: ${variant.name}`)
         } catch (modelErr) {
           const isUniqueSlug =
             typeof modelErr === 'object' &&
@@ -2688,9 +2689,7 @@ export async function POST(): Promise<Response> {
 
           if (isUniqueSlug) {
             result.modelsSkipped++
-            payload.logger.warn(
-              `Slug already exists for model ${variant.name} (${variant.slug}) — skipping`,
-            )
+            log.warn(`Slug already exists for model ${variant.name} (${variant.slug}) — skipping`)
             continue
           }
 
@@ -2699,11 +2698,8 @@ export async function POST(): Promise<Response> {
       }
     }
 
-    payload.logger.info('Vehicle import complete.')
+    log.info('Vehicle import complete.')
 
-    return Response.json({ success: true, ...result })
-  } catch (e) {
-    payload.logger.error({ err: e, message: 'Error importing vehicles' })
-    return new Response('Error importing vehicles.', { status: 500 })
-  }
+    return { success: true, ...result }
+  }, payload.logger)
 }

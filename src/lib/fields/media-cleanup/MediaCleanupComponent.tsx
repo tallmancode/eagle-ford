@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useCallback, useState } from 'react'
-import { toast } from '@payloadcms/ui'
+import { Button, toast } from '@payloadcms/ui'
 
 type CleanupResponse = {
   success: boolean
@@ -115,17 +115,14 @@ export const MediaCleanupComponent = () => {
         Remove media collection items that are not referenced anywhere in the CMS, including their
         files. Form submission uploads are treated as in use and will be kept.
       </p>
-      <p>
-        <button className="seedButton" type="button" onClick={handlePreview} disabled={loading}>
+      <p style={{ display: 'flex', gap: 'calc(var(--base) / 2)', flexWrap: 'wrap' }}>
+        <Button buttonStyle="secondary" size="small" disabled={loading} onClick={handlePreview}>
           {loading && !preview ? 'Scanning...' : 'Preview orphaned media'}
-        </button>
+        </Button>
         {preview && preview.orphanCount > 0 && (
-          <>
-            {' '}
-            <button className="seedButton" type="button" onClick={handleDelete} disabled={loading}>
-              {loading ? 'Deleting...' : `Delete ${preview.orphanCount} orphaned item(s)`}
-            </button>
-          </>
+          <Button buttonStyle="error" size="small" disabled={loading} onClick={handleDelete}>
+            {loading ? 'Deleting...' : `Delete ${preview.orphanCount} orphaned item(s)`}
+          </Button>
         )}
       </p>
       {preview && (
