@@ -15,6 +15,7 @@ const allBlockRefs: BlockSlug[] = [
   'team-grid',
   'image-block',
   'cta-cards',
+  'image-cards',
   'statsBlock',
   'hours-tabs',
   'faq',

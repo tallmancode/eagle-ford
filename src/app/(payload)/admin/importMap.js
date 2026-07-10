@@ -72,6 +72,7 @@ import { default as default_1186204a6de4fec56bd7a499c2b45917 } from '../../../li
 import { default as default_a220ec9db5b9132be136187d781b00db } from '../../../lib/blocks/team-grid-block/components/TeamGridBlockLabel'
 import { default as default_55db0c70c40e0b9848bc6212cc499f9b } from '../../../lib/blocks/image-block/components/ImageBlockLabel'
 import { default as default_cc6684bfc9bca610c54f9ccdff085d70 } from '../../../lib/blocks/cta-cards-block/components/CtaCardsBlockLabel'
+import { default as default_8fa4a9bd37ece55e9998729ceb1655a0 } from '../../../lib/blocks/image-cards-block/components/ImageCardsBlockLabel'
 import { default as default_9c512141ec1eddbbee092512a0ec1e94 } from '../../../lib/blocks/stats-block/components/StatsBlockLabel'
 import { default as default_6f3197c07453688a360c56703708e06a } from '../../../lib/blocks/hours-tabs-block/components/HoursTabsBlockLabel'
 import { default as default_d7fb5d85eea6bc8c516a6af89d5644d8 } from '../../../lib/blocks/faq-block/components/FaqBlockLabel'
@@ -235,6 +236,8 @@ export const importMap = {
     default_55db0c70c40e0b9848bc6212cc499f9b,
   '/lib/blocks/cta-cards-block/components/CtaCardsBlockLabel#default':
     default_cc6684bfc9bca610c54f9ccdff085d70,
+  '/lib/blocks/image-cards-block/components/ImageCardsBlockLabel#default':
+    default_8fa4a9bd37ece55e9998729ceb1655a0,
   '/lib/blocks/stats-block/components/StatsBlockLabel#default':
     default_9c512141ec1eddbbee092512a0ec1e94,
   '/lib/blocks/hours-tabs-block/components/HoursTabsBlockLabel#default':
