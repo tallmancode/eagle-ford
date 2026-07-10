@@ -15,6 +15,7 @@ import type {
   TeamGrid,
   ImageBlock,
   CtaCards,
+  ImageCards,
   StatsBlock,
   HoursTabs,
   Faq,
@@ -57,6 +58,7 @@ import { MapBlockComponent } from '@/lib/blocks/map-block/components/MapBlockCom
 import { TeamGridBlockComponent } from '@/lib/blocks/team-grid-block/components/TeamGridBlockComponent'
 import { StatsBlockComponent } from '@/lib/blocks/stats-block/components/StatsBlockComponent'
 import { CtaCardsBlockComponent } from '@/lib/blocks/cta-cards-block/components/CtaCardsBlockComponent'
+import { ImageCardsBlockComponent } from '@/lib/blocks/image-cards-block/components/ImageCardsBlockComponent'
 import { ImageBlockComponent } from '@/lib/blocks/image-block/components/ImageBlockComponent'
 import { HoursTabsBlockComponent } from '@/lib/blocks/hours-tabs-block/components/HoursTabsBlockComponent'
 import { FaqBlockComponent } from '@/lib/blocks/faq-block/components/FaqBlockComponent'
@@ -103,6 +105,7 @@ type BlockComponentMap = {
   'team-grid': TeamGrid
   'image-block': ImageBlock
   'cta-cards': CtaCards
+  'image-cards': ImageCards
   statsBlock: StatsBlock
   'hours-tabs': HoursTabs
   faq: Faq
@@ -153,6 +156,7 @@ const blockComponents: {
   'team-grid': TeamGridBlockComponent,
   'image-block': ImageBlockComponent,
   'cta-cards': CtaCardsBlockComponent,
+  'image-cards': ImageCardsBlockComponent,
   statsBlock: StatsBlockComponent,
   'hours-tabs': HoursTabsBlockComponent,
   faq: FaqBlockComponent,

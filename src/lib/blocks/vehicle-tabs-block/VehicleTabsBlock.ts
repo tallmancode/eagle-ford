@@ -19,14 +19,5 @@ export const VehicleTabsBlock: Block = {
       },
     },
   },
-  fields: [
-    {
-      name: 'heading',
-      type: 'text',
-      label: 'Heading',
-      admin: {
-        description: 'Optional heading displayed above the tabs (e.g. "View Our Vehicles")',
-      },
-    },
-  ],
+  fields: [],
 }

@@ -4,7 +4,7 @@ import configPromise from '@payload-config'
 import type { VehicleCategory, VehicleTabsBlock } from '@/payload-types'
 import { VehicleTabsClient, type VehicleTabItem } from './VehicleTabsClient'
 
-export async function VehicleTabsBlockComponent({ heading }: VehicleTabsBlock) {
+export async function VehicleTabsBlockComponent(_props: VehicleTabsBlock) {
   const payload = await getPayload({ config: configPromise })
 
   const [categoriesResult, vehiclesResult] = await Promise.all([
@@ -48,5 +48,5 @@ export async function VehicleTabsBlockComponent({ heading }: VehicleTabsBlock) {
     })
   }
 
-  return <VehicleTabsClient heading={heading} categories={categories} vehicles={vehicles} />
+  return <VehicleTabsClient categories={categories} vehicles={vehicles} />
 }

@@ -37,22 +37,17 @@ function renderFlyoutTrigger(item: NavLink, linkClassName?: string, ariaLabel?: 
 
   if (parentHref) {
     return (
-      <div className="flex items-center gap-0">
-        <Link
-          href={parentHref}
-          target={getNavLinkTarget(item)}
-          className={cn(linkClassName, 'px-4 py-2')}
-        >
+      <NavigationMenuTrigger
+        asChild
+        hideChevron
+        className={triggerClassName(linkClassName)}
+        aria-label={ariaLabel ?? `Open ${item.label} menu`}
+      >
+        <Link href={parentHref} target={getNavLinkTarget(item)}>
           {item.label}
+          <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
         </Link>
-        <NavigationMenuTrigger
-          hideChevron
-          className={cn(triggerClassName(linkClassName), 'px-1')}
-          aria-label={ariaLabel ?? `Open ${item.label} menu`}
-        >
-          <ChevronDown className="h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
-        </NavigationMenuTrigger>
-      </div>
+      </NavigationMenuTrigger>
     )
   }
 

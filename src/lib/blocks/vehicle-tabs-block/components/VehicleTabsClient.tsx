@@ -48,15 +48,13 @@ function VehicleCard({ vehicle }: { vehicle: VehicleTabItem }) {
 }
 
 type Props = {
-  heading?: string | null
   categories: Pick<VehicleCategory, 'id' | 'title' | 'slug'>[]
   vehicles: VehicleTabItem[]
 }
 
-export function VehicleTabsClient({ heading, categories, vehicles }: Props) {
+export function VehicleTabsClient({ categories, vehicles }: Props) {
   return (
     <div>
-      {heading && <h2 className="text-2xl text-center text-muted-foreground mb-6">{heading}</h2>}
       <Tabs defaultValue="all">
         <TabsList variant="line" className="mb-6 flex flex-wrap h-auto gap-x-1">
           <TabsTrigger value="all">All Vehicles</TabsTrigger>
