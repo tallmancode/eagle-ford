@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 
-import { populatePublishedAt } from '@/hooks/populatePublishedAt'
+import { populatePublishedAt } from '@/lib/hooks/populatePublishedAt'
 import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
 import { generatePreviewPath } from '@/lib/utils/generatePreviewPath'
 import { revalidateVehicle, revalidateVehicleDelete } from './hooks/revalidateVehicle'

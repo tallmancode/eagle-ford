@@ -1,6 +1,6 @@
 import { CollectionConfig, slugField } from 'payload'
 
-import { populatePublishedAt } from '@/hooks/populatePublishedAt'
+import { populatePublishedAt } from '@/lib/hooks/populatePublishedAt'
 import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
 import { OFFER_TYPES } from '@/lib/specials/constants'
 import { revalidateSpecial, revalidateSpecialDelete } from './hooks/revalidateSpecial'
