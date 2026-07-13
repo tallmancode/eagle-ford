@@ -3,9 +3,11 @@ import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
+import { sentryPlugin } from '@payloadcms/plugin-sentry'
+import * as Sentry from '@sentry/nextjs'
 import { Plugin } from 'payload'
 import type { Field } from 'payload'
-import { revalidateRedirects } from '@/hooks/revalidateRedirects'
+import { revalidateRedirects } from '@/lib/hooks/revalidateRedirects'
 import { GenerateURL } from '@payloadcms/plugin-seo/types'
 import generateTitle from '@/lib/utils/generateTitle'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -219,5 +221,11 @@ export const plugins: Plugin[] = [
       { slug: 'users', export: { disableJobsQueue: true }, import: { disableJobsQueue: true } },
       { slug: 'pages', export: { disableJobsQueue: true }, import: { disableJobsQueue: true } },
     ],
+  }),
+  // Keep enabled so AdminErrorBoundary stays in the import map (generate:importmap
+  // runs in non-production). Sentry.init already gates reporting on NODE_ENV.
+  sentryPlugin({
+    enabled: true,
+    Sentry,
   }),
 ]
