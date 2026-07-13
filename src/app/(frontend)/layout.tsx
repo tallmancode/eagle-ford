@@ -51,8 +51,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       className={cn(GeistSans.variable, GeistMono.variable, fordF1.variable)}
+      data-theme="light"
       lang="en"
-      suppressHydrationWarning
     >
       <PrivacyProvider>
         <body className="font-ford">
