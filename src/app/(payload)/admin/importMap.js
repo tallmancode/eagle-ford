@@ -91,6 +91,7 @@ import { default as default_a7653596fe6e03539b30d7c2a5614de8 } from '../../../li
 import { LiveStockNavLink as LiveStockNavLink_e8acb1be7b2f6864021d27929c086ced } from '@/components/admin/sidebar/LiveStockNavLink'
 import { default as default_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/components/BeforeLogin'
 import { ImportExportProvider as ImportExportProvider_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { AdminErrorBoundary as AdminErrorBoundary_e5a9e14bdbe97e70ba60697217fe7688 } from '@payloadcms/plugin-sentry/client'
 import { default as default_410252c7292359409637c465dfeb7f50 } from '@/views/Login'
 import { default as default_b23ca64b4ee2a01df1b2fef4bbd2bd1a } from '@/views/LiveStock'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -274,6 +275,8 @@ export const importMap = {
   '@/components/BeforeLogin#default': default_8a7ab0eb7ab5c511aba12e68480bfe5e,
   '@payloadcms/plugin-import-export/rsc#ImportExportProvider':
     ImportExportProvider_cdf7e044479f899a31f804427d568b36,
+  '@payloadcms/plugin-sentry/client#AdminErrorBoundary':
+    AdminErrorBoundary_e5a9e14bdbe97e70ba60697217fe7688,
   '@/views/Login#default': default_410252c7292359409637c465dfeb7f50,
   '@/views/LiveStock#default': default_b23ca64b4ee2a01df1b2fef4bbd2bd1a,
   '@payloadcms/next/rsc#CollectionCards': CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,

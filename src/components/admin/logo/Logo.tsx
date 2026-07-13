@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import iconLogo from '@/assets/Media/logo/eagle-motor-city-icon.png'
+import iconLogo from '@/assets/Media/logo/eagle-icon.png'
 import Image from 'next/image'
 import { SITE_NAME } from '@/constants/site'
 
