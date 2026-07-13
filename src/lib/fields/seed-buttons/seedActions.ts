@@ -83,3 +83,14 @@ export const importSeedActions: SeedAction[] = [
     allowRetry: true,
   },
 ]
+
+export const diagnosticSeedActions: SeedAction[] = [
+  {
+    endpoint: '/next/sentry-test-error',
+    label: 'Force Sentry Test Error',
+    successText: 'Sentry test error reported.',
+    description:
+      'Intentionally capture an exception so you can confirm Sentry is receiving events (production + SENTRY_DSN required).',
+    allowRetry: true,
+  },
+]
