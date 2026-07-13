@@ -3,7 +3,12 @@
 import React from 'react'
 import type { Payload } from 'payload'
 import { CreateFormButton } from '@/components/BeforeDashboard/CreateFormButton'
-import { formSeedActions, importSeedActions, type SeedAction } from './seedActions'
+import {
+  diagnosticSeedActions,
+  formSeedActions,
+  importSeedActions,
+  type SeedAction,
+} from './seedActions'
 
 import './SeedButtonsComponent.scss'
 
@@ -44,6 +49,7 @@ export const SeedButtonsComponent = ({ payload: _payload }: { payload: Payload }
     <div className={baseClass}>
       <SeedSection title="Forms" actions={formSeedActions} />
       <SeedSection title="Imports" actions={importSeedActions} />
+      <SeedSection title="Diagnostics" actions={diagnosticSeedActions} />
     </div>
   )
 }
