@@ -134,6 +134,17 @@ export function VehicleHero({ vehicle }: VehicleHeroProps) {
                   View Models
                 </Button>
               </a>
+              {brochureUrl && (
+                <a href={brochureUrl} target="_blank" rel="noopener noreferrer" download>
+                  <Button
+                    variant="outline"
+                    className="rounded-full border-white text-white bg-transparent hover:bg-white/10"
+                  >
+                    <Download className="mr-2 size-4" />
+                    Download Brochure
+                  </Button>
+                </a>
+              )}
             </>
           )}
         </div>

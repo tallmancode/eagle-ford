@@ -25,6 +25,8 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
   defaultSort: 'sortOrder',
   defaultPopulate: {
     offerType: true,
+    vehicle: true,
+    vehicleModel: true,
   },
   fields: [
     {
@@ -65,6 +67,37 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
               type: 'upload',
               relationTo: 'media',
               required: true,
+            },
+            {
+              name: 'vehicle',
+              label: 'Linked Vehicle',
+              type: 'relationship',
+              relationTo: 'vehicles',
+              admin: {
+                description:
+                  'Optional. Links this special to a vehicle family page. Leave blank for service or non-vehicle offers.',
+              },
+            },
+            {
+              name: 'vehicleModel',
+              label: 'Linked Model / Variant',
+              type: 'relationship',
+              relationTo: 'vehicle-models',
+              filterOptions: ({ siblingData }) => {
+                const data = siblingData as { vehicle?: string | { id?: string } | null }
+                if (data?.vehicle) {
+                  return {
+                    vehicle: {
+                      equals: typeof data.vehicle === 'object' ? data.vehicle.id : data.vehicle,
+                    },
+                  }
+                }
+                return true
+              },
+              admin: {
+                description:
+                  'Optional. Links this special to a specific model variant. Leave blank when not applicable.',
+              },
             },
           ],
         },

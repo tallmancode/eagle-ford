@@ -2252,6 +2252,14 @@ export interface Special {
   subTitle?: string | null;
   cardImage: string | Media;
   /**
+   * Optional. Links this special to a vehicle family page. Leave blank for service or non-vehicle offers.
+   */
+  vehicle?: (string | null) | Vehicle;
+  /**
+   * Optional. Links this special to a specific model variant. Leave blank when not applicable.
+   */
+  vehicleModel?: (string | null) | VehicleModel;
+  /**
    * Cash price in Rand, e.g. 489900 for R489 900
    */
   pricingLabel?: string | null;
@@ -2275,53 +2283,6 @@ export interface Special {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-categories".
- */
-export interface VehicleCategory {
-  id: string;
-  title: string;
-  /**
-   * Lower numbers appear first.
-   */
-  sortOrder?: number | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-templates".
- */
-export interface VehicleTemplate {
-  id: string;
-  /**
-   * e.g. "Standard Vehicle Layout" or "Commercial Vehicle Layout"
-   */
-  title: string;
-  section?: Section[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-model-templates".
- */
-export interface VehicleModelTemplate {
-  id: string;
-  /**
-   * e.g. "Standard Model Layout" or "Commercial Model Layout"
-   */
-  title: string;
-  section?: Section[] | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2520,6 +2481,53 @@ export interface Vehicle {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-categories".
+ */
+export interface VehicleCategory {
+  id: string;
+  title: string;
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-templates".
+ */
+export interface VehicleTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Vehicle Layout" or "Commercial Vehicle Layout"
+   */
+  title: string;
+  section?: Section[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-model-templates".
+ */
+export interface VehicleModelTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Model Layout" or "Commercial Model Layout"
+   */
+  title: string;
+  section?: Section[] | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3052,6 +3060,8 @@ export interface SpecialsSelect<T extends boolean = true> {
   title?: T;
   subTitle?: T;
   cardImage?: T;
+  vehicle?: T;
+  vehicleModel?: T;
   pricingLabel?: T;
   specialOffer?: T;
   content?:

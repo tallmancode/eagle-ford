@@ -1,0 +1,2450 @@
+{
+  "createdAt": "2026-07-06T14:53:13.704Z",
+  "updatedAt": "2026-07-06T15:06:03.305Z",
+  "offerType": "service",
+  "content": {
+    "section": [
+      {
+        "blockType": "section",
+        "content": [
+          {
+            "blockType": "sectionInner",
+            "content": [
+              {
+                "blockType": "image-block",
+                "image": {
+                  "createdAt": "2026-07-06T14:59:09.988Z",
+                  "updatedAt": "2026-07-06T14:59:09.988Z",
+                  "alt": "asdasd",
+                  "url": "/api/media/file/17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi.webp",
+                  "filename": "17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi.webp",
+                  "mimeType": "image/webp",
+                  "filesize": 85036,
+                  "width": 700,
+                  "height": 700,
+                  "focalX": 50,
+                  "focalY": 50,
+                  "sizes": {
+                    "thumbnail": {
+                      "url": "/api/media/file/17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-300x300.webp",
+                      "width": 300,
+                      "height": 300,
+                      "mimeType": "image/webp",
+                      "filesize": 24720,
+                      "filename": "17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-300x300.webp"
+                    },
+                    "square": {
+                      "url": "/api/media/file/17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-500x500.webp",
+                      "width": 500,
+                      "height": 500,
+                      "mimeType": "image/webp",
+                      "filesize": 49266,
+                      "filename": "17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-500x500.webp"
+                    },
+                    "small": {
+                      "url": "/api/media/file/17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-600x600.webp",
+                      "width": 600,
+                      "height": 600,
+                      "mimeType": "image/webp",
+                      "filesize": 68610,
+                      "filename": "17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-600x600.webp"
+                    },
+                    "medium": {
+                      "url": null,
+                      "width": null,
+                      "height": null,
+                      "mimeType": null,
+                      "filesize": null,
+                      "filename": null
+                    },
+                    "large": {
+                      "url": null,
+                      "width": null,
+                      "height": null,
+                      "mimeType": null,
+                      "filesize": null,
+                      "filename": null
+                    },
+                    "xlarge": {
+                      "url": null,
+                      "width": null,
+                      "height": null,
+                      "mimeType": null,
+                      "filesize": null,
+                      "filename": null
+                    },
+                    "og": {
+                      "url": "/api/media/file/17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-1200x630.webp",
+                      "width": 1200,
+                      "height": 630,
+                      "mimeType": "image/webp",
+                      "filesize": 86242,
+                      "filename": "17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-1200x630.webp"
+                    }
+                  },
+                  "id": "6a4bc2bdaae5cd2be7342b31",
+                  "thumbnailURL": "/api/media/file/17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-300x300.webp"
+                },
+                "cornerRadius": "none",
+                "aspectRatio": "auto",
+                "shadow": "none",
+                "id": "6a4bc2f31654174c2236af09"
+              }
+            ],
+            "backgroundColor": "none",
+            "backgroundStyle": "none",
+            "container": false,
+            "verticalAlign": "top",
+            "layout": {
+              "spacing": {
+                "padding": {
+                  "linked": true,
+                  "unit": "rem",
+                  "breakpoints": {
+                    "base": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    },
+                    "md": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    },
+                    "lg": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    }
+                  }
+                },
+                "margin": {
+                  "linked": true,
+                  "unit": "rem",
+                  "breakpoints": {
+                    "base": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    },
+                    "md": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    },
+                    "lg": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    }
+                  }
+                }
+              },
+              "flex": {
+                "gapUnit": "rem",
+                "breakpoints": {
+                  "base": {
+                    "direction": "",
+                    "justifyContent": "",
+                    "alignItems": "",
+                    "gap": ""
+                  },
+                  "md": {
+                    "direction": "",
+                    "justifyContent": "",
+                    "alignItems": "",
+                    "gap": ""
+                  },
+                  "lg": {
+                    "direction": "",
+                    "justifyContent": "",
+                    "alignItems": "",
+                    "gap": ""
+                  }
+                }
+              },
+              "visibility": {
+                "hideAt": {
+                  "base": false,
+                  "md": false,
+                  "lg": false
+                }
+              }
+            },
+            "accessibility": {
+              "landmark": "",
+              "ariaHidden": false
+            },
+            "id": "6a4bc2e31654174c2236af07"
+          },
+          {
+            "blockType": "sectionInner",
+            "content": [
+              {
+                "blockType": "heading",
+                "template": "standard",
+                "standardHeadingContent": {
+                  "tag": {
+                    "style": "filled",
+                    "color": "neutral"
+                  },
+                  "heading": "Ford Cambelt Service",
+                  "splitTextAnimation": false,
+                  "subheading": "Book Your Ford Cambelt Service and Save R10 000",
+                  "headingTag": "h2",
+                  "size": "lg",
+                  "alignment": "left",
+                  "color": "primary",
+                  "fontWeight": "bold",
+                  "uppercase": false
+                },
+                "dashHeadingContent": {
+                  "headingTag": "h2",
+                  "size": "lg",
+                  "alignment": "center",
+                  "color": "primary",
+                  "fontWeight": "bold",
+                  "uppercase": true
+                },
+                "separatorHeadingContent": {
+                  "headingTag": "h2",
+                  "size": "lg",
+                  "alignment": "center",
+                  "color": "primary",
+                  "fontWeight": "bold",
+                  "uppercase": true
+                },
+                "swipeHeadingContent": {
+                  "barColor": "#000000",
+                  "headingTag": "h2",
+                  "size": "lg",
+                  "alignment": "center",
+                  "color": "primary",
+                  "fontWeight": "bold",
+                  "uppercase": true
+                },
+                "id": "6a4bc3081654174c2236af0a"
+              },
+              {
+                "blockType": "rich-text",
+                "content": {
+                  "root": {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "detail": 0,
+                            "format": 0,
+                            "mode": "normal",
+                            "style": "",
+                            "text": "Avoid costly engine damage and keep your Ford running at its best with our EcoSport and Fiesta Cambelt Service Special for 2015, 2016 and 2017 models.",
+                            "type": "text",
+                            "version": 1
+                          }
+                        ],
+                        "direction": null,
+                        "format": "start",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1,
+                        "textFormat": 0,
+                        "textStyle": ""
+                      },
+                      {
+                        "children": [],
+                        "direction": null,
+                        "format": "start",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1,
+                        "textFormat": 0,
+                        "textStyle": ""
+                      },
+                      {
+                        "children": [
+                          {
+                            "detail": 0,
+                            "format": 1,
+                            "mode": "normal",
+                            "style": "",
+                            "text": "Service special includes:",
+                            "type": "text",
+                            "version": 1
+                          }
+                        ],
+                        "direction": null,
+                        "format": "start",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1,
+                        "textFormat": 1,
+                        "textStyle": ""
+                      },
+                      {
+                        "children": [],
+                        "direction": null,
+                        "format": "start",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1,
+                        "textFormat": 0,
+                        "textStyle": ""
+                      },
+                      {
+                        "children": [
+                          {
+                            "detail": 0,
+                            "format": 0,
+                            "mode": "normal",
+                            "style": "",
+                            "text": "• Professional cambelt replacement",
+                            "type": "text",
+                            "version": 1
+                          }
+                        ],
+                        "direction": null,
+                        "format": "start",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1,
+                        "textFormat": 0,
+                        "textStyle": ""
+                      },
+                      {
+                        "children": [
+                          {
+                            "detail": 0,
+                            "format": 0,
+                            "mode": "normal",
+                            "style": "",
+                            "text": "• Quality Ford-approved parts",
+                            "type": "text",
+                            "version": 1
+                          }
+                        ],
+                        "direction": null,
+                        "format": "start",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1,
+                        "textFormat": 0,
+                        "textStyle": ""
+                      },
+                      {
+                        "children": [
+                          {
+                            "detail": 0,
+                            "format": 0,
+                            "mode": "normal",
+                            "style": "",
+                            "text": "• Expert technician fitment",
+                            "type": "text",
+                            "version": 1
+                          }
+                        ],
+                        "direction": null,
+                        "format": "start",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1,
+                        "textFormat": 0,
+                        "textStyle": ""
+                      },
+                      {
+                        "children": [
+                          {
+                            "detail": 0,
+                            "format": 0,
+                            "mode": "normal",
+                            "style": "",
+                            "text": "• Peace of mind on the road",
+                            "type": "text",
+                            "version": 1
+                          }
+                        ],
+                        "direction": null,
+                        "format": "start",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1,
+                        "textFormat": 0,
+                        "textStyle": ""
+                      },
+                      {
+                        "children": [],
+                        "direction": null,
+                        "format": "start",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1,
+                        "textFormat": 0,
+                        "textStyle": ""
+                      },
+                      {
+                        "children": [
+                          {
+                            "detail": 0,
+                            "format": 1,
+                            "mode": "normal",
+                            "style": "",
+                            "text": "Save R10 000 for a limited time only.",
+                            "type": "text",
+                            "version": 1
+                          }
+                        ],
+                        "direction": null,
+                        "format": "start",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1,
+                        "textFormat": 1,
+                        "textStyle": ""
+                      },
+                      {
+                        "children": [],
+                        "direction": null,
+                        "format": "start",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1,
+                        "textFormat": 0,
+                        "textStyle": ""
+                      },
+                      {
+                        "children": [
+                          {
+                            "detail": 0,
+                            "format": 0,
+                            "mode": "normal",
+                            "style": "",
+                            "text": "*Terms and conditions apply.",
+                            "type": "text",
+                            "version": 1
+                          }
+                        ],
+                        "direction": null,
+                        "format": "start",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1,
+                        "textFormat": 0,
+                        "textStyle": ""
+                      }
+                    ],
+                    "direction": null,
+                    "format": "",
+                    "indent": 0,
+                    "type": "root",
+                    "version": 1
+                  }
+                },
+                "id": "6a4bc3261654174c2236af0b"
+              },
+              {
+                "blockType": "row",
+                "content": [
+                  {
+                    "blockType": "cta-button",
+                    "label": "Enquire Now",
+                    "icon": "mail",
+                    "linkType": "url",
+                    "variant": "default",
+                    "url": "mailto:sales@eagleford.co.za",
+                    "newTab": false,
+                    "size": "default",
+                    "align": "left",
+                    "id": "6a4bc33f1654174c2236af0d"
+                  },
+                  {
+                    "blockType": "cta-button",
+                    "label": "All Specials",
+                    "icon": "dollar-sign",
+                    "linkType": "reference",
+                    "variant": "outline",
+                    "reference": {
+                      "relationTo": "pages",
+                      "value": {
+                        "createdAt": "2026-07-06T14:49:07.894Z",
+                        "updatedAt": "2026-07-06T17:31:56.191Z",
+                        "overlayHeader": false,
+                        "content": {
+                          "section": [
+                            {
+                              "blockType": "section",
+                              "content": [
+                                {
+                                  "blockType": "hero",
+                                  "template": "banner",
+                                  "carouselHeroContent": {
+                                    "carouselTemplate": "standard",
+                                    "enableInteraction": true,
+                                    "autoPlay": true,
+                                    "autoPlayInterval": 5000,
+                                    "standardCarouselContent": {
+                                      "slides": []
+                                    },
+                                    "overlayCarouselContent": {
+                                      "slides": []
+                                    }
+                                  },
+                                  "bannerHeroContent": {
+                                    "bannerTemplate": "cta-overlay",
+                                    "fullWidthBannerContent": {},
+                                    "overlayBannerContent": {
+                                      "alignment": "left",
+                                      "darkOverlay": true
+                                    },
+                                    "ctaOverlayContent": {
+                                      "image": {
+                                        "createdAt": "2026-07-06T14:52:21.577Z",
+                                        "updatedAt": "2026-07-06T14:52:21.577Z",
+                                        "alt": "asdasd",
+                                        "url": "/api/media/file/specials-hero.webp",
+                                        "filename": "specials-hero.webp",
+                                        "mimeType": "image/webp",
+                                        "filesize": 409284,
+                                        "width": 3440,
+                                        "height": 1439,
+                                        "focalX": 50,
+                                        "focalY": 50,
+                                        "sizes": {
+                                          "thumbnail": {
+                                            "url": "/api/media/file/specials-hero-300x125.jpg",
+                                            "width": 300,
+                                            "height": 125,
+                                            "mimeType": "image/jpeg",
+                                            "filesize": 9664,
+                                            "filename": "specials-hero-300x125.jpg"
+                                          },
+                                          "square": {
+                                            "url": "/api/media/file/specials-hero-500x500.jpg",
+                                            "width": 500,
+                                            "height": 500,
+                                            "mimeType": "image/jpeg",
+                                            "filesize": 38280,
+                                            "filename": "specials-hero-500x500.jpg"
+                                          },
+                                          "small": {
+                                            "url": "/api/media/file/specials-hero-600x251.jpg",
+                                            "width": 600,
+                                            "height": 251,
+                                            "mimeType": "image/jpeg",
+                                            "filesize": 32454,
+                                            "filename": "specials-hero-600x251.jpg"
+                                          },
+                                          "medium": {
+                                            "url": "/api/media/file/specials-hero-900x376.jpg",
+                                            "width": 900,
+                                            "height": 376,
+                                            "mimeType": "image/jpeg",
+                                            "filesize": 65576,
+                                            "filename": "specials-hero-900x376.jpg"
+                                          },
+                                          "large": {
+                                            "url": "/api/media/file/specials-hero-1400x586.jpg",
+                                            "width": 1400,
+                                            "height": 586,
+                                            "mimeType": "image/jpeg",
+                                            "filesize": 143482,
+                                            "filename": "specials-hero-1400x586.jpg"
+                                          },
+                                          "xlarge": {
+                                            "url": "/api/media/file/specials-hero-1920x803.jpg",
+                                            "width": 1920,
+                                            "height": 803,
+                                            "mimeType": "image/jpeg",
+                                            "filesize": 245052,
+                                            "filename": "specials-hero-1920x803.jpg"
+                                          },
+                                          "og": {
+                                            "url": "/api/media/file/specials-hero-1200x630.jpg",
+                                            "width": 1200,
+                                            "height": 630,
+                                            "mimeType": "image/jpeg",
+                                            "filesize": 116760,
+                                            "filename": "specials-hero-1200x630.jpg"
+                                          }
+                                        },
+                                        "id": "6a4bc125aae5cd2be7342a38",
+                                        "thumbnailURL": "/api/media/file/specials-hero-300x125.jpg"
+                                      },
+                                      "eyebrow": "Eagle Ford  - Sales",
+                                      "heading": "Eagle Ford Specials",
+                                      "subheading": "Unbeatable deals on the latest Ford models - from rugged Rangers to iconic Mustangs. Browse our current offers below.",
+                                      "primaryButton": {
+                                        "icon": "none"
+                                      },
+                                      "secondaryButton": {
+                                        "icon": "none"
+                                      }
+                                    }
+                                  },
+                                  "id": "6a4bc0fc1654174c2236af03"
+                                }
+                              ],
+                              "backgroundColor": "none",
+                              "backgroundStyle": "none",
+                              "container": false,
+                              "gridCols": "1",
+                              "showDivider": false,
+                              "dividerColor": "primary",
+                              "layout": {
+                                "spacing": {
+                                  "padding": {
+                                    "linked": true,
+                                    "unit": "rem",
+                                    "breakpoints": {
+                                      "base": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      },
+                                      "md": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      },
+                                      "lg": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      }
+                                    }
+                                  },
+                                  "margin": {
+                                    "linked": true,
+                                    "unit": "rem",
+                                    "breakpoints": {
+                                      "base": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      },
+                                      "md": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      },
+                                      "lg": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      }
+                                    }
+                                  }
+                                },
+                                "flex": {
+                                  "gapUnit": "rem",
+                                  "breakpoints": {
+                                    "base": {
+                                      "direction": "",
+                                      "justifyContent": "",
+                                      "alignItems": "",
+                                      "gap": ""
+                                    },
+                                    "md": {
+                                      "direction": "",
+                                      "justifyContent": "",
+                                      "alignItems": "",
+                                      "gap": ""
+                                    },
+                                    "lg": {
+                                      "direction": "",
+                                      "justifyContent": "",
+                                      "alignItems": "",
+                                      "gap": ""
+                                    }
+                                  }
+                                },
+                                "visibility": {
+                                  "hideAt": {
+                                    "base": false,
+                                    "md": false,
+                                    "lg": false
+                                  }
+                                }
+                              },
+                              "accessibility": {
+                                "landmark": "region",
+                                "ariaHidden": false
+                              },
+                              "id": "6a4bc0801654174c2236af02"
+                            },
+                            {
+                              "blockType": "section",
+                              "content": [
+                                {
+                                  "blockType": "specials-archive",
+                                  "id": "6a4bc1391654174c2236af05"
+                                }
+                              ],
+                              "backgroundColor": "none",
+                              "backgroundStyle": "none",
+                              "container": true,
+                              "gridCols": "1",
+                              "showDivider": false,
+                              "dividerColor": "primary",
+                              "layout": {
+                                "spacing": {
+                                  "padding": {
+                                    "linked": false,
+                                    "unit": "rem",
+                                    "breakpoints": {
+                                      "base": {
+                                        "top": "4",
+                                        "right": "",
+                                        "bottom": "4",
+                                        "left": ""
+                                      },
+                                      "md": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      },
+                                      "lg": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      }
+                                    }
+                                  },
+                                  "margin": {
+                                    "linked": true,
+                                    "unit": "rem",
+                                    "breakpoints": {
+                                      "base": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      },
+                                      "md": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      },
+                                      "lg": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      }
+                                    }
+                                  }
+                                },
+                                "flex": {
+                                  "gapUnit": "rem",
+                                  "breakpoints": {
+                                    "base": {
+                                      "direction": "",
+                                      "justifyContent": "",
+                                      "alignItems": "",
+                                      "gap": ""
+                                    },
+                                    "md": {
+                                      "direction": "",
+                                      "justifyContent": "",
+                                      "alignItems": "",
+                                      "gap": ""
+                                    },
+                                    "lg": {
+                                      "direction": "",
+                                      "justifyContent": "",
+                                      "alignItems": "",
+                                      "gap": ""
+                                    }
+                                  }
+                                },
+                                "visibility": {
+                                  "hideAt": {
+                                    "base": false,
+                                    "md": false,
+                                    "lg": false
+                                  }
+                                }
+                              },
+                              "accessibility": {
+                                "landmark": "region",
+                                "ariaHidden": false
+                              },
+                              "id": "6a4bc1311654174c2236af04"
+                            }
+                          ]
+                        },
+                        "meta": {},
+                        "generateSlug": false,
+                        "_status": "published",
+                        "publishedAt": "2026-07-06T14:49:11.301Z",
+                        "slug": "specials",
+                        "title": "Specials",
+                        "id": "6a4bc063aae5cd2be7342956"
+                      }
+                    },
+                    "newTab": false,
+                    "size": "default",
+                    "align": "left",
+                    "id": "6a4bc3771654174c2236af0f"
+                  },
+                  {
+                    "blockType": "cta-button",
+                    "label": "Speak to us",
+                    "icon": "phone",
+                    "linkType": "url",
+                    "variant": "secondary",
+                    "url": "tel:0105971555",
+                    "newTab": false,
+                    "size": "default",
+                    "align": "left",
+                    "id": "6a4bc3951654174c2236af10"
+                  }
+                ],
+                "backgroundColor": "none",
+                "container": false,
+                "align": "left",
+                "verticalAlign": "center",
+                "gap": "md",
+                "wrap": true,
+                "layout": {
+                  "spacing": {
+                    "padding": {
+                      "linked": true,
+                      "unit": "rem",
+                      "breakpoints": {
+                        "base": {
+                          "top": "",
+                          "right": "",
+                          "bottom": "",
+                          "left": ""
+                        },
+                        "md": {
+                          "top": "",
+                          "right": "",
+                          "bottom": "",
+                          "left": ""
+                        },
+                        "lg": {
+                          "top": "",
+                          "right": "",
+                          "bottom": "",
+                          "left": ""
+                        }
+                      }
+                    },
+                    "margin": {
+                      "linked": true,
+                      "unit": "rem",
+                      "breakpoints": {
+                        "base": {
+                          "top": "",
+                          "right": "",
+                          "bottom": "",
+                          "left": ""
+                        },
+                        "md": {
+                          "top": "",
+                          "right": "",
+                          "bottom": "",
+                          "left": ""
+                        },
+                        "lg": {
+                          "top": "",
+                          "right": "",
+                          "bottom": "",
+                          "left": ""
+                        }
+                      }
+                    }
+                  },
+                  "flex": {
+                    "gapUnit": "rem",
+                    "breakpoints": {
+                      "base": {
+                        "direction": "",
+                        "justifyContent": "",
+                        "alignItems": "",
+                        "gap": ""
+                      },
+                      "md": {
+                        "direction": "",
+                        "justifyContent": "",
+                        "alignItems": "",
+                        "gap": ""
+                      },
+                      "lg": {
+                        "direction": "",
+                        "justifyContent": "",
+                        "alignItems": "",
+                        "gap": ""
+                      }
+                    }
+                  },
+                  "visibility": {
+                    "hideAt": {
+                      "base": false,
+                      "md": false,
+                      "lg": false
+                    }
+                  }
+                },
+                "accessibility": {
+                  "landmark": "",
+                  "ariaHidden": false
+                },
+                "id": "6a4bc3371654174c2236af0c"
+              }
+            ],
+            "backgroundColor": "none",
+            "backgroundStyle": "none",
+            "container": false,
+            "verticalAlign": "top",
+            "layout": {
+              "spacing": {
+                "padding": {
+                  "linked": true,
+                  "unit": "rem",
+                  "breakpoints": {
+                    "base": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    },
+                    "md": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    },
+                    "lg": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    }
+                  }
+                },
+                "margin": {
+                  "linked": true,
+                  "unit": "rem",
+                  "breakpoints": {
+                    "base": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    },
+                    "md": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    },
+                    "lg": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    }
+                  }
+                }
+              },
+              "flex": {
+                "gapUnit": "rem",
+                "breakpoints": {
+                  "base": {
+                    "direction": "",
+                    "justifyContent": "",
+                    "alignItems": "",
+                    "gap": ""
+                  },
+                  "md": {
+                    "direction": "",
+                    "justifyContent": "",
+                    "alignItems": "",
+                    "gap": ""
+                  },
+                  "lg": {
+                    "direction": "",
+                    "justifyContent": "",
+                    "alignItems": "",
+                    "gap": ""
+                  }
+                }
+              },
+              "visibility": {
+                "hideAt": {
+                  "base": false,
+                  "md": false,
+                  "lg": false
+                }
+              }
+            },
+            "accessibility": {
+              "landmark": "",
+              "ariaHidden": false
+            },
+            "id": "6a4bc2e51654174c2236af08"
+          }
+        ],
+        "backgroundColor": "none",
+        "backgroundStyle": "none",
+        "container": true,
+        "gridCols": "2",
+        "showDivider": false,
+        "dividerColor": "primary",
+        "layout": {
+          "spacing": {
+            "padding": {
+              "linked": false,
+              "unit": "rem",
+              "breakpoints": {
+                "base": {
+                  "top": "4",
+                  "right": "",
+                  "bottom": "4",
+                  "left": ""
+                },
+                "md": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                },
+                "lg": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                }
+              }
+            },
+            "margin": {
+              "linked": true,
+              "unit": "rem",
+              "breakpoints": {
+                "base": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                },
+                "md": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                },
+                "lg": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                }
+              }
+            }
+          },
+          "flex": {
+            "gapUnit": "rem",
+            "breakpoints": {
+              "base": {
+                "direction": "",
+                "justifyContent": "",
+                "alignItems": "",
+                "gap": ""
+              },
+              "md": {
+                "direction": "",
+                "justifyContent": "",
+                "alignItems": "",
+                "gap": ""
+              },
+              "lg": {
+                "direction": "",
+                "justifyContent": "",
+                "alignItems": "",
+                "gap": ""
+              }
+            }
+          },
+          "visibility": {
+            "hideAt": {
+              "base": false,
+              "md": false,
+              "lg": false
+            }
+          }
+        },
+        "accessibility": {
+          "landmark": "region",
+          "ariaHidden": false
+        },
+        "id": "6a4bc2e01654174c2236af06"
+      },
+      {
+        "blockType": "section",
+        "content": [
+          {
+            "blockType": "heading",
+            "template": "standard",
+            "standardHeadingContent": {
+              "tag": {
+                "style": "filled",
+                "color": "neutral"
+              },
+              "heading": "Want to know more ",
+              "splitTextAnimation": false,
+              "subheading": "Fill in your details below and our sales team will get in touch",
+              "headingTag": "h2",
+              "size": "md",
+              "alignment": "center",
+              "color": "primary",
+              "fontWeight": "bold",
+              "uppercase": false
+            },
+            "dashHeadingContent": {
+              "headingTag": "h2",
+              "size": "lg",
+              "alignment": "center",
+              "color": "primary",
+              "fontWeight": "bold",
+              "uppercase": true
+            },
+            "separatorHeadingContent": {
+              "headingTag": "h2",
+              "size": "lg",
+              "alignment": "center",
+              "color": "primary",
+              "fontWeight": "bold",
+              "uppercase": true
+            },
+            "swipeHeadingContent": {
+              "barColor": "#000000",
+              "headingTag": "h2",
+              "size": "lg",
+              "alignment": "center",
+              "color": "primary",
+              "fontWeight": "bold",
+              "uppercase": true
+            },
+            "id": "6a4bc3e71654174c2236af12"
+          },
+          {
+            "blockType": "sectionInner",
+            "content": [
+              {
+                "blockType": "formBlock",
+                "form": {
+                  "createdAt": "2026-07-06T15:03:45.279Z",
+                  "updatedAt": "2026-07-07T14:29:25.764Z",
+                  "title": "Special Offer Enquiry Form",
+                  "formLayout": "singlePage",
+                  "fields": [
+                    {
+                      "blockType": "text",
+                      "name": "specialTitle",
+                      "label": "Special Offer",
+                      "width": 100,
+                      "required": false,
+                      "id": "6a4bc3d146cc760001049a8f",
+                      "blockName": "specialTitle"
+                    },
+                    {
+                      "blockType": "text",
+                      "name": "firstName",
+                      "label": "First Name",
+                      "width": 50,
+                      "required": true,
+                      "id": "6a4bc3d146cc760001049a90",
+                      "blockName": "firstName"
+                    },
+                    {
+                      "blockType": "text",
+                      "name": "lastName",
+                      "label": "Last Name",
+                      "width": 50,
+                      "required": true,
+                      "id": "6a4bc3d146cc760001049a91",
+                      "blockName": "lastName"
+                    },
+                    {
+                      "blockType": "text",
+                      "name": "phone",
+                      "label": "Phone Number",
+                      "width": 50,
+                      "required": true,
+                      "id": "6a4bc3d146cc760001049a92",
+                      "blockName": "phone"
+                    },
+                    {
+                      "blockType": "email",
+                      "name": "email",
+                      "label": "Email Address",
+                      "width": 50,
+                      "required": true,
+                      "id": "6a4bc3d146cc760001049a93",
+                      "blockName": "email"
+                    },
+                    {
+                      "blockType": "textarea",
+                      "name": "message",
+                      "label": "Question / Comment",
+                      "width": 100,
+                      "required": false,
+                      "id": "6a4bc3d146cc760001049a94",
+                      "blockName": "message"
+                    },
+                    {
+                      "blockType": "checkbox",
+                      "name": "privacyPolicy",
+                      "label": "I have read and agree to the Eagle Ford (Pty) Ltd Privacy Policy",
+                      "width": 100,
+                      "required": true,
+                      "id": "6a4bc3d146cc760001049a95",
+                      "blockName": "privacyPolicy"
+                    }
+                  ],
+                  "submitButtonLabel": "Submit Enquiry",
+                  "confirmationType": "redirect",
+                  "confirmationMessage": {
+                    "root": {
+                      "type": "root",
+                      "children": [
+                        {
+                          "type": "heading",
+                          "tag": "h2",
+                          "children": [
+                            {
+                              "type": "text",
+                              "detail": 0,
+                              "format": 0,
+                              "mode": "normal",
+                              "style": "",
+                              "text": "Enquiry Received",
+                              "version": 1
+                            }
+                          ],
+                          "direction": "ltr",
+                          "format": "",
+                          "indent": 0,
+                          "version": 1
+                        },
+                        {
+                          "type": "paragraph",
+                          "children": [
+                            {
+                              "type": "text",
+                              "detail": 0,
+                              "format": 0,
+                              "mode": "normal",
+                              "style": "",
+                              "text": "Thank you for your interest in our special offer. A member of our team will be in touch with you shortly.",
+                              "version": 1
+                            }
+                          ],
+                          "direction": "ltr",
+                          "format": "",
+                          "indent": 0,
+                          "textFormat": 0,
+                          "version": 1
+                        }
+                      ],
+                      "direction": "ltr",
+                      "format": "",
+                      "indent": 0,
+                      "version": 1
+                    }
+                  },
+                  "redirect": {
+                    "type": "reference",
+                    "reference": {
+                      "relationTo": "pages",
+                      "value": {
+                        "createdAt": "2026-07-05T14:07:03.015Z",
+                        "updatedAt": "2026-07-05T17:15:28.749Z",
+                        "overlayHeader": false,
+                        "content": {
+                          "section": [
+                            {
+                              "blockType": "section",
+                              "content": [
+                                {
+                                  "blockType": "sectionInner",
+                                  "content": [
+                                    {
+                                      "blockType": "heading",
+                                      "template": "standard",
+                                      "standardHeadingContent": {
+                                        "tag": {
+                                          "style": "filled",
+                                          "color": "neutral"
+                                        },
+                                        "heading": "Thank You for your Enquiry ",
+                                        "splitTextAnimation": false,
+                                        "headingTag": "h2",
+                                        "size": "lg",
+                                        "alignment": "center",
+                                        "color": "primary",
+                                        "fontWeight": "bold",
+                                        "uppercase": true
+                                      },
+                                      "dashHeadingContent": {
+                                        "headingTag": "h2",
+                                        "size": "lg",
+                                        "alignment": "center",
+                                        "color": "primary",
+                                        "fontWeight": "bold",
+                                        "uppercase": true
+                                      },
+                                      "separatorHeadingContent": {
+                                        "headingTag": "h2",
+                                        "size": "lg",
+                                        "alignment": "center",
+                                        "color": "primary",
+                                        "fontWeight": "bold",
+                                        "uppercase": true
+                                      },
+                                      "swipeHeadingContent": {
+                                        "barColor": "#000000",
+                                        "headingTag": "h2",
+                                        "size": "lg",
+                                        "alignment": "center",
+                                        "color": "primary",
+                                        "fontWeight": "bold",
+                                        "uppercase": true
+                                      },
+                                      "id": "6a4a6b124bc9663302ff799d"
+                                    }
+                                  ],
+                                  "backgroundColor": "none",
+                                  "backgroundStyle": "none",
+                                  "container": false,
+                                  "verticalAlign": "top",
+                                  "layout": {
+                                    "spacing": {
+                                      "padding": {
+                                        "linked": true,
+                                        "unit": "rem",
+                                        "breakpoints": {
+                                          "base": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "md": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "lg": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          }
+                                        }
+                                      },
+                                      "margin": {
+                                        "linked": true,
+                                        "unit": "rem",
+                                        "breakpoints": {
+                                          "base": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "md": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "lg": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "flex": {
+                                      "gapUnit": "rem",
+                                      "breakpoints": {
+                                        "base": {
+                                          "direction": "",
+                                          "justifyContent": "",
+                                          "alignItems": "",
+                                          "gap": ""
+                                        },
+                                        "md": {
+                                          "direction": "",
+                                          "justifyContent": "",
+                                          "alignItems": "",
+                                          "gap": ""
+                                        },
+                                        "lg": {
+                                          "direction": "",
+                                          "justifyContent": "",
+                                          "alignItems": "",
+                                          "gap": ""
+                                        }
+                                      }
+                                    },
+                                    "visibility": {
+                                      "hideAt": {
+                                        "base": false,
+                                        "md": false,
+                                        "lg": false
+                                      }
+                                    }
+                                  },
+                                  "accessibility": {
+                                    "landmark": "",
+                                    "ariaHidden": false
+                                  },
+                                  "id": "6a4a6afe4bc9663302ff799c"
+                                },
+                                {
+                                  "blockType": "sectionInner",
+                                  "content": [
+                                    {
+                                      "blockType": "image-block",
+                                      "image": "6a4a6af237e29fafbceeb3de",
+                                      "cornerRadius": "none",
+                                      "aspectRatio": "auto",
+                                      "shadow": "none",
+                                      "id": "6a4a6adb4bc9663302ff799b"
+                                    }
+                                  ],
+                                  "backgroundColor": "none",
+                                  "backgroundStyle": "none",
+                                  "container": false,
+                                  "verticalAlign": "top",
+                                  "layout": {
+                                    "spacing": {
+                                      "padding": {
+                                        "linked": false,
+                                        "unit": "rem",
+                                        "breakpoints": {
+                                          "base": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "md": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "lg": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          }
+                                        }
+                                      },
+                                      "margin": {
+                                        "linked": true,
+                                        "unit": "rem",
+                                        "breakpoints": {
+                                          "base": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "md": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "lg": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "flex": {
+                                      "gapUnit": "rem",
+                                      "breakpoints": {
+                                        "base": {
+                                          "direction": "",
+                                          "justifyContent": "",
+                                          "alignItems": "",
+                                          "gap": ""
+                                        },
+                                        "md": {
+                                          "direction": "",
+                                          "justifyContent": "",
+                                          "alignItems": "",
+                                          "gap": ""
+                                        },
+                                        "lg": {
+                                          "direction": "",
+                                          "justifyContent": "",
+                                          "alignItems": "",
+                                          "gap": ""
+                                        }
+                                      }
+                                    },
+                                    "visibility": {
+                                      "hideAt": {
+                                        "base": false,
+                                        "md": false,
+                                        "lg": false
+                                      }
+                                    }
+                                  },
+                                  "accessibility": {
+                                    "landmark": "",
+                                    "ariaHidden": false
+                                  },
+                                  "id": "6a4a6ad24bc9663302ff799a"
+                                },
+                                {
+                                  "blockType": "sectionInner",
+                                  "content": [
+                                    {
+                                      "blockType": "rich-text",
+                                      "content": {
+                                        "root": {
+                                          "children": [
+                                            {
+                                              "children": [
+                                                {
+                                                  "detail": 0,
+                                                  "format": 0,
+                                                  "mode": "normal",
+                                                  "style": "",
+                                                  "text": "Thanks for reaching out to Eagle Ford. We've got your message and someone from our team will follow up soon.",
+                                                  "type": "text",
+                                                  "version": 1
+                                                }
+                                              ],
+                                              "direction": null,
+                                              "format": "",
+                                              "indent": 0,
+                                              "type": "paragraph",
+                                              "version": 1,
+                                              "textFormat": 0,
+                                              "textStyle": ""
+                                            }
+                                          ],
+                                          "direction": null,
+                                          "format": "",
+                                          "indent": 0,
+                                          "type": "root",
+                                          "version": 1
+                                        }
+                                      },
+                                      "id": "6a4a87be4bc9663302ff79a2"
+                                    }
+                                  ],
+                                  "backgroundColor": "none",
+                                  "backgroundStyle": "none",
+                                  "container": false,
+                                  "verticalAlign": "top",
+                                  "layout": {
+                                    "spacing": {
+                                      "padding": {
+                                        "linked": false,
+                                        "unit": "rem",
+                                        "breakpoints": {
+                                          "base": {
+                                            "top": "4",
+                                            "right": "",
+                                            "bottom": "2",
+                                            "left": ""
+                                          },
+                                          "md": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "lg": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          }
+                                        }
+                                      },
+                                      "margin": {
+                                        "linked": true,
+                                        "unit": "rem",
+                                        "breakpoints": {
+                                          "base": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "md": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "lg": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "flex": {
+                                      "gapUnit": "rem",
+                                      "breakpoints": {
+                                        "base": {
+                                          "direction": "",
+                                          "justifyContent": "",
+                                          "alignItems": "",
+                                          "gap": ""
+                                        },
+                                        "md": {
+                                          "direction": "",
+                                          "justifyContent": "",
+                                          "alignItems": "",
+                                          "gap": ""
+                                        },
+                                        "lg": {
+                                          "direction": "",
+                                          "justifyContent": "",
+                                          "alignItems": "",
+                                          "gap": ""
+                                        }
+                                      }
+                                    },
+                                    "visibility": {
+                                      "hideAt": {
+                                        "base": false,
+                                        "md": false,
+                                        "lg": false
+                                      }
+                                    }
+                                  },
+                                  "accessibility": {
+                                    "landmark": "",
+                                    "ariaHidden": false
+                                  },
+                                  "id": "6a4a87ad4bc9663302ff79a1"
+                                },
+                                {
+                                  "blockType": "sectionInner",
+                                  "content": [
+                                    {
+                                      "blockType": "back-button",
+                                      "label": "Previous Page",
+                                      "variant": "default",
+                                      "fallbackUrl": "/",
+                                      "showIcon": false,
+                                      "size": "default",
+                                      "align": "left",
+                                      "id": "6a4a90895b079e7bb6000f75"
+                                    },
+                                    {
+                                      "blockType": "cta-button",
+                                      "label": "Back Home",
+                                      "linkType": "reference",
+                                      "variant": "secondary",
+                                      "reference": {
+                                        "relationTo": "pages",
+                                        "value": "6a48ff1328f6f539aae79df6"
+                                      },
+                                      "newTab": false,
+                                      "size": "default",
+                                      "align": "left",
+                                      "id": "6a4a90ac5b079e7bb6000f76"
+                                    },
+                                    {
+                                      "blockType": "cta-button",
+                                      "label": "View all Offers",
+                                      "linkType": "reference",
+                                      "variant": "default",
+                                      "reference": {
+                                        "relationTo": "pages",
+                                        "value": "6a48ff1328f6f539aae79df6"
+                                      },
+                                      "newTab": false,
+                                      "size": "default",
+                                      "align": "left",
+                                      "id": "6a4a90dd5b079e7bb6000f77"
+                                    }
+                                  ],
+                                  "backgroundColor": "none",
+                                  "backgroundStyle": "none",
+                                  "container": true,
+                                  "verticalAlign": "center",
+                                  "layout": {
+                                    "spacing": {
+                                      "padding": {
+                                        "linked": true,
+                                        "unit": "rem",
+                                        "breakpoints": {
+                                          "base": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "md": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "lg": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          }
+                                        }
+                                      },
+                                      "margin": {
+                                        "linked": true,
+                                        "unit": "rem",
+                                        "breakpoints": {
+                                          "base": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "md": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          },
+                                          "lg": {
+                                            "top": "",
+                                            "right": "",
+                                            "bottom": "",
+                                            "left": ""
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "flex": {
+                                      "gapUnit": "rem",
+                                      "breakpoints": {
+                                        "base": {
+                                          "direction": "row",
+                                          "justifyContent": "center",
+                                          "alignItems": "center",
+                                          "gap": ""
+                                        },
+                                        "md": {
+                                          "direction": "",
+                                          "justifyContent": "",
+                                          "alignItems": "",
+                                          "gap": ""
+                                        },
+                                        "lg": {
+                                          "direction": "",
+                                          "justifyContent": "",
+                                          "alignItems": "",
+                                          "gap": ""
+                                        }
+                                      }
+                                    },
+                                    "visibility": {
+                                      "hideAt": {
+                                        "base": false,
+                                        "md": false,
+                                        "lg": false
+                                      }
+                                    }
+                                  },
+                                  "accessibility": {
+                                    "landmark": "",
+                                    "ariaHidden": false
+                                  },
+                                  "id": "6a4a87e44bc9663302ff79a3"
+                                }
+                              ],
+                              "backgroundColor": "none",
+                              "backgroundStyle": "none",
+                              "container": true,
+                              "gridCols": "1",
+                              "showDivider": false,
+                              "dividerColor": "primary",
+                              "layout": {
+                                "spacing": {
+                                  "padding": {
+                                    "linked": false,
+                                    "unit": "rem",
+                                    "breakpoints": {
+                                      "base": {
+                                        "top": "4",
+                                        "right": "",
+                                        "bottom": "4",
+                                        "left": ""
+                                      },
+                                      "md": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      },
+                                      "lg": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      }
+                                    }
+                                  },
+                                  "margin": {
+                                    "linked": true,
+                                    "unit": "rem",
+                                    "breakpoints": {
+                                      "base": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      },
+                                      "md": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      },
+                                      "lg": {
+                                        "top": "",
+                                        "right": "",
+                                        "bottom": "",
+                                        "left": ""
+                                      }
+                                    }
+                                  }
+                                },
+                                "flex": {
+                                  "gapUnit": "rem",
+                                  "breakpoints": {
+                                    "base": {
+                                      "direction": "",
+                                      "justifyContent": "",
+                                      "alignItems": "",
+                                      "gap": ""
+                                    },
+                                    "md": {
+                                      "direction": "",
+                                      "justifyContent": "",
+                                      "alignItems": "",
+                                      "gap": ""
+                                    },
+                                    "lg": {
+                                      "direction": "",
+                                      "justifyContent": "",
+                                      "alignItems": "",
+                                      "gap": ""
+                                    }
+                                  }
+                                },
+                                "visibility": {
+                                  "hideAt": {
+                                    "base": false,
+                                    "md": false,
+                                    "lg": false
+                                  }
+                                }
+                              },
+                              "accessibility": {
+                                "landmark": "region",
+                                "ariaHidden": false
+                              },
+                              "id": "6a4a6acd4bc9663302ff7999"
+                            }
+                          ]
+                        },
+                        "meta": {},
+                        "generateSlug": false,
+                        "_status": "published",
+                        "publishedAt": "2026-07-05T14:07:11.364Z",
+                        "slug": "sales-form-submitted",
+                        "title": "Sales Email Thank you Page",
+                        "id": "6a4a650737e29fafbceeaa38"
+                      }
+                    }
+                  },
+                  "emails": [
+                    {
+                      "emailTo": "{{email}}",
+                      "emailFrom": "\"Eagle Ford\" <noreply@eagleford.co.za>",
+                      "subject": "Your special offer enquiry has been received — Eagle Ford",
+                      "message": {
+                        "root": {
+                          "type": "root",
+                          "children": [
+                            {
+                              "type": "paragraph",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "detail": 0,
+                                  "format": 0,
+                                  "mode": "normal",
+                                  "style": "",
+                                  "text": "Thank you for your interest in our special offer. A member of our team will be in touch with you shortly.",
+                                  "version": 1
+                                }
+                              ],
+                              "direction": "ltr",
+                              "format": "",
+                              "indent": 0,
+                              "textFormat": 0,
+                              "version": 1
+                            }
+                          ],
+                          "direction": "ltr",
+                          "format": "",
+                          "indent": 0,
+                          "version": 1
+                        }
+                      },
+                      "id": "6a4bc3d146cc760001049a96"
+                    },
+                    {
+                      "emailTo": "sales@eagleford.co.za",
+                      "emailFrom": "\"Eagle Ford\" <noreply@eagleford.co.za>",
+                      "subject": "Special offer enquiry: {{specialTitle}}",
+                      "message": {
+                        "root": {
+                          "type": "root",
+                          "children": [
+                            {
+                              "type": "paragraph",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "detail": 0,
+                                  "format": 0,
+                                  "mode": "normal",
+                                  "style": "",
+                                  "text": "A new special offer enquiry has been submitted.",
+                                  "version": 1
+                                }
+                              ],
+                              "direction": "ltr",
+                              "format": "",
+                              "indent": 0,
+                              "textFormat": 0,
+                              "version": 1
+                            },
+                            {
+                              "type": "paragraph",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "detail": 0,
+                                  "format": 0,
+                                  "mode": "normal",
+                                  "style": "",
+                                  "text": "Special: {{specialTitle}}",
+                                  "version": 1
+                                }
+                              ],
+                              "direction": "ltr",
+                              "format": "",
+                              "indent": 0,
+                              "textFormat": 0,
+                              "version": 1
+                            },
+                            {
+                              "type": "paragraph",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "detail": 0,
+                                  "format": 0,
+                                  "mode": "normal",
+                                  "style": "",
+                                  "text": "Name: {{firstName}} {{lastName}}",
+                                  "version": 1
+                                }
+                              ],
+                              "direction": "ltr",
+                              "format": "",
+                              "indent": 0,
+                              "textFormat": 0,
+                              "version": 1
+                            },
+                            {
+                              "type": "paragraph",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "detail": 0,
+                                  "format": 0,
+                                  "mode": "normal",
+                                  "style": "",
+                                  "text": "Phone: {{phone}}",
+                                  "version": 1
+                                }
+                              ],
+                              "direction": "ltr",
+                              "format": "",
+                              "indent": 0,
+                              "textFormat": 0,
+                              "version": 1
+                            },
+                            {
+                              "type": "paragraph",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "detail": 0,
+                                  "format": 0,
+                                  "mode": "normal",
+                                  "style": "",
+                                  "text": "Email: {{email}}",
+                                  "version": 1
+                                }
+                              ],
+                              "direction": "ltr",
+                              "format": "",
+                              "indent": 0,
+                              "textFormat": 0,
+                              "version": 1
+                            },
+                            {
+                              "type": "paragraph",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "detail": 0,
+                                  "format": 0,
+                                  "mode": "normal",
+                                  "style": "",
+                                  "text": "Message: {{message}}",
+                                  "version": 1
+                                }
+                              ],
+                              "direction": "ltr",
+                              "format": "",
+                              "indent": 0,
+                              "textFormat": 0,
+                              "version": 1
+                            }
+                          ],
+                          "direction": "ltr",
+                          "format": "",
+                          "indent": 0,
+                          "version": 1
+                        }
+                      },
+                      "id": "6a4bc3d146cc760001049a97"
+                    }
+                  ],
+                  "steps": [],
+                  "id": "6a4bc3d1aae5cd2be7342ec9"
+                },
+                "id": "6a4bc4341654174c2236af14"
+              }
+            ],
+            "backgroundColor": "none",
+            "backgroundStyle": "none",
+            "container": false,
+            "verticalAlign": "top",
+            "layout": {
+              "spacing": {
+                "padding": {
+                  "linked": true,
+                  "unit": "rem",
+                  "breakpoints": {
+                    "base": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    },
+                    "md": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    },
+                    "lg": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    }
+                  }
+                },
+                "margin": {
+                  "linked": true,
+                  "unit": "rem",
+                  "breakpoints": {
+                    "base": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    },
+                    "md": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    },
+                    "lg": {
+                      "top": "",
+                      "right": "",
+                      "bottom": "",
+                      "left": ""
+                    }
+                  }
+                }
+              },
+              "flex": {
+                "gapUnit": "rem",
+                "breakpoints": {
+                  "base": {
+                    "direction": "",
+                    "justifyContent": "",
+                    "alignItems": "",
+                    "gap": ""
+                  },
+                  "md": {
+                    "direction": "",
+                    "justifyContent": "",
+                    "alignItems": "",
+                    "gap": ""
+                  },
+                  "lg": {
+                    "direction": "",
+                    "justifyContent": "",
+                    "alignItems": "",
+                    "gap": ""
+                  }
+                }
+              },
+              "visibility": {
+                "hideAt": {
+                  "base": false,
+                  "md": false,
+                  "lg": false
+                }
+              }
+            },
+            "accessibility": {
+              "landmark": "",
+              "ariaHidden": false
+            },
+            "id": "6a4bc4301654174c2236af13"
+          }
+        ],
+        "backgroundColor": "light",
+        "backgroundStyle": "none",
+        "container": true,
+        "gridCols": "1",
+        "showDivider": false,
+        "dividerColor": "primary",
+        "layout": {
+          "spacing": {
+            "padding": {
+              "linked": false,
+              "unit": "rem",
+              "breakpoints": {
+                "base": {
+                  "top": "4",
+                  "right": "",
+                  "bottom": "4",
+                  "left": ""
+                },
+                "md": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                },
+                "lg": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                }
+              }
+            },
+            "margin": {
+              "linked": true,
+              "unit": "rem",
+              "breakpoints": {
+                "base": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                },
+                "md": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                },
+                "lg": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                }
+              }
+            }
+          },
+          "flex": {
+            "gapUnit": "rem",
+            "breakpoints": {
+              "base": {
+                "direction": "",
+                "justifyContent": "",
+                "alignItems": "",
+                "gap": ""
+              },
+              "md": {
+                "direction": "",
+                "justifyContent": "",
+                "alignItems": "",
+                "gap": ""
+              },
+              "lg": {
+                "direction": "",
+                "justifyContent": "",
+                "alignItems": "",
+                "gap": ""
+              }
+            }
+          },
+          "visibility": {
+            "hideAt": {
+              "base": false,
+              "md": false,
+              "lg": false
+            }
+          }
+        },
+        "accessibility": {
+          "landmark": "region",
+          "ariaHidden": false
+        },
+        "id": "6a4bc3e21654174c2236af11"
+      },
+      {
+        "blockType": "section",
+        "content": [
+          {
+            "blockType": "contact-footer",
+            "id": "6a4bc4581654174c2236af16"
+          }
+        ],
+        "backgroundColor": "none",
+        "backgroundStyle": "none",
+        "container": true,
+        "gridCols": "1",
+        "showDivider": false,
+        "dividerColor": "primary",
+        "layout": {
+          "spacing": {
+            "padding": {
+              "linked": true,
+              "unit": "rem",
+              "breakpoints": {
+                "base": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                },
+                "md": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                },
+                "lg": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                }
+              }
+            },
+            "margin": {
+              "linked": true,
+              "unit": "rem",
+              "breakpoints": {
+                "base": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                },
+                "md": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                },
+                "lg": {
+                  "top": "",
+                  "right": "",
+                  "bottom": "",
+                  "left": ""
+                }
+              }
+            }
+          },
+          "flex": {
+            "gapUnit": "rem",
+            "breakpoints": {
+              "base": {
+                "direction": "",
+                "justifyContent": "",
+                "alignItems": "",
+                "gap": ""
+              },
+              "md": {
+                "direction": "",
+                "justifyContent": "",
+                "alignItems": "",
+                "gap": ""
+              },
+              "lg": {
+                "direction": "",
+                "justifyContent": "",
+                "alignItems": "",
+                "gap": ""
+              }
+            }
+          },
+          "visibility": {
+            "hideAt": {
+              "base": false,
+              "md": false,
+              "lg": false
+            }
+          }
+        },
+        "accessibility": {
+          "landmark": "region",
+          "ariaHidden": false
+        },
+        "id": "6a4bc44d1654174c2236af15"
+      }
+    ]
+  },
+  "sortOrder": 0,
+  "generateSlug": false,
+  "_status": "published",
+  "cardImage": {
+    "createdAt": "2026-07-06T14:59:09.988Z",
+    "updatedAt": "2026-07-06T14:59:09.988Z",
+    "alt": "asdasd",
+    "url": "/api/media/file/17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi.webp",
+    "filename": "17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi.webp",
+    "mimeType": "image/webp",
+    "filesize": 85036,
+    "width": 700,
+    "height": 700,
+    "focalX": 50,
+    "focalY": 50,
+    "sizes": {
+      "thumbnail": {
+        "url": "/api/media/file/17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-300x300.webp",
+        "width": 300,
+        "height": 300,
+        "mimeType": "image/webp",
+        "filesize": 24720,
+        "filename": "17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-300x300.webp"
+      },
+      "square": {
+        "url": "/api/media/file/17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-500x500.webp",
+        "width": 500,
+        "height": 500,
+        "mimeType": "image/webp",
+        "filesize": 49266,
+        "filename": "17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-500x500.webp"
+      },
+      "small": {
+        "url": "/api/media/file/17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-600x600.webp",
+        "width": 600,
+        "height": 600,
+        "mimeType": "image/webp",
+        "filesize": 68610,
+        "filename": "17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-600x600.webp"
+      },
+      "medium": {
+        "url": null,
+        "width": null,
+        "height": null,
+        "mimeType": null,
+        "filesize": null,
+        "filename": null
+      },
+      "large": {
+        "url": null,
+        "width": null,
+        "height": null,
+        "mimeType": null,
+        "filesize": null,
+        "filename": null
+      },
+      "xlarge": {
+        "url": null,
+        "width": null,
+        "height": null,
+        "mimeType": null,
+        "filesize": null,
+        "filename": null
+      },
+      "og": {
+        "url": "/api/media/file/17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-1200x630.webp",
+        "width": 1200,
+        "height": 630,
+        "mimeType": "image/webp",
+        "filesize": 86242,
+        "filename": "17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-1200x630.webp"
+      }
+    },
+    "id": "6a4bc2bdaae5cd2be7342b31",
+    "thumbnailURL": "/api/media/file/17238-5cd480bc-606e-496e-bd2f-f4c09f435a0e8b7791c7-08c0-4715-abd9-cdd525da1be5_Mobi-300x300.webp"
+  },
+  "pricingLabel": "Save",
+  "publishedAt": "2026-07-06T14:58:47.964Z",
+  "slug": "ford-cambelt-service",
+  "specialOffer": 10000,
+  "subTitle": "EcoSport and Fiesta Cambelt Service Special for 2015, 2016 and 2017 models.",
+  "title": "Ford Cambelt Service",
+  "id": "6a4bc159aae5cd2be7342ae4"
+}
