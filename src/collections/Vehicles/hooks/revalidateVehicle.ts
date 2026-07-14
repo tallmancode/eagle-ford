@@ -18,6 +18,7 @@ export const revalidateVehicle: CollectionAfterChangeHook<Vehicle> = ({
       revalidatePath(path)
       revalidatePath('/vehicles')
       revalidateTag('vehicles', 'max')
+      revalidateTag('sitemap', 'max')
     }
 
     if (previousDoc?._status === 'published' && doc._status !== 'published') {
@@ -28,6 +29,7 @@ export const revalidateVehicle: CollectionAfterChangeHook<Vehicle> = ({
       revalidatePath(path)
       revalidatePath('/vehicles')
       revalidateTag('vehicles', 'max')
+      revalidateTag('sitemap', 'max')
     }
   }
 
@@ -42,6 +44,7 @@ export const revalidateVehicleDelete: CollectionAfterDeleteHook<Vehicle> = ({
     revalidatePath(`/vehicles/${doc?.slug}`)
     revalidatePath('/vehicles')
     revalidateTag('vehicles', 'max')
+    revalidateTag('sitemap', 'max')
   }
 
   return doc
