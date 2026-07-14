@@ -8,6 +8,7 @@ import {
   filterRedactedRscLog,
   REDACTED_RSC_MESSAGE,
 } from './src/lib/sentry/redactedRsc'
+import { RSC_PROBE_NOISE_MESSAGES } from './src/lib/sentry/rscProbeNoise'
 
 if (process.env.NODE_ENV === 'production' && !process.env.SENTRY_DSN) {
   console.warn(
@@ -26,7 +27,7 @@ Sentry.init({
   enableLogs: true,
 
   // Drop digests-only RSC errors if they reach the server SDK (e.g. React node client reconstruction).
-  ignoreErrors: [REDACTED_RSC_MESSAGE],
+  ignoreErrors: [REDACTED_RSC_MESSAGE, ...RSC_PROBE_NOISE_MESSAGES],
 
   dataCollection: {
     // To disable sending user data and HTTP bodies, uncomment the lines below. For more info visit:

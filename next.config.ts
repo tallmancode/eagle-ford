@@ -92,6 +92,14 @@ const nextConfig: NextConfig = {
 const isProdBuild = process.env.NODE_ENV === 'production'
 const hasSentryAuth = Boolean(process.env.SENTRY_AUTH_TOKEN)
 
+if (isProdBuild && !process.env.NEXT_SERVER_ACTIONS_ENCRYPTION_KEY) {
+  throw new Error(
+    'NEXT_SERVER_ACTIONS_ENCRYPTION_KEY is required for production builds. ' +
+      'Generate with: openssl rand -base64 32. ' +
+      'Must be in the Docker build secret (.env) so action IDs stay stable across deploys.',
+  )
+}
+
 export default withSentryConfig(withPayload(nextConfig, { devBundleServerPackages: false }), {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
