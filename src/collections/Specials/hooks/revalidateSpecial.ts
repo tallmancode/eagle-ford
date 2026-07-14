@@ -11,17 +11,21 @@ export const revalidateSpecial: CollectionAfterChangeHook<Special> = ({
 }) => {
   if (!context.disableRevalidate) {
     if (doc._status === 'published') {
-      payload.logger.info('Revalidating specials listing')
+      payload.logger.info(`Revalidating special at path: /specials/${doc.slug}`)
 
       revalidatePath('/local/specials')
       revalidatePath('/specials')
+      revalidatePath(`/specials/${doc.slug}`)
       revalidateTag('specials', 'max')
+      revalidateTag('sitemap', 'max')
     }
 
     if (previousDoc?._status === 'published' && doc._status !== 'published') {
       revalidatePath('/local/specials')
       revalidatePath('/specials')
+      revalidatePath(`/specials/${previousDoc.slug}`)
       revalidateTag('specials', 'max')
+      revalidateTag('sitemap', 'max')
     }
   }
 
@@ -35,7 +39,9 @@ export const revalidateSpecialDelete: CollectionAfterDeleteHook<Special> = ({
   if (!context.disableRevalidate) {
     revalidatePath('/local/specials')
     revalidatePath('/specials')
+    revalidatePath(`/specials/${doc?.slug}`)
     revalidateTag('specials', 'max')
+    revalidateTag('sitemap', 'max')
   }
 
   return doc

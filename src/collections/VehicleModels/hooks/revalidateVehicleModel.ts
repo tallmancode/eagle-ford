@@ -44,6 +44,7 @@ export const revalidateVehicleModel: CollectionAfterChangeHook<VehicleModel> = a
 
       revalidateTag('vehicle-models', 'max')
       revalidateTag('vehicles', 'max')
+      revalidateTag('sitemap', 'max')
     }
 
     if (previousDoc?._status === 'published' && doc._status !== 'published') {
@@ -57,6 +58,7 @@ export const revalidateVehicleModel: CollectionAfterChangeHook<VehicleModel> = a
 
       revalidateTag('vehicle-models', 'max')
       revalidateTag('vehicles', 'max')
+      revalidateTag('sitemap', 'max')
     }
 
     if (
@@ -88,6 +90,7 @@ export const revalidateVehicleModelDelete: CollectionAfterDeleteHook<VehicleMode
 
     revalidateTag('vehicle-models', 'max')
     revalidateTag('vehicles', 'max')
+    revalidateTag('sitemap', 'max')
   }
 
   return doc
