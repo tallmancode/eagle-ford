@@ -82,6 +82,14 @@ export const importSeedActions: SeedAction[] = [
       'Import all vehicles, models, categories, and refresh images from bundled seed assets.',
     allowRetry: true,
   },
+  {
+    endpoint: '/next/import-specials',
+    label: 'Import Specials',
+    successText: 'Specials imported successfully!',
+    description:
+      'Import all specials from bundled specials-data.ts (images downloaded from live URLs). Run "Create Special Offer Enquiry Form" first.',
+    allowRetry: true,
+  },
 ]
 
 export const diagnosticSeedActions: SeedAction[] = [
