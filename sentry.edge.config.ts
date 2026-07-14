@@ -9,6 +9,7 @@ import {
   filterRedactedRscLog,
   REDACTED_RSC_MESSAGE,
 } from './src/lib/sentry/redactedRsc'
+import { RSC_PROBE_NOISE_MESSAGES } from './src/lib/sentry/rscProbeNoise'
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
@@ -20,7 +21,7 @@ Sentry.init({
   // Enable logs to be sent to Sentry
   enableLogs: true,
 
-  ignoreErrors: [REDACTED_RSC_MESSAGE],
+  ignoreErrors: [REDACTED_RSC_MESSAGE, ...RSC_PROBE_NOISE_MESSAGES],
 
   dataCollection: {
     // To disable sending user data and HTTP bodies, uncomment the lines below. For more info visit:

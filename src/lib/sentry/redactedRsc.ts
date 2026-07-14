@@ -1,5 +1,7 @@
 import type { ErrorEvent, EventHint, Log } from '@sentry/nextjs'
 
+import { isRscProbeNoise, isRscProbeNoiseEvent, isRscProbeNoiseMessage } from './rscProbeNoise'
+
 /**
  * Next.js / React replace Server Component error messages with this string in
  * production when reconstructing errors from digests (client, edge, and node
@@ -59,6 +61,10 @@ export function filterRedactedRscEvent(event: ErrorEvent, hint: EventHint): Erro
     return null
   }
 
+  if (isRscProbeNoise(original) || isRscProbeNoiseEvent(event)) {
+    return null
+  }
+
   const digest = getErrorDigest(original)
   if (digest) {
     event.tags = { ...event.tags, digest }
@@ -69,5 +75,6 @@ export function filterRedactedRscEvent(event: ErrorEvent, hint: EventHint): Erro
 
 export function filterRedactedRscLog(log: Log): Log | null {
   if (isRedactedRscError(log.message)) return null
+  if (isRscProbeNoiseMessage(log.message)) return null
   return log
 }
