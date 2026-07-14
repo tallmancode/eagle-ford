@@ -18,6 +18,15 @@ export function buildSeedMediaFilename(vehicleSlug: string, role: string, suffix
   return `${vehicleSlug}-${role}-${slugifyForFilename(suffix)}.webp`
 }
 
+export function buildSpecialMediaFilename(
+  slug: string,
+  role: 'card' | 'detail',
+  ext: string,
+): string {
+  const normalizedExt = ext.startsWith('.') ? ext : `.${ext}`
+  return `${slug}-${role}${normalizedExt}`
+}
+
 export function toPayloadFile(image: SeedImage, filename?: string): File {
   const name = filename ?? image.filename
   const ext = path.extname(name).slice(1).toLowerCase()
