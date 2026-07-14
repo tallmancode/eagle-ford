@@ -6,6 +6,7 @@ import {
   isRedactedRscError,
   unwrapRedactedRscError,
 } from '@/lib/sentry/redactedRsc'
+import { isRscProbeNoise } from '@/lib/sentry/rscProbeNoise'
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
@@ -29,6 +30,11 @@ export const onRequestError: Instrumentation.onRequestError = (error, request, e
   // Next throws this while opting a route out of static generation (e.g. draftMode).
   // It is not an application failure — do not send to Sentry or spam logs.
   if (digest === 'DYNAMIC_SERVER_USAGE') {
+    return
+  }
+
+  // Automated scanners probing RSC / Server Actions (e.g. next-action: x) — not app failures.
+  if (isRscProbeNoise(resolved) || isRscProbeNoise(error)) {
     return
   }
 

@@ -8,6 +8,7 @@ import {
   filterRedactedRscLog,
   REDACTED_RSC_MESSAGE,
 } from '@/lib/sentry/redactedRsc'
+import { RSC_PROBE_NOISE_MESSAGES } from '@/lib/sentry/rscProbeNoise'
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -19,7 +20,7 @@ Sentry.init({
   enableLogs: true,
 
   // Belt-and-suspenders with beforeSend — digests-only RSC errors are useless on the client.
-  ignoreErrors: [REDACTED_RSC_MESSAGE],
+  ignoreErrors: [REDACTED_RSC_MESSAGE, ...RSC_PROBE_NOISE_MESSAGES],
 
   dataCollection: {
     // To disable sending user data and HTTP bodies, uncomment the lines below. For more info visit:
