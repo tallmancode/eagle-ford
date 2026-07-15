@@ -1,4 +1,4 @@
-import { paintPanelEnquiryForm } from '@/endpoints/seed/paint-panel-enquiry-form'
+import { paintPanelEnquiryForm } from '@/fixtures/form-fixtures/paint-panel-enquiry-form'
 import { createFormSeedRoute } from '@/lib/seed/createFormSeedRoute'
 
 export const maxDuration = 60

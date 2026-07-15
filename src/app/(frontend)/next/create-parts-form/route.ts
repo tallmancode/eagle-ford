@@ -1,4 +1,4 @@
-import { partsEnquiryForm } from '@/endpoints/seed/parts-enquiry-form'
+import { partsEnquiryForm } from '@/fixtures/form-fixtures/parts-enquiry-form'
 import { createFormSeedRoute } from '@/lib/seed/createFormSeedRoute'
 
 export const maxDuration = 60
