@@ -1,4 +1,4 @@
-import { sellEnquiryForm } from '@/endpoints/seed/sell-enquiry-form'
+import { sellEnquiryForm } from '@/fixtures/form-fixtures/sell-enquiry-form'
 import { createFormSeedRoute } from '@/lib/seed/createFormSeedRoute'
 
 export const maxDuration = 60

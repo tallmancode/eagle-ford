@@ -26,22 +26,9 @@ const getCachedSitemapEntries = unstable_cache(
     const siteUrl = getSiteUrl()
     const dateFallback = new Date().toISOString()
 
-    const [pages, blogs, vehicles, vehicleModels, specials] = await Promise.all([
+    const [pages, vehicles, vehicleModels, specials] = await Promise.all([
       payload.find({
         collection: 'pages',
-        overrideAccess: false,
-        draft: false,
-        depth: 0,
-        limit: 1000,
-        pagination: false,
-        where: publishedWhere,
-        select: {
-          slug: true,
-          updatedAt: true,
-        },
-      }),
-      payload.find({
-        collection: 'blogs',
         overrideAccess: false,
         draft: false,
         depth: 0,
@@ -95,11 +82,6 @@ const getCachedSitemapEntries = unstable_cache(
       }),
     ])
 
-    const staticEntries: MetadataRoute.Sitemap = [
-      toSitemapEntry(`${siteUrl}/search`, dateFallback),
-      toSitemapEntry(`${siteUrl}/blogs`, dateFallback),
-    ]
-
     const pageEntries = pages.docs
       .filter((page) => Boolean(page.slug))
       .map((page) =>
@@ -107,12 +89,6 @@ const getCachedSitemapEntries = unstable_cache(
           page.slug === 'home' ? `${siteUrl}/` : `${siteUrl}/${page.slug}`,
           page.updatedAt ?? dateFallback,
         ),
-      )
-
-    const blogEntries = blogs.docs
-      .filter((blog) => Boolean(blog.slug))
-      .map((blog) =>
-        toSitemapEntry(`${siteUrl}/blogs/${blog.slug}`, blog.updatedAt ?? dateFallback),
       )
 
     const vehicleEntries = vehicles.docs
@@ -141,14 +117,7 @@ const getCachedSitemapEntries = unstable_cache(
         toSitemapEntry(`${siteUrl}/specials/${special.slug}`, special.updatedAt ?? dateFallback),
       )
 
-    return [
-      ...staticEntries,
-      ...pageEntries,
-      ...blogEntries,
-      ...vehicleEntries,
-      ...vehicleModelEntries,
-      ...specialEntries,
-    ]
+    return [...pageEntries, ...vehicleEntries, ...vehicleModelEntries, ...specialEntries]
   },
   ['sitemap'],
   {

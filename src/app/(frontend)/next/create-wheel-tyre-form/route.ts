@@ -1,4 +1,4 @@
-import { wheelTyreEnquiryForm } from '@/endpoints/seed/wheel-tyre-enquiry-form'
+import { wheelTyreEnquiryForm } from '@/fixtures/form-fixtures/wheel-tyre-enquiry-form'
 import { createFormSeedRoute } from '@/lib/seed/createFormSeedRoute'
 
 export const maxDuration = 60

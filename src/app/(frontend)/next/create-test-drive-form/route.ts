@@ -1,4 +1,4 @@
-import { testDriveForm } from '@/endpoints/seed/test-drive-form'
+import { testDriveForm } from '@/fixtures/form-fixtures/test-drive-form'
 import { createFormSeedRoute } from '@/lib/seed/createFormSeedRoute'
 
 export const maxDuration = 60

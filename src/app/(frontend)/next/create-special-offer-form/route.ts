@@ -1,4 +1,4 @@
-import { specialOfferEnquiryForm } from '@/endpoints/seed/special-offer-enquiry-form'
+import { specialOfferEnquiryForm } from '@/fixtures/form-fixtures/special-offer-enquiry-form'
 import { createFormSeedRoute } from '@/lib/seed/createFormSeedRoute'
 
 export const maxDuration = 60

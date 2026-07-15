@@ -4,7 +4,6 @@ import { collectReferencedMediaIds } from './collectReferencedMediaIds'
 
 const VERSIONED_COLLECTIONS = [
   'pages',
-  'blogs',
   'specials',
   'vehicles',
   'vehicle-models',
@@ -15,7 +14,6 @@ const SCAN_COLLECTIONS = [
   'vehicle-templates',
   'vehicle-model-templates',
   'form-submissions',
-  'search',
 ] as const satisfies CollectionSlug[]
 
 const GLOBAL_SLUGS = ['header', 'footer', 'settings'] as const satisfies GlobalSlug[]

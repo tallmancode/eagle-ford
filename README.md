@@ -41,7 +41,7 @@ Use the **Seed** button in the admin dashboard to populate the database with sam
 
 - `src/app/(frontend)/` — Public website routes
 - `src/app/(payload)/` — Payload admin and API routes
-- `src/collections/` — CMS collections (pages, blogs, vehicles, etc.)
+- `src/collections/` — CMS collections (pages, vehicles, etc.)
 - `src/globals/` — CMS globals (header, footer, settings)
 - `src/lib/blocks/` — Layout builder blocks
 - `src/constants/site.ts` — Site name and metadata constants

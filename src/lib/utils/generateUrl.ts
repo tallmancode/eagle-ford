@@ -1,16 +1,12 @@
 import type { GenerateURL } from '@payloadcms/plugin-seo/types'
-import type { Page, Blog } from '@/payload-types'
+import type { Page } from '@/payload-types'
 import { getPagePath } from '@/lib/utils/getPagePath'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
 
-const generateURL: GenerateURL<Page | Blog> = ({ doc, collectionSlug }) => {
+const generateURL: GenerateURL<Page> = ({ doc }) => {
   const url = getServerSideURL()
 
   if (!doc?.slug) return url
-
-  if (collectionSlug === 'blogs') {
-    return `${url}/blogs/${doc.slug}`
-  }
 
   return `${url}${getPagePath(doc)}`
 }
