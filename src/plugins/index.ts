@@ -1,8 +1,6 @@
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
-import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
-import { searchPlugin } from '@payloadcms/plugin-search'
 import { sentryPlugin } from '@payloadcms/plugin-sentry'
 import * as Sentry from '@sentry/nextjs'
 import { Plugin } from 'payload'
@@ -11,10 +9,8 @@ import { revalidateRedirects } from '@/lib/hooks/revalidateRedirects'
 import { GenerateURL } from '@payloadcms/plugin-seo/types'
 import generateTitle from '@/lib/utils/generateTitle'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
-import { searchFields } from '@/search/fieldOverrides'
-import { beforeSyncWithSearch } from '@/search/beforeSync'
 
-import { Page, Blog } from '@/payload-types'
+import { Page } from '@/payload-types'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
 import {
   FORM_UPLOAD_COLLECTIONS,
@@ -27,7 +23,7 @@ import { importExportPlugin } from '@payloadcms/plugin-import-export'
 
 const formStepRowLabelPath = '@/lib/blocks/form-block/components/FormStepRowLabel#FormStepRowLabel'
 
-const generateURL: GenerateURL<Blog | Page> = ({ doc }) => {
+const generateURL: GenerateURL<Page> = ({ doc }) => {
   const url = getServerSideURL()
 
   return doc?.slug ? `${url}/${doc.slug}` : url
@@ -35,7 +31,7 @@ const generateURL: GenerateURL<Blog | Page> = ({ doc }) => {
 
 export const plugins: Plugin[] = [
   redirectsPlugin({
-    collections: ['pages', 'blogs'],
+    collections: ['pages'],
     overrides: {
       // @ts-expect-error - This is a valid override, mapped fields don't resolve to the same type
       fields: ({ defaultFields }) => {
@@ -55,10 +51,6 @@ export const plugins: Plugin[] = [
         afterChange: [revalidateRedirects],
       },
     },
-  }),
-  nestedDocsPlugin({
-    collections: ['categories'],
-    generateURL: (docs) => docs.reduce((url, doc) => `${url}/${doc.slug}`, ''),
   }),
   seoPlugin({
     generateTitle,
@@ -189,15 +181,6 @@ export const plugins: Plugin[] = [
         }
 
         return result
-      },
-    },
-  }),
-  searchPlugin({
-    collections: ['blogs'],
-    beforeSync: beforeSyncWithSearch,
-    searchOverrides: {
-      fields: ({ defaultFields }) => {
-        return [...defaultFields, ...searchFields]
       },
     },
   }),

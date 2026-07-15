@@ -1,4 +1,4 @@
-import { generalEnquiryForm } from '@/endpoints/seed/general-enquiry-form'
+import { generalEnquiryForm } from '@/fixtures/form-fixtures/general-enquiry-form'
 import { createFormSeedRoute } from '@/lib/seed/createFormSeedRoute'
 
 export const maxDuration = 60

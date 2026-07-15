@@ -1,4 +1,4 @@
-import { vehicleQuoteForm } from '@/endpoints/seed/vehicle-quote-form'
+import { vehicleQuoteForm } from '@/fixtures/form-fixtures/vehicle-quote-form'
 import { createFormSeedRoute } from '@/lib/seed/createFormSeedRoute'
 
 export const maxDuration = 60
