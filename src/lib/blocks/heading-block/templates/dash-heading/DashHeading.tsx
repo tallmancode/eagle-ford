@@ -16,10 +16,10 @@ export const DashHeading: React.FC<Heading> = (props) => {
     heading,
     subheading,
     tag,
-    headingTag = 'h2',
-    size = 'lg',
-    alignment = 'center',
-    color = 'primary',
+    headingTag = 'h1',
+    size = 'md',
+    alignment = 'left',
+    color = 'neutral',
     fontWeight = 'bold',
     uppercase: uppercaseSetting,
   } = content
@@ -32,13 +32,10 @@ export const DashHeading: React.FC<Heading> = (props) => {
 
   return (
     <div className={`flex flex-col gap-3 mb-8 ${alignClass}`}>
-      <div className="flex items-center gap-4">
-        <div className="h-px w-12 bg-dark-600"></div>
+      <div className="flex items-center gap-2">
+        <div className="h-px w-6 bg-primary"></div>
         <span
-          className={[
-            'text-sm font-medium tracking-wider text-dark-600',
-            uppercase ? 'uppercase' : '',
-          ]
+          className={['text-sm font-medium tracking-wider text-primary', 'uppercase']
             .filter(Boolean)
             .join(' ')}
         >

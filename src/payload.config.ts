@@ -12,6 +12,7 @@ import { getServerSideURL } from './lib/utils/getServerSideURL'
 import Globals from '@/globals'
 import Blocks from '@/lib/blocks'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+import { SITE_FAVICON_LINKS } from './constants/siteIcons'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -60,9 +61,9 @@ export default buildConfig({
     },
     meta: {
       title: 'Eagle Ford CMS',
+      icons: [...SITE_FAVICON_LINKS],
     },
   },
-  // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
