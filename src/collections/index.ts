@@ -2,6 +2,7 @@ import { CollectionConfig } from 'payload'
 import { PagesCollection } from '@/collections/Pages'
 import { MediaCollection } from '@/collections/Media/MediaCollection'
 import { SpecialsCollection } from '@/collections/Specials'
+import { SpecialCategories } from '@/collections/SpecialCategories'
 import { VehicleCategories } from '@/collections/VehicleCategories'
 import { VehiclesCollection } from '@/collections/Vehicles'
 import { VehicleModelsCollection } from '@/collections/VehicleModels'
@@ -11,6 +12,7 @@ import { VehicleModelTemplatesCollection } from '@/collections/VehicleModelTempl
 const collections: CollectionConfig[] = [
   PagesCollection,
   SpecialsCollection,
+  SpecialCategories,
   MediaCollection,
   VehicleCategories,
   VehicleTemplatesCollection,

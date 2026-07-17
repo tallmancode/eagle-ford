@@ -131,6 +131,8 @@ export async function POST(): Promise<Response> {
 
   return createSeedStreamResponse(async (log) => {
     const result = {
+      categoriesCreated: 0,
+      categoriesSkipped: 0,
       created: 0,
       updated: 0,
       skipped: 0,
@@ -148,6 +150,48 @@ export async function POST(): Promise<Response> {
 
     log.info('Resolving Special Offer Enquiry Form...')
     const formId = await resolveSpecialOfferFormId(payload)
+
+    log.info('Seeding special categories...')
+    const categoryIdsByTitle = new Map<string, string>()
+    const categoryTitles = [...new Set(SPECIALS_SEED_DATA.map((entry) => entry.specialsCategory))]
+
+    for (const [index, title] of categoryTitles.entries()) {
+      const slug = title
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+
+      const existing = await payload.find({
+        collection: 'special-categories',
+        where: { slug: { equals: slug } },
+        limit: 1,
+        depth: 0,
+        overrideAccess: true,
+        req: payloadReq,
+      })
+
+      if (existing.totalDocs > 0) {
+        categoryIdsByTitle.set(title, existing.docs[0].id as string)
+        result.categoriesSkipped++
+        continue
+      }
+
+      const created = await payload.create({
+        collection: 'special-categories',
+        data: {
+          title,
+          slug,
+          generateSlug: false,
+          sortOrder: index,
+        },
+        overrideAccess: true,
+        req: payloadReq,
+      })
+      categoryIdsByTitle.set(title, created.id as string)
+      result.categoriesCreated++
+      log.info(`Created special category: ${title}`)
+    }
 
     log.info('Loading vehicle catalog for specials links...')
     const { vehicleIdsBySlug, modelIdsByKey } = await buildCatalogIdMaps(payload, payloadReq)
@@ -219,14 +263,20 @@ export async function POST(): Promise<Response> {
           formId,
           modelHref,
         })
+        const categoryId = categoryIdsByTitle.get(entry.specialsCategory)
+        if (!categoryId) {
+          throw new Error(`Missing special category "${entry.specialsCategory}"`)
+        }
 
         const specialData = {
           title: entry.title,
           subTitle: entry.subTitle,
           offerType: entry.offerType,
+          category: categoryId,
           cardImage: cardImageId,
           ...(entry.pricingLabel ? { pricingLabel: entry.pricingLabel } : {}),
           ...(entry.specialOffer != null ? { specialOffer: entry.specialOffer } : {}),
+          ...(entry.bestSaving != null ? { bestSaving: entry.bestSaving } : {}),
           ...(vehicleId ? { vehicle: vehicleId } : { vehicle: null }),
           ...(modelId ? { vehicleModel: modelId } : { vehicleModel: null }),
           content,

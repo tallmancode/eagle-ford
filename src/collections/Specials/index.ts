@@ -18,13 +18,14 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
     update: isAuthenticated,
   },
   admin: {
-    defaultColumns: ['title', 'offerType', 'updatedAt'],
+    defaultColumns: ['title', 'category', 'offerType', 'updatedAt'],
     useAsTitle: 'title',
     group: 'Content',
   },
   defaultSort: 'sortOrder',
   defaultPopulate: {
     offerType: true,
+    category: true,
     vehicle: true,
     vehicleModel: true,
   },
@@ -42,6 +43,17 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
               required: true,
               defaultValue: 'price-point',
               options: [...OFFER_TYPES],
+            },
+            {
+              name: 'category',
+              label: 'Category',
+              type: 'relationship',
+              relationTo: 'special-categories',
+              required: true,
+              admin: {
+                description:
+                  'Groups this special under a campaign or theme (e.g. Truck Month, Holiday).',
+              },
             },
             {
               name: 'title',
@@ -124,26 +136,26 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
                 description: 'Cash price in Rand, e.g. 489900 for R489 900',
               },
             },
-            // {
-            //   name: 'bestSaving',
-            //   label: 'Best Saving (ZAR)',
-            //   type: 'number',
-            //   min: 0,
-            //   admin: {
-            //     condition: (_, siblingData) => siblingData?.offerType === 'price-point',
-            //     description: 'Saving amount in Rand, e.g. 100100 for R100 100',
-            //   },
-            // },
-            // {
-            //   name: 'paymentFrom',
-            //   label: 'Payment From (ZAR per month)',
-            //   type: 'number',
-            //   min: 0,
-            //   admin: {
-            //     condition: (_, siblingData) => siblingData?.offerType === 'payment',
-            //     description: 'Monthly payment in Rand, e.g. 7799 for R7 799*pm',
-            //   },
-            // },
+            {
+              name: 'bestSaving',
+              label: 'Best Saving (ZAR)',
+              type: 'number',
+              min: 0,
+              admin: {
+                condition: (_, siblingData) => siblingData?.offerType === 'price-point',
+                description: 'Saving amount in Rand, e.g. 100100 for R100 100',
+              },
+            },
+            {
+              name: 'paymentFrom',
+              label: 'Payment From (ZAR per month)',
+              type: 'number',
+              min: 0,
+              admin: {
+                condition: (_, siblingData) => siblingData?.offerType === 'payment',
+                description: 'Monthly payment in Rand, e.g. 7799 for R7 799*pm',
+              },
+            },
           ],
         },
         {
@@ -159,25 +171,6 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
             },
           ],
         },
-        // {
-        //   label: 'Call to Action',
-        //   fields: [
-        //     {
-        //       name: 'ctaLabel',
-        //       label: 'Button Label',
-        //       type: 'text',
-        //       defaultValue: 'View Offer',
-        //     },
-        //     {
-        //       name: 'ctaLink',
-        //       label: 'Button Link',
-        //       type: 'text',
-        //       admin: {
-        //         description: 'URL or path for the offer button. Leave blank to use a placeholder.',
-        //       },
-        //     },
-        //   ],
-        // },
       ],
     },
     {
@@ -209,9 +202,6 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
   },
   versions: {
     drafts: {
-      autosave: {
-        interval: 100,
-      },
       schedulePublish: true,
     },
     maxPerDoc: 50,
