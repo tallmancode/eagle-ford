@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import type { Media, Page, Blog, Config, Special } from '@/payload-types'
+import type { Media, Page, Config, Special } from '@/payload-types'
 
 import { CRAWLER_BLOCK_ROBOTS } from '@/constants/crawlerPolicy'
 import { DEFAULT_OG_IMAGE_PATH, formatPageTitle, SITE_NAME } from '@/constants/site'
@@ -22,14 +22,12 @@ const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   return url
 }
 
-function isSpecial(
-  doc: Partial<Page> | Partial<Blog> | Partial<Special> | null,
-): doc is Partial<Special> {
+function isSpecial(doc: Partial<Page> | Partial<Special> | null): doc is Partial<Special> {
   return doc != null && 'offerType' in doc
 }
 
 export const generateMeta = async (args: {
-  doc: Partial<Page> | Partial<Blog> | Partial<Special> | null
+  doc: Partial<Page> | Partial<Special> | null
 }): Promise<Metadata> => {
   const { doc } = args
 

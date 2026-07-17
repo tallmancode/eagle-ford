@@ -55,8 +55,6 @@ export const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }
   }
 
   switch (relationTo) {
-    case 'blog':
-      return `/blog/${value.slug}`
     case 'pages':
       return getPagePath(value as unknown as Page)
     default:

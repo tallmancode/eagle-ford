@@ -2,7 +2,6 @@ import { CollectionSlug, GlobalSlug } from 'payload'
 import {
   GamepadDirectional,
   Image,
-  LayoutGrid,
   LucideProps,
   StickyNote,
   User,
@@ -19,7 +18,6 @@ export const navIconMap: Partial<
 > = {
   media: Image,
   users: User,
-  blogs: LayoutGrid,
   pages: StickyNote,
   header: PanelTopClose,
   footer: Footprints,

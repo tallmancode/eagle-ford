@@ -16,34 +16,35 @@ export const DashHeading: React.FC<Heading> = (props) => {
     heading,
     subheading,
     tag,
-    headingTag = 'h2',
-    size = 'lg',
-    alignment = 'center',
-    color = 'primary',
+    headingTag = 'h1',
+    size = 'md',
+    alignment = 'left',
+    color = 'neutral',
     fontWeight = 'bold',
     uppercase: uppercaseSetting,
   } = content
 
   const uppercase = uppercaseSetting ?? true
+  const resolvedAlignment = alignment ?? 'left'
   const colors = colorMap[color ?? 'primary'] ?? colorMap.primary
   const sizes = sizeMap[size ?? 'lg'] ?? sizeMap.lg
-  const alignClass = alignmentMap[alignment ?? 'center'] ?? alignmentMap.center
+  const alignClass = alignmentMap[resolvedAlignment] ?? alignmentMap.left
   const HeadingTag = headingTagMap[headingTag ?? 'h2'] ?? 'h2'
+  const showLeftDash = resolvedAlignment === 'left' || resolvedAlignment === 'center'
+  const showRightDash = resolvedAlignment === 'right' || resolvedAlignment === 'center'
 
   return (
     <div className={`flex flex-col gap-3 mb-8 ${alignClass}`}>
-      <div className="flex items-center gap-4">
-        <div className="h-px w-12 bg-dark-600"></div>
+      <div className="flex items-center gap-2">
+        {showLeftDash && <div className="h-px w-6 bg-primary" />}
         <span
-          className={[
-            'text-sm font-medium tracking-wider text-dark-600',
-            uppercase ? 'uppercase' : '',
-          ]
+          className={['text-sm font-medium tracking-wider text-primary', 'uppercase']
             .filter(Boolean)
             .join(' ')}
         >
           {tag}
         </span>
+        {showRightDash && <div className="h-px w-6 bg-primary" />}
       </div>
       <HeadingTag
         className={[

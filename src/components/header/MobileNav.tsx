@@ -18,6 +18,7 @@ import {
   getDropdownParentHref,
   getNavLinkTarget,
 } from '@/lib/fields/navigation/resolveNavHref'
+import { isNavLinkActive, navLinkFocusResetClass } from '@/lib/fields/navigation/isNavLinkActive'
 import { VehicleMegaMenuMobile } from '@/components/header/VehicleMegaMenuMobile'
 import type { VehicleMegaMenuData } from '@/lib/data/vehicleMegaMenuTypes'
 import { formatContactAddress } from '@/lib/utils/formatContactAddress'
@@ -41,7 +42,8 @@ const mobileMenuTriggerClass = cn(
   'text-dark-800 hover:text-secondary',
 )
 
-const mobileLinkClass = 'text-2xl font-semibold text-secondary'
+const mobileLinkClass = cn(navLinkFocusResetClass, 'text-2xl font-semibold text-secondary')
+const mobileActiveClass = 'text-primary'
 
 const mobileNavSurfaceClass =
   'bg-light-50/70 backdrop-blur-md supports-[backdrop-filter]:bg-light-50/75'
@@ -156,7 +158,7 @@ export const MobileNav = ({ links, className, settings, vehicleMegaMenuData }: M
               onValueChange={setOpenSections}
             >
               {links.map((link, index) =>
-                renderMobileMenuItem(link, index, closeMobileMenu, vehicleMegaMenuData),
+                renderMobileMenuItem(link, index, closeMobileMenu, pathname, vehicleMegaMenuData),
               )}
             </Accordion>
           </div>
@@ -192,6 +194,7 @@ const renderMobileMenuItem = (
   item: NavLink,
   index: number,
   onNavigate: () => void,
+  pathname: string,
   vehicleMegaMenuData?: VehicleMegaMenuData | null,
 ) => {
   if (item.type === 'vehicleMegaMenu' && vehicleMegaMenuData) {
@@ -219,6 +222,7 @@ const renderMobileMenuItem = (
 
   if (item.type === 'dropdown') {
     const parentHref = getDropdownParentHref(item)
+    const parentActive = parentHref ? isNavLinkActive(pathname, parentHref) : false
 
     return (
       <AccordionItem
@@ -231,13 +235,17 @@ const renderMobileMenuItem = (
             <Link
               href={parentHref}
               target={getNavLinkTarget(item)}
-              className={mobileLinkClass}
+              aria-current={parentActive ? 'page' : undefined}
+              className={cn(mobileLinkClass, parentActive && mobileActiveClass)}
               onClick={onNavigate}
             >
               {item.label}
             </Link>
             <MobileAccordionTrigger
-              className="w-auto shrink-0 py-0 px-2 font-semibold no-underline hover:no-underline size-8"
+              className={cn(
+                navLinkFocusResetClass,
+                'w-auto shrink-0 py-0 px-2 font-semibold no-underline hover:no-underline size-8',
+              )}
               aria-label={`Expand ${item.label} submenu`}
             />
           </div>
@@ -250,7 +258,12 @@ const renderMobileMenuItem = (
         )}
         <AccordionContent className="mt-2 [&_a]:no-underline">
           {item.children?.map((subItem, childIndex) => (
-            <SubMenuLink key={subItem.id ?? childIndex} item={subItem} onNavigate={onNavigate} />
+            <SubMenuLink
+              key={subItem.id ?? childIndex}
+              item={subItem}
+              pathname={pathname}
+              onNavigate={onNavigate}
+            />
           ))}
         </AccordionContent>
       </AccordionItem>
@@ -259,6 +272,7 @@ const renderMobileMenuItem = (
 
   const href = generateNavHref(item)
   const target = getNavLinkTarget(item)
+  const active = isNavLinkActive(pathname, href)
 
   if (item.variant === 'button') {
     return (
@@ -269,7 +283,12 @@ const renderMobileMenuItem = (
         className="rounded-full my-2"
         size="sm"
       >
-        <Link href={href} target={target} onClick={onNavigate}>
+        <Link
+          href={href}
+          target={target}
+          aria-current={active ? 'page' : undefined}
+          onClick={onNavigate}
+        >
           {item.label}
         </Link>
       </Button>
@@ -281,7 +300,8 @@ const renderMobileMenuItem = (
       key={item.id ?? index}
       href={href}
       target={target}
-      className={cn(mobileLinkClass, 'my-2 block')}
+      aria-current={active ? 'page' : undefined}
+      className={cn(mobileLinkClass, 'my-2 block', active && mobileActiveClass)}
       onClick={onNavigate}
     >
       {item.label}
@@ -289,12 +309,28 @@ const renderMobileMenuItem = (
   )
 }
 
-const SubMenuLink = ({ item, onNavigate }: { item: NavLinkChild; onNavigate: () => void }) => {
+const SubMenuLink = ({
+  item,
+  pathname,
+  onNavigate,
+}: {
+  item: NavLinkChild
+  pathname: string
+  onNavigate: () => void
+}) => {
+  const href = generateNavHref(item)
+  const active = isNavLinkActive(pathname, href)
+
   return (
     <Link
-      href={generateNavHref(item)}
+      href={href}
       target={getNavLinkTarget(item)}
-      className="flex min-w-0 flex-row p-3 no-underline text-secondary"
+      aria-current={active ? 'page' : undefined}
+      className={cn(
+        navLinkFocusResetClass,
+        'flex min-w-0 flex-row p-3 no-underline text-secondary',
+        active && mobileActiveClass,
+      )}
       onClick={onNavigate}
     >
       <div className="text-xl font-semibold">{item.label}</div>

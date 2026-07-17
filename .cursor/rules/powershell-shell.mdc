@@ -1,0 +1,39 @@
+---
+description: Windows PowerShell shell conventions for terminal commands
+alwaysApply: true
+---
+
+# Windows PowerShell Shell
+
+This project runs on **Windows PowerShell 5.x**. `&&` is **not** a valid statement separator and will fail with a parser error.
+
+## Do
+
+- Set the Shell tool `working_directory` to the project path instead of `cd ... && <command>`.
+- Chain commands with `;` only when both must run in one invocation.
+- Run quality checks as standalone commands from the repo root:
+
+```powershell
+pnpm exec tsc --noEmit
+pnpm lint
+```
+
+## Don't
+
+```powershell
+# BAD — && fails in PowerShell 5.x
+cd "c:\development\eagle-motors\eagle-ford" && pnpm exec tsc --noEmit
+
+# BAD — unnecessary truncation
+pnpm exec tsc --noEmit 2>&1 | Select-Object -First 30
+```
+
+## Examples
+
+```powershell
+# GOOD — use working_directory: c:\development\eagle-motors\eagle-ford
+pnpm exec tsc --noEmit
+
+# GOOD — if chaining is required
+Set-Location "c:\development\eagle-motors\eagle-ford"; pnpm lint
+```

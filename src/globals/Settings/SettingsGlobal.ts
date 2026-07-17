@@ -74,6 +74,26 @@ export const SettingsGlobal: GlobalConfig = {
             },
           ],
         },
+        {
+          label: 'Media',
+          admin: {
+            condition: (_data, _siblingData, { user }) => {
+              return Boolean(user?.roles?.includes('developer'))
+            },
+          },
+          fields: [
+            {
+              type: 'ui',
+              label: 'Media cleanup',
+              name: 'mediaCleanupDisplay',
+              admin: {
+                components: {
+                  Field: '@/lib/fields/media-cleanup/MediaCleanupComponent#MediaCleanupComponent',
+                },
+              },
+            },
+          ],
+        },
       ],
     },
   ],

@@ -22,3 +22,7 @@ export const isAuthenticatedOrPublished: Access = ({ req: { user } }) => {
     },
   }
 }
+
+export const isDeveloper: Access = ({ req: { user } }) => {
+  return Boolean(user?.roles?.includes('developer'))
+}
