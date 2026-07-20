@@ -52,6 +52,7 @@ export function StockCard({ vehicle, enquireUrl }: Props) {
             alt={title}
             fill
             imgClassName="object-cover"
+            maxWidth={600}
             size="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
             quality={100}
           />

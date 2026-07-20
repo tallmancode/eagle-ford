@@ -37,6 +37,7 @@ function PopupCardItem({ card }: { card: PopupCard }) {
           alt={card.imageAlt ?? undefined}
           fill
           imgClassName="object-cover"
+          maxWidth={900}
           size="(max-width: 768px) 100vw, 33vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />

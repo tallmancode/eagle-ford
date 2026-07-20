@@ -108,6 +108,7 @@ export function VehicleGallery({ vehicleName, gallery }: VehicleGalleryProps) {
                       resource={item.image}
                       fill
                       imgClassName="object-cover group-hover:scale-105 transition-transform duration-300"
+                      maxWidth={600}
                       size="(max-width: 768px) 50vw, 25vw"
                     />
                   </button>
@@ -194,6 +195,7 @@ export function VehicleGallery({ vehicleName, gallery }: VehicleGalleryProps) {
               resource={gallery[lightboxIndex]?.image}
               fill
               imgClassName="object-contain"
+              maxWidth={1920}
               size="100vw"
               priority
             />

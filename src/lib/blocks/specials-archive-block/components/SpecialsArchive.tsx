@@ -24,6 +24,7 @@ function CategoryCard({ category }: { category: SpecialCategory }) {
             resource={category.featureImage}
             fill
             imgClassName="object-cover transition-transform duration-300 group-hover:scale-105"
+            maxWidth={900}
             size="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
