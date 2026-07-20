@@ -25,15 +25,18 @@ export const DashHeading: React.FC<Heading> = (props) => {
   } = content
 
   const uppercase = uppercaseSetting ?? true
+  const resolvedAlignment = alignment ?? 'left'
   const colors = colorMap[color ?? 'primary'] ?? colorMap.primary
   const sizes = sizeMap[size ?? 'lg'] ?? sizeMap.lg
-  const alignClass = alignmentMap[alignment ?? 'center'] ?? alignmentMap.center
+  const alignClass = alignmentMap[resolvedAlignment] ?? alignmentMap.left
   const HeadingTag = headingTagMap[headingTag ?? 'h2'] ?? 'h2'
+  const showLeftDash = resolvedAlignment === 'left' || resolvedAlignment === 'center'
+  const showRightDash = resolvedAlignment === 'right' || resolvedAlignment === 'center'
 
   return (
     <div className={`flex flex-col gap-3 mb-8 ${alignClass}`}>
       <div className="flex items-center gap-2">
-        <div className="h-px w-6 bg-primary"></div>
+        {showLeftDash && <div className="h-px w-6 bg-primary" />}
         <span
           className={['text-sm font-medium tracking-wider text-primary', 'uppercase']
             .filter(Boolean)
@@ -41,6 +44,7 @@ export const DashHeading: React.FC<Heading> = (props) => {
         >
           {tag}
         </span>
+        {showRightDash && <div className="h-px w-6 bg-primary" />}
       </div>
       <HeadingTag
         className={[

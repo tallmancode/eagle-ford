@@ -161,6 +161,7 @@ export interface Config {
   collections: {
     pages: Page;
     specials: Special;
+    'special-categories': SpecialCategory;
     media: Media;
     'vehicle-categories': VehicleCategory;
     'vehicle-templates': VehicleTemplate;
@@ -183,6 +184,7 @@ export interface Config {
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     specials: SpecialsSelect<false> | SpecialsSelect<true>;
+    'special-categories': SpecialCategoriesSelect<false> | SpecialCategoriesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'vehicle-categories': VehicleCategoriesSelect<false> | VehicleCategoriesSelect<true>;
     'vehicle-templates': VehicleTemplatesSelect<false> | VehicleTemplatesSelect<true>;
@@ -2134,6 +2136,10 @@ export interface Special {
   id: string;
   offerType: 'price-point' | 'payment' | 'service' | 'enquiry';
   /**
+   * Groups this special under a campaign or theme (e.g. Truck Month, Holiday).
+   */
+  category: string | SpecialCategory;
+  /**
    * Optional. Defaults to the offer type label if left blank.
    */
   title?: string | null;
@@ -2158,6 +2164,14 @@ export interface Special {
    * Cash price in Rand, e.g. 489900 for R489 900
    */
   specialOffer?: number | null;
+  /**
+   * Saving amount in Rand, e.g. 100100 for R100 100
+   */
+  bestSaving?: number | null;
+  /**
+   * Monthly payment in Rand, e.g. 7799 for R7 799*pm
+   */
+  paymentFrom?: number | null;
   content?: {
     section?: Section[] | null;
   };
@@ -2174,6 +2188,25 @@ export interface Special {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "special-categories".
+ */
+export interface SpecialCategory {
+  id: string;
+  title: string;
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2785,6 +2818,10 @@ export interface PayloadLockedDocument {
         value: string | Special;
       } | null)
     | ({
+        relationTo: 'special-categories';
+        value: string | SpecialCategory;
+      } | null)
+    | ({
         relationTo: 'media';
         value: string | Media;
       } | null)
@@ -2898,6 +2935,7 @@ export interface PagesSelect<T extends boolean = true> {
  */
 export interface SpecialsSelect<T extends boolean = true> {
   offerType?: T;
+  category?: T;
   title?: T;
   subTitle?: T;
   cardImage?: T;
@@ -2905,6 +2943,8 @@ export interface SpecialsSelect<T extends boolean = true> {
   vehicleModel?: T;
   pricingLabel?: T;
   specialOffer?: T;
+  bestSaving?: T;
+  paymentFrom?: T;
   content?:
     | T
     | {
@@ -2917,6 +2957,18 @@ export interface SpecialsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "special-categories_select".
+ */
+export interface SpecialCategoriesSelect<T extends boolean = true> {
+  title?: T;
+  sortOrder?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -4049,6 +4101,7 @@ export interface TaskCreateCollectionExport {
     collectionSlug:
       | 'pages'
       | 'specials'
+      | 'special-categories'
       | 'media'
       | 'vehicle-categories'
       | 'vehicle-templates'
