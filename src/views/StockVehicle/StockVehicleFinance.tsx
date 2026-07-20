@@ -27,7 +27,6 @@ export function StockVehicleFinance({ vehicle }: Props) {
         </div>
 
         <FinanceCalculatorClient
-          heading={null}
           disclaimer={FINANCE_DISCLAIMER}
           defaultPurchasePrice={price > 0 ? price : null}
           mode="repaymentOnly"

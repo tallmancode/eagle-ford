@@ -15,12 +15,6 @@ export const StockArchiveBlock: Block = {
   },
   fields: [
     {
-      type: 'text',
-      name: 'heading',
-      label: 'Heading',
-      defaultValue: 'Our Showroom',
-    },
-    {
       type: 'select',
       name: 'conditionFilter',
       label: 'Condition Filter',

@@ -9,12 +9,10 @@ import {
   type StockArchiveVehicle,
 } from '../utils'
 import { StockArchiveGrid } from './StockArchiveGrid'
-import { StockArchiveHeader } from './StockArchiveHeader'
 import { StockArchivePagination } from './StockArchivePagination'
 import { StockArchiveToolbar } from './StockArchiveToolbar'
 
 type Props = {
-  heading: string
   vehicles: StockArchiveVehicle[]
   filterOptions: MotorCityStockFilterOptions
   activeFilters: StockArchiveFilters
@@ -29,7 +27,6 @@ type Props = {
 }
 
 export function StockArchiveClient({
-  heading,
   vehicles,
   filterOptions,
   activeFilters,
@@ -68,8 +65,6 @@ export function StockArchiveClient({
 
   return (
     <div>
-      <StockArchiveHeader heading={heading} />
-
       <StockArchiveToolbar
         vehicles={vehicles}
         filterOptions={filterOptions}

@@ -255,7 +255,7 @@ export async function POST(): Promise<Response> {
           )
         }
 
-        const content = buildSpecialContent({
+        const templateSections = buildSpecialContent({
           title: entry.title,
           subheading: entry.contentSubheading,
           bodyHtml: entry.bodyHtml,
@@ -266,6 +266,42 @@ export async function POST(): Promise<Response> {
         const categoryId = categoryIdsByTitle.get(entry.specialsCategory)
         if (!categoryId) {
           throw new Error(`Missing special category "${entry.specialsCategory}"`)
+        }
+
+        const templateTitle = `${entry.title} Layout`
+        const existingTemplate = await payload.find({
+          collection: 'special-templates',
+          where: { title: { equals: templateTitle } },
+          limit: 1,
+          depth: 0,
+          overrideAccess: true,
+          req: payloadReq,
+        })
+
+        let templateId: string
+        if (existingTemplate.totalDocs > 0) {
+          const updated = await payload.update({
+            collection: 'special-templates',
+            id: existingTemplate.docs[0].id,
+            data: {
+              title: templateTitle,
+              section: templateSections.section,
+            },
+            req: payloadReq,
+            context: { disableRevalidate: true },
+          })
+          templateId = updated.id as string
+        } else {
+          const created = await payload.create({
+            collection: 'special-templates',
+            data: {
+              title: templateTitle,
+              section: templateSections.section,
+            },
+            req: payloadReq,
+            context: { disableRevalidate: true },
+          })
+          templateId = created.id as string
         }
 
         const specialData = {
@@ -279,7 +315,7 @@ export async function POST(): Promise<Response> {
           ...(entry.bestSaving != null ? { bestSaving: entry.bestSaving } : {}),
           ...(vehicleId ? { vehicle: vehicleId } : { vehicle: null }),
           ...(modelId ? { vehicleModel: modelId } : { vehicleModel: null }),
-          content,
+          template: templateId,
           sortOrder: entry.sortOrder,
           slug: entry.slug,
           generateSlug: false,
