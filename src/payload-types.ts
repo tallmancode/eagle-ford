@@ -2167,28 +2167,6 @@ export interface Special {
    */
   vehicleModel?: (string | null) | VehicleModel;
   /**
-   * Optional copy shown below key features on the specials category detail panel.
-   */
-  detailContent?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * HTML id of the form section to scroll to (e.g. enquire). Leave blank to hide the Enquire Now button.
-   */
-  enquireSectionId?: string | null;
-  /**
    * Cash price in Rand, e.g. 489900 for R489 900
    */
   pricingLabel?: string | null;
@@ -2204,14 +2182,21 @@ export interface Special {
    * Monthly payment in Rand, e.g. 7799 for R7 799*pm
    */
   paymentFrom?: number | null;
+  content?: {
+    section?: Section[] | null;
+  };
   /**
    * Lower numbers appear first within a section.
    */
   sortOrder?: number | null;
   /**
-   * Optional. Layout shown below the specials tabs when this special is selected.
+   * Optional. Overrides the category template when this special is selected. If blank, the category template is used.
    */
   template?: (string | null) | SpecialTemplate;
+  /**
+   * Optional. Overrides the category enquire form when this special is selected. If blank, the category form is used.
+   */
+  enquiryForm?: (string | null) | Form;
   publishedAt?: string | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -2238,10 +2223,32 @@ export interface SpecialCategory {
    */
   sortOrder?: number | null;
   /**
+   * Optional. Default layout for specials in this category. Individual specials can override this.
+   */
+  template?: (string | null) | SpecialTemplate;
+  /**
+   * Optional. Default enquire form for specials in this category. Individual specials can override this.
+   */
+  enquiryForm?: (string | null) | Form;
+  /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "special-templates".
+ */
+export interface SpecialTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Special Layout" or "Vehicle Offer Layout"
+   */
+  title: string;
+  section?: Section[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -2578,20 +2585,6 @@ export interface VehicleModel {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "special-templates".
- */
-export interface SpecialTemplate {
-  id: string;
-  /**
-   * e.g. "Standard Special Layout" or "Vehicle Offer Layout"
-   */
-  title: string;
-  section?: Section[] | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2996,14 +2989,18 @@ export interface SpecialsSelect<T extends boolean = true> {
   cardImage?: T;
   vehicle?: T;
   vehicleModel?: T;
-  detailContent?: T;
-  enquireSectionId?: T;
   pricingLabel?: T;
   specialOffer?: T;
   bestSaving?: T;
   paymentFrom?: T;
+  content?:
+    | T
+    | {
+        section?: T | {};
+      };
   sortOrder?: T;
   template?: T;
+  enquiryForm?: T;
   publishedAt?: T;
   generateSlug?: T;
   slug?: T;
@@ -3019,6 +3016,8 @@ export interface SpecialCategoriesSelect<T extends boolean = true> {
   title?: T;
   featureImage?: T;
   sortOrder?: T;
+  template?: T;
+  enquiryForm?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;

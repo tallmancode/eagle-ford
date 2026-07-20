@@ -4,8 +4,6 @@ import React, { Suspense, useEffect, useTransition } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Download } from 'lucide-react'
-import { RichText as ConvertRichText } from '@payloadcms/richtext-lexical/react'
-import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 
 import {
   Accordion,
@@ -15,13 +13,14 @@ import {
 } from '@/components/ui/accordion'
 import { MediaImage } from '@/components/ui/media-image'
 import { Button } from '@/components/ui/button'
-import { richTextConverters } from '@/components/rich-text/richTextConverters'
+import { FormBlockClient } from '@/lib/blocks/form-block/components/FormBlockClient'
+import type { FormBlockContextValues } from '@/lib/blocks/form-block/types/formContext'
 import { getOfferTypeLabel } from '@/lib/specials/constants'
 import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getSpecialCategoryPath } from '@/lib/specials/paths'
 import { formatZAR } from '@/lib/utils/formatZAR'
 import { getBrochureUrl } from '@/lib/utils/vehicleCta'
-import type { Special, Vehicle } from '@/payload-types'
+import type { Form, Special, Vehicle, VehicleModel } from '@/payload-types'
 
 export type SpecialTabItem = Pick<
   Special,
@@ -37,32 +36,15 @@ export type SpecialTabItem = Pick<
   | 'cardImage'
   | 'vehicle'
   | 'vehicleModel'
-  | 'detailContent'
-  | 'enquireSectionId'
+  | 'enquiryForm'
 >
 
 type SpecialsTabsProps = {
   categorySlug: string
+  categoryTitle: string
+  categoryEnquiryForm: Form | null
   specials: SpecialTabItem[]
   initialSpecialSlug?: string
-}
-
-function getSpecialPrimaryAmount(special: SpecialTabItem): number | null {
-  if (special.offerType === 'payment') {
-    return special.paymentFrom ?? null
-  }
-
-  if (special.offerType === 'price-point' || special.offerType === 'service') {
-    return special.specialOffer ?? null
-  }
-
-  return null
-}
-
-function formatSpecialListPrice(special: SpecialTabItem): string | null {
-  const amount = getSpecialPrimaryAmount(special)
-  if (amount == null) return null
-  return formatZAR(amount)
 }
 
 function findSpecialIndex(
@@ -72,6 +54,72 @@ function findSpecialIndex(
   if (!specialSlug) return 0
   const index = specials.findIndex((special) => special.slug === specialSlug)
   return index >= 0 ? index : 0
+}
+
+function resolveEnquiryForm(
+  special: SpecialTabItem,
+  categoryEnquiryForm: Form | null,
+): Form | null {
+  const override = special.enquiryForm
+  if (override && typeof override === 'object' && override.id) {
+    return override
+  }
+  return categoryEnquiryForm
+}
+
+function getModelName(special: SpecialTabItem): string {
+  const model =
+    special.vehicleModel && typeof special.vehicleModel === 'object'
+      ? (special.vehicleModel as VehicleModel)
+      : null
+  return model?.name ?? ''
+}
+
+function buildSpecialContextValues(
+  special: SpecialTabItem,
+  categoryTitle: string,
+): FormBlockContextValues {
+  return {
+    specialCategory: categoryTitle,
+    modelName: getModelName(special),
+    specialType: getOfferTypeLabel(special.offerType),
+    specialTitle: getSpecialDisplayTitle(special),
+  }
+}
+
+function SpecialListPricing({ special }: { special: SpecialTabItem }) {
+  if (special.offerType === 'price-point') {
+    if (special.specialOffer == null && special.bestSaving == null) return null
+    return (
+      <span className="flex justify-between gap-4">
+        {special.specialOffer != null && (
+          <span className="flex items-center space-x-1">
+            <span className="text-xs">Special Offer:</span>
+            <span className="font-semibold text-secondary">{formatZAR(special.specialOffer)}*</span>
+          </span>
+        )}
+        {special.bestSaving != null && (
+          <span className="flex items-center space-x-1">
+            <span className="text-xs">Best saving:</span>
+            <span className="font-semibold text-secondary">{formatZAR(special.bestSaving)}*</span>
+          </span>
+        )}
+      </span>
+    )
+  }
+
+  if (special.offerType === 'payment' && special.paymentFrom != null) {
+    return (
+      <span className="flex justify-end">
+        <span className="flex items-center space-x-1">
+          <span className="text-xs">Payment From:</span>
+          <span className="font-semibold text-secondary">{formatZAR(special.paymentFrom)}*pm</span>
+        </span>
+      </span>
+    )
+  }
+
+  return null
 }
 
 function hasSpecialDetailPricing(special: SpecialTabItem): boolean {
@@ -142,13 +190,23 @@ function SpecialDetailPricing({ special }: { special: SpecialTabItem }) {
   return null
 }
 
-function SpecialDetailContent({
-  special,
-  priority,
-}: {
-  special: SpecialTabItem
-  priority?: boolean
-}) {
+function SpecialCardImage({ special, priority }: { special: SpecialTabItem; priority?: boolean }) {
+  if (!special.cardImage) return null
+
+  return (
+    <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-muted">
+      <MediaImage
+        resource={special.cardImage}
+        fill
+        imgClassName="object-contain object-center"
+        size="(max-width: 1024px) 100vw, 66vw"
+        priority={priority}
+      />
+    </div>
+  )
+}
+
+function SpecialDetailInfo({ special }: { special: SpecialTabItem }) {
   const title = getSpecialDisplayTitle(special)
   const model =
     special.vehicleModel && typeof special.vehicleModel === 'object' ? special.vehicleModel : null
@@ -157,85 +215,128 @@ function SpecialDetailContent({
   const highlights = model?.highlights ?? []
   const hasHighlights = highlights.length > 0
   const hasPricing = hasSpecialDetailPricing(special)
-  const enquireSectionId = special.enquireSectionId?.trim() || null
   const brochureUrl = getBrochureUrl(vehicle?.brochure)
 
   return (
-    <div className="flex flex-col gap-6">
-      {special.cardImage && (
-        <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-muted">
-          <MediaImage
-            resource={special.cardImage}
-            fill
-            imgClassName="object-contain object-center"
-            size="(max-width: 1024px) 100vw, 66vw"
-            priority={priority}
-          />
+    <div>
+      <h3 className="text-primary text-2xl md:text-3xl font-bold mb-3">{title}</h3>
+
+      <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        {brochureUrl && (
+          <Button variant="secondary" className="w-full rounded-full sm:w-auto" asChild>
+            <a href={brochureUrl} target="_blank" rel="noopener noreferrer" download>
+              <Download className="mr-2 size-4" />
+              Download Brochure
+            </a>
+          </Button>
+        )}
+        <Button variant="outline" className="w-full rounded-full sm:w-auto" asChild>
+          <Link href="/specials">Back to Specials</Link>
+        </Button>
+      </div>
+
+      {(hasHighlights || hasPricing) && (
+        <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+          {hasHighlights && (
+            <div className="min-w-0 flex-1">
+              <h4 className="text-primary font-bold mb-3">Key Features</h4>
+              <ul className="space-y-2">
+                {highlights.map((item, i) => (
+                  <li
+                    key={item.id ?? i}
+                    className="flex items-start gap-2 text-sm text-muted-foreground"
+                  >
+                    <span className="text-primary mt-0.5 shrink-0">•</span>
+                    <span>{item.highlight}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {hasPricing && (
+            <div className="shrink-0 sm:ml-auto">
+              <SpecialDetailPricing special={special} />
+            </div>
+          )}
         </div>
       )}
-
-      <div>
-        <h3 className="text-primary text-2xl md:text-3xl font-bold mb-3">{title}</h3>
-
-        <div className="mb-8 flex flex-wrap gap-3">
-          {enquireSectionId && (
-            <Button variant="default" className="rounded-full" asChild>
-              <a href={`#${enquireSectionId}`}>Enquire Now</a>
-            </Button>
-          )}
-          {brochureUrl && (
-            <Button variant="secondary" className="rounded-full" asChild>
-              <a href={brochureUrl} target="_blank" rel="noopener noreferrer" download>
-                <Download className="mr-2 size-4" />
-                Download Brochure
-              </a>
-            </Button>
-          )}
-          <Button variant="outline" className="rounded-full" asChild>
-            <Link href="/specials">Back to Specials</Link>
-          </Button>
-        </div>
-
-        {(hasHighlights || hasPricing) && (
-          <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
-            {hasHighlights && (
-              <div className="min-w-0 flex-1">
-                <h4 className="text-primary font-bold mb-3">Key Features</h4>
-                <ul className="space-y-2">
-                  {highlights.map((item, i) => (
-                    <li
-                      key={item.id ?? i}
-                      className="flex items-start gap-2 text-sm text-muted-foreground"
-                    >
-                      <span className="text-primary mt-0.5 shrink-0">•</span>
-                      <span>{item.highlight}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {hasPricing && (
-              <div className="shrink-0 sm:ml-auto">
-                <SpecialDetailPricing special={special} />
-              </div>
-            )}
-          </div>
-        )}
-
-        {special.detailContent && (
-          <div className="text-muted-foreground leading-relaxed">
-            <ConvertRichText
-              converters={richTextConverters}
-              data={special.detailContent as SerializedEditorState}
-            />
-          </div>
-        )}
-      </div>
     </div>
   )
 }
 
-function SpecialsTabsInner({ categorySlug, specials, initialSpecialSlug }: SpecialsTabsProps) {
+function SpecialEnquiryForm({
+  form,
+  special,
+  categoryTitle,
+}: {
+  form: Form
+  special: SpecialTabItem
+  categoryTitle: string
+}) {
+  return (
+    <FormBlockClient
+      key={`${form.id}-${special.id}`}
+      form={form}
+      contextValues={buildSpecialContextValues(special, categoryTitle)}
+    />
+  )
+}
+
+function SpecialsTabsList({
+  specials,
+  selectedIndex,
+  onSelect,
+}: {
+  specials: SpecialTabItem[]
+  selectedIndex: number
+  onSelect: (index: number) => void
+}) {
+  return (
+    <>
+      <div className="gap-4 px-4 pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <span>Specials</span>
+      </div>
+      <ul className="divide-y divide-border">
+        {specials.map((special, index) => {
+          const isSelected = index === selectedIndex
+          return (
+            <li key={special.id}>
+              <button
+                type="button"
+                onClick={() => onSelect(index)}
+                aria-pressed={isSelected}
+                className={`w-full flex flex-col gap-4 px-4 py-4 text-left transition-colors border-l-4 ${
+                  isSelected
+                    ? 'bg-primary/5 border-l-primary text-primary'
+                    : 'border-l-transparent hover:bg-muted/50'
+                }`}
+              >
+                <span className="flex justify-between">
+                  <span className={`font-semibold text-sm ${isSelected ? 'text-primary' : ''}`}>
+                    {getSpecialDisplayTitle(special)}
+                  </span>
+                  <span className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+                    {getOfferTypeLabel(special.offerType)}
+                  </span>
+                </span>
+
+                <SpecialListPricing special={special} />
+              </button>
+            </li>
+          )
+        })}
+      </ul>
+    </>
+  )
+}
+
+function SpecialsTabsInner({
+  categorySlug,
+  categoryTitle,
+  categoryEnquiryForm,
+  specials,
+  initialSpecialSlug,
+}: SpecialsTabsProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [, startTransition] = useTransition()
@@ -243,6 +344,9 @@ function SpecialsTabsInner({ categorySlug, specials, initialSpecialSlug }: Speci
   const specialFromQuery = searchParams.get('special') ?? initialSpecialSlug
   const selectedIndex = findSpecialIndex(specials, specialFromQuery)
   const selectedSpecial = specials[selectedIndex] ?? specials[0]
+  const enquiryForm = selectedSpecial
+    ? resolveEnquiryForm(selectedSpecial, categoryEnquiryForm)
+    : null
 
   useEffect(() => {
     if (specials.length === 0 || !selectedSpecial?.slug) return
@@ -271,7 +375,7 @@ function SpecialsTabsInner({ categorySlug, specials, initialSpecialSlug }: Speci
 
   return (
     <div>
-      {/* Mobile: accordion */}
+      {/* Mobile: accordion + form below */}
       <div className="lg:hidden flex flex-col gap-6">
         <div className="border-b border-border">
           <div className="px-4 pb-2 text-xs font-medium tracking-wide text-muted-foreground">
@@ -287,101 +391,65 @@ function SpecialsTabsInner({ categorySlug, specials, initialSpecialSlug }: Speci
             }}
           >
             {specials.map((special, index) => {
-              const listPrice = formatSpecialListPrice(special)
               const isSelected = index === selectedIndex
               return (
                 <AccordionItem key={special.id} value={String(special.id)} className="border-b-0">
                   <AccordionTrigger className="group hover:no-underline w-full px-4 py-4 text-left transition-colors border-l-4 border-l-transparent data-[state=open]:bg-primary/5 data-[state=open]:border-l-primary hover:bg-muted/50 [&>svg]:text-muted-foreground group-data-[state=open]:[&>svg]:text-primary">
-                    <span className="grid grid-cols-[1fr_auto] gap-4 flex-1 items-center">
+                    <span className="flex flex-1 flex-col gap-2 text-left">
                       <span className="font-semibold text-sm group-data-[state=open]:text-primary">
                         {getSpecialDisplayTitle(special)}
                       </span>
-                      {listPrice && (
-                        <span className="text-sm font-medium whitespace-nowrap text-muted-foreground group-data-[state=open]:text-primary">
-                          {listPrice}
-                        </span>
-                      )}
+                      <SpecialListPricing special={special} />
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="px-4 pt-2 pb-6">
-                    <SpecialDetailContent special={special} priority={isSelected} />
+                    <div className="flex flex-col gap-6">
+                      <SpecialCardImage special={special} priority={isSelected} />
+                      <SpecialDetailInfo special={special} />
+                    </div>
                   </AccordionContent>
                 </AccordionItem>
               )
             })}
           </Accordion>
         </div>
+
+        {enquiryForm && (
+          <SpecialEnquiryForm
+            form={enquiryForm}
+            special={selectedSpecial}
+            categoryTitle={categoryTitle}
+          />
+        )}
       </div>
 
-      {/* Desktop: two-column layout */}
-      <div className="hidden lg:grid grid-cols-[minmax(0,440px)_1fr] gap-12 items-start">
-        <div className="border-b border-border">
-          <div className="gap-4 px-4 pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            <span>Specials</span>
-          </div>
-          <ul className="divide-y divide-border">
-            {specials.map((special, index) => {
-              const isSelected = index === selectedIndex
-              return (
-                <li key={special.id}>
-                  <button
-                    type="button"
-                    onClick={() => selectSpecial(index)}
-                    aria-pressed={isSelected}
-                    className={`w-full flex flex-col gap-4 px-4 py-4 text-left transition-colors border-l-4 ${
-                      isSelected
-                        ? 'bg-primary/5 border-l-primary text-primary'
-                        : 'border-l-transparent hover:bg-muted/50'
-                    }`}
-                  >
-                    <span className="flex justify-between">
-                      <span className={`font-semibold text-sm ${isSelected ? 'text-primary' : ''}`}>
-                        {getSpecialDisplayTitle(special)}
-                      </span>
-                      <span className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-                        {getOfferTypeLabel(special.offerType)}
-                      </span>
-                    </span>
-
-                    {special.offerType === 'price-point' && (
-                      <span className="flex justify-between">
-                        {special.specialOffer != null && (
-                          <span className="flex items-center space-x-1">
-                            <span className="text-xs">Special Offer:</span>
-                            <span className="font-semibold text-secondary">
-                              {formatZAR(special.specialOffer)}*
-                            </span>
-                          </span>
-                        )}
-                        {special.bestSaving != null && (
-                          <span className="flex items-center space-x-1">
-                            <span className="text-xs">Best saving:</span>
-                            <span className="font-semibold text-secondary">
-                              {formatZAR(special.bestSaving)}*
-                            </span>
-                          </span>
-                        )}
-                      </span>
-                    )}
-
-                    {special.offerType === 'payment' && special.paymentFrom != null && (
-                      <span className="flex justify-end">
-                        <span className="flex items-center space-x-1">
-                          <span className="text-xs">Payment From:</span>
-                          <span className="font-semibold text-secondary">
-                            {formatZAR(special.paymentFrom)}*pm
-                          </span>
-                        </span>
-                      </span>
-                    )}
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
+      {/* Desktop: tabs|image top; form|info bottom */}
+      <div className="hidden lg:grid grid-cols-[minmax(0,440px)_1fr] grid-rows-[auto_auto] gap-x-12 gap-y-8 items-start">
+        <div className="col-start-1 row-start-1 h-0 min-h-full overflow-y-auto border-b border-border">
+          <SpecialsTabsList
+            specials={specials}
+            selectedIndex={selectedIndex}
+            onSelect={selectSpecial}
+          />
         </div>
 
-        <SpecialDetailContent special={selectedSpecial} priority />
+        <div className="col-start-2 row-start-1">
+          <SpecialCardImage special={selectedSpecial} priority />
+        </div>
+
+        <div className="col-start-1 row-start-2">
+          {enquiryForm && (
+            <SpecialEnquiryForm
+              form={enquiryForm}
+              special={selectedSpecial}
+              categoryTitle={categoryTitle}
+            />
+          )}
+        </div>
+
+        <div className="col-start-2 row-start-2">
+          <SpecialDetailInfo special={selectedSpecial} />
+        </div>
       </div>
     </div>
   )
