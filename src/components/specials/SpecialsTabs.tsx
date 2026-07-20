@@ -43,6 +43,7 @@ type SpecialsTabsProps = {
   categorySlug: string
   categoryTitle: string
   categoryEnquiryForm: Form | null
+  fordPromiseHref: string | null
   specials: SpecialTabItem[]
   initialSpecialSlug?: string
 }
@@ -206,7 +207,13 @@ function SpecialCardImage({ special, priority }: { special: SpecialTabItem; prio
   )
 }
 
-function SpecialDetailInfo({ special }: { special: SpecialTabItem }) {
+function SpecialDetailInfo({
+  special,
+  fordPromiseHref,
+}: {
+  special: SpecialTabItem
+  fordPromiseHref: string | null
+}) {
   const title = getSpecialDisplayTitle(special)
   const model =
     special.vehicleModel && typeof special.vehicleModel === 'object' ? special.vehicleModel : null
@@ -222,6 +229,11 @@ function SpecialDetailInfo({ special }: { special: SpecialTabItem }) {
       <h3 className="text-primary text-2xl md:text-3xl font-bold mb-3">{title}</h3>
 
       <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        {fordPromiseHref && (
+          <Button className="w-full rounded-full sm:w-auto" asChild>
+            <Link href={fordPromiseHref}>Ford Family Promise</Link>
+          </Button>
+        )}
         {brochureUrl && (
           <Button variant="secondary" className="w-full rounded-full sm:w-auto" asChild>
             <a href={brochureUrl} target="_blank" rel="noopener noreferrer" download>
@@ -334,6 +346,7 @@ function SpecialsTabsInner({
   categorySlug,
   categoryTitle,
   categoryEnquiryForm,
+  fordPromiseHref,
   specials,
   initialSpecialSlug,
 }: SpecialsTabsProps) {
@@ -405,7 +418,7 @@ function SpecialsTabsInner({
                   <AccordionContent className="px-4 pt-2 pb-6">
                     <div className="flex flex-col gap-6">
                       <SpecialCardImage special={special} priority={isSelected} />
-                      <SpecialDetailInfo special={special} />
+                      <SpecialDetailInfo special={special} fordPromiseHref={fordPromiseHref} />
                     </div>
                   </AccordionContent>
                 </AccordionItem>
@@ -424,7 +437,7 @@ function SpecialsTabsInner({
       </div>
 
       {/* Desktop: tabs|image top; form|info bottom */}
-      <div className="hidden lg:grid grid-cols-[minmax(0,440px)_1fr] grid-rows-[auto_auto] gap-x-12 gap-y-8 items-start">
+      <div className="hidden lg:grid grid-cols-[minmax(0,440px)_1fr] xl:grid-cols-[minmax(0,600px)_1fr] grid-rows-[auto_auto] gap-x-12 gap-y-8 items-start">
         <div className="col-start-1 row-start-1 h-0 min-h-full overflow-y-auto border-b border-border">
           <SpecialsTabsList
             specials={specials}
@@ -448,7 +461,7 @@ function SpecialsTabsInner({
         </div>
 
         <div className="col-start-2 row-start-2">
-          <SpecialDetailInfo special={selectedSpecial} />
+          <SpecialDetailInfo special={selectedSpecial} fordPromiseHref={fordPromiseHref} />
         </div>
       </div>
     </div>

@@ -2231,6 +2231,10 @@ export interface SpecialCategory {
    */
   enquiryForm?: (string | null) | Form;
   /**
+   * Optional. Internal page linked by the Ford Family Promise button on specials in this category.
+   */
+  fordPromisePage?: (string | null) | Page;
+  /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
@@ -3018,6 +3022,7 @@ export interface SpecialCategoriesSelect<T extends boolean = true> {
   sortOrder?: T;
   template?: T;
   enquiryForm?: T;
+  fordPromisePage?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;
