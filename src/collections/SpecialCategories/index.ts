@@ -75,6 +75,17 @@ export const SpecialCategories: CollectionConfig = {
           'Optional. Default enquire form for specials in this category. Individual specials can override this.',
       },
     },
+    {
+      name: 'fordPromisePage',
+      label: 'Ford Promise Page',
+      type: 'relationship',
+      relationTo: 'pages',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Optional. Internal page linked by the Ford Family Promise button on specials in this category.',
+      },
+    },
     slugField(),
   ],
 }

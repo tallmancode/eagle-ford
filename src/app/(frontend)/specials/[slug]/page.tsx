@@ -13,6 +13,7 @@ import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { getOfferTypeLabel } from '@/lib/specials/constants'
 import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getSpecialCategoryPath } from '@/lib/specials/paths'
+import { getPagePath } from '@/lib/utils/getPagePath'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
 import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
 import type {
@@ -58,14 +59,14 @@ async function resolveSpecialTemplate(
   template: SpecialListItem['template'] | SpecialCategory['template'],
 ): Promise<SpecialTemplate | null> {
   if (!template) return null
-
-  const templateId = typeof template === 'object' ? template.id : template
+  if (typeof template === 'object') return template
 
   const payload = await getPayload({ config: configPromise })
   const result = await payload.findByID({
     collection: 'special-templates',
-    id: templateId,
+    id: template,
     depth: 2,
+    disableErrors: true,
     overrideAccess: false,
   })
 
@@ -86,10 +87,37 @@ async function resolveForm(
     collection: 'forms',
     id: formId,
     depth: 2,
+    disableErrors: true,
     overrideAccess: false,
   })
 
   return result ?? null
+}
+
+async function resolveFordPromiseHref(
+  fordPromisePage: SpecialCategory['fordPromisePage'],
+): Promise<string | null> {
+  if (!fordPromisePage) return null
+
+  if (typeof fordPromisePage === 'object') {
+    if (!fordPromisePage.slug) return null
+    return getPagePath(fordPromisePage)
+  }
+
+  const payload = await getPayload({ config: configPromise })
+  const page = await payload.findByID({
+    collection: 'pages',
+    id: fordPromisePage,
+    depth: 0,
+    disableErrors: true,
+    overrideAccess: false,
+    select: {
+      slug: true,
+    },
+  })
+
+  if (!page?.slug) return null
+  return getPagePath(page)
 }
 
 async function resolveSpecialContent(
@@ -102,6 +130,7 @@ async function resolveSpecialContent(
     id: specialId,
     draft,
     depth: 2,
+    disableErrors: true,
     overrideAccess: draft,
     select: {
       content: true,
@@ -121,6 +150,7 @@ async function resolveVehicle(vehicle: SpecialListItem['vehicle']): Promise<Vehi
     collection: 'vehicles',
     id: vehicle,
     depth: 2,
+    disableErrors: true,
     overrideAccess: false,
   })
 
@@ -138,6 +168,7 @@ async function resolveVehicleModel(
     collection: 'vehicle-models',
     id: vehicleModel,
     depth: 2,
+    disableErrors: true,
     overrideAccess: false,
   })
 
@@ -213,12 +244,11 @@ export default async function SpecialCategoryPage({
     }
   })
 
-  const [vehicle, vehicleModel] = selectedSpecial
-    ? await Promise.all([
-        resolveVehicle(selectedSpecial.vehicle),
-        resolveVehicleModel(selectedSpecial.vehicleModel),
-      ])
-    : [null, null]
+  const [vehicle, vehicleModel, fordPromiseHref] = await Promise.all([
+    selectedSpecial ? resolveVehicle(selectedSpecial.vehicle) : Promise.resolve(null),
+    selectedSpecial ? resolveVehicleModel(selectedSpecial.vehicleModel) : Promise.resolve(null),
+    resolveFordPromiseHref(category.fordPromisePage),
+  ])
 
   const selectedDisplayTitle = selectedSpecial ? getSpecialDisplayTitle(selectedSpecial) : ''
 
@@ -250,6 +280,7 @@ export default async function SpecialCategoryPage({
             categorySlug={category.slug}
             categoryTitle={category.title}
             categoryEnquiryForm={categoryEnquiryForm}
+            fordPromiseHref={fordPromiseHref}
             specials={specialsWithForms}
             initialSpecialSlug={initialSpecialSlug}
           />
