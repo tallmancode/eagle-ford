@@ -122,6 +122,7 @@ export interface Config {
     heading: Heading;
     'rich-text': RichText;
     'feature-list': FeatureList;
+    'feature-rows': FeatureRows;
     formBlock: FormBlockType;
     'contact-info': ContactInfo;
     'icon-text': IconText;
@@ -270,6 +271,7 @@ export interface Section {
         | Hero
         | RichText
         | FeatureList
+        | FeatureRows
         | FormBlockType
         | ContactInfo
         | IconText
@@ -411,6 +413,7 @@ export interface SectionInner {
         | Hero
         | RichText
         | FeatureList
+        | FeatureRows
         | FormBlockType
         | ContactInfo
         | IconText
@@ -549,6 +552,7 @@ export interface Row {
         | Hero
         | RichText
         | FeatureList
+        | FeatureRows
         | FormBlockType
         | ContactInfo
         | IconText
@@ -1069,6 +1073,30 @@ export interface FeatureList {
   id?: string | null;
   blockName?: string | null;
   blockType: 'feature-list';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureRows".
+ */
+export interface FeatureRows {
+  rows: {
+    icon: string;
+    title: string;
+    description: string;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'feature-rows';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1715,6 +1743,7 @@ export interface FixedBackgroundBlockType {
         | Hero
         | RichText
         | FeatureList
+        | FeatureRows
         | FormBlockType
         | ContactInfo
         | IconText

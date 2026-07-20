@@ -5,6 +5,7 @@ const allBlockRefs: BlockSlug[] = [
   'hero',
   'rich-text',
   'feature-list',
+  'feature-rows',
   'formBlock',
   'contact-info',
   'icon-text',
