@@ -32,6 +32,7 @@ function VehicleCard({ vehicle }: { vehicle: VehicleTabItem }) {
           resource={vehicle.featureImage}
           fill
           imgClassName="object-contain"
+          maxWidth={600}
           size="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
       </div>

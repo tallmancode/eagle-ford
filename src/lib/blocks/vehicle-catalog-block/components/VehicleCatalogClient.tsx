@@ -33,6 +33,7 @@ function VehicleCatalogCard({ vehicle }: { vehicle: VehicleCatalogItem }) {
           resource={vehicle.featureImage}
           fill
           imgClassName="object-contain"
+          maxWidth={900}
           size="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       </div>

@@ -1,9 +1,11 @@
 import Image from 'next/image'
 import type { Media } from '@/payload-types'
 import { getMediaUrl } from '@/lib/utils/getMediaUrl'
+import { getOptimalMediaSize } from '@/lib/utils/getOptimalMediaSize'
 import { cssVariables } from '@/cssVariables'
 import { cn } from '@/lib/utils/cn'
 import React from 'react'
+
 interface Props {
   className?: string
   fill?: boolean // for NextImage only
@@ -15,12 +17,15 @@ interface Props {
   priority?: boolean // for NextImage only
   resource?: Media | string | null // for Payload media
   alt?: string
-  size?: string // for NextImage only
+  size?: string // Next.js sizes attribute (layout hint for srcset)
+  /** Max CSS pixel width of the layout slot; picks the matching Payload size. Default 1920. */
+  maxWidth?: number
   videoClassName?: string
   width?: number
   height?: number
   quality?: number // override default image quality (1-100)
 }
+
 const { breakpoints } = cssVariables
 
 function getDefaultSizes(): string {
@@ -38,6 +43,7 @@ export const MediaImage: React.FC<Props> = (props) => {
     alt: altFromProps,
     fill,
     size: sizeFromProps,
+    maxWidth = 1920,
     className,
     imgClassName,
     priority,
@@ -56,12 +62,18 @@ export const MediaImage: React.FC<Props> = (props) => {
       height = props.height
     }
     if (typeof resource === 'object') {
-      const { height: fullHeight, url, width: fullWidth, updatedAt } = resource
+      const optimal = getOptimalMediaSize(resource, maxWidth)
 
-      width = fullWidth!
-      height = fullHeight!
-
-      src = getMediaUrl(url, updatedAt)
+      if (optimal) {
+        src = optimal.url
+        width = optimal.width
+        height = optimal.height
+      } else {
+        const { height: fullHeight, url, width: fullWidth, updatedAt } = resource
+        width = fullWidth ?? undefined
+        height = fullHeight ?? undefined
+        src = getMediaUrl(url, updatedAt)
+      }
     }
   }
 

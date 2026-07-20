@@ -38,6 +38,8 @@ export const CtaOverlayBanner: React.FC<Hero> = (props) => {
         imgClassName="object-cover object-center"
         priority
         loading="eager"
+        maxWidth={1920}
+        size="100vw"
       />
 
       <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/20" />

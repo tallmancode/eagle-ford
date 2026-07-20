@@ -33,6 +33,8 @@ export const FaqBlockComponent: React.FC<Faq> = ({ items }) => {
                     resource={image}
                     alt={item.imageAlt ?? undefined}
                     imgClassName="rounded-lg w-full max-w-md mx-auto h-auto"
+                    maxWidth={600}
+                    size="(max-width: 768px) 100vw, 448px"
                   />
                 </div>
               )}
