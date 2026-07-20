@@ -28,6 +28,7 @@ import { BenefitsGridBlock } from '@/lib/blocks/benefits-grid-block/BenefitsGrid
 import { SpecialsArchiveBlock } from '@/lib/blocks/specials-archive-block/SpecialsArchiveBlock'
 import { StockArchiveBlock } from '@/lib/blocks/stock-archive-block/StockArchiveBlock'
 import { PartnersBlock } from '@/lib/blocks/partners-block/PartnersBlock'
+import { ReviewsBlock } from '@/lib/blocks/reviews-block/ReviewsBlock'
 import { VehicleTabsBlock } from '@/lib/blocks/vehicle-tabs-block/VehicleTabsBlock'
 import { VehicleCatalogBlock } from '@/lib/blocks/vehicle-catalog-block/VehicleCatalogBlock'
 import { VehicleHeroBlock } from '@/lib/blocks/vehicle-hero-block/VehicleHeroBlock'
@@ -72,6 +73,7 @@ const Blocks = [
   SpecialsArchiveBlock,
   StockArchiveBlock,
   PartnersBlock,
+  ReviewsBlock,
   VehicleTabsBlock,
   VehicleCatalogBlock,
   VehicleHeroBlock,

@@ -29,6 +29,7 @@ import type {
   SpecialsArchive,
   StockArchive,
   Partners,
+  Reviews,
   Row,
   VehicleTabsBlock,
   VehicleCatalogBlock,
@@ -72,6 +73,7 @@ import { BenefitsGridBlockComponent } from '@/lib/blocks/benefits-grid-block/com
 import { SpecialsArchiveBlockComponent } from '@/lib/blocks/specials-archive-block/components/SpecialsArchiveBlockComponent'
 import { StockArchiveBlockComponent } from '@/lib/blocks/stock-archive-block/components/StockArchiveBlockComponent'
 import { PartnersBlockComponent } from '@/lib/blocks/partners-block/components/PartnersBlockComponent'
+import { ReviewsBlockComponent } from '@/lib/blocks/reviews-block/components/ReviewsBlockComponent'
 import { RowBlockComponent } from '@/lib/blocks/row-block/components/RowBlockComponent'
 import { VehicleTabsBlockComponent } from '@/lib/blocks/vehicle-tabs-block/components/VehicleTabsBlockComponent'
 import { VehicleCatalogBlockComponent } from '@/lib/blocks/vehicle-catalog-block/components/VehicleCatalogBlockComponent'
@@ -118,6 +120,7 @@ type BlockComponentMap = {
   'specials-archive': SpecialsArchive
   'stock-archive': StockArchive
   partners: Partners
+  reviews: Reviews
   'vehicle-tabs': VehicleTabsBlock
   'vehicle-catalog': VehicleCatalogBlock
   'vehicle-hero': VehicleHeroBlock
@@ -171,6 +174,7 @@ const blockComponents: {
   'specials-archive': SpecialsArchiveBlockComponent,
   'stock-archive': StockArchiveBlockComponent,
   partners: PartnersBlockComponent,
+  reviews: ReviewsBlockComponent,
   'vehicle-tabs': VehicleTabsBlockComponent,
   'vehicle-catalog': VehicleCatalogBlockComponent,
   'vehicle-hero': VehicleHeroBlockComponent,

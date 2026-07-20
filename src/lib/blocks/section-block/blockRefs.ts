@@ -28,6 +28,7 @@ const allBlockRefs: BlockSlug[] = [
   'specials-archive',
   'stock-archive',
   'partners',
+  'reviews',
   'vehicle-tabs',
   'vehicle-catalog',
   'vehicle-hero',
