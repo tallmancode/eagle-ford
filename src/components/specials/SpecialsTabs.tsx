@@ -30,6 +30,8 @@ export type SpecialTabItem = Pick<
   | 'bestSaving'
   | 'paymentFrom'
   | 'cardImage'
+  | 'vehicle'
+  | 'vehicleModel'
 >
 
 type SpecialsTabsProps = {
@@ -76,6 +78,9 @@ function SpecialDetailContent({
 }) {
   const detailsHref = getSpecialCategoryPath(categorySlug, special.slug)
   const title = getSpecialDisplayTitle(special)
+  const model =
+    special.vehicleModel && typeof special.vehicleModel === 'object' ? special.vehicleModel : null
+  const highlights = model?.highlights ?? []
 
   return (
     <div className="flex flex-col gap-6">
@@ -94,8 +99,21 @@ function SpecialDetailContent({
       <div>
         <h3 className="text-primary text-2xl md:text-3xl font-bold mb-3">{title}</h3>
 
-        {special.subTitle?.trim() && (
-          <p className="text-muted-foreground leading-relaxed mb-6">{special.subTitle}</p>
+        {highlights.length > 0 && (
+          <div className="mb-8">
+            <h4 className="text-primary font-bold mb-3">Key Features</h4>
+            <ul className="space-y-2">
+              {highlights.map((item, i) => (
+                <li
+                  key={item.id ?? i}
+                  className="flex items-start gap-2 text-sm text-muted-foreground"
+                >
+                  <span className="text-primary mt-0.5 shrink-0">•</span>
+                  <span>{item.highlight}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         <div className="mb-8 space-y-2">

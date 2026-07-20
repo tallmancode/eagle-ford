@@ -58,6 +58,11 @@ const nextConfig: NextConfig = {
         hostname: 'cdn.cmscloud.co.za',
         pathname: '/stock-images/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '/**',
+      },
     ],
   },
   webpack: (webpackConfig) => {

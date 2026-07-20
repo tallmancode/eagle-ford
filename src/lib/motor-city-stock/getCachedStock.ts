@@ -11,6 +11,8 @@ function cacheKeyFromOptions(options: FetchStockOptions): string {
     fuelType: options.fuelType ?? null,
     transmission: options.transmission ?? null,
     newUsed: options.newUsed ?? null,
+    model: options.model ?? null,
+    maxMileage: options.maxMileage ?? null,
     minPrice: options.minPrice ?? null,
     maxPrice: options.maxPrice ?? null,
     page: options.page ?? 1,

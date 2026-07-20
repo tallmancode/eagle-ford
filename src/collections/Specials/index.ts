@@ -158,19 +158,6 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
             },
           ],
         },
-        {
-          label: 'Content',
-          name: 'content',
-          fields: [
-            {
-              name: 'section',
-              label: false,
-              type: 'blocks',
-              blocks: [],
-              blockReferences: ['section'],
-            },
-          ],
-        },
       ],
     },
     {
@@ -181,6 +168,17 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
       admin: {
         position: 'sidebar',
         description: 'Lower numbers appear first within a section.',
+      },
+    },
+    {
+      name: 'template',
+      label: 'Page Template',
+      type: 'relationship',
+      relationTo: 'special-templates',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Optional. Layout shown below the specials tabs when this special is selected.',
       },
     },
     {

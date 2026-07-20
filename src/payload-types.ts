@@ -145,6 +145,7 @@ export interface Config {
     'specials-archive': SpecialsArchive;
     'stock-archive': StockArchive;
     partners: Partners;
+    reviews: Reviews;
     'vehicle-tabs': VehicleTabsBlock;
     'vehicle-catalog': VehicleCatalogBlock;
     'vehicle-hero': VehicleHeroBlock;
@@ -162,6 +163,7 @@ export interface Config {
     pages: Page;
     specials: Special;
     'special-categories': SpecialCategory;
+    'special-templates': SpecialTemplate;
     media: Media;
     'vehicle-categories': VehicleCategory;
     'vehicle-templates': VehicleTemplate;
@@ -185,6 +187,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     specials: SpecialsSelect<false> | SpecialsSelect<true>;
     'special-categories': SpecialCategoriesSelect<false> | SpecialCategoriesSelect<true>;
+    'special-templates': SpecialTemplatesSelect<false> | SpecialTemplatesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'vehicle-categories': VehicleCategoriesSelect<false> | VehicleCategoriesSelect<true>;
     'vehicle-templates': VehicleTemplatesSelect<false> | VehicleTemplatesSelect<true>;
@@ -288,6 +291,7 @@ export interface Section {
         | SpecialsArchive
         | StockArchive
         | Partners
+        | Reviews
         | VehicleTabsBlock
         | VehicleCatalogBlock
         | VehicleHeroBlock
@@ -426,6 +430,7 @@ export interface SectionInner {
         | SpecialsArchive
         | StockArchive
         | Partners
+        | Reviews
         | VehicleTabsBlock
         | VehicleCatalogBlock
         | VehicleHeroBlock
@@ -561,6 +566,7 @@ export interface Row {
         | SpecialsArchive
         | StockArchive
         | Partners
+        | Reviews
         | VehicleTabsBlock
         | VehicleCatalogBlock
         | VehicleHeroBlock
@@ -2018,6 +2024,15 @@ export interface Partners {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Reviews".
+ */
+export interface Reviews {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'reviews';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "VehicleTabsBlock".
  */
 export interface VehicleTabsBlock {
@@ -2172,13 +2187,14 @@ export interface Special {
    * Monthly payment in Rand, e.g. 7799 for R7 799*pm
    */
   paymentFrom?: number | null;
-  content?: {
-    section?: Section[] | null;
-  };
   /**
    * Lower numbers appear first within a section.
    */
   sortOrder?: number | null;
+  /**
+   * Optional. Layout shown below the specials tabs when this special is selected.
+   */
+  template?: (string | null) | SpecialTemplate;
   publishedAt?: string | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -2548,6 +2564,20 @@ export interface VehicleModel {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "special-templates".
+ */
+export interface SpecialTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Special Layout" or "Vehicle Offer Layout"
+   */
+  title: string;
+  section?: Section[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -2826,6 +2856,10 @@ export interface PayloadLockedDocument {
         value: string | SpecialCategory;
       } | null)
     | ({
+        relationTo: 'special-templates';
+        value: string | SpecialTemplate;
+      } | null)
+    | ({
         relationTo: 'media';
         value: string | Media;
       } | null)
@@ -2949,12 +2983,8 @@ export interface SpecialsSelect<T extends boolean = true> {
   specialOffer?: T;
   bestSaving?: T;
   paymentFrom?: T;
-  content?:
-    | T
-    | {
-        section?: T | {};
-      };
   sortOrder?: T;
+  template?: T;
   publishedAt?: T;
   generateSlug?: T;
   slug?: T;
@@ -2972,6 +3002,16 @@ export interface SpecialCategoriesSelect<T extends boolean = true> {
   sortOrder?: T;
   generateSlug?: T;
   slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "special-templates_select".
+ */
+export interface SpecialTemplatesSelect<T extends boolean = true> {
+  title?: T;
+  section?: T | {};
   updatedAt?: T;
   createdAt?: T;
 }
@@ -4107,6 +4147,7 @@ export interface TaskCreateCollectionExport {
       | 'pages'
       | 'specials'
       | 'special-categories'
+      | 'special-templates'
       | 'media'
       | 'vehicle-categories'
       | 'vehicle-templates'

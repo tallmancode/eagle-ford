@@ -175,6 +175,53 @@ export function getVehiclePrice(vehicle: StockArchiveVehicle): number {
   return vehicle.specialPrice ?? vehicle.price ?? 0
 }
 
+/** Taxonomy label for the primary brand shown first in the showroom. */
+export const PRIMARY_STOCK_BRAND = 'ford'
+
+export function isPrimaryStockBrand(vehicle: StockArchiveVehicle): boolean {
+  const slug = getTaxonomySlug(vehicle.brand)
+  return slug !== null && slug.toLowerCase() === PRIMARY_STOCK_BRAND
+}
+
+/** Primary brand first, then effective price ascending within each group. */
+export function compareStockForShowroom(a: StockArchiveVehicle, b: StockArchiveVehicle): number {
+  const aPrimary = isPrimaryStockBrand(a)
+  const bPrimary = isPrimaryStockBrand(b)
+
+  if (aPrimary !== bPrimary) {
+    return aPrimary ? -1 : 1
+  }
+
+  return getVehiclePrice(a) - getVehiclePrice(b)
+}
+
+export function paginateSortedStock(
+  docs: StockArchiveVehicle[],
+  page: number,
+  limit: number,
+): {
+  docs: StockArchiveVehicle[]
+  page: number
+  totalPages: number
+  totalDocs: number
+  hasNextPage: boolean
+  hasPrevPage: boolean
+} {
+  const totalDocs = docs.length
+  const totalPages = totalDocs === 0 ? 1 : Math.ceil(totalDocs / limit)
+  const safePage = Math.min(Math.max(page, 1), totalPages)
+  const start = (safePage - 1) * limit
+
+  return {
+    docs: docs.slice(start, start + limit),
+    page: safePage,
+    totalPages,
+    totalDocs,
+    hasNextPage: safePage < totalPages,
+    hasPrevPage: safePage > 1,
+  }
+}
+
 export function getVehicleDisplayName(vehicle: StockArchiveVehicle): string {
   return (
     vehicle.title ??
