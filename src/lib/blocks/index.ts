@@ -5,6 +5,7 @@ import { HeroBlock } from '@/lib/blocks/hero-block/HeroBlock'
 import { HeadingBlock } from '@/lib/blocks/heading-block/HeadingBlock'
 import { RichTextBlock } from '@/lib/blocks/rich-text-block/RichTextBlock'
 import { FeatureListBlock } from '@/lib/blocks/feature-list-block/FeatureListBlock'
+import { FeatureRowsBlock } from '@/lib/blocks/feature-rows-block/FeatureRowsBlock'
 import { FormBlock } from '@/lib/blocks/form-block/FormBlock'
 import { ContactInfoBlock } from '@/lib/blocks/contact-info-block/ContactInfoBlock'
 import { IconTextBlock } from '@/lib/blocks/icon-text-block/IconTextBlock'
@@ -52,6 +53,7 @@ const Blocks = [
   HeadingBlock,
   RichTextBlock,
   FeatureListBlock,
+  FeatureRowsBlock,
   FormBlock,
   ContactInfoBlock,
   IconTextBlock,
