@@ -6,6 +6,7 @@ import type {
   Hero,
   RichText,
   FeatureList,
+  FeatureRows,
   FormBlockType,
   ContactInfo,
   IconText,
@@ -52,6 +53,7 @@ import { HeadingBlockComponent } from '@/lib/blocks/heading-block/components/Hea
 import { HeroBlock } from '@/lib/blocks/hero-block/components/HeroBlockComponent'
 import { RichTextBlockComponent } from '@/lib/blocks/rich-text-block/components/RichTextBlockComponent'
 import { FeatureListBlockComponent } from '@/lib/blocks/feature-list-block/components/FeatureListBlockComponent'
+import { FeatureRowsBlockComponent } from '@/lib/blocks/feature-rows-block/components/FeatureRowsBlockComponent'
 import { FormBlockComponent } from '@/lib/blocks/form-block/components/FormBlockComponent'
 import { ContactInfoBlockComponent } from '@/lib/blocks/contact-info-block/components/ContactInfoBlockComponent'
 import { IconTextBlockComponent } from '@/lib/blocks/icon-text-block/components/IconTextBlockComponent'
@@ -101,6 +103,7 @@ type BlockComponentMap = {
   hero: Hero
   'rich-text': RichText
   'feature-list': FeatureList
+  'feature-rows': FeatureRows
   formBlock: FormBlockType
   'contact-info': ContactInfo
   'icon-text': IconText
@@ -153,6 +156,7 @@ const blockComponents: {
   hero: HeroBlock,
   'rich-text': RichTextBlockComponent,
   'feature-list': FeatureListBlockComponent,
+  'feature-rows': FeatureRowsBlockComponent,
   formBlock: FormBlockComponent as unknown as React.ComponentType<WithMeta<FormBlockType>>,
   'contact-info': ContactInfoBlockComponent as unknown as React.ComponentType<
     WithMeta<ContactInfo>

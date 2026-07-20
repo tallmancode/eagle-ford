@@ -24,7 +24,9 @@ import {
   sectionDividerVisibilityClass,
 } from '@/lib/blocks/section-block/sectionDividerUtils'
 import { cn } from '@/lib/utils/cn'
-import type { FormBlockMeta } from '@/lib/blocks/form-block/types/formContext'
+import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
+import { contentContainsVehicleSpecialCategories } from '@/lib/blocks/vehicle-special-categories-block/contentContainsVehicleSpecialCategories'
+import { getVehicleSpecialCategories } from '@/lib/blocks/vehicle-special-categories-block/getVehicleSpecialCategories'
 
 const verticalAlignClassMap: Record<string, string> = {
   center: 'flex flex-col h-full justify-center',
@@ -51,7 +53,7 @@ const landmarkElementMap: Record<string, keyof JSX.IntrinsicElements> = {
 function renderSectionContent(
   props: Section | SectionInner,
   gridCols: Section['gridCols'] | undefined,
-  meta?: FormBlockMeta,
+  meta?: BlockRenderMeta,
 ): React.ReactNode {
   const { content } = props
   const showDivider = 'showDivider' in props ? props.showDivider : false
@@ -92,11 +94,17 @@ function renderSectionContent(
   )
 }
 
-export const SectionBlock: React.FC<(Section | SectionInner) & { meta?: FormBlockMeta }> = (
-  props,
-) => {
+export async function SectionBlock(props: (Section | SectionInner) & { meta?: BlockRenderMeta }) {
   const { meta, ...sectionProps } = props
   const { container, accessibility, backgroundColor, backgroundStyle } = sectionProps
+
+  const isOuterSection = sectionProps.blockType === 'section'
+  if (isOuterSection && contentContainsVehicleSpecialCategories(sectionProps.content)) {
+    const vehicle = meta?.vehicle
+    if (!vehicle) return null
+    const categories = await getVehicleSpecialCategories(vehicle.id)
+    if (categories.length === 0) return null
+  }
 
   const gridCols = 'gridCols' in sectionProps ? sectionProps.gridCols : undefined
   const verticalAlign = 'verticalAlign' in sectionProps ? sectionProps.verticalAlign : undefined
