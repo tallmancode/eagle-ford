@@ -13,6 +13,7 @@ import { WhyCardsBlock } from '@/lib/blocks/why-cards-block/WhyCardsBlock'
 import { MapBlock } from '@/lib/blocks/map-block/MapBlock'
 import { TeamGridBlock } from '@/lib/blocks/team-grid-block/TeamGridBlock'
 import { ImageBlock } from '@/lib/blocks/image-block/ImageBlock'
+import { FixedBackgroundBlock } from '@/lib/blocks/fixed-background-block/FixedBackgroundBlock'
 import { CtaCardsBlock } from '@/lib/blocks/cta-cards-block/CtaCardsBlock'
 import { ImageCardsBlock } from '@/lib/blocks/image-cards-block/ImageCardsBlock'
 import { StatsBlock } from '@/lib/blocks/stats-block/StatsBlock'
@@ -37,6 +38,7 @@ import { VehicleFaqBlock } from '@/lib/blocks/vehicle-faq-block/VehicleFaqBlock'
 import { VehicleColorsBlock } from '@/lib/blocks/vehicle-colors-block/VehicleColorsBlock'
 import { VehicleGalleryBlock } from '@/lib/blocks/vehicle-gallery-block/VehicleGalleryBlock'
 import { VehicleFeaturesBlock } from '@/lib/blocks/vehicle-features-block/VehicleFeaturesBlock'
+import { VehicleSpecialCategoriesBlock } from '@/lib/blocks/vehicle-special-categories-block/VehicleSpecialCategoriesBlock'
 import { VehicleModelHeroBlock } from '@/lib/blocks/vehicle-model-hero-block/VehicleModelHeroBlock'
 import { VehicleModelHighlightsBlock } from '@/lib/blocks/vehicle-model-highlights-block/VehicleModelHighlightsBlock'
 import { VehicleModelColorsBlock } from '@/lib/blocks/vehicle-model-colors-block/VehicleModelColorsBlock'
@@ -58,6 +60,7 @@ const Blocks = [
   MapBlock,
   TeamGridBlock,
   ImageBlock,
+  FixedBackgroundBlock,
   CtaCardsBlock,
   ImageCardsBlock,
   StatsBlock,
@@ -82,6 +85,7 @@ const Blocks = [
   VehicleColorsBlock,
   VehicleGalleryBlock,
   VehicleFeaturesBlock,
+  VehicleSpecialCategoriesBlock,
   VehicleModelHeroBlock,
   VehicleModelHighlightsBlock,
   VehicleModelColorsBlock,

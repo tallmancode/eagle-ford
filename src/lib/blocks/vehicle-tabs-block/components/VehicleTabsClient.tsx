@@ -25,25 +25,26 @@ function VehicleCard({ vehicle }: { vehicle: VehicleTabItem }) {
   return (
     <Link
       href={`/vehicles/${vehicle.slug}`}
-      className="group flex flex-col items-center bg-card rounded-lg shadow-sm p-4 border border-border/40 hover:shadow-md transition-shadow"
+      className="group flex flex-col items-center bg-light-50 rounded-lg shadow-card border border-border/40 hover:shadow-lg transition-shadow"
     >
-      <div className="relative w-full aspect-[3/2] mb-3">
+      <div className="w-full overflow-hidden rounded-t-lg mb-3">
         <MediaImage
           resource={vehicle.featureImage}
-          fill
-          imgClassName="object-contain"
+          imgClassName="w-full h-auto"
           maxWidth={600}
           size="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
       </div>
-      <h3 className="uppercase text-primary font-bold text-center text-sm leading-tight">
-        {vehicle.name}
-      </h3>
-      {vehicle.badge && (
-        <span className="mt-1 text-xs text-muted-foreground text-center">
-          {badgeLabels[vehicle.badge] ?? vehicle.badge}
-        </span>
-      )}
+      <div className="px-4 pb-4 flex flex-col">
+        <h3 className="uppercase text-primary font-bold text-center text-sm leading-tight">
+          {vehicle.name}
+        </h3>
+        {vehicle.badge && (
+          <span className="mt-1 text-xs text-muted-foreground text-center">
+            {badgeLabels[vehicle.badge] ?? vehicle.badge}
+          </span>
+        )}
+      </div>
     </Link>
   )
 }

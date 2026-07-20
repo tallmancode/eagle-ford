@@ -14,6 +14,7 @@ import {
   CarouselNext,
   type CarouselApi,
 } from '@/components/ui/carousel'
+import { cn } from '@/lib/utils/cn'
 
 type GalleryItem = NonNullable<NonNullable<Vehicle['gallery']>[number]>
 
@@ -83,7 +84,7 @@ export function VehicleGallery({ vehicleName, gallery }: VehicleGalleryProps) {
   return (
     <>
       <section className="py-14 px-4">
-        <div className="container mx-auto">
+        <div className="container mx-auto max-w-6xl">
           <h2 className="text-primary text-3xl font-bold text-center mb-10">
             {vehicleName} Gallery
           </h2>
@@ -91,41 +92,52 @@ export function VehicleGallery({ vehicleName, gallery }: VehicleGalleryProps) {
           <Carousel
             className="relative w-full"
             setApi={setApi}
-            opts={{ loop: true, align: 'center' }}
+            opts={{ loop: gallery.length > 1, align: 'start' }}
             plugins={[autoplayRef.current]}
             onMouseEnter={() => autoplayRef.current?.stop()}
             onMouseLeave={() => autoplayRef.current?.play()}
           >
-            <CarouselContent>
-              {gallery.map((item, index) => (
-                <CarouselItem key={item.id ?? index}>
-                  <button
-                    onClick={() => openLightbox(index)}
-                    aria-label={`Open gallery image ${index + 1}`}
-                    className="relative aspect-[4/3] rounded-xl overflow-hidden group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary block w-full"
+            <div className={gallery.length > 1 ? 'px-12' : undefined}>
+              <CarouselContent className="-ml-4">
+                {gallery.map((item, index) => (
+                  <CarouselItem
+                    key={item.id ?? index}
+                    className={cn(
+                      'pl-4',
+                      gallery.length === 1 && 'basis-full [&>button]:mx-auto [&>button]:max-w-3xl',
+                      gallery.length === 2 && 'basis-[85%] sm:basis-1/2',
+                      gallery.length >= 3 && 'basis-[85%] sm:basis-1/2 lg:basis-1/3',
+                    )}
                   >
-                    <MediaImage
-                      resource={item.image}
-                      fill
-                      imgClassName="object-cover group-hover:scale-105 transition-transform duration-300"
-                      maxWidth={600}
-                      size="(max-width: 768px) 50vw, 25vw"
-                    />
-                  </button>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
+                    <button
+                      type="button"
+                      onClick={() => openLightbox(index)}
+                      aria-label={`Open gallery image ${index + 1}`}
+                      className="relative aspect-[4/3] rounded-xl overflow-hidden group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary block w-full"
+                    >
+                      <MediaImage
+                        resource={item.image}
+                        fill
+                        imgClassName="object-cover group-hover:scale-105 transition-transform duration-300"
+                        maxWidth={800}
+                        size="(max-width: 640px) 85vw, (max-width: 1024px) 45vw, 30vw"
+                      />
+                    </button>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </div>
 
             {gallery.length > 1 && (
               <>
                 <CarouselPrevious
-                  className="-left-12 md:-left-16 top-1/2 -translate-y-1/2"
+                  className="left-0 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full border border-border bg-background shadow-sm hover:bg-muted disabled:opacity-40"
                   size="icon"
                   variant="outline"
                   aria-label="Previous gallery image"
                 />
                 <CarouselNext
-                  className="-right-12 md:-right-16 top-1/2 -translate-y-1/2"
+                  className="right-0 top-1/2 z-10 h-10 w-10 -translate-y-1/2 rounded-full border border-border bg-background shadow-sm hover:bg-muted disabled:opacity-40"
                   size="icon"
                   variant="outline"
                   aria-label="Next gallery image"
