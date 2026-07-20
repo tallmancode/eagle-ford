@@ -27,7 +27,7 @@ const badgeLabels: Record<string, string> = {
 
 function VehicleCatalogCard({ vehicle }: { vehicle: VehicleCatalogItem }) {
   return (
-    <div className="flex h-full flex-col items-center bg-card rounded-lg shadow-sm p-4 border border-border/40">
+    <div className="flex h-full flex-col items-center bg-card rounded-lg shadow-sm p-0 border border-border/40">
       <div className="relative w-full aspect-[3/2] mb-3">
         <MediaImage
           resource={vehicle.featureImage}

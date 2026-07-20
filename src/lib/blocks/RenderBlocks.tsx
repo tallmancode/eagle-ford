@@ -14,6 +14,7 @@ import type {
   Map,
   TeamGrid,
   ImageBlock,
+  FixedBackgroundBlockType,
   CtaCards,
   ImageCards,
   StatsBlock,
@@ -39,6 +40,7 @@ import type {
   VehicleColorsBlock,
   VehicleGalleryBlock,
   VehicleFeaturesBlock,
+  VehicleSpecialCategoriesBlock,
   VehicleModelHeroBlock,
   VehicleModelHighlightsBlock,
   VehicleModelColorsBlock,
@@ -61,6 +63,7 @@ import { StatsBlockComponent } from '@/lib/blocks/stats-block/components/StatsBl
 import { CtaCardsBlockComponent } from '@/lib/blocks/cta-cards-block/components/CtaCardsBlockComponent'
 import { ImageCardsBlockComponent } from '@/lib/blocks/image-cards-block/components/ImageCardsBlockComponent'
 import { ImageBlockComponent } from '@/lib/blocks/image-block/components/ImageBlockComponent'
+import { FixedBackgroundBlockComponent } from '@/lib/blocks/fixed-background-block/components/FixedBackgroundBlockComponent'
 import { HoursTabsBlockComponent } from '@/lib/blocks/hours-tabs-block/components/HoursTabsBlockComponent'
 import { FaqBlockComponent } from '@/lib/blocks/faq-block/components/FaqBlockComponent'
 import { ContactFooterBlockComponent } from '@/lib/blocks/contact-footer-block/components/ContactFooterBlockComponent'
@@ -83,6 +86,7 @@ import { VehicleFaqBlockComponent } from '@/lib/blocks/vehicle-faq-block/compone
 import { VehicleColorsBlockComponent } from '@/lib/blocks/vehicle-colors-block/components/VehicleColorsBlockComponent'
 import { VehicleGalleryBlockComponent } from '@/lib/blocks/vehicle-gallery-block/components/VehicleGalleryBlockComponent'
 import { VehicleFeaturesBlockComponent } from '@/lib/blocks/vehicle-features-block/components/VehicleFeaturesBlockComponent'
+import { VehicleSpecialCategoriesBlockComponent } from '@/lib/blocks/vehicle-special-categories-block/components/VehicleSpecialCategoriesBlockComponent'
 import { VehicleModelHeroBlockComponent } from '@/lib/blocks/vehicle-model-hero-block/components/VehicleModelHeroBlockComponent'
 import { VehicleModelHighlightsBlockComponent } from '@/lib/blocks/vehicle-model-highlights-block/components/VehicleModelHighlightsBlockComponent'
 import { VehicleModelColorsBlockComponent } from '@/lib/blocks/vehicle-model-colors-block/components/VehicleModelColorsBlockComponent'
@@ -106,6 +110,7 @@ type BlockComponentMap = {
   map: Map
   'team-grid': TeamGrid
   'image-block': ImageBlock
+  fixedBackgroundBlock: FixedBackgroundBlockType
   'cta-cards': CtaCards
   'image-cards': ImageCards
   statsBlock: StatsBlock
@@ -129,6 +134,7 @@ type BlockComponentMap = {
   'vehicle-colors': VehicleColorsBlock
   'vehicle-gallery': VehicleGalleryBlock
   'vehicle-features': VehicleFeaturesBlock
+  'vehicle-special-categories': VehicleSpecialCategoriesBlock
   'vehicle-model-hero': VehicleModelHeroBlock
   'vehicle-model-highlights': VehicleModelHighlightsBlock
   'vehicle-model-colors': VehicleModelColorsBlock
@@ -158,6 +164,7 @@ const blockComponents: {
   map: MapBlockComponent as unknown as React.ComponentType<WithMeta<Map>>,
   'team-grid': TeamGridBlockComponent,
   'image-block': ImageBlockComponent,
+  fixedBackgroundBlock: FixedBackgroundBlockComponent,
   'cta-cards': CtaCardsBlockComponent,
   'image-cards': ImageCardsBlockComponent,
   statsBlock: StatsBlockComponent,
@@ -183,6 +190,7 @@ const blockComponents: {
   'vehicle-colors': VehicleColorsBlockComponent,
   'vehicle-gallery': VehicleGalleryBlockComponent,
   'vehicle-features': VehicleFeaturesBlockComponent,
+  'vehicle-special-categories': VehicleSpecialCategoriesBlockComponent,
   'vehicle-model-hero': VehicleModelHeroBlockComponent,
   'vehicle-model-highlights': VehicleModelHighlightsBlockComponent,
   'vehicle-model-colors': VehicleModelColorsBlockComponent,

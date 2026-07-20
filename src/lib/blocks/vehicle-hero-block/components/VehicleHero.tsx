@@ -28,10 +28,7 @@ function HeroCtaButton({
   const isBrochure = cta.action === 'brochure'
   const external = isExternalUrl(href)
 
-  const buttonClass =
-    variant === 'primary'
-      ? 'rounded-full bg-white text-black hover:bg-white/90 font-semibold'
-      : 'rounded-full border-white text-white bg-transparent hover:bg-white/10'
+  const buttonClass = variant === 'primary' ? 'rounded-full font-semibold' : 'rounded-full'
 
   const button = (
     <Button variant={variant === 'primary' ? 'default' : 'outline'} className={buttonClass}>
@@ -123,24 +120,21 @@ export function VehicleHero({ vehicle }: VehicleHeroProps) {
           ) : (
             <>
               <a href="#enquire">
-                <Button className="rounded-full bg-white text-black hover:bg-white/90 font-semibold">
+                <Button className="rounded-full font-semibold" variant="secondary">
                   Enquire Now
                 </Button>
               </a>
               <a href="#models">
                 <Button
                   variant="outline"
-                  className="rounded-full border-white text-white bg-transparent hover:bg-white/10"
+                  className="rounded-full border-white text-white bg-transparent hover:bg-white/20 hover:text-white/80"
                 >
                   View Models
                 </Button>
               </a>
               {brochureUrl && (
                 <a href={brochureUrl} target="_blank" rel="noopener noreferrer" download>
-                  <Button
-                    variant="outline"
-                    className="rounded-full border-white text-white bg-transparent hover:bg-white/10"
-                  >
+                  <Button className="rounded-full ">
                     <Download className="mr-2 size-4" />
                     Download Brochure
                   </Button>
