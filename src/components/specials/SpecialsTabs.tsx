@@ -3,6 +3,9 @@
 import React, { Suspense, useEffect, useTransition } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { Download } from 'lucide-react'
+import { RichText as ConvertRichText } from '@payloadcms/richtext-lexical/react'
+import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 
 import {
   Accordion,
@@ -12,11 +15,13 @@ import {
 } from '@/components/ui/accordion'
 import { MediaImage } from '@/components/ui/media-image'
 import { Button } from '@/components/ui/button'
+import { richTextConverters } from '@/components/rich-text/richTextConverters'
 import { getOfferTypeLabel } from '@/lib/specials/constants'
 import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getSpecialCategoryPath } from '@/lib/specials/paths'
 import { formatZAR } from '@/lib/utils/formatZAR'
-import type { Special } from '@/payload-types'
+import { getBrochureUrl } from '@/lib/utils/vehicleCta'
+import type { Special, Vehicle } from '@/payload-types'
 
 export type SpecialTabItem = Pick<
   Special,
@@ -32,6 +37,8 @@ export type SpecialTabItem = Pick<
   | 'cardImage'
   | 'vehicle'
   | 'vehicleModel'
+  | 'detailContent'
+  | 'enquireSectionId'
 >
 
 type SpecialsTabsProps = {
@@ -67,20 +74,91 @@ function findSpecialIndex(
   return index >= 0 ? index : 0
 }
 
+function hasSpecialDetailPricing(special: SpecialTabItem): boolean {
+  if (special.offerType === 'price-point') {
+    return special.specialOffer != null || special.bestSaving != null
+  }
+  if (special.offerType === 'payment') {
+    return special.paymentFrom != null
+  }
+  if (special.offerType === 'service') {
+    return special.specialOffer != null
+  }
+  return false
+}
+
+function SpecialDetailPricing({ special }: { special: SpecialTabItem }) {
+  const offerLabel = special.pricingLabel?.trim() || 'Special Offer'
+
+  if (special.offerType === 'price-point') {
+    return (
+      <div className="space-y-2 sm:text-right">
+        {special.specialOffer != null && (
+          <div className="flex flex-col">
+            <span className="text-xs text-muted-foreground">{offerLabel}</span>
+            <span className="font-semibold text-secondary text-lg">
+              {formatZAR(special.specialOffer)}*
+            </span>
+          </div>
+        )}
+        {special.bestSaving != null && (
+          <div className="flex flex-col">
+            <span className="text-xs text-muted-foreground">Best saving</span>
+            <span className="font-semibold text-secondary text-lg">
+              {formatZAR(special.bestSaving)}*
+            </span>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  if (special.offerType === 'payment' && special.paymentFrom != null) {
+    return (
+      <div className="space-y-2 sm:text-right">
+        <div className="flex flex-col">
+          <span className="text-xs text-muted-foreground">Payment from</span>
+          <span className="font-semibold text-secondary text-lg">
+            {formatZAR(special.paymentFrom)}*pm
+          </span>
+        </div>
+      </div>
+    )
+  }
+
+  if (special.offerType === 'service' && special.specialOffer != null) {
+    return (
+      <div className="space-y-2 sm:text-right">
+        <div className="flex flex-col">
+          <span className="text-xs text-muted-foreground">{offerLabel}</span>
+          <span className="font-semibold text-secondary text-lg">
+            {formatZAR(special.specialOffer)}*
+          </span>
+        </div>
+      </div>
+    )
+  }
+
+  return null
+}
+
 function SpecialDetailContent({
   special,
-  categorySlug,
   priority,
 }: {
   special: SpecialTabItem
-  categorySlug: string
   priority?: boolean
 }) {
-  const detailsHref = getSpecialCategoryPath(categorySlug, special.slug)
   const title = getSpecialDisplayTitle(special)
   const model =
     special.vehicleModel && typeof special.vehicleModel === 'object' ? special.vehicleModel : null
+  const vehicle =
+    special.vehicle && typeof special.vehicle === 'object' ? (special.vehicle as Vehicle) : null
   const highlights = model?.highlights ?? []
+  const hasHighlights = highlights.length > 0
+  const hasPricing = hasSpecialDetailPricing(special)
+  const enquireSectionId = special.enquireSectionId?.trim() || null
+  const brochureUrl = getBrochureUrl(vehicle?.brochure)
 
   return (
     <div className="flex flex-col gap-6">
@@ -99,60 +177,59 @@ function SpecialDetailContent({
       <div>
         <h3 className="text-primary text-2xl md:text-3xl font-bold mb-3">{title}</h3>
 
-        {highlights.length > 0 && (
-          <div className="mb-8">
-            <h4 className="text-primary font-bold mb-3">Key Features</h4>
-            <ul className="space-y-2">
-              {highlights.map((item, i) => (
-                <li
-                  key={item.id ?? i}
-                  className="flex items-start gap-2 text-sm text-muted-foreground"
-                >
-                  <span className="text-primary mt-0.5 shrink-0">•</span>
-                  <span>{item.highlight}</span>
-                </li>
-              ))}
-            </ul>
+        <div className="mb-8 flex flex-wrap gap-3">
+          {enquireSectionId && (
+            <Button variant="default" className="rounded-full" asChild>
+              <a href={`#${enquireSectionId}`}>Enquire Now</a>
+            </Button>
+          )}
+          {brochureUrl && (
+            <Button variant="secondary" className="rounded-full" asChild>
+              <a href={brochureUrl} target="_blank" rel="noopener noreferrer" download>
+                <Download className="mr-2 size-4" />
+                Download Brochure
+              </a>
+            </Button>
+          )}
+          <Button variant="outline" className="rounded-full" asChild>
+            <Link href="/specials">Back to Specials</Link>
+          </Button>
+        </div>
+
+        {(hasHighlights || hasPricing) && (
+          <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+            {hasHighlights && (
+              <div className="min-w-0 flex-1">
+                <h4 className="text-primary font-bold mb-3">Key Features</h4>
+                <ul className="space-y-2">
+                  {highlights.map((item, i) => (
+                    <li
+                      key={item.id ?? i}
+                      className="flex items-start gap-2 text-sm text-muted-foreground"
+                    >
+                      <span className="text-primary mt-0.5 shrink-0">•</span>
+                      <span>{item.highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {hasPricing && (
+              <div className="shrink-0 sm:ml-auto">
+                <SpecialDetailPricing special={special} />
+              </div>
+            )}
           </div>
         )}
 
-        <div className="mb-8 space-y-2">
-          {special.specialOffer != null && (
-            <div className="flex flex-col">
-              <span className="text-xs text-muted-foreground">
-                {special.pricingLabel?.trim() || 'Special Offer'}
-              </span>
-              <span className="font-semibold text-secondary text-lg">
-                {formatZAR(special.specialOffer)}*
-              </span>
-            </div>
-          )}
-          {special.bestSaving != null && (
-            <div className="flex flex-col">
-              <span className="text-xs text-muted-foreground">Best saving</span>
-              <span className="font-semibold text-secondary text-lg">
-                {formatZAR(special.bestSaving)}*
-              </span>
-            </div>
-          )}
-          {special.paymentFrom != null && (
-            <div className="flex flex-col">
-              <span className="text-xs text-muted-foreground">Payment from</span>
-              <span className="font-semibold text-secondary text-lg">
-                {formatZAR(special.paymentFrom)}*pm
-              </span>
-            </div>
-          )}
-        </div>
-
-        <div className="flex flex-wrap gap-3 pt-4 border-t border-border">
-          <Button className="rounded-full" asChild>
-            <Link href={detailsHref}>Enquire Now</Link>
-          </Button>
-          <Button variant="outline" className="rounded-full" asChild>
-            <Link href={detailsHref}>Offer Details</Link>
-          </Button>
-        </div>
+        {special.detailContent && (
+          <div className="text-muted-foreground leading-relaxed">
+            <ConvertRichText
+              converters={richTextConverters}
+              data={special.detailContent as SerializedEditorState}
+            />
+          </div>
+        )}
       </div>
     </div>
   )
@@ -227,11 +304,7 @@ function SpecialsTabsInner({ categorySlug, specials, initialSpecialSlug }: Speci
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="px-4 pt-2 pb-6">
-                    <SpecialDetailContent
-                      special={special}
-                      categorySlug={categorySlug}
-                      priority={isSelected}
-                    />
+                    <SpecialDetailContent special={special} priority={isSelected} />
                   </AccordionContent>
                 </AccordionItem>
               )
@@ -308,7 +381,7 @@ function SpecialsTabsInner({ categorySlug, specials, initialSpecialSlug }: Speci
           </ul>
         </div>
 
-        <SpecialDetailContent special={selectedSpecial} categorySlug={categorySlug} priority />
+        <SpecialDetailContent special={selectedSpecial} priority />
       </div>
     </div>
   )

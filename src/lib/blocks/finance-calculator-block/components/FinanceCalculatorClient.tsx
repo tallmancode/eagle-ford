@@ -41,7 +41,6 @@ import { Button } from '@/components/ui/button'
 type FinanceCalculatorMode = 'full' | 'repaymentOnly'
 
 type FinanceCalculatorClientProps = {
-  heading?: string | null
   disclaimer?: string | null
   defaultPurchasePrice?: number | null
   mode?: FinanceCalculatorMode
@@ -93,7 +92,6 @@ function resolveDeposit(
 }
 
 export function FinanceCalculatorClient({
-  heading,
   disclaimer,
   defaultPurchasePrice,
   mode = 'full',
@@ -228,10 +226,6 @@ export function FinanceCalculatorClient({
 
   return (
     <div className="w-full">
-      {heading && (
-        <h2 className="mb-4 text-2xl font-bold text-neutral-900 md:text-3xl">{heading}</h2>
-      )}
-
       <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
         {!isRepaymentOnly && (
           <FinanceCalculatorTabs activeTab={activeTab} onTabChange={setActiveTab} />

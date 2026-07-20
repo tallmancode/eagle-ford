@@ -1964,10 +1964,6 @@ export interface PopupCards {
  */
 export interface FinanceCalculatorBlockType {
   /**
-   * Optional heading displayed above the calculator.
-   */
-  heading?: string | null;
-  /**
    * Pre-fills the purchase price field (ZAR).
    */
   defaultPurchasePrice?: number | null;
@@ -1993,7 +1989,6 @@ export interface SpecialsArchive {
  * via the `definition` "StockArchive".
  */
 export interface StockArchive {
-  heading?: string | null;
   conditionFilter?: ('all' | 'new' | 'pre-owned') | null;
   limit?: number | null;
   showPagination?: boolean | null;
@@ -2171,6 +2166,28 @@ export interface Special {
    * Optional. Links this special to a specific model variant. Leave blank when not applicable.
    */
   vehicleModel?: (string | null) | VehicleModel;
+  /**
+   * Optional copy shown below key features on the specials category detail panel.
+   */
+  detailContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * HTML id of the form section to scroll to (e.g. enquire). Leave blank to hide the Enquire Now button.
+   */
+  enquireSectionId?: string | null;
   /**
    * Cash price in Rand, e.g. 489900 for R489 900
    */
@@ -2979,6 +2996,8 @@ export interface SpecialsSelect<T extends boolean = true> {
   cardImage?: T;
   vehicle?: T;
   vehicleModel?: T;
+  detailContent?: T;
+  enquireSectionId?: T;
   pricingLabel?: T;
   specialOffer?: T;
   bestSaving?: T;

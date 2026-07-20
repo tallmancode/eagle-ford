@@ -1,4 +1,4 @@
-import { Cog, Fuel, Gauge, Heart, MapPin } from 'lucide-react'
+import { Cog, Fuel, Gauge, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import { MediaImage } from '@/components/ui/media-image'
 import { Button } from '@/components/ui/button'
@@ -74,10 +74,8 @@ export function StockCard({ vehicle, enquireUrl }: Props) {
           </Link>
         </div>
 
-        <div className="flex items-center bg-primary-900 px-4 py-3 text-light-50">
+        <div className="flex items-center bg-secondary px-4 py-3 text-light-50">
           <span className="flex-1 text-lg font-bold">{formatPrice(price)}</span>
-          <div className="mx-4 h-6 w-px bg-light-50/30" />
-          <Heart className="size-5 shrink-0" strokeWidth={1.5} />
         </div>
 
         <div className="flex px-4 py-4">
