@@ -200,6 +200,7 @@ function SpecialCardImage({ special, priority }: { special: SpecialTabItem; prio
         resource={special.cardImage}
         fill
         imgClassName="object-contain object-center"
+        maxWidth={1400}
         size="(max-width: 1024px) 100vw, 66vw"
         priority={priority}
       />

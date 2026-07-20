@@ -80,6 +80,7 @@ export default function VehicleRangePage({
                             resource={cardImage}
                             fill
                             imgClassName="object-contain"
+                            maxWidth={600}
                             size="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw"
                           />
                         </div>

@@ -23,6 +23,7 @@ export function VehicleModelHero({ vehicle, model }: VehicleModelHeroProps) {
           fill
           imgClassName="object-cover object-center"
           priority
+          maxWidth={1920}
           size="100vw"
         />
       )}

@@ -71,6 +71,7 @@ function ModelDetailContent({
             resource={detailImage}
             fill
             imgClassName="object-cover object-center"
+            maxWidth={1400}
             size="(max-width: 1024px) 100vw, 66vw"
             priority
           />
