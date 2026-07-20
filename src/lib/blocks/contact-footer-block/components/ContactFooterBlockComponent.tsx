@@ -5,7 +5,7 @@ import { Clock, MapPin } from 'lucide-react'
 import React from 'react'
 
 export async function ContactFooterBlockComponent(_props: ContactFooter) {
-  const settings = (await getCachedGlobal('settings', 1)()) as Setting
+  const settings = (await getCachedGlobal('settings', 1)) as Setting
   const address = settings?.contactInfo?.address
   const addressLine = formatContactAddress(address)
   const hours = settings?.contactInfo?.operationHours?.trim()
