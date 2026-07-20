@@ -19,7 +19,10 @@ export async function SpecialsArchiveBlockComponent(_props: SpecialsArchive) {
       limit: 1000,
       overrideAccess: false,
       pagination: false,
-      depth: 1,
+      depth: 0,
+      select: {
+        category: true,
+      },
     }),
     payload.find({
       collection: 'special-categories',
@@ -28,7 +31,7 @@ export async function SpecialsArchiveBlockComponent(_props: SpecialsArchive) {
       limit: 100,
       overrideAccess: false,
       pagination: false,
-      depth: 0,
+      depth: 1,
     }),
   ])
 
@@ -43,5 +46,7 @@ export async function SpecialsArchiveBlockComponent(_props: SpecialsArchive) {
     categoryIdsWithSpecials.has(category.id),
   )
 
-  return <SpecialsArchiveView categories={categories} specials={specials} />
+  if (categories.length === 0) return null
+
+  return <SpecialsArchiveView categories={categories} />
 }

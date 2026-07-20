@@ -2197,6 +2197,10 @@ export interface SpecialCategory {
   id: string;
   title: string;
   /**
+   * Image shown on specials archive category cards.
+   */
+  featureImage?: (string | null) | Media;
+  /**
    * Lower numbers appear first.
    */
   sortOrder?: number | null;
@@ -2964,6 +2968,7 @@ export interface SpecialsSelect<T extends boolean = true> {
  */
 export interface SpecialCategoriesSelect<T extends boolean = true> {
   title?: T;
+  featureImage?: T;
   sortOrder?: T;
   generateSlug?: T;
   slug?: T;
