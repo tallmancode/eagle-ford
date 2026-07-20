@@ -45,6 +45,14 @@ const config = {
           ],
         },
       },
+      screens: {
+        '3xl': '1600px',
+        '4xl': '1920px',
+      },
+      container: {
+        center: true,
+        padding: '2rem',
+      },
     },
   },
 }

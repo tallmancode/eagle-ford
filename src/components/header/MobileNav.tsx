@@ -209,7 +209,7 @@ const renderMobileMenuItem = (
         >
           {item.label}
         </MobileAccordionTrigger>
-        <AccordionContent className="mt-2">
+        <AccordionContent className="pt-2">
           <VehicleMegaMenuMobile
             data={vehicleMegaMenuData}
             displayMode={item.displayMode}
@@ -256,7 +256,7 @@ const renderMobileMenuItem = (
             {item.label}
           </MobileAccordionTrigger>
         )}
-        <AccordionContent className="mt-2 [&_a]:no-underline">
+        <AccordionContent className="pt-2 [&_a]:no-underline">
           {item.children?.map((subItem, childIndex) => (
             <SubMenuLink
               key={subItem.id ?? childIndex}

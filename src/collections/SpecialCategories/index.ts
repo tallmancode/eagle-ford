@@ -53,6 +53,28 @@ export const SpecialCategories: CollectionConfig = {
         description: 'Lower numbers appear first.',
       },
     },
+    {
+      name: 'template',
+      label: 'Page Template',
+      type: 'relationship',
+      relationTo: 'special-templates',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Optional. Default layout for specials in this category. Individual specials can override this.',
+      },
+    },
+    {
+      name: 'enquiryForm',
+      label: 'Enquiry Form',
+      type: 'relationship',
+      relationTo: 'forms',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Optional. Default enquire form for specials in this category. Individual specials can override this.',
+      },
+    },
     slugField(),
   ],
 }
