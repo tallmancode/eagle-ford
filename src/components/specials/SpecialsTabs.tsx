@@ -224,6 +224,7 @@ function SpecialDetailInfo({
   const hasHighlights = highlights.length > 0
   const hasPricing = hasSpecialDetailPricing(special)
   const brochureUrl = getBrochureUrl(vehicle?.brochure)
+  const vehicleHref = vehicle?.slug ? `/vehicles/${vehicle.slug}` : null
 
   return (
     <div>
@@ -241,6 +242,11 @@ function SpecialDetailInfo({
               <Download className="mr-2 size-4" />
               Download Brochure
             </a>
+          </Button>
+        )}
+        {vehicleHref && (
+          <Button className="w-full rounded-full sm:w-auto" asChild>
+            <Link href={vehicleHref}>View Full Range</Link>
           </Button>
         )}
         <Button variant="outline" className="w-full rounded-full sm:w-auto" asChild>

@@ -130,6 +130,7 @@ export interface Config {
     map: Map;
     'team-grid': TeamGrid;
     'image-block': ImageBlock;
+    fixedBackgroundBlock: FixedBackgroundBlockType;
     'cta-cards': CtaCards;
     'image-cards': ImageCards;
     statsBlock: StatsBlock;
@@ -154,6 +155,7 @@ export interface Config {
     'vehicle-colors': VehicleColorsBlock;
     'vehicle-gallery': VehicleGalleryBlock;
     'vehicle-features': VehicleFeaturesBlock;
+    'vehicle-special-categories': VehicleSpecialCategoriesBlock;
     'vehicle-model-hero': VehicleModelHeroBlock;
     'vehicle-model-highlights': VehicleModelHighlightsBlock;
     'vehicle-model-colors': VehicleModelColorsBlock;
@@ -277,6 +279,7 @@ export interface Section {
         | Map
         | TeamGrid
         | ImageBlock
+        | FixedBackgroundBlockType
         | CtaCards
         | ImageCards
         | StatsBlock
@@ -300,6 +303,7 @@ export interface Section {
         | VehicleFaqBlock
         | VehicleGalleryBlock
         | VehicleFeaturesBlock
+        | VehicleSpecialCategoriesBlock
         | VehicleModelHeroBlock
         | VehicleModelHighlightsBlock
         | VehicleModelColorsBlock
@@ -416,6 +420,7 @@ export interface SectionInner {
         | Map
         | TeamGrid
         | ImageBlock
+        | FixedBackgroundBlockType
         | CtaCards
         | ImageCards
         | StatsBlock
@@ -439,6 +444,7 @@ export interface SectionInner {
         | VehicleFaqBlock
         | VehicleGalleryBlock
         | VehicleFeaturesBlock
+        | VehicleSpecialCategoriesBlock
         | VehicleModelHeroBlock
         | VehicleModelHighlightsBlock
         | VehicleModelColorsBlock
@@ -552,6 +558,7 @@ export interface Row {
         | Map
         | TeamGrid
         | ImageBlock
+        | FixedBackgroundBlockType
         | CtaCards
         | ImageCards
         | StatsBlock
@@ -575,6 +582,7 @@ export interface Row {
         | VehicleFaqBlock
         | VehicleGalleryBlock
         | VehicleFeaturesBlock
+        | VehicleSpecialCategoriesBlock
         | VehicleModelHeroBlock
         | VehicleModelHighlightsBlock
         | VehicleModelColorsBlock
@@ -1697,6 +1705,66 @@ export interface ImageBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FixedBackgroundBlockType".
+ */
+export interface FixedBackgroundBlockType {
+  backgroundImage: string | Media;
+  content?:
+    | (
+        | Heading
+        | Hero
+        | RichText
+        | FeatureList
+        | FormBlockType
+        | ContactInfo
+        | IconText
+        | CtaButton
+        | BackButton
+        | WhyCards
+        | Map
+        | TeamGrid
+        | ImageBlock
+        | CtaCards
+        | ImageCards
+        | StatsBlock
+        | HoursTabs
+        | Faq
+        | ContactFooter
+        | FeatureGrid
+        | Benefits
+        | BenefitsGrid
+        | PopupCards
+        | FinanceCalculatorBlockType
+        | SpecialsArchive
+        | StockArchive
+        | Partners
+        | Reviews
+        | VehicleTabsBlock
+        | VehicleCatalogBlock
+        | VehicleHeroBlock
+        | VehicleModelsBlock
+        | VehicleColorsBlock
+        | VehicleFaqBlock
+        | VehicleGalleryBlock
+        | VehicleFeaturesBlock
+        | VehicleSpecialCategoriesBlock
+        | VehicleModelHeroBlock
+        | VehicleModelHighlightsBlock
+        | VehicleModelColorsBlock
+        | VehicleModelSiblingsBlock
+      )[]
+    | null;
+  /**
+   * Dark overlay over the background image (0–100). Helps text readability on bright images.
+   */
+  overlayOpacity?: number | null;
+  container?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'fixedBackgroundBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "CtaCards".
  */
 export interface CtaCards {
@@ -2101,6 +2169,15 @@ export interface VehicleFeaturesBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'vehicle-features';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleSpecialCategoriesBlock".
+ */
+export interface VehicleSpecialCategoriesBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-special-categories';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
