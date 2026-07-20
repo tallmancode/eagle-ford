@@ -10,10 +10,20 @@ import { SpecialsTabs } from '@/components/specials/SpecialsTabs'
 import { CRAWLER_BLOCK_ROBOTS } from '@/constants/crawlerPolicy'
 import { DEFAULT_OG_IMAGE_PATH, formatPageTitle } from '@/constants/site'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
+import { getOfferTypeLabel } from '@/lib/specials/constants'
+import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getSpecialCategoryPath } from '@/lib/specials/paths'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
 import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
-import type { Media, Special, SpecialTemplate, Vehicle, VehicleModel } from '@/payload-types'
+import type {
+  Form,
+  Media,
+  Special,
+  SpecialCategory,
+  SpecialTemplate,
+  Vehicle,
+  VehicleModel,
+} from '@/payload-types'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,8 +41,7 @@ type SpecialListItem = Pick<
   | 'cardImage'
   | 'vehicle'
   | 'vehicleModel'
-  | 'detailContent'
-  | 'enquireSectionId'
+  | 'enquiryForm'
   | 'template'
 >
 
@@ -46,23 +55,61 @@ type Args = {
 }
 
 async function resolveSpecialTemplate(
-  template: SpecialListItem['template'],
+  template: SpecialListItem['template'] | SpecialCategory['template'],
 ): Promise<SpecialTemplate | null> {
   if (!template) return null
 
-  if (typeof template === 'object') {
-    return template
-  }
+  const templateId = typeof template === 'object' ? template.id : template
 
   const payload = await getPayload({ config: configPromise })
   const result = await payload.findByID({
     collection: 'special-templates',
-    id: template,
+    id: templateId,
     depth: 2,
     overrideAccess: false,
   })
 
   return result ?? null
+}
+
+async function resolveForm(
+  form: SpecialListItem['enquiryForm'] | SpecialCategory['enquiryForm'],
+): Promise<Form | null> {
+  if (!form) return null
+  if (typeof form === 'object' && form.id && (form.fields || form.steps)) {
+    return form
+  }
+
+  const formId = typeof form === 'object' ? form.id : form
+  const payload = await getPayload({ config: configPromise })
+  const result = await payload.findByID({
+    collection: 'forms',
+    id: formId,
+    depth: 2,
+    overrideAccess: false,
+  })
+
+  return result ?? null
+}
+
+async function resolveSpecialContent(
+  specialId: string,
+): Promise<NonNullable<Special['content']>['section'] | null> {
+  const { isEnabled: draft } = await draftMode()
+  const payload = await getPayload({ config: configPromise })
+  const result = await payload.findByID({
+    collection: 'specials',
+    id: specialId,
+    draft,
+    depth: 2,
+    overrideAccess: draft,
+    select: {
+      content: true,
+    },
+  })
+
+  const sections = result?.content?.section
+  return Array.isArray(sections) && sections.length > 0 ? sections : null
 }
 
 async function resolveVehicle(vehicle: SpecialListItem['vehicle']): Promise<Vehicle | null> {
@@ -106,6 +153,13 @@ function findSelectedSpecial(
   return specials.find((special) => special.slug === specialSlug) ?? specials[0] ?? null
 }
 
+function getFormId(
+  form: SpecialListItem['enquiryForm'] | SpecialCategory['enquiryForm'],
+): string | null {
+  if (!form) return null
+  return typeof form === 'object' ? form.id : form
+}
+
 export default async function SpecialCategoryPage({
   params: paramsPromise,
   searchParams: searchParamsPromise,
@@ -121,9 +175,43 @@ export default async function SpecialCategoryPage({
   const specials = await querySpecialsByCategoryId({ categoryId: category.id })
   const selectedSpecial = findSelectedSpecial(specials, initialSpecialSlug)
 
-  const template = selectedSpecial ? await resolveSpecialTemplate(selectedSpecial.template) : null
+  const [template, specialContentSections] = selectedSpecial
+    ? await Promise.all([
+        resolveSpecialTemplate(selectedSpecial.template ?? category.template),
+        resolveSpecialContent(selectedSpecial.id),
+      ])
+    : [null, null]
   const templateSections = template?.section
   const useTemplate = Array.isArray(templateSections) && templateSections.length > 0
+  const useSpecialContent =
+    Array.isArray(specialContentSections) && specialContentSections.length > 0
+
+  const formIds = new Set<string>()
+  const categoryFormId = getFormId(category.enquiryForm)
+  if (categoryFormId) formIds.add(categoryFormId)
+  for (const special of specials) {
+    const specialFormId = getFormId(special.enquiryForm)
+    if (specialFormId) formIds.add(specialFormId)
+  }
+
+  const resolvedForms = new Map<string, Form>()
+  await Promise.all(
+    [...formIds].map(async (formId) => {
+      const form = await resolveForm(formId)
+      if (form) resolvedForms.set(formId, form)
+    }),
+  )
+
+  const categoryEnquiryForm = categoryFormId ? (resolvedForms.get(categoryFormId) ?? null) : null
+
+  const specialsWithForms: SpecialListItem[] = specials.map((special) => {
+    const specialFormId = getFormId(special.enquiryForm)
+    if (!specialFormId) return { ...special, enquiryForm: null }
+    return {
+      ...special,
+      enquiryForm: resolvedForms.get(specialFormId) ?? null,
+    }
+  })
 
   const [vehicle, vehicleModel] = selectedSpecial
     ? await Promise.all([
@@ -131,6 +219,22 @@ export default async function SpecialCategoryPage({
         resolveVehicleModel(selectedSpecial.vehicleModel),
       ])
     : [null, null]
+
+  const selectedDisplayTitle = selectedSpecial ? getSpecialDisplayTitle(selectedSpecial) : ''
+
+  const blockMeta = selectedSpecial
+    ? {
+        ...(vehicle ? { vehicle } : {}),
+        ...(vehicleModel ? { vehicleModel } : {}),
+        contextValues: {
+          vehicleName: vehicle?.name ?? '',
+          modelName: vehicleModel?.name ?? '',
+          specialCategory: category.title,
+          specialType: getOfferTypeLabel(selectedSpecial.offerType),
+          specialTitle: selectedDisplayTitle,
+        },
+      }
+    : undefined
 
   return (
     <div>
@@ -144,24 +248,20 @@ export default async function SpecialCategoryPage({
 
           <SpecialsTabs
             categorySlug={category.slug}
-            specials={specials}
+            categoryTitle={category.title}
+            categoryEnquiryForm={categoryEnquiryForm}
+            specials={specialsWithForms}
             initialSpecialSlug={initialSpecialSlug}
           />
         </div>
       </section>
 
-      {useTemplate && (
-        <RenderBlocks
-          blocks={templateSections}
-          meta={{
-            ...(vehicle ? { vehicle } : {}),
-            ...(vehicleModel ? { vehicleModel } : {}),
-            contextValues: {
-              vehicleName: vehicle?.name ?? '',
-              modelName: vehicleModel?.name ?? '',
-            },
-          }}
-        />
+      {useSpecialContent && specialContentSections && (
+        <RenderBlocks blocks={specialContentSections} meta={blockMeta} />
+      )}
+
+      {useTemplate && templateSections && (
+        <RenderBlocks blocks={templateSections} meta={blockMeta} />
       )}
     </div>
   )
@@ -213,7 +313,7 @@ const queryCategoryBySlug = cache(async ({ slug }: { slug: string }) => {
     limit: 1,
     overrideAccess: false,
     pagination: false,
-    depth: 1,
+    depth: 0,
     where: {
       slug: {
         equals: slug,
@@ -253,8 +353,7 @@ const querySpecialsByCategoryId = cache(async ({ categoryId }: { categoryId: str
       cardImage: true,
       vehicle: true,
       vehicleModel: true,
-      detailContent: true,
-      enquireSectionId: true,
+      enquiryForm: true,
       template: true,
     },
   })

@@ -2,7 +2,6 @@ import { CollectionConfig, slugField } from 'payload'
 
 import { populatePublishedAt } from '@/lib/hooks/populatePublishedAt'
 import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
-import { blockRichTextEditor } from '@/lib/blocks/rich-text-block/blockRichTextEditor'
 import { OFFER_TYPES } from '@/lib/specials/constants'
 import { revalidateSpecial, revalidateSpecialDelete } from './hooks/revalidateSpecial'
 
@@ -112,25 +111,6 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
                   'Optional. Links this special to a specific model variant. Leave blank when not applicable.',
               },
             },
-            {
-              name: 'detailContent',
-              label: 'Content',
-              type: 'richText',
-              editor: blockRichTextEditor,
-              admin: {
-                description:
-                  'Optional copy shown below key features on the specials category detail panel.',
-              },
-            },
-            {
-              name: 'enquireSectionId',
-              label: 'Enquire Section ID',
-              type: 'text',
-              admin: {
-                description:
-                  'HTML id of the form section to scroll to (e.g. enquire). Leave blank to hide the Enquire Now button.',
-              },
-            },
           ],
         },
         {
@@ -178,6 +158,19 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
             },
           ],
         },
+        {
+          name: 'content',
+          label: 'Content',
+          fields: [
+            {
+              name: 'section',
+              label: false,
+              type: 'blocks',
+              blocks: [],
+              blockReferences: ['section'],
+            },
+          ],
+        },
       ],
     },
     {
@@ -198,7 +191,18 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
       admin: {
         position: 'sidebar',
         description:
-          'Optional. Layout shown below the specials tabs when this special is selected.',
+          'Optional. Overrides the category template when this special is selected. If blank, the category template is used.',
+      },
+    },
+    {
+      name: 'enquiryForm',
+      label: 'Enquiry Form',
+      type: 'relationship',
+      relationTo: 'forms',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Optional. Overrides the category enquire form when this special is selected. If blank, the category form is used.',
       },
     },
     {
