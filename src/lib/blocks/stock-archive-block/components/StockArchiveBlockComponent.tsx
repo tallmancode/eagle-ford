@@ -51,7 +51,6 @@ async function fetchAllFilteredStock(options: FetchStockOptions): Promise<MotorC
 
 export async function StockArchiveBlockComponent(props: Props) {
   const {
-    heading = 'Our Showroom',
     conditionFilter = 'all',
     limit = 12,
     showPagination = true,
@@ -110,7 +109,6 @@ export async function StockArchiveBlockComponent(props: Props) {
 
   return (
     <StockArchiveClient
-      heading={heading ?? 'Our Showroom'}
       vehicles={paginated.docs}
       filterOptions={filterOptions}
       activeFilters={activeFilters}

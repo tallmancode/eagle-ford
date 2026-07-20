@@ -15,6 +15,8 @@ import { getServerSideURL } from '@/lib/utils/getServerSideURL'
 import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
 import type { Media, Special, SpecialTemplate, Vehicle, VehicleModel } from '@/payload-types'
 
+export const dynamic = 'force-dynamic'
+
 type SpecialListItem = Pick<
   Special,
   | 'id'
@@ -29,24 +31,10 @@ type SpecialListItem = Pick<
   | 'cardImage'
   | 'vehicle'
   | 'vehicleModel'
+  | 'detailContent'
+  | 'enquireSectionId'
   | 'template'
 >
-
-export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const categories = await payload.find({
-    collection: 'special-categories',
-    draft: false,
-    limit: 1000,
-    overrideAccess: false,
-    pagination: false,
-    select: {
-      slug: true,
-    },
-  })
-
-  return categories.docs.map(({ slug }) => ({ slug }))
-}
 
 type Args = {
   params: Promise<{
@@ -265,6 +253,8 @@ const querySpecialsByCategoryId = cache(async ({ categoryId }: { categoryId: str
       cardImage: true,
       vehicle: true,
       vehicleModel: true,
+      detailContent: true,
+      enquireSectionId: true,
       template: true,
     },
   })

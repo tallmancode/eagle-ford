@@ -2,6 +2,7 @@ import { CollectionConfig, slugField } from 'payload'
 
 import { populatePublishedAt } from '@/lib/hooks/populatePublishedAt'
 import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
+import { blockRichTextEditor } from '@/lib/blocks/rich-text-block/blockRichTextEditor'
 import { OFFER_TYPES } from '@/lib/specials/constants'
 import { revalidateSpecial, revalidateSpecialDelete } from './hooks/revalidateSpecial'
 
@@ -109,6 +110,25 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
               admin: {
                 description:
                   'Optional. Links this special to a specific model variant. Leave blank when not applicable.',
+              },
+            },
+            {
+              name: 'detailContent',
+              label: 'Content',
+              type: 'richText',
+              editor: blockRichTextEditor,
+              admin: {
+                description:
+                  'Optional copy shown below key features on the specials category detail panel.',
+              },
+            },
+            {
+              name: 'enquireSectionId',
+              label: 'Enquire Section ID',
+              type: 'text',
+              admin: {
+                description:
+                  'HTML id of the form section to scroll to (e.g. enquire). Leave blank to hide the Enquire Now button.',
               },
             },
           ],
