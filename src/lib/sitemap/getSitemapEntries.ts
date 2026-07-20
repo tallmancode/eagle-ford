@@ -26,7 +26,7 @@ const getCachedSitemapEntries = unstable_cache(
     const siteUrl = getSiteUrl()
     const dateFallback = new Date().toISOString()
 
-    const [pages, vehicles, vehicleModels, specials] = await Promise.all([
+    const [pages, vehicles, vehicleModels, specialCategories] = await Promise.all([
       payload.find({
         collection: 'pages',
         overrideAccess: false,
@@ -68,13 +68,12 @@ const getCachedSitemapEntries = unstable_cache(
         },
       }),
       payload.find({
-        collection: 'specials',
+        collection: 'special-categories',
         overrideAccess: false,
         draft: false,
         depth: 0,
         limit: 1000,
         pagination: false,
-        where: publishedWhere,
         select: {
           slug: true,
           updatedAt: true,
@@ -111,13 +110,13 @@ const getCachedSitemapEntries = unstable_cache(
       ]
     })
 
-    const specialEntries = specials.docs
-      .filter((special) => Boolean(special.slug))
-      .map((special) =>
-        toSitemapEntry(`${siteUrl}/specials/${special.slug}`, special.updatedAt ?? dateFallback),
+    const specialCategoryEntries = specialCategories.docs
+      .filter((category) => Boolean(category.slug))
+      .map((category) =>
+        toSitemapEntry(`${siteUrl}/specials/${category.slug}`, category.updatedAt ?? dateFallback),
       )
 
-    return [...pageEntries, ...vehicleEntries, ...vehicleModelEntries, ...specialEntries]
+    return [...pageEntries, ...vehicleEntries, ...vehicleModelEntries, ...specialCategoryEntries]
   },
   ['sitemap'],
   {

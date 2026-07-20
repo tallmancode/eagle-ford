@@ -2,6 +2,10 @@ import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 
 import { isAnyone, isAuthenticated } from '@/lib/utils/accessUtil'
+import {
+  revalidateSpecialCategory,
+  revalidateSpecialCategoryDelete,
+} from './hooks/revalidateSpecialCategory'
 
 export const SpecialCategories: CollectionConfig = {
   slug: 'special-categories',
@@ -17,15 +21,28 @@ export const SpecialCategories: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'sortOrder'],
+    defaultColumns: ['title', 'slug', 'sortOrder', 'updatedAt'],
     group: 'Content',
   },
   defaultSort: 'sortOrder',
+  hooks: {
+    afterChange: [revalidateSpecialCategory],
+    afterDelete: [revalidateSpecialCategoryDelete],
+  },
   fields: [
     {
       name: 'title',
       type: 'text',
       required: true,
+    },
+    {
+      name: 'featureImage',
+      label: 'Feature Image',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Image shown on specials archive category cards.',
+      },
     },
     {
       name: 'sortOrder',

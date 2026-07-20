@@ -11,6 +11,7 @@ const VERSIONED_COLLECTIONS = [
 
 const SCAN_COLLECTIONS = [
   ...VERSIONED_COLLECTIONS,
+  'special-categories',
   'vehicle-templates',
   'vehicle-model-templates',
   'form-submissions',
