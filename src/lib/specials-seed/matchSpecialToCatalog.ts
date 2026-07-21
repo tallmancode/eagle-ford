@@ -287,15 +287,66 @@ function bestVariant(
   return best.slug
 }
 
+function findVehicleByName(name: string | null | undefined): CatalogVehicle | null {
+  if (!name?.trim()) return null
+  const needle = name.trim().toLowerCase()
+  return (
+    CATALOG.find(
+      (v) =>
+        v.name.toLowerCase() === needle ||
+        v.aliases.some((alias) => alias === needle) ||
+        v.slug === needle,
+    ) ?? null
+  )
+}
+
+/**
+ * Resolve linkedModel which may be a display name OR a CMS vehicle-model slug
+ * (e.g. "territory-18t-ambiente", "20-sit-active-4x2-10at").
+ */
+function resolveLinkedModel(
+  vehicle: CatalogVehicle | null,
+  linkedModel: string | null | undefined,
+): string | null {
+  if (!linkedModel?.trim()) return null
+  const needle = linkedModel.trim()
+  const lower = needle.toLowerCase()
+
+  if (vehicle) {
+    const bySlug = vehicle.variants.find((v) => v.slug.toLowerCase() === lower)
+    if (bySlug) return bySlug.slug
+
+    const byName = vehicle.variants.find((v) => v.name.toLowerCase() === lower)
+    if (byName) return byName.slug
+  }
+
+  // Manual seed overrides use real CMS model slugs (often without dots).
+  // Pass them through so import can look them up in the DB.
+  if (!/\s/.test(needle)) {
+    return needle
+  }
+
+  if (vehicle) {
+    return bestVariant(vehicle, needle, '')
+  }
+
+  return null
+}
+
 export function matchSpecialToCatalog(input: {
-  title: string
-  subTitle: string
+  title?: string
+  subTitle?: string
+  labelOverride?: string
   slug: string
   offerType: string
+  /** Catalog vehicle family name or slug */
+  linkedVehicle?: string | null
+  /** Catalog model display name OR CMS vehicle-model slug */
+  linkedModel?: string | null
   vehicleSlug?: string | null
   modelSlug?: string | null
 }): CatalogMatch {
-  // Explicit overrides in seed data win
+  // Explicit slug overrides in seed data win
   if (input.vehicleSlug || input.modelSlug) {
     return {
       vehicleSlug: input.vehicleSlug ?? null,
@@ -303,14 +354,27 @@ export function matchSpecialToCatalog(input: {
     }
   }
 
+  // Linked vehicle/model from nested seed DATA (names and/or CMS slugs)
+  if (input.linkedVehicle || input.linkedModel) {
+    const vehicle =
+      findVehicleByName(input.linkedVehicle) ??
+      detectVehicle(input.title ?? '', input.labelOverride ?? input.subTitle ?? '', input.slug)
+
+    return {
+      vehicleSlug: vehicle?.slug ?? null,
+      modelSlug: resolveLinkedModel(vehicle, input.linkedModel),
+    }
+  }
+
   if (input.offerType === 'service' || input.offerType === 'enquiry') {
     return { vehicleSlug: null, modelSlug: null }
   }
 
-  const vehicle = detectVehicle(input.title, input.subTitle, input.slug)
+  const label = input.labelOverride ?? input.subTitle ?? ''
+  const vehicle = detectVehicle(input.title ?? '', label, input.slug)
   if (!vehicle) return { vehicleSlug: null, modelSlug: null }
 
-  const modelSlug = bestVariant(vehicle, input.subTitle, input.slug)
+  const modelSlug = bestVariant(vehicle, label, input.slug)
   return {
     vehicleSlug: vehicle.slug,
     modelSlug,
