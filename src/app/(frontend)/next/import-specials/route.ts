@@ -1,9 +1,7 @@
-import { buildSpecialContent } from '@/lib/specials-seed/buildSpecialContent'
 import { SPECIALS_SEED_DATA, type SpecialSeedEntry } from '@/lib/specials-seed/specials-data'
 import { matchSpecialToCatalog } from '@/lib/specials-seed/matchSpecialToCatalog'
 import { createSeedStreamResponse } from '@/lib/seed/createSeedStreamResponse'
 import { fetchRemoteImage, uploadSeedImage, type ImageImportStats } from '@/lib/seed/media'
-import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
 import { buildSpecialMediaFilename } from '@/lib/vehicle-seed-images'
 import config from '@payload-config'
 import { headers } from 'next/headers'
@@ -77,21 +75,35 @@ async function buildCatalogIdMaps(
 
   for (const model of models.docs) {
     if (!model.slug) continue
-    const vehicleId =
-      typeof model.vehicle === 'object' && model.vehicle !== null
-        ? (model.vehicle.id as string)
-        : (model.vehicle as string | undefined)
-    if (!vehicleId) continue
 
-    let vehicleSlug: string | undefined
-    for (const [slug, id] of vehicleIdsBySlug.entries()) {
-      if (id === vehicleId) {
-        vehicleSlug = slug
-        break
+    const parentRefs = Array.isArray(model.vehicle)
+      ? model.vehicle
+      : model.vehicle
+        ? [model.vehicle]
+        : []
+
+    for (const parent of parentRefs) {
+      const vehicleId =
+        typeof parent === 'object' && parent !== null
+          ? (parent.id as string)
+          : (parent as string | undefined)
+      if (!vehicleId) continue
+
+      let vehicleSlug: string | undefined
+      for (const [slug, id] of vehicleIdsBySlug.entries()) {
+        if (id === vehicleId) {
+          vehicleSlug = slug
+          break
+        }
+      }
+      if (!vehicleSlug) continue
+      modelIdsByKey.set(`${vehicleSlug}::${model.slug}`, model.id as string)
+      // Seed linkedModel strips dots (e.g. 2.0-sit → 20-sit); index both forms
+      const undotted = model.slug.replace(/\./g, '')
+      if (undotted !== model.slug) {
+        modelIdsByKey.set(`${vehicleSlug}::${undotted}`, model.id as string)
       }
     }
-    if (!vehicleSlug) continue
-    modelIdsByKey.set(`${vehicleSlug}::${model.slug}`, model.id as string)
   }
 
   return { vehicleIdsBySlug, modelIdsByKey }
@@ -113,7 +125,7 @@ async function uploadSpecialImage(
 
   const ext = fileExtFromUrl(imageUrl)
   const mediaFilename = buildSpecialMediaFilename(entry.slug, role, ext)
-  const alt = `${entry.title} — Eagle Ford special offer`
+  const alt = `${entry.labelOverride} — Eagle Ford special offer`
 
   return uploadSeedImage(payload, req, remote, mediaFilename, alt, stats)
 }
@@ -172,7 +184,19 @@ export async function POST(): Promise<Response> {
       })
 
       if (existing.totalDocs > 0) {
-        categoryIdsByTitle.set(title, existing.docs[0].id as string)
+        const categoryId = existing.docs[0].id as string
+        await payload.update({
+          collection: 'special-categories',
+          id: categoryId,
+          data: {
+            enquiryForm: formId,
+            sortOrder: index,
+          },
+          overrideAccess: true,
+          req: payloadReq,
+          context: { disableRevalidate: true },
+        })
+        categoryIdsByTitle.set(title, categoryId)
         result.categoriesSkipped++
         continue
       }
@@ -184,6 +208,7 @@ export async function POST(): Promise<Response> {
           slug,
           generateSlug: false,
           sortOrder: index,
+          enquiryForm: formId,
         },
         overrideAccess: true,
         req: payloadReq,
@@ -201,11 +226,11 @@ export async function POST(): Promise<Response> {
 
     for (const [index, entry] of SPECIALS_SEED_DATA.entries()) {
       try {
-        log.info(`[${index + 1}/${SPECIALS_SEED_DATA.length}] ${entry.title}`)
+        log.info(`[${index + 1}/${SPECIALS_SEED_DATA.length}] ${entry.labelOverride}`)
 
         const cardImageId = await uploadSpecialImage(
           entry,
-          entry.cardImageUrl,
+          entry.cardImage,
           'card',
           stats,
           payload,
@@ -218,104 +243,69 @@ export async function POST(): Promise<Response> {
           continue
         }
 
-        const detailImageId = await uploadSpecialImage(
-          entry,
-          entry.detailImageUrl,
-          'detail',
-          stats,
-          payload,
-          payloadReq,
-        )
+        const catalog = matchSpecialToCatalog({
+          labelOverride: entry.labelOverride,
+          slug: entry.slug,
+          offerType: entry.offerType,
+          linkedVehicle: entry.linkedVehicle,
+          linkedModel: entry.linkedModel,
+        })
 
-        const catalog = matchSpecialToCatalog(entry)
-        const vehicleId = catalog.vehicleSlug
-          ? (vehicleIdsBySlug.get(catalog.vehicleSlug) ?? null)
-          : null
-        const modelId =
-          catalog.vehicleSlug && catalog.modelSlug
-            ? (modelIdsByKey.get(`${catalog.vehicleSlug}::${catalog.modelSlug}`) ?? null)
-            : null
+        let vehicleSlug = catalog.vehicleSlug
+        const modelSlug = catalog.modelSlug
+        let vehicleId = vehicleSlug ? (vehicleIdsBySlug.get(vehicleSlug) ?? null) : null
+        let modelId: string | null = null
 
-        let modelHref: string | null = null
-        if (catalog.vehicleSlug && catalog.modelSlug && modelId) {
-          modelHref = getVehicleModelPath(catalog.vehicleSlug, catalog.modelSlug)
+        if (modelSlug) {
+          // Prefer vehicle+model composite key from catalog match
+          if (vehicleSlug) {
+            modelId = modelIdsByKey.get(`${vehicleSlug}::${modelSlug}`) ?? null
+          }
+          // Fallback: linkedModel may be a CMS slug under another vehicle key
+          if (!modelId) {
+            const undottedTarget = modelSlug.replace(/\./g, '')
+            for (const [key, id] of modelIdsByKey.entries()) {
+              const keyModel = key.includes('::') ? key.slice(key.lastIndexOf('::') + 2) : key
+              if (keyModel === modelSlug || keyModel.replace(/\./g, '') === undottedTarget) {
+                modelId = id
+                const inferredVehicleSlug = key.slice(0, key.length - keyModel.length - 2)
+                if (!vehicleSlug) {
+                  vehicleSlug = inferredVehicleSlug
+                  vehicleId = vehicleIdsBySlug.get(inferredVehicleSlug) ?? null
+                }
+                break
+              }
+            }
+          }
+        }
+
+        if (vehicleSlug && modelSlug && modelId) {
           result.linkedToModel++
-        } else if (catalog.vehicleSlug && vehicleId) {
-          modelHref = `/vehicles/${catalog.vehicleSlug}`
+        } else if (vehicleSlug && vehicleId) {
           result.linkedToVehicleOnly++
         }
 
-        if (catalog.vehicleSlug && !vehicleId) {
-          log.warn(
-            `No vehicle found for slug "${catalog.vehicleSlug}" — run Import Vehicle Catalog first`,
-          )
-        } else if (catalog.modelSlug && !modelId) {
-          log.warn(
-            `No model found for "${catalog.vehicleSlug}/${catalog.modelSlug}" — linking vehicle only`,
-          )
+        if (vehicleSlug && !vehicleId) {
+          log.warn(`No vehicle found for slug "${vehicleSlug}" — run Import Vehicle Catalog first`)
+        } else if (modelSlug && !modelId) {
+          log.warn(`No model found for "${vehicleSlug ?? '?'}/${modelSlug}" — linking vehicle only`)
         }
 
-        const templateSections = buildSpecialContent({
-          title: entry.title,
-          subheading: entry.contentSubheading,
-          bodyHtml: entry.bodyHtml,
-          detailImageId: detailImageId ?? cardImageId,
-          formId,
-          modelHref,
-        })
         const categoryId = categoryIdsByTitle.get(entry.specialsCategory)
         if (!categoryId) {
           throw new Error(`Missing special category "${entry.specialsCategory}"`)
         }
 
-        const templateTitle = `${entry.title} Layout`
-        const existingTemplate = await payload.find({
-          collection: 'special-templates',
-          where: { title: { equals: templateTitle } },
-          limit: 1,
-          depth: 0,
-          overrideAccess: true,
-          req: payloadReq,
-        })
-
-        let templateId: string
-        if (existingTemplate.totalDocs > 0) {
-          const updated = await payload.update({
-            collection: 'special-templates',
-            id: existingTemplate.docs[0].id,
-            data: {
-              title: templateTitle,
-              section: templateSections.section,
-            },
-            req: payloadReq,
-            context: { disableRevalidate: true },
-          })
-          templateId = updated.id as string
-        } else {
-          const created = await payload.create({
-            collection: 'special-templates',
-            data: {
-              title: templateTitle,
-              section: templateSections.section,
-            },
-            req: payloadReq,
-            context: { disableRevalidate: true },
-          })
-          templateId = created.id as string
-        }
-
         const specialData = {
-          title: entry.title,
-          subTitle: entry.subTitle,
+          title: entry.labelOverride,
           offerType: entry.offerType,
           category: categoryId,
           cardImage: cardImageId,
-          ...(entry.pricingLabel ? { pricingLabel: entry.pricingLabel } : {}),
           ...(entry.specialOffer != null ? { specialOffer: entry.specialOffer } : {}),
           ...(entry.bestSaving != null ? { bestSaving: entry.bestSaving } : {}),
+          ...(entry.paymentFrom != null ? { paymentFrom: entry.paymentFrom } : {}),
           ...(vehicleId ? { vehicle: vehicleId } : { vehicle: null }),
           ...(modelId ? { vehicleModel: modelId } : { vehicleModel: null }),
-          template: templateId,
           sortOrder: entry.sortOrder,
           slug: entry.slug,
           generateSlug: false,

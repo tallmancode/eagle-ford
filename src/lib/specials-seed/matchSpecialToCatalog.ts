@@ -134,6 +134,183 @@ const CATALOG: CatalogVehicle[] = [
     ],
   },
   {
+    slug: 'ranger-sport',
+    name: 'Ranger Sport',
+    aliases: ['ranger sport', 'sport ranger'],
+    variants: [
+      {
+        slug: '2.3l-double-cab-sport-4x2-10at',
+        name: '2.3L Double Cab Sport 4x2 10AT',
+        tokens: [],
+      },
+      {
+        slug: '2.3l-super-cab-sport-4x2-10at',
+        name: '2.3L Super Cab Sport 4x2 10AT',
+        tokens: [],
+      },
+      {
+        slug: '3.0l-v6td-double-cab-sport-4x4-10at',
+        name: '3.0L V6TD Double Cab Sport 4x4 10AT',
+        tokens: [],
+      },
+      {
+        slug: '3.0td-v6-super-cab-sport-4x4-10at',
+        name: '3.0TD V6 Super Cab Sport 4x4 10AT',
+        tokens: [],
+      },
+    ],
+  },
+  {
+    slug: 'ranger-platinum',
+    name: 'Ranger Platinum',
+    aliases: ['ranger platinum', 'platinum ranger'],
+    variants: [
+      {
+        slug: '3.0td-v6-ranger-double-cab-platinum-4x4-10at',
+        name: '3.0TD V6 Ranger Double Cab Platinum 4x4 10AT',
+        tokens: [],
+      },
+      {
+        slug: '3.0l-v6-double-cab-platinum-4x4-10at',
+        name: '3.0L V6 Double Cab Platinum 4x4 10AT',
+        tokens: [],
+      },
+    ],
+  },
+  {
+    slug: 'ranger-tremor',
+    name: 'Ranger Tremor',
+    aliases: ['ranger tremor', 'tremor'],
+    variants: [
+      { slug: 'ford-ranger-tremor', name: 'Ford Ranger Tremor', tokens: [] },
+      {
+        slug: '3.0l-v6-double-cab-tremor-4x4-10at',
+        name: '3.0L V6 Double Cab Tremor 4x4 10AT',
+        tokens: [],
+      },
+    ],
+  },
+  {
+    slug: 'ranger-raptor',
+    name: 'Ranger Raptor',
+    aliases: ['ranger raptor', 'raptor'],
+    variants: [
+      {
+        slug: 'ranger-3.0t-v6-double-cab-raptor-4wd',
+        name: 'Ranger 3.0T V6 double cab Raptor 4WD',
+        tokens: [],
+      },
+      {
+        slug: '3.0l-v6-tt-double-cab-raptor-4x4-10at',
+        name: '3.0L V6 TT Double Cab Raptor 4x4 10AT',
+        tokens: [],
+      },
+    ],
+  },
+  {
+    slug: 'ranger-wildtrak',
+    name: 'Ranger Wildtrak',
+    aliases: ['ranger wildtrak', 'wildtrak'],
+    variants: [
+      {
+        slug: '2.0-biturbo-double-cab-wildtrak-4x2-10at',
+        name: '2.0 BiTurbo Double Cab Wildtrak 4x2 10AT',
+        tokens: [],
+      },
+      {
+        slug: '2.0-biturbo-double-cab-wildtrak-4x4-10at',
+        name: '2.0 BiTurbo Double Cab Wildtrak 4x4 10AT',
+        tokens: [],
+      },
+      {
+        slug: '2.3l-double-cab-wildtrak-4x2-10at',
+        name: '2.3L Double Cab Wildtrak 4x2 10AT',
+        tokens: [],
+      },
+      {
+        slug: '3.0td-v6-double-cab-wildtrak-4x4-10at',
+        name: '3.0TD V6 Double Cab Wildtrak 4x4 10AT',
+        tokens: [],
+      },
+      {
+        slug: '3.0l-v6-double-cab-wildtrak-4x4-10at',
+        name: '3.0L V6 Double Cab Wildtrak 4x4 10AT',
+        tokens: [],
+      },
+    ],
+  },
+  {
+    slug: 'ranger-wildtrak-x',
+    name: 'Ranger Wildtrak X',
+    aliases: ['ranger wildtrak x', 'wildtrak x'],
+    variants: [
+      {
+        slug: '2.0-biturbo-double-cab-wildtrak-x-4wd-10at',
+        name: '2.0 BiTurbo Double Cab Wildtrak X 4WD 10AT',
+        tokens: [],
+      },
+    ],
+  },
+  {
+    slug: 'ranger-xl',
+    name: 'Ranger XL',
+    aliases: ['ranger xl'],
+    variants: [
+      {
+        slug: 'ranger-2.0l-sit-sc-xl-4x2-10at',
+        name: 'RANGER 2.0L SIT SC XL 4X2 10AT',
+        tokens: [],
+      },
+      {
+        slug: 'ranger-2.0l-sit-sc-xl-4x4-10at',
+        name: 'RANGER 2.0L SIT SC XL 4X4 10AT',
+        tokens: [],
+      },
+      {
+        slug: 'ranger-2.0l-sit-sc-xl-4x4-6mt',
+        name: 'RANGER 2.0L SIT SC XL 4X4 6MT',
+        tokens: [],
+      },
+      {
+        slug: 'ranger-2.0l-sit-sup-xl-4x2-10at',
+        name: 'RANGER 2.0L SIT SUP XL 4X2 10AT',
+        tokens: [],
+      },
+      {
+        slug: 'ranger-2.0l-sit-sup-xl-4x4-10at',
+        name: 'RANGER 2.0L SIT SUP XL 4X4 10AT',
+        tokens: [],
+      },
+    ],
+  },
+  {
+    slug: 'ranger-xlt',
+    name: 'Ranger XLT',
+    aliases: ['ranger xlt'],
+    variants: [
+      {
+        slug: '2.0-sit-double-cab-xlt-4x2-10at',
+        name: '2.0 SiT Double Cab XLT 4x2 10AT',
+        tokens: [],
+      },
+      {
+        slug: '2.0-sit-double-cab-xlt-4x4-10at',
+        name: '2.0 SiT Double Cab XLT 4x4 10AT',
+        tokens: [],
+      },
+      {
+        slug: '2.0-sit-super-cab-xlt-4x2-10at',
+        name: '2.0 SiT Super Cab XLT 4x2 10AT',
+        tokens: [],
+      },
+      {
+        slug: '2.0-sit-super-cab-xlt-4x4-10at',
+        name: '2.0 SiT Super Cab XLT 4x4 10AT',
+        tokens: [],
+      },
+    ],
+  },
+  {
     slug: 'next-level-everest',
     name: 'Next Level Everest',
     aliases: ['next level everest', 'everest'],
@@ -246,7 +423,31 @@ function detectVehicle(
     return CATALOG.find((v) => v.slug === 'transit-van') ?? null
   }
 
-  if (/ranger/.test(hay) || /raptor/.test(hay)) {
+  if (/ranger/.test(hay) || /raptor/.test(hay) || /tremor/.test(hay) || /wildtrak/.test(hay)) {
+    if (/wildtrak\s*x|wildtrak-x/.test(hay)) {
+      return CATALOG.find((v) => v.slug === 'ranger-wildtrak-x') ?? null
+    }
+    if (/wildtrak/.test(hay)) {
+      return CATALOG.find((v) => v.slug === 'ranger-wildtrak') ?? null
+    }
+    if (/raptor/.test(hay)) {
+      return CATALOG.find((v) => v.slug === 'ranger-raptor') ?? null
+    }
+    if (/tremor/.test(hay)) {
+      return CATALOG.find((v) => v.slug === 'ranger-tremor') ?? null
+    }
+    if (/platinum/.test(hay)) {
+      return CATALOG.find((v) => v.slug === 'ranger-platinum') ?? null
+    }
+    if (/\bsport\b/.test(hay)) {
+      return CATALOG.find((v) => v.slug === 'ranger-sport') ?? null
+    }
+    if (/\bxlt\b/.test(hay)) {
+      return CATALOG.find((v) => v.slug === 'ranger-xlt') ?? null
+    }
+    if (/\bxl\b/.test(hay) && !/xlt/.test(hay)) {
+      return CATALOG.find((v) => v.slug === 'ranger-xl') ?? null
+    }
     if (/single\s*cab|\bsinglecab\b/.test(hay) || /ranger-sc-/.test(specialSlug)) {
       return CATALOG.find((v) => v.slug === 'ranger-single-cab') ?? null
     }
@@ -287,15 +488,66 @@ function bestVariant(
   return best.slug
 }
 
+function findVehicleByName(name: string | null | undefined): CatalogVehicle | null {
+  if (!name?.trim()) return null
+  const needle = name.trim().toLowerCase()
+  return (
+    CATALOG.find(
+      (v) =>
+        v.name.toLowerCase() === needle ||
+        v.aliases.some((alias) => alias === needle) ||
+        v.slug === needle,
+    ) ?? null
+  )
+}
+
+/**
+ * Resolve linkedModel which may be a display name OR a CMS vehicle-model slug
+ * (e.g. "territory-18t-ambiente", "20-sit-active-4x2-10at").
+ */
+function resolveLinkedModel(
+  vehicle: CatalogVehicle | null,
+  linkedModel: string | null | undefined,
+): string | null {
+  if (!linkedModel?.trim()) return null
+  const needle = linkedModel.trim()
+  const lower = needle.toLowerCase()
+
+  if (vehicle) {
+    const bySlug = vehicle.variants.find((v) => v.slug.toLowerCase() === lower)
+    if (bySlug) return bySlug.slug
+
+    const byName = vehicle.variants.find((v) => v.name.toLowerCase() === lower)
+    if (byName) return byName.slug
+  }
+
+  // Manual seed overrides use real CMS model slugs (often without dots).
+  // Pass them through so import can look them up in the DB.
+  if (!/\s/.test(needle)) {
+    return needle
+  }
+
+  if (vehicle) {
+    return bestVariant(vehicle, needle, '')
+  }
+
+  return null
+}
+
 export function matchSpecialToCatalog(input: {
-  title: string
-  subTitle: string
+  title?: string
+  subTitle?: string
+  labelOverride?: string
   slug: string
   offerType: string
+  /** Catalog vehicle family name or slug */
+  linkedVehicle?: string | null
+  /** Catalog model display name OR CMS vehicle-model slug */
+  linkedModel?: string | null
   vehicleSlug?: string | null
   modelSlug?: string | null
 }): CatalogMatch {
-  // Explicit overrides in seed data win
+  // Explicit slug overrides in seed data win
   if (input.vehicleSlug || input.modelSlug) {
     return {
       vehicleSlug: input.vehicleSlug ?? null,
@@ -303,14 +555,27 @@ export function matchSpecialToCatalog(input: {
     }
   }
 
+  // Linked vehicle/model from nested seed DATA (names and/or CMS slugs)
+  if (input.linkedVehicle || input.linkedModel) {
+    const vehicle =
+      findVehicleByName(input.linkedVehicle) ??
+      detectVehicle(input.title ?? '', input.labelOverride ?? input.subTitle ?? '', input.slug)
+
+    return {
+      vehicleSlug: vehicle?.slug ?? null,
+      modelSlug: resolveLinkedModel(vehicle, input.linkedModel),
+    }
+  }
+
   if (input.offerType === 'service' || input.offerType === 'enquiry') {
     return { vehicleSlug: null, modelSlug: null }
   }
 
-  const vehicle = detectVehicle(input.title, input.subTitle, input.slug)
+  const label = input.labelOverride ?? input.subTitle ?? ''
+  const vehicle = detectVehicle(input.title ?? '', label, input.slug)
   if (!vehicle) return { vehicleSlug: null, modelSlug: null }
 
-  const modelSlug = bestVariant(vehicle, input.subTitle, input.slug)
+  const modelSlug = bestVariant(vehicle, label, input.slug)
   return {
     vehicleSlug: vehicle.slug,
     modelSlug,

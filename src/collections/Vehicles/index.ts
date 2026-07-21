@@ -20,7 +20,7 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
   },
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'category', 'startingPrice', 'badge', 'updatedAt'],
+    defaultColumns: ['name', 'category', 'startingPrice', 'badge', 'showInMegaMenu', 'updatedAt'],
     group: 'Vehicles',
     livePreview: {
       url: ({ data, req }) =>
@@ -463,6 +463,16 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
           ],
         },
       ],
+    },
+    {
+      name: 'showInMegaMenu',
+      label: 'Show in Mega Menu',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        position: 'sidebar',
+        description: 'When enabled, this vehicle appears in the New vehicles mega menu.',
+      },
     },
     {
       name: 'sortOrder',

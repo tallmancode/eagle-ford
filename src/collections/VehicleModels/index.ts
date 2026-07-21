@@ -44,12 +44,13 @@ export const VehicleModelsCollection: CollectionConfig<'vehicle-models'> = {
             },
             {
               name: 'vehicle',
-              label: 'Vehicle Family',
+              label: 'Vehicle Families',
               type: 'relationship',
               relationTo: 'vehicles',
+              hasMany: true,
               required: true,
               admin: {
-                description: 'The parent vehicle this model belongs to.',
+                description: 'Parent vehicle families this model belongs to.',
               },
             },
             {
