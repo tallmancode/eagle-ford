@@ -75,21 +75,35 @@ async function buildCatalogIdMaps(
 
   for (const model of models.docs) {
     if (!model.slug) continue
-    const vehicleId =
-      typeof model.vehicle === 'object' && model.vehicle !== null
-        ? (model.vehicle.id as string)
-        : (model.vehicle as string | undefined)
-    if (!vehicleId) continue
 
-    let vehicleSlug: string | undefined
-    for (const [slug, id] of vehicleIdsBySlug.entries()) {
-      if (id === vehicleId) {
-        vehicleSlug = slug
-        break
+    const parentRefs = Array.isArray(model.vehicle)
+      ? model.vehicle
+      : model.vehicle
+        ? [model.vehicle]
+        : []
+
+    for (const parent of parentRefs) {
+      const vehicleId =
+        typeof parent === 'object' && parent !== null
+          ? (parent.id as string)
+          : (parent as string | undefined)
+      if (!vehicleId) continue
+
+      let vehicleSlug: string | undefined
+      for (const [slug, id] of vehicleIdsBySlug.entries()) {
+        if (id === vehicleId) {
+          vehicleSlug = slug
+          break
+        }
+      }
+      if (!vehicleSlug) continue
+      modelIdsByKey.set(`${vehicleSlug}::${model.slug}`, model.id as string)
+      // Seed linkedModel strips dots (e.g. 2.0-sit → 20-sit); index both forms
+      const undotted = model.slug.replace(/\./g, '')
+      if (undotted !== model.slug) {
+        modelIdsByKey.set(`${vehicleSlug}::${undotted}`, model.id as string)
       }
     }
-    if (!vehicleSlug) continue
-    modelIdsByKey.set(`${vehicleSlug}::${model.slug}`, model.id as string)
   }
 
   return { vehicleIdsBySlug, modelIdsByKey }
@@ -247,12 +261,14 @@ export async function POST(): Promise<Response> {
           if (vehicleSlug) {
             modelId = modelIdsByKey.get(`${vehicleSlug}::${modelSlug}`) ?? null
           }
-          // Fallback: linkedModel may be a CMS slug that only exists under another key
+          // Fallback: linkedModel may be a CMS slug under another vehicle key
           if (!modelId) {
+            const undottedTarget = modelSlug.replace(/\./g, '')
             for (const [key, id] of modelIdsByKey.entries()) {
-              if (key.endsWith(`::${modelSlug}`)) {
+              const keyModel = key.includes('::') ? key.slice(key.lastIndexOf('::') + 2) : key
+              if (keyModel === modelSlug || keyModel.replace(/\./g, '') === undottedTarget) {
                 modelId = id
-                const inferredVehicleSlug = key.slice(0, key.length - modelSlug.length - 2)
+                const inferredVehicleSlug = key.slice(0, key.length - keyModel.length - 2)
                 if (!vehicleSlug) {
                   vehicleSlug = inferredVehicleSlug
                   vehicleId = vehicleIdsBySlug.get(inferredVehicleSlug) ?? null

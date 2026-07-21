@@ -3,6 +3,7 @@ import type { OfferType } from '@/lib/specials/constants'
 /**
  * Static seed data for specials import.
  * Generated from https://www.eagleford.co.za/specials/ via scripts/generate-specials-data.mjs
+ * linkedModel values are CMS vehicle-model slugs (dots stripped to match Payload slug storage).
  */
 export type SpecialSeedItem = {
   offerType: Extract<OfferType, 'price-point' | 'payment'>
@@ -43,7 +44,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/15849-next-level-ranger-2.0-xl-4x2-dc-manual/images/15849-1195fd5a-702f-4a6e-8d81-e87b0c87f342c7986659-91a4-4056-8626-8baa73cd57f8_Next-Level-Ranger-2-0-XL-4x2-DC.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.0 SiT Double Cab XL 4x2 6MT',
+        linkedModel: '20-sit-double-cab-xl-4x2-6mt',
         slug: '15849-next-level-ranger-2.0-xl-4x2-dc-manual',
         specialOffer: 569900,
         bestSaving: 51100,
@@ -56,7 +57,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/15850-next-level-ranger-2.0-xl-4x2-dc-auto/images/15850-96eb591d-34f9-4d3c-badb-17c5ab386b9bd823e380-3dc7-4f99-aa7c-2a272cc28452_Next-Level-Ranger-2-0-XL-4x2-DC.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.0 SiT Double Cab XL 4x2 6MT',
+        linkedModel: '20-sit-double-cab-xl-4x2-6mt',
         slug: '15850-next-level-ranger-2.0-xl-4x2-dc-auto',
         specialOffer: 559900,
         bestSaving: 91600,
@@ -69,7 +70,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/15889-next-level-ranger-2.0-sit-xlt-4x2-dc-auto/images/15889-2cc99ae7-6e07-4861-8c87-6c304980bbebe8d92ca0-952b-45f9-86e3-33976ed4b575_Next-Level-Ranger-2-0-XLT-4x2-DC.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.0 SiT Double Cab XLT 4x2 10AT',
+        linkedModel: '20-sit-double-cab-xlt-4x2-10at',
         slug: '15889-next-level-ranger-2.0-sit-xlt-4x2-dc-auto',
         specialOffer: 599900,
         bestSaving: 99600,
@@ -82,7 +83,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17896-ranger-dc-4x2-2.0l-sit-xl-6mt/images/17896-3106717d-b086-4521-9d32-bc94e8ccbe7d64b80faf-9990-4689-8402-9354e22b19da_Ranger-Double-Cab-XL.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.0 SiT Double Cab XL 4x2 6MT',
+        linkedModel: '20-sit-double-cab-xl-4x2-6mt',
         slug: '17896-ranger-dc-4x2-2.0l-sit-xl-6mt',
         paymentFrom: 8399,
       },
@@ -94,7 +95,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17897-ranger-dc-4x2-2.0l-sit-xl-10at/images/17897-a5df5995-b01b-42d1-979c-aa569e131d061e9ef5ee-9d0c-4d90-8844-0022a15dce71_Ranger-Double-Cab-XL.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.0 SiT Double Cab XL 4x2 6MT',
+        linkedModel: '20-sit-double-cab-xl-4x2-6mt',
         slug: '17897-ranger-dc-4x2-2.0l-sit-xl-10at',
         paymentFrom: 8099,
       },
@@ -106,7 +107,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/15893-next-level-ranger-2.0-xl-4x4-dc-auto/images/15893-f0df347c-4f8b-4ff6-90c7-d1077f13051d5d9bb289-9b71-44fa-8040-395cec74c2d8_Next-Level-Ranger-2-0-XL-4x4-DC.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.0 SiT Double Cab XL 4x2 6MT',
+        linkedModel: '20-sit-double-cab-xl-4x2-6mt',
         slug: '15893-next-level-ranger-2.0-xl-4x4-dc-auto',
         specialOffer: 659900,
         bestSaving: 75100,
@@ -119,7 +120,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17900-ranger-dc-4x2-2.0l-sit-xlt-10at/images/17900-3faf86a6-db21-404d-aa4e-c81d30da24414aeca424-48b1-4a7a-88f9-fd8fd2aaf1f7_XLT-DC.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.0 SiT Double Cab XLT 4x2 10AT',
+        linkedModel: '20-sit-double-cab-xlt-4x2-10at',
         slug: '17900-ranger-dc-4x2-2.0l-sit-xlt-10at',
         paymentFrom: 8599,
       },
@@ -131,7 +132,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17898-ranger-dc-4x4-2.0l-sit-xl-6mt/images/17898-c1f91866-7f0b-4fae-9fc3-51f82a8ba0240722f871-245f-4af6-ba26-9674678c3047_Ranger-Double-Cab-XL.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.0 SiT Double Cab XL 4x2 6MT',
+        linkedModel: '20-sit-double-cab-xl-4x2-6mt',
         slug: '17898-ranger-dc-4x4-2.0l-sit-xl-6mt',
         paymentFrom: 9399,
       },
@@ -142,8 +143,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/15894-next-level-ranger-2.0-sit-xlt-4x4-dc-auto/images/15894-9a84b273-5796-4caa-8161-daf754199e2fdf4e1a8c-7528-4d87-b876-5d07f9c7e7fd_Next-Level-Ranger-2-0-XLT-4x4-DC.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/15894-next-level-ranger-2.0-sit-xlt-4x4-dc-auto/images/15894-9a84b273-5796-4caa-8161-daf754199e2fdf4e1a8c-7528-4d87-b876-5d07f9c7e7fd_Next-Level-Ranger-2-0-XLT-4x4-DC.webp',
-        linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.0 SiT Double Cab XLT 4x2 10AT',
+        linkedVehicle: 'Ranger XLT',
+        linkedModel: '20-sit-double-cab-xlt-4x4-10at',
         slug: '15894-next-level-ranger-2.0-sit-xlt-4x4-dc-auto',
         specialOffer: 712900,
         bestSaving: 75600,
@@ -158,6 +159,7 @@ export const DATA: SpecialSeedCategory[] = [
         linkedVehicle: 'Next Level Ranger',
         slug: '17899-ranger-dc-4x4-2.0l-sit-xl-10at',
         paymentFrom: 9899,
+        linkedModel: '20-sit-double-cab-xl-4x2-6mt',
       },
       {
         offerType: 'price-point',
@@ -167,7 +169,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/16295-next-level-ranger-2.3-sport-4x2-dc-auto/images/16295-39e816aa-2b80-4775-9cd2-ab6b9f6e9077b2d55b44-6e6c-447d-ad60-5400b59bcda0_Next-Level-Ranger-2-3-Sport-4x2-DC.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.3L Double Cab Sport 4x2 10AT',
+        linkedModel: '23l-double-cab-sport-4x2-10at',
         slug: '16295-next-level-ranger-2.3-sport-4x2-dc-auto',
         specialOffer: 744900,
         bestSaving: 94700,
@@ -179,8 +181,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/17901-ranger-dc-4x4-2.0l-sit-xlt-10at/images/17901-837142d5-ae97-468e-80d8-5e1c3e28e26ff4fa9719-2083-4a2d-a26d-487f271aa6ab_XLT-DC.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17901-ranger-dc-4x4-2.0l-sit-xlt-10at/images/17901-837142d5-ae97-468e-80d8-5e1c3e28e26ff4fa9719-2083-4a2d-a26d-487f271aa6ab_XLT-DC.webp',
-        linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.0 SiT Double Cab XLT 4x2 10AT',
+        linkedVehicle: 'Ranger XLT',
+        linkedModel: '20-sit-double-cab-xlt-4x4-10at',
         slug: '17901-ranger-dc-4x4-2.0l-sit-xlt-10at',
         paymentFrom: 10199,
       },
@@ -192,7 +194,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/16296-next-level-ranger-2.3-wildtrak-4x2-dc-auto/images/16296-f01dda91-b1d0-482f-876c-0fcc66a4250b0e8de94e-982f-47c0-b301-98547bcf7c38_Next-Level-Ranger-2-3-Wildtrak-4x2-DC.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.3L Double Cab Wildtrak 4x2 10AT',
+        linkedModel: '23l-double-cab-wildtrak-4x2-10at',
         slug: '16296-next-level-ranger-2.3-wildtrak-4x2-dc-auto',
         specialOffer: 799900,
         bestSaving: 99100,
@@ -205,7 +207,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17902-ranger-dc-4x2-2.3l-tc-sport-10at/images/17902-2e2e384b-31ec-46d0-98b6-4660e2fa8eed52053b59-0c4d-4250-abe0-7a14056e15f7_Sport-DC.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.3L Double Cab Sport 4x2 10AT',
+        linkedModel: '23l-double-cab-sport-4x2-10at',
         slug: '17902-ranger-dc-4x2-2.3l-tc-sport-10at',
         paymentFrom: 10899,
       },
@@ -216,8 +218,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/16297-next-level-ranger-3.0-v6-sport-4x4-dc-auto/images/16297-a0004c94-fd42-46a5-8761-aad3b2183333b81a10e5-1f0d-488f-9fd0-9a38ea816a4b_Next-Level-Ranger-3-0-Sport-4x4-DC.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/16297-next-level-ranger-3.0-v6-sport-4x4-dc-auto/images/16297-a0004c94-fd42-46a5-8761-aad3b2183333b81a10e5-1f0d-488f-9fd0-9a38ea816a4b_Next-Level-Ranger-3-0-Sport-4x4-DC.webp',
-        linkedVehicle: 'Next Level Ranger',
-        linkedModel: '3.0L V6 Double Cab Tremor 4x4 10AT',
+        linkedVehicle: 'Ranger Sport',
+        linkedModel: '30l-v6td-double-cab-sport-4x4-10at',
         slug: '16297-next-level-ranger-3.0-v6-sport-4x4-dc-auto',
         specialOffer: 874900,
         bestSaving: 120100,
@@ -230,7 +232,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17903-ranger-dc-4x2-2.3l-tc-wildtrak-10at/images/17903-2e417ec7-e981-4a71-b43a-e1b1aa6c6fd0557a237a-bc15-4275-bf6e-ff49a7411412_Sport-DC.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '2.3L Double Cab Wildtrak 4x2 10AT',
+        linkedModel: '23l-double-cab-wildtrak-4x2-10at',
         slug: '17903-ranger-dc-4x2-2.3l-tc-wildtrak-10at',
         paymentFrom: 11699,
       },
@@ -242,7 +244,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/16298-next-level-ranger-3.0-v6-tremor-4x4-dc-auto/images/16298-349500b2-c72f-4c03-af9f-864970fe81194da4edb0-d828-447b-9db1-0d18267bfe8a_Next-Level-Ranger-3-0-Tremor-4x4-DC.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '3.0L V6 Double Cab Tremor 4x4 10AT',
+        linkedModel: '30l-v6-double-cab-tremor-4x4-10at',
         slug: '16298-next-level-ranger-3.0-v6-tremor-4x4-dc-auto',
         specialOffer: 964900,
         bestSaving: 74100,
@@ -255,7 +257,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/15896-next-level-ranger-3.0-v6-wildtrak-4x4-dc-auto/images/15896-ac7884f2-1acd-4a9f-a0a3-03fc134282f56e03e98b-c452-4bc8-83ee-c3fba3c65039_Next-Level-Ranger-3-0-Wildtrak-4x4-DC.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '3.0L V6 Double Cab Wildtrak 4x4 10AT',
+        linkedModel: '30l-v6-double-cab-wildtrak-4x4-10at',
         slug: '15896-next-level-ranger-3.0-v6-wildtrak-4x4-dc-auto',
         specialOffer: 965900,
         bestSaving: 104100,
@@ -267,8 +269,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/17904-ranger-dc-4wd-3.0l-v6-sport-10at/images/17904-e9e228b7-c0d2-449c-9048-09d8218fba0d27f2fc2b-aa72-4827-acd0-b86054e2a0c9_Sport-DC.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17904-ranger-dc-4wd-3.0l-v6-sport-10at/images/17904-e9e228b7-c0d2-449c-9048-09d8218fba0d27f2fc2b-aa72-4827-acd0-b86054e2a0c9_Sport-DC.webp',
-        linkedVehicle: 'Next Level Ranger',
-        linkedModel: '3.0L V6 Double Cab Tremor 4x4 10AT',
+        linkedVehicle: 'Ranger Sport',
+        linkedModel: '30l-v6td-double-cab-sport-4x4-10at',
         slug: '17904-ranger-dc-4wd-3.0l-v6-sport-10at',
         paymentFrom: 13099,
       },
@@ -280,7 +282,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17905-ranger-dc-4wd-3.0l-v6-tremor-10at/images/17905-a9ba8196-1847-418b-86c8-6e5ba14099df43bf0576-6d3b-4418-bcd1-5f84a501567f_Tremor.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '3.0L V6 Double Cab Tremor 4x4 10AT',
+        linkedModel: '30l-v6-double-cab-tremor-4x4-10at',
         slug: '17905-ranger-dc-4wd-3.0l-v6-tremor-10at',
         paymentFrom: 13999,
       },
@@ -292,7 +294,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/18393-next-level-ranger-3.0-v6-platinum-4x4-dc-auto/images/18393-9629bc08-335a-4ad8-b6dc-832e597f75a64ea97ad2-4b19-495e-8718-996282063744_download.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '3.0L V6 Double Cab Platinum 4x4 10AT',
+        linkedModel: '30l-v6-double-cab-platinum-4x4-10at',
         slug: '18393-next-level-ranger-3.0-v6-platinum-4x4-dc-auto',
         specialOffer: 1064900,
         bestSaving: 114600,
@@ -305,7 +307,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17906-ranger-dc-4wd-3.0l-v6-wildtrak-10at/images/17906-b7ddae63-bb40-4554-86f5-36af9b33bd9c66bebfee-ec68-40ad-9848-5acd1b9cde07_Wildtrack-DC.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '3.0L V6 Double Cab Wildtrak 4x4 10AT',
+        linkedModel: '30l-v6-double-cab-wildtrak-4x4-10at',
         slug: '17906-ranger-dc-4wd-3.0l-v6-wildtrak-10at',
         paymentFrom: 13899,
       },
@@ -317,7 +319,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17907-ranger-dc-4wd-3.0l-v6-platinum-10at/images/17907-51d9fe60-a1cb-47fe-81e2-a66ea44d3f6f18072a38-2ce2-4021-a077-35512f4b1bc3_Ranger-Platinum.webp',
         linkedVehicle: 'Next Level Ranger',
-        linkedModel: '3.0L V6 Double Cab Platinum 4x4 10AT',
+        linkedModel: '30l-v6-double-cab-platinum-4x4-10at',
         slug: '17907-ranger-dc-4wd-3.0l-v6-platinum-10at',
         paymentFrom: 15499,
       },
@@ -333,8 +335,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/15886-next-level-ranger-2.0-xl-4x2-super-cab-auto/images/15886-ab08765d-cfee-49b4-8a78-255339f7bfeb8dddc466-b3fc-4f27-bd69-4ce915337a36_Next-Level-Ranger-2-0-XL-4x2-Super-Cab-A.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/15886-next-level-ranger-2.0-xl-4x2-super-cab-auto/images/15886-ab08765d-cfee-49b4-8a78-255339f7bfeb8dddc466-b3fc-4f27-bd69-4ce915337a36_Next-Level-Ranger-2-0-XL-4x2-Super-Cab-A.webp',
-        linkedVehicle: 'Ranger Super Cab',
-        linkedModel: 'ranger-20-sit-supercab-xl-auto',
+        linkedVehicle: 'Ranger XL',
+        linkedModel: 'ranger-20l-sit-sup-xl-4x2-10at',
         slug: '15886-next-level-ranger-2.0-xl-4x2-super-cab-auto',
         specialOffer: 519900,
         bestSaving: 79600,
@@ -346,8 +348,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/15888-next-level-ranger-2.0-sit-xlt-4x2-super-cab-auto/images/15888-ce4213a4-2be6-45de-bf63-3647cd4b5b8b3a194ad4-13e3-44fd-ae24-ce2b13daaa9f_Next-Level-Ranger-2-0-XLT-4x2-Super-Cab-A.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/15888-next-level-ranger-2.0-sit-xlt-4x2-super-cab-auto/images/15888-ce4213a4-2be6-45de-bf63-3647cd4b5b8b3a194ad4-13e3-44fd-ae24-ce2b13daaa9f_Next-Level-Ranger-2-0-XLT-4x2-Super-Cab-A.webp',
-        linkedVehicle: 'Ranger Super Cab',
-        linkedModel: 'ranger-20-sit-supercab-xl-auto',
+        linkedVehicle: 'Ranger XLT',
+        linkedModel: '20-sit-super-cab-xlt-4x2-10at',
         slug: '15888-next-level-ranger-2.0-sit-xlt-4x2-super-cab-auto',
         specialOffer: 555900,
         bestSaving: 99100,
@@ -359,8 +361,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/18389-next-level-ranger-2.0-xl-4x4-super-cab-auto/images/18389-74e29c4e-ec0f-4677-b9c6-e2f3fdeff4afcffc8b10-4b0a-4bc4-acf1-4ee4ef80612a_9a8f40d7-44aa-45a9-bb9c-2c45729bc535.png',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/18389-next-level-ranger-2.0-xl-4x4-super-cab-auto/images/18389-74e29c4e-ec0f-4677-b9c6-e2f3fdeff4afcffc8b10-4b0a-4bc4-acf1-4ee4ef80612a_9a8f40d7-44aa-45a9-bb9c-2c45729bc535.png',
-        linkedVehicle: 'Ranger Super Cab',
-        linkedModel: 'ranger-20-sit-supercab-xl-auto',
+        linkedVehicle: 'Ranger XL',
+        linkedModel: 'ranger-20l-sit-sup-xl-4x4-10at',
         slug: '18389-next-level-ranger-2.0-xl-4x4-super-cab-auto',
         specialOffer: 582900,
         bestSaving: 67432,
@@ -372,8 +374,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/17889-ranger-sup-4x2-2.0l-sit-xl-10at/images/17889-7b828e52-0ea9-48df-83de-b70f9fedd11cd78fc82b-d203-45bd-a868-17ab25727a51_Ranger-Super-Cab-XL.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17889-ranger-sup-4x2-2.0l-sit-xl-10at/images/17889-7b828e52-0ea9-48df-83de-b70f9fedd11cd78fc82b-d203-45bd-a868-17ab25727a51_Ranger-Super-Cab-XL.webp',
-        linkedVehicle: 'Ranger Super Cab',
-        linkedModel: 'ranger-20-sit-supercab-xl-auto',
+        linkedVehicle: 'Ranger XL',
+        linkedModel: 'ranger-20l-sit-sup-xl-4x2-10at',
         slug: '17889-ranger-sup-4x2-2.0l-sit-xl-10at',
         paymentFrom: 7699,
       },
@@ -384,10 +386,11 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/15898-next-level-ranger-2.3-sport-4x2-super-cab/images/15898-db6de789-c030-406c-8366-9008a0fad3dd045d4ccd-741e-41b2-9c04-442fb21c31b5_Next-Level-Ranger-2-3-Sport-4x2-Super-Cab-A.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/15898-next-level-ranger-2.3-sport-4x2-super-cab/images/15898-db6de789-c030-406c-8366-9008a0fad3dd045d4ccd-741e-41b2-9c04-442fb21c31b5_Next-Level-Ranger-2-3-Sport-4x2-Super-Cab-A.webp',
-        linkedVehicle: 'Ranger Super Cab',
+        linkedVehicle: 'Ranger Sport',
         slug: '15898-next-level-ranger-2.3-sport-4x2-super-cab',
         specialOffer: 655900,
         bestSaving: 79100,
+        linkedModel: '23l-super-cab-sport-4x2-10at',
       },
       {
         offerType: 'payment',
@@ -396,9 +399,10 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/17891-ranger-sup-4x2-2.0l-sit-xlt-10at/images/17891-99379bad-7139-4528-92cf-c9bd0ffd526a7e16dbff-1113-403a-8ea2-830d21ea253b_XLT-SUP-CAB.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17891-ranger-sup-4x2-2.0l-sit-xlt-10at/images/17891-99379bad-7139-4528-92cf-c9bd0ffd526a7e16dbff-1113-403a-8ea2-830d21ea253b_XLT-SUP-CAB.webp',
-        linkedVehicle: 'Ranger Super Cab',
+        linkedVehicle: 'Ranger XLT',
         slug: '17891-ranger-sup-4x2-2.0l-sit-xlt-10at',
         paymentFrom: 8099,
+        linkedModel: '20-sit-super-cab-xlt-4x2-10at',
       },
       {
         offerType: 'price-point',
@@ -407,8 +411,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/15887-next-level-ranger-2.0-sit--xlt-4x4-super-cab--auto/images/15887-47c583cf-f9eb-4cde-bf40-39a2588d99105b45d795-4cfa-4b7f-b028-0db092aac718_Next-Level-Ranger-2-0-XLT-4x4-Super-Cab-A.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/15887-next-level-ranger-2.0-sit--xlt-4x4-super-cab--auto/images/15887-47c583cf-f9eb-4cde-bf40-39a2588d99105b45d795-4cfa-4b7f-b028-0db092aac718_Next-Level-Ranger-2-0-XLT-4x4-Super-Cab-A.webp',
-        linkedVehicle: 'Ranger Super Cab',
-        linkedModel: 'ranger-20-sit-supercab-xl-auto',
+        linkedVehicle: 'Ranger XLT',
+        linkedModel: '20-sit-super-cab-xlt-4x4-10at',
         slug: '15887-next-level-ranger-2.0-sit--xlt-4x4-super-cab--auto',
         specialOffer: 669900,
         bestSaving: 61100,
@@ -420,10 +424,11 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/18390-next-level-ranger-2.3-sport-4x2-super-cab-auto/images/18390-52c83fb4-1014-4ad7-9406-03641327a0b77d90b5d3-fdc4-4198-9805-8fb38074a52d_download.png',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/18390-next-level-ranger-2.3-sport-4x2-super-cab-auto/images/18390-52c83fb4-1014-4ad7-9406-03641327a0b77d90b5d3-fdc4-4198-9805-8fb38074a52d_download.png',
-        linkedVehicle: 'Ranger Super Cab',
+        linkedVehicle: 'Ranger Sport',
         slug: '18390-next-level-ranger-2.3-sport-4x2-super-cab-auto',
         specialOffer: 676900,
         bestSaving: 58100,
+        linkedModel: '23l-super-cab-sport-4x2-10at',
       },
       {
         offerType: 'payment',
@@ -432,8 +437,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/17890-ranger-sup-4x4-2.0l-sit-xl-10at/images/17890-c4959e33-62a0-4bb1-a56c-61a06f4cd356e98c7a0e-af6c-4589-a7cb-718d677aade0_Ranger-Super-Cab-XL.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17890-ranger-sup-4x4-2.0l-sit-xl-10at/images/17890-c4959e33-62a0-4bb1-a56c-61a06f4cd356e98c7a0e-af6c-4589-a7cb-718d677aade0_Ranger-Super-Cab-XL.webp',
-        linkedVehicle: 'Ranger Super Cab',
-        linkedModel: 'ranger-20-sit-supercab-xl-auto',
+        linkedVehicle: 'Ranger XL',
+        linkedModel: 'ranger-20l-sit-sup-xl-4x4-10at',
         slug: '17890-ranger-sup-4x4-2.0l-sit-xl-10at',
         paymentFrom: 8799,
       },
@@ -444,8 +449,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/17892-ranger-sup-4x4-2.0l-sit-xlt-10at/images/17892-d72b2fbe-1ceb-47e9-b2a0-026798697cc3e4667126-4748-4555-b007-d5e1f0b7a601_XLT-SUP-CAB.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17892-ranger-sup-4x4-2.0l-sit-xlt-10at/images/17892-d72b2fbe-1ceb-47e9-b2a0-026798697cc3e4667126-4748-4555-b007-d5e1f0b7a601_XLT-SUP-CAB.webp',
-        linkedVehicle: 'Ranger Super Cab',
-        linkedModel: 'ranger-20-sit-supercab-xlt',
+        linkedVehicle: 'Ranger XLT',
+        linkedModel: '20-sit-super-cab-xlt-4x4-10at',
         slug: '17892-ranger-sup-4x4-2.0l-sit-xlt-10at',
         paymentFrom: 9899,
       },
@@ -456,9 +461,10 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/17893-ranger-sup-4x2-2.3l-tc-sport-10at/images/17893-149378ba-27aa-453f-a8f9-403ffc384f766169870d-a9a9-4fc5-a3c5-2f718cbc333c_Sport-Sup-Cab.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17893-ranger-sup-4x2-2.3l-tc-sport-10at/images/17893-149378ba-27aa-453f-a8f9-403ffc384f766169870d-a9a9-4fc5-a3c5-2f718cbc333c_Sport-Sup-Cab.webp',
-        linkedVehicle: 'Ranger Super Cab',
+        linkedVehicle: 'Ranger Sport',
         slug: '17893-ranger-sup-4x2-2.3l-tc-sport-10at',
         paymentFrom: 9899,
+        linkedModel: '23l-super-cab-sport-4x2-10at',
       },
       {
         offerType: 'price-point',
@@ -467,10 +473,11 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/18391-next-level-ranger-3.0-v6-sport-4x4-super-cab-auto/images/18391-da7bdc16-442c-4714-b917-a45240cc19185dd6aa0f-1f90-4dcb-8c7e-2472ee55ecae_download.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/18391-next-level-ranger-3.0-v6-sport-4x4-super-cab-auto/images/18391-da7bdc16-442c-4714-b917-a45240cc19185dd6aa0f-1f90-4dcb-8c7e-2472ee55ecae_download.webp',
-        linkedVehicle: 'Ranger Super Cab',
+        linkedVehicle: 'Ranger Sport',
         slug: '18391-next-level-ranger-3.0-v6-sport-4x4-super-cab-auto',
         specialOffer: 767900,
         bestSaving: 57100,
+        linkedModel: '30td-v6-super-cab-sport-4x4-10at',
       },
       {
         offerType: 'price-point',
@@ -483,6 +490,7 @@ export const DATA: SpecialSeedCategory[] = [
         slug: '18392-next-level-ranger-3.0-v6-wildtrak-4x4-super-cab-auto',
         specialOffer: 784900,
         bestSaving: 80100,
+        linkedModel: 'ford-ranger-20-biturbo-supercab-wildtrak-4x4',
       },
       {
         offerType: 'payment',
@@ -491,9 +499,10 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/17894-ranger-sup-4wd-3.0l-v6-sport-10at/images/17894-66e4bd61-b520-4ebc-8deb-b9792eb87cf06ff690ab-58fa-4679-8dcc-26d406ccd234_Wildtrak-Sup-Cab.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17894-ranger-sup-4wd-3.0l-v6-sport-10at/images/17894-66e4bd61-b520-4ebc-8deb-b9792eb87cf06ff690ab-58fa-4679-8dcc-26d406ccd234_Wildtrak-Sup-Cab.webp',
-        linkedVehicle: 'Ranger Super Cab',
+        linkedVehicle: 'Ranger Sport',
         slug: '17894-ranger-sup-4wd-3.0l-v6-sport-10at',
         paymentFrom: 11199,
+        linkedModel: '30td-v6-super-cab-sport-4x4-10at',
       },
       {
         offerType: 'payment',
@@ -505,6 +514,7 @@ export const DATA: SpecialSeedCategory[] = [
         linkedVehicle: 'Ranger Super Cab',
         slug: '17895-ranger-sup-4wd-3.0l-v6-wildtrak-10at',
         paymentFrom: 11299,
+        linkedModel: 'ford-ranger-20-biturbo-supercab-wildtrak-4x4',
       },
     ],
   },
@@ -531,8 +541,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/15877-next-level-ranger-2.0-xl-4x4-single-cab-auto/images/15877-298df42a-1ad9-46b4-9f0b-dab8289dbb5968f11431-c206-4563-86b3-bc6468313f1c_Next-Level-Ranger-2-0-XL-4x4-Single-Cab-A.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/15877-next-level-ranger-2.0-xl-4x4-single-cab-auto/images/15877-298df42a-1ad9-46b4-9f0b-dab8289dbb5968f11431-c206-4563-86b3-bc6468313f1c_Next-Level-Ranger-2-0-XL-4x4-Single-Cab-A.webp',
-        linkedVehicle: 'Ranger Single Cab',
-        linkedModel: 'ranger-20-sit-single-cab-xl-4x2-auto',
+        linkedVehicle: 'Ranger XL',
+        linkedModel: 'ranger-20l-sit-sc-xl-4x4-10at',
         slug: '15877-next-level-ranger-2.0-xl-4x4-single-cab-auto',
         specialOffer: 579900,
         bestSaving: 86100,
@@ -544,8 +554,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/17886-ranger-sc-4x2-2.0l-sit-xl-10at/images/17886-beaef745-9cbf-49f9-90b9-ba4df68c528bb0a5835c-1be7-4cde-a906-ae76e1a3fed8_Ranger-Single-Cab.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17886-ranger-sc-4x2-2.0l-sit-xl-10at/images/17886-beaef745-9cbf-49f9-90b9-ba4df68c528bb0a5835c-1be7-4cde-a906-ae76e1a3fed8_Ranger-Single-Cab.webp',
-        linkedVehicle: 'Ranger Single Cab',
-        linkedModel: 'ranger-20-sit-single-cab-xl-4x2-auto',
+        linkedVehicle: 'Ranger XL',
+        linkedModel: 'ranger-20l-sit-sc-xl-4x2-10at',
         slug: '17886-ranger-sc-4x2-2.0l-sit-xl-10at',
         paymentFrom: 7799,
       },
@@ -556,8 +566,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/17887-ranger-sc-4x4-2.0l-sit-xl-6mt/images/17887-fab0a3f9-c4e5-4e86-b86c-047a5bba64e1d6f7a374-8882-4a98-b18d-283b82518cf3_Ranger-Single-Cab.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17887-ranger-sc-4x4-2.0l-sit-xl-6mt/images/17887-fab0a3f9-c4e5-4e86-b86c-047a5bba64e1d6f7a374-8882-4a98-b18d-283b82518cf3_Ranger-Single-Cab.webp',
-        linkedVehicle: 'Ranger Single Cab',
-        linkedModel: '20-sit-single-cab-xl-4x4-manual',
+        linkedVehicle: 'Ranger XL',
+        linkedModel: 'ranger-20l-sit-sc-xl-4x4-6mt',
         slug: '17887-ranger-sc-4x4-2.0l-sit-xl-6mt',
         paymentFrom: 8599,
       },
@@ -568,8 +578,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/17888-ranger-sc-4x4-2.0l-sit-xl-10at/images/17888-1993e9ed-e9ec-4623-8590-cf5dd13e93f23be9dece-fd5c-443b-98df-67f4796fb9ee_Ranger-Single-Cab.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17888-ranger-sc-4x4-2.0l-sit-xl-10at/images/17888-1993e9ed-e9ec-4623-8590-cf5dd13e93f23be9dece-fd5c-443b-98df-67f4796fb9ee_Ranger-Single-Cab.webp',
-        linkedVehicle: 'Ranger Single Cab',
-        linkedModel: 'ranger-20-sit-supercab-xl-4x4',
+        linkedVehicle: 'Ranger XL',
+        linkedModel: 'ranger-20l-sit-sc-xl-4x4-10at',
         slug: '17888-ranger-sc-4x4-2.0l-sit-xl-10at',
         paymentFrom: 8899,
       },
@@ -691,7 +701,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17883-everest-2.0-sit-active-4x4-auto/images/17883-06b6735c-b570-4ebf-9314-8787c9f9dc8475ddc090-d794-4f47-9521-7f8a06d7c755_active-arctic-white-01.webp',
         linkedVehicle: 'Next Level Everest',
-        linkedModel: '20-sit-active-4x2-10at',
+        linkedModel: '20-sit-active-4x4-10at',
         slug: '17883-everest-2.0-sit-active-4x4-auto',
         specialOffer: 834900,
         bestSaving: 40100,
@@ -704,7 +714,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/18385-everest-2.0l-sit-active-10at-4x4/images/18385-bc48f800-d7e3-4f46-9115-59b163f1761e58ef278a-5f34-4611-bc34-cd24fcee8bf4_847a2cfe-9c1f-4b98-95c5-955281fe9262.webp',
         linkedVehicle: 'Next Level Everest',
-        linkedModel: '20-sit-active-4x2-10at',
+        linkedModel: '20-sit-active-4x4-10at',
         slug: '18385-everest-2.0l-sit-active-10at-4x4',
         paymentFrom: 11899,
       },
@@ -795,8 +805,8 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/12651-ranger-3.0-v6-petrol-raptor/images/12651-7ccbf218-831b-4029-9cdc-75ae3737337cbd893d7b-5756-4c74-9436-f68beb58cd7a_Ranger-Raptor-700x340-.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/12651-ranger-3.0-v6-petrol-raptor/images/12651-7ccbf218-831b-4029-9cdc-75ae3737337cbd893d7b-5756-4c74-9436-f68beb58cd7a_Ranger-Raptor-700x340-.webp',
-        linkedVehicle: 'Next Level Ranger',
-        linkedModel: '30l-v6-tt-double-cab-raptor-4x4-10at',
+        linkedVehicle: 'Ranger Raptor',
+        linkedModel: 'ranger-30t-v6-double-cab-raptor-4wd',
         slug: '12651-ranger-3.0-v6-petrol-raptor',
         specialOffer: 1239900,
         bestSaving: 67400,
@@ -808,7 +818,7 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/17908-ranger-3.0l-v6-ecoboost-raptor-4wd-10at/images/17908-6267a5f1-d1e3-429f-bf64-dea781c093dc830b8391-0bb2-4e2e-84ee-7c8b00922fb5_26MY_IMG_JB_P703_RANRAP_RPTR_DOUBLECAB_ARCWHI_ANGLE21_RHD_4X4.png',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17908-ranger-3.0l-v6-ecoboost-raptor-4wd-10at/images/17908-6267a5f1-d1e3-429f-bf64-dea781c093dc830b8391-0bb2-4e2e-84ee-7c8b00922fb5_26MY_IMG_JB_P703_RANRAP_RPTR_DOUBLECAB_ARCWHI_ANGLE21_RHD_4X4.png',
-        linkedVehicle: 'Next Level Ranger',
+        linkedVehicle: 'Ranger Raptor',
         linkedModel: '30l-v6-tt-double-cab-raptor-4x4-10at',
         slug: '17908-ranger-3.0l-v6-ecoboost-raptor-4wd-10at',
         paymentFrom: 19399,
@@ -838,7 +848,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17862-mustang-dark-horse/images/17862-5bbe1ab8-cae6-4067-8954-85e9ffcab6daa5dac075-4205-4e99-8df0-76e620b6ffcb_download.webp',
         linkedVehicle: 'Mustang Dark Horse',
-        linkedModel: 'MUSTANG 5.0L V8 DARK HORSE 10AT',
+        linkedModel: 'mustang-50l-v8-dark-horse-10at',
         slug: '17862-mustang-dark-horse',
         specialOffer: 1399900,
         bestSaving: 145100,
@@ -851,7 +861,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/12779-mustang-dark-horse-10at/images/12779-bf2cc23a-a3a3-49a0-b466-6a04e95577188e6e0094-53c0-4ece-b04b-0f750a8da416_Mustang-Dark-Horse-700x340-.webp',
         linkedVehicle: 'Mustang Dark Horse',
-        linkedModel: 'MUSTANG 5.0L V8 DARK HORSE 10AT',
+        linkedModel: 'mustang-50l-v8-dark-horse-10at',
         slug: '12779-mustang-dark-horse-10at',
         paymentFrom: 22999,
       },
@@ -885,9 +895,10 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/16395-tourneo-2.0-trend-auto/images/16395-13b92216-3753-48cb-8b97-c47e64af5c42649883be-9049-42cc-8cbd-3d9ef4a2f1e6_Tourneo-Custom-700x340-.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/16395-tourneo-2.0-trend-auto/images/16395-13b92216-3753-48cb-8b97-c47e64af5c42649883be-9049-42cc-8cbd-3d9ef4a2f1e6_Tourneo-Custom-700x340-.webp',
-        linkedVehicle: 'new-tourneo-custom',
+        linkedVehicle: 'New Tourneo Custom',
         slug: '16395-tourneo-2.0-trend-auto',
         linkedModel: 'tourneo-trend',
+
         specialOffer: 969900,
         bestSaving: 152050,
       },
@@ -898,7 +909,7 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/16394-tourneo-active-lwb-bus-auto/images/16394-b736f56e-6dd8-478a-862d-0febcd45c299898bb4c6-e2cd-42b1-ba86-5b4348f1ea7e_Tourneo-700x340-.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/16394-tourneo-active-lwb-bus-auto/images/16394-b736f56e-6dd8-478a-862d-0febcd45c299898bb4c6-e2cd-42b1-ba86-5b4348f1ea7e_Tourneo-700x340-.webp',
-        linkedVehicle: 'new-tourneo-custom',
+        linkedVehicle: 'New Tourneo Custom',
         slug: '16394-tourneo-active-lwb-bus-auto',
         specialOffer: 1015900,
         bestSaving: 64050,
@@ -910,7 +921,7 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/14774-tourneo-custom-2.0l-lwb-bus-trend-8at/images/14774-853c01b9-14aa-450b-8fd2-4cafee8b19eaf128bd06-1454-4dc3-a470-9198296ed96a_Tourneo-Custom-700x340-.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/14774-tourneo-custom-2.0l-lwb-bus-trend-8at/images/14774-853c01b9-14aa-450b-8fd2-4cafee8b19eaf128bd06-1454-4dc3-a470-9198296ed96a_Tourneo-Custom-700x340-.webp',
-        linkedVehicle: 'new-tourneo-custom',
+        linkedVehicle: 'New Tourneo Custom',
         linkedModel: 'tourneo-trend',
         slug: '14774-tourneo-custom-2.0l-lwb-bus-trend-8at',
         paymentFrom: 14599,
@@ -922,7 +933,7 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/16397-tourneo-2.0-sport-auto/images/16397-6daca8a8-7f64-4218-8fc8-2b8aeaed8e69ab3d6dcd-1d7c-4c9a-a7b1-ea9b88fbee56_Transit-Custom-700x340---1-.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/16397-tourneo-2.0-sport-auto/images/16397-6daca8a8-7f64-4218-8fc8-2b8aeaed8e69ab3d6dcd-1d7c-4c9a-a7b1-ea9b88fbee56_Transit-Custom-700x340---1-.webp',
-        linkedVehicle: 'new-tourneo-custom',
+        linkedVehicle: 'New Tourneo Custom',
         linkedModel: 'tourneo-sport',
         slug: '16397-tourneo-2.0-sport-auto',
         specialOffer: 1125000,
@@ -935,7 +946,7 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/12806-tourneo-custom-2.0l-swb-bus-sport-8at/images/12806-0cb0aa79-e538-4443-a26b-22d5d01728fd48fe7831-576e-4d47-8313-92297b840dd0_download.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/12806-tourneo-custom-2.0l-swb-bus-sport-8at/images/12806-0cb0aa79-e538-4443-a26b-22d5d01728fd48fe7831-576e-4d47-8313-92297b840dd0_download.webp',
-        linkedVehicle: 'new-tourneo-custom',
+        linkedVehicle: 'New Tourneo Custom',
         linkedModel: 'tourneo-sport',
         slug: '12806-tourneo-custom-2.0l-swb-bus-sport-8at',
         paymentFrom: 18299,
@@ -947,7 +958,7 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/16396-tourneo-titanium-x-auto/images/16396-77b0802c-2314-4fc7-9289-8eae4246f04e8c94cea6-5dc6-4d7f-864d-712aa30be344_Tourneo-700x340---1-.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/16396-tourneo-titanium-x-auto/images/16396-77b0802c-2314-4fc7-9289-8eae4246f04e8c94cea6-5dc6-4d7f-864d-712aa30be344_Tourneo-700x340---1-.webp',
-        linkedVehicle: 'new-tourneo-custom',
+        linkedVehicle: 'New Tourneo Custom',
         linkedModel: 'tourneo-titanium-x',
         slug: '16396-tourneo-titanium-x-auto',
         specialOffer: 1210900,
@@ -960,7 +971,7 @@ export const DATA: SpecialSeedCategory[] = [
           'https://www.eagleford.co.za/specials/14775-tourneo-custom-2.0l-swb-titanium-x-8at/images/14775-68384505-2f7b-4e99-9f11-a79407bf1aeaf66405f1-7757-431c-a4dc-12102d40302b_Tourneo-700x340---1-.webp',
         detailImageUrl:
           'https://www.eagleford.co.za/specials/14775-tourneo-custom-2.0l-swb-titanium-x-8at/images/14775-68384505-2f7b-4e99-9f11-a79407bf1aeaf66405f1-7757-431c-a4dc-12102d40302b_Tourneo-700x340---1-.webp',
-        linkedVehicle: 'new-tourneo-custom',
+        linkedVehicle: 'New Tourneo Custom',
         linkedModel: 'tourneo-titanium-x',
         slug: '14775-tourneo-custom-2.0l-swb-titanium-x-8at',
         paymentFrom: 18999,

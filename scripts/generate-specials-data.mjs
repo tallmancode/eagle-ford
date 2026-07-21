@@ -229,8 +229,8 @@ function bestVariant(vehicle, subTitle, specialSlug) {
     if (!best || score > best.score) best = { slug: variant.slug, name: variant.name, score }
   }
   if (!best || best.score < 0.45) return null
-  // Prefer CMS-style slug for seed linkedModel
-  return best.slug
+  // CMS slug style used in seed linkedModel (dots stripped)
+  return best.slug.replace(/\./g, '')
 }
 
 function matchCatalogNames(title, labelOverride, slug) {

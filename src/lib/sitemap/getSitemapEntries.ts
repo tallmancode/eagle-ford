@@ -97,17 +97,23 @@ const getCachedSitemapEntries = unstable_cache(
       )
 
     const vehicleModelEntries = vehicleModels.docs.flatMap((model) => {
-      const vehicle = model.vehicle
-      if (!vehicle || typeof vehicle === 'string' || !vehicle.slug || !model.slug) {
-        return []
-      }
+      if (!model.slug) return []
 
-      return [
-        toSitemapEntry(
-          `${siteUrl}${getVehicleModelPath(vehicle.slug, model.slug)}`,
-          model.updatedAt ?? dateFallback,
-        ),
-      ]
+      const parents = Array.isArray(model.vehicle)
+        ? model.vehicle
+        : model.vehicle
+          ? [model.vehicle]
+          : []
+
+      return parents.flatMap((vehicle) => {
+        if (!vehicle || typeof vehicle === 'string' || !vehicle.slug) return []
+        return [
+          toSitemapEntry(
+            `${siteUrl}${getVehicleModelPath(vehicle.slug, model.slug!)}`,
+            model.updatedAt ?? dateFallback,
+          ),
+        ]
+      })
     })
 
     const specialCategoryEntries = specialCategories.docs

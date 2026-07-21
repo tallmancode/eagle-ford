@@ -30,11 +30,18 @@ export async function generateStaticParams() {
   })
 
   return models.docs.flatMap((model) => {
-    const vehicle = model.vehicle
-    if (!vehicle || typeof vehicle === 'string' || !vehicle.slug || !model.slug) {
-      return []
-    }
-    return [{ slug: vehicle.slug, modelSlug: model.slug }]
+    if (!model.slug) return []
+
+    const parents = Array.isArray(model.vehicle)
+      ? model.vehicle
+      : model.vehicle
+        ? [model.vehicle]
+        : []
+
+    return parents.flatMap((vehicle) => {
+      if (!vehicle || typeof vehicle === 'string' || !vehicle.slug) return []
+      return [{ slug: vehicle.slug, modelSlug: model.slug! }]
+    })
   })
 }
 

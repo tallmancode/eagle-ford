@@ -5,25 +5,57 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import type { Vehicle, VehicleModel } from '@/payload-types'
 import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
 
-async function resolveParentVehicleSlug(
+type ParentRef = NonNullable<VehicleModel['vehicle']>[number]
+
+function asParentList(vehicle: VehicleModel['vehicle']): ParentRef[] {
+  if (!vehicle) return []
+  return Array.isArray(vehicle) ? vehicle : [vehicle as ParentRef]
+}
+
+async function resolveParentVehicleSlugs(
   vehicle: VehicleModel['vehicle'],
   payload: Parameters<CollectionAfterChangeHook<VehicleModel>>[0]['req']['payload'],
-): Promise<string | null> {
-  if (!vehicle) return null
-  if (typeof vehicle === 'object' && vehicle.slug) return vehicle.slug
+): Promise<string[]> {
+  const parents = asParentList(vehicle)
+  const slugs: string[] = []
 
-  const vehicleId = typeof vehicle === 'object' ? vehicle.id : vehicle
-  try {
-    const parent = (await payload.findByID({
-      collection: 'vehicles',
-      id: vehicleId,
-      depth: 0,
-      overrideAccess: false,
-      select: { slug: true },
-    })) as Pick<Vehicle, 'slug'> | null
-    return parent?.slug ?? null
-  } catch {
-    return null
+  for (const parent of parents) {
+    if (typeof parent === 'object' && parent?.slug) {
+      slugs.push(parent.slug)
+      continue
+    }
+
+    const vehicleId = typeof parent === 'object' ? parent.id : parent
+    if (!vehicleId) continue
+
+    try {
+      const doc = (await payload.findByID({
+        collection: 'vehicles',
+        id: vehicleId,
+        depth: 0,
+        overrideAccess: false,
+        select: { slug: true },
+      })) as Pick<Vehicle, 'slug'> | null
+      if (doc?.slug) slugs.push(doc.slug)
+    } catch {
+      // Parent may have been deleted
+    }
+  }
+
+  return [...new Set(slugs)]
+}
+
+function revalidateParentPaths(
+  parentSlugs: string[],
+  modelSlug: string,
+  payload: Parameters<CollectionAfterChangeHook<VehicleModel>>[0]['req']['payload'],
+  logPrefix: string,
+) {
+  for (const parentSlug of parentSlugs) {
+    const path = getVehicleModelPath(parentSlug, modelSlug)
+    payload.logger.info(`${logPrefix}: ${path}`)
+    revalidatePath(path)
+    revalidatePath(`/vehicles/${parentSlug}`)
   }
 }
 
@@ -34,13 +66,8 @@ export const revalidateVehicleModel: CollectionAfterChangeHook<VehicleModel> = a
 }) => {
   if (!context.disableRevalidate) {
     if (doc._status === 'published' && doc.slug) {
-      const parentSlug = await resolveParentVehicleSlug(doc.vehicle, payload)
-      if (parentSlug) {
-        const path = getVehicleModelPath(parentSlug, doc.slug)
-        payload.logger.info(`Revalidating vehicle model at path: ${path}`)
-        revalidatePath(path)
-        revalidatePath(`/vehicles/${parentSlug}`)
-      }
+      const parentSlugs = await resolveParentVehicleSlugs(doc.vehicle, payload)
+      revalidateParentPaths(parentSlugs, doc.slug, payload, 'Revalidating vehicle model at path')
 
       revalidateTag('vehicle-models', 'max')
       revalidateTag('vehicles', 'max')
@@ -48,12 +75,17 @@ export const revalidateVehicleModel: CollectionAfterChangeHook<VehicleModel> = a
     }
 
     if (previousDoc?._status === 'published' && doc._status !== 'published') {
-      const parentSlug = await resolveParentVehicleSlug(previousDoc.vehicle ?? doc.vehicle, payload)
-      if (parentSlug && previousDoc.slug) {
-        const path = getVehicleModelPath(parentSlug, previousDoc.slug)
-        payload.logger.info(`Revalidating previously published vehicle model: ${path}`)
-        revalidatePath(path)
-        revalidatePath(`/vehicles/${parentSlug}`)
+      const parentSlugs = await resolveParentVehicleSlugs(
+        previousDoc.vehicle ?? doc.vehicle,
+        payload,
+      )
+      if (previousDoc.slug) {
+        revalidateParentPaths(
+          parentSlugs,
+          previousDoc.slug,
+          payload,
+          'Revalidating previously published vehicle model',
+        )
       }
 
       revalidateTag('vehicle-models', 'max')
@@ -67,8 +99,8 @@ export const revalidateVehicleModel: CollectionAfterChangeHook<VehicleModel> = a
       doc.slug &&
       previousDoc.slug !== doc.slug
     ) {
-      const parentSlug = await resolveParentVehicleSlug(doc.vehicle, payload)
-      if (parentSlug) {
+      const parentSlugs = await resolveParentVehicleSlugs(doc.vehicle, payload)
+      for (const parentSlug of parentSlugs) {
         revalidatePath(getVehicleModelPath(parentSlug, previousDoc.slug))
       }
     }
@@ -82,10 +114,9 @@ export const revalidateVehicleModelDelete: CollectionAfterDeleteHook<VehicleMode
   req: { payload, context },
 }) => {
   if (!context.disableRevalidate) {
-    const parentSlug = await resolveParentVehicleSlug(doc?.vehicle, payload)
-    if (parentSlug && doc?.slug) {
-      revalidatePath(getVehicleModelPath(parentSlug, doc.slug))
-      revalidatePath(`/vehicles/${parentSlug}`)
+    const parentSlugs = await resolveParentVehicleSlugs(doc?.vehicle, payload)
+    if (doc?.slug) {
+      revalidateParentPaths(parentSlugs, doc.slug, payload, 'Revalidating deleted vehicle model')
     }
 
     revalidateTag('vehicle-models', 'max')

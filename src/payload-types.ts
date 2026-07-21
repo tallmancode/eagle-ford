@@ -2539,6 +2539,10 @@ export interface Vehicle {
     metaImage?: (string | null) | Media;
   };
   /**
+   * When enabled, this vehicle appears in the New vehicles mega menu.
+   */
+  showInMegaMenu?: boolean | null;
+  /**
    * Lower numbers appear first.
    */
   sortOrder?: number | null;
@@ -2618,9 +2622,9 @@ export interface VehicleModel {
    */
   name: string;
   /**
-   * The parent vehicle this model belongs to.
+   * Parent vehicle families this model belongs to.
    */
-  vehicle: string | Vehicle;
+  vehicle: (string | Vehicle)[];
   /**
    * Specific price for this model variant, e.g. 621000 for R 621,000.
    */
@@ -3366,6 +3370,7 @@ export interface VehiclesSelect<T extends boolean = true> {
         metaDescription?: T;
         metaImage?: T;
       };
+  showInMegaMenu?: T;
   sortOrder?: T;
   template?: T;
   modelTemplate?: T;
