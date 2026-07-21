@@ -10,15 +10,18 @@ import { SpecialsTabs } from '@/components/specials/SpecialsTabs'
 import { CRAWLER_BLOCK_ROBOTS } from '@/constants/crawlerPolicy'
 import { DEFAULT_OG_IMAGE_PATH, formatPageTitle } from '@/constants/site'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
+import { getFinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-block/getFinanceCalculatorDefaults'
 import { getOfferTypeLabel } from '@/lib/specials/constants'
 import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getSpecialCategoryPath } from '@/lib/specials/paths'
+import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import { getPagePath } from '@/lib/utils/getPagePath'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
 import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
 import type {
   Form,
   Media,
+  Setting,
   Special,
   SpecialCategory,
   SpecialTemplate,
@@ -244,11 +247,14 @@ export default async function SpecialCategoryPage({
     }
   })
 
-  const [vehicle, vehicleModel, fordPromiseHref] = await Promise.all([
+  const [vehicle, vehicleModel, fordPromiseHref, settings] = await Promise.all([
     selectedSpecial ? resolveVehicle(selectedSpecial.vehicle) : Promise.resolve(null),
     selectedSpecial ? resolveVehicleModel(selectedSpecial.vehicleModel) : Promise.resolve(null),
     resolveFordPromiseHref(category.fordPromisePage),
+    getCachedGlobal('settings', 1) as Promise<Setting>,
   ])
+
+  const calculatorDefaults = getFinanceCalculatorDefaults(settings)
 
   const selectedDisplayTitle = selectedSpecial ? getSpecialDisplayTitle(selectedSpecial) : ''
 
@@ -283,13 +289,15 @@ export default async function SpecialCategoryPage({
             fordPromiseHref={fordPromiseHref}
             specials={specialsWithForms}
             initialSpecialSlug={initialSpecialSlug}
+            calculatorDefaults={calculatorDefaults}
+            offerDetails={
+              useSpecialContent && specialContentSections ? (
+                <RenderBlocks blocks={specialContentSections} meta={blockMeta} />
+              ) : null
+            }
           />
         </div>
       </section>
-
-      {useSpecialContent && specialContentSections && (
-        <RenderBlocks blocks={specialContentSections} meta={blockMeta} />
-      )}
 
       {useTemplate && templateSections && (
         <RenderBlocks blocks={templateSections} meta={blockMeta} />

@@ -28,8 +28,10 @@ import {
   DEFAULT_DEPOSIT_PERCENT,
   DEFAULT_INTEREST_RATE,
   DEFAULT_PAYMENT_TERM,
+  MAX_BALLOON_PERCENT,
   type CalculatorTab,
 } from '@/lib/blocks/finance-calculator-block/financeCalculatorOptions'
+import type { FinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-block/getFinanceCalculatorDefaults'
 import { formatCalculatorPrice } from '@/lib/blocks/finance-calculator-block/formatCalculatorPrice'
 import {
   formatCalculatorDecimal,
@@ -44,6 +46,7 @@ type FinanceCalculatorClientProps = {
   disclaimer?: string | null
   defaultPurchasePrice?: number | null
   mode?: FinanceCalculatorMode
+  defaults?: FinanceCalculatorDefaults | null
 }
 
 type CalculatorFormState = {
@@ -65,16 +68,65 @@ function getInitialVehiclePrice(defaultPurchasePrice?: number | null): string {
   return ''
 }
 
-function createInitialFormState(defaultPurchasePrice?: number | null): CalculatorFormState {
+function clampBalloonInput(value: string): string {
+  const trimmed = value.trim()
+  if (!trimmed) {
+    return value
+  }
+
+  const parsed = parseCalculatorNumber(value)
+  if (!Number.isFinite(parsed)) {
+    return value
+  }
+
+  if (parsed > MAX_BALLOON_PERCENT) {
+    return formatCalculatorDecimal(MAX_BALLOON_PERCENT, 2)
+  }
+
+  if (parsed < 0) {
+    return '0'
+  }
+
+  return value
+}
+
+function createInitialFormState(
+  defaultPurchasePrice?: number | null,
+  defaults?: FinanceCalculatorDefaults | null,
+): CalculatorFormState {
+  const vehiclePrice = getInitialVehiclePrice(defaultPurchasePrice)
+  const purchasePrice = parseCalculatorNumber(vehiclePrice)
+
+  const depositAmountValue = defaults?.depositAmount ?? 0
+  const hasDepositAmount = depositAmountValue > 0
+  const interestRate =
+    defaults != null ? formatCalculatorDecimal(defaults.interestRate, 2) : DEFAULT_INTEREST_RATE
+  const balloonPercent =
+    defaults != null
+      ? formatCalculatorDecimal(
+          Math.min(MAX_BALLOON_PERCENT, Math.max(0, defaults.balloonPayment)),
+          defaults.balloonPayment % 1 === 0 ? 0 : 2,
+        )
+      : DEFAULT_BALLOON_PERCENT
+  const paymentTerm = defaults?.repaymentPeriod ?? DEFAULT_PAYMENT_TERM
+
+  const depositAmount = hasDepositAmount ? formatCalculatorInteger(depositAmountValue) : '0'
+  let depositPercent = DEFAULT_DEPOSIT_PERCENT
+  const depositMode: DepositMode = hasDepositAmount ? 'amount' : 'percent'
+
+  if (hasDepositAmount && Number.isFinite(purchasePrice) && purchasePrice > 0) {
+    depositPercent = formatCalculatorDecimal((depositAmountValue / purchasePrice) * 100, 2)
+  }
+
   return {
-    vehiclePrice: getInitialVehiclePrice(defaultPurchasePrice),
+    vehiclePrice,
     monthlyInstallment: '',
-    depositAmount: '0',
-    depositPercent: DEFAULT_DEPOSIT_PERCENT,
-    depositMode: 'percent',
-    interestRate: DEFAULT_INTEREST_RATE,
-    balloonPercent: DEFAULT_BALLOON_PERCENT,
-    paymentTerm: DEFAULT_PAYMENT_TERM,
+    depositAmount,
+    depositPercent,
+    depositMode,
+    interestRate,
+    balloonPercent,
+    paymentTerm,
   }
 }
 
@@ -95,12 +147,13 @@ export function FinanceCalculatorClient({
   disclaimer,
   defaultPurchasePrice,
   mode = 'full',
+  defaults,
 }: FinanceCalculatorClientProps) {
   const isRepaymentOnly = mode === 'repaymentOnly'
 
   const initialFormState = useMemo(
-    () => createInitialFormState(defaultPurchasePrice),
-    [defaultPurchasePrice],
+    () => createInitialFormState(defaultPurchasePrice, defaults),
+    [defaultPurchasePrice, defaults],
   )
 
   const [activeTab, setActiveTab] = useState<CalculatorTab>('monthlyInstallments')
@@ -148,6 +201,10 @@ export function FinanceCalculatorClient({
     }
 
     updateFormState(nextState)
+  }
+
+  const handleBalloonPercentChange = (value: string) => {
+    updateFormState({ balloonPercent: clampBalloonInput(value) })
   }
 
   const handleCalculate = () => {
@@ -281,7 +338,7 @@ export function FinanceCalculatorClient({
               id="balloonPercent"
               label="Balloon Payment %"
               value={formState.balloonPercent}
-              onChange={(value) => updateFormState({ balloonPercent: value })}
+              onChange={handleBalloonPercentChange}
               inputMode="decimal"
               trailing={
                 <button
