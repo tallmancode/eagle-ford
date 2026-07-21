@@ -18,7 +18,7 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
     update: isAuthenticated,
   },
   admin: {
-    defaultColumns: ['title', 'category', 'offerType', 'updatedAt'],
+    defaultColumns: ['title', 'category', 'offerType', 'updatedAt', 'vehicle', 'vehicleModel'],
     useAsTitle: 'title',
     group: 'Content',
   },
