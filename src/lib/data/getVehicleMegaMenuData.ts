@@ -33,6 +33,11 @@ async function fetchVehicleMegaMenuData(): Promise<VehicleMegaMenuData> {
       draft: false,
       overrideAccess: false,
       pagination: false,
+      where: {
+        showInMegaMenu: {
+          not_equals: false,
+        },
+      },
       select: {
         id: true,
         name: true,
@@ -43,6 +48,7 @@ async function fetchVehicleMegaMenuData(): Promise<VehicleMegaMenuData> {
         startingPrice: true,
         priceDisclaimer: true,
         category: true,
+        showInMegaMenu: true,
       },
     }),
     payload.find({
@@ -72,6 +78,8 @@ async function fetchVehicleMegaMenuData(): Promise<VehicleMegaMenuData> {
     slug: cat.slug,
   }))
 
+  const megaMenuVehicleIds = new Set(vehiclesResult.docs.map((vehicle) => vehicle.id))
+
   const vehicleItems: VehicleMegaMenuItem[] = []
 
   for (const vehicle of vehiclesResult.docs) {
@@ -93,23 +101,33 @@ async function fetchVehicleMegaMenuData(): Promise<VehicleMegaMenuData> {
   const modelItems: VehicleMegaMenuItem[] = []
 
   for (const model of modelsResult.docs) {
-    const vehicle = model.vehicle as Vehicle | null
-    if (!vehicle || typeof vehicle === 'string') continue
+    const parents = Array.isArray(model.vehicle)
+      ? model.vehicle
+      : model.vehicle
+        ? [model.vehicle]
+        : []
 
-    const category = vehicle.category as VehicleCategory | null
-    if (!category || typeof category === 'string') continue
+    for (const parent of parents) {
+      const vehicle = parent as Vehicle | null
+      if (!vehicle || typeof vehicle === 'string') continue
+      if (!megaMenuVehicleIds.has(vehicle.id)) continue
+      if (vehicle.showInMegaMenu === false) continue
 
-    modelItems.push({
-      id: model.id,
-      name: model.name,
-      slug: vehicle.slug,
-      modelSlug: model.slug,
-      featureImage: getModelCardImage(model, vehicle),
-      startingPrice: model.price ?? null,
-      priceDisclaimer: vehicle.priceDisclaimer ?? null,
-      categorySlug: category.slug,
-      categoryTitle: category.title,
-    })
+      const category = vehicle.category as VehicleCategory | null
+      if (!category || typeof category === 'string') continue
+
+      modelItems.push({
+        id: `${model.id}:${vehicle.id}`,
+        name: model.name,
+        slug: vehicle.slug,
+        modelSlug: model.slug,
+        featureImage: getModelCardImage(model, vehicle),
+        startingPrice: model.price ?? null,
+        priceDisclaimer: vehicle.priceDisclaimer ?? null,
+        categorySlug: category.slug,
+        categoryTitle: category.title,
+      })
+    }
   }
 
   const categoriesWithVehicles = categories.filter((cat) =>

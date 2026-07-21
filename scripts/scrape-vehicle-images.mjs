@@ -62,6 +62,71 @@ const VEHICLES = [
     ],
   },
   {
+    slug: 'ranger-sport',
+    url: `${BASE}/new/ranger-sport/`,
+    variantSlugs: [
+      '2.3l-double-cab-sport-4x2-10at',
+      '2.3l-super-cab-sport-4x2-10at',
+      '3.0l-v6td-double-cab-sport-4x4-10at',
+      '3.0td-v6-super-cab-sport-4x4-10at',
+    ],
+  },
+  {
+    slug: 'ranger-platinum',
+    url: `${BASE}/new/ranger-platinum/`,
+    variantSlugs: [
+      '3.0td-v6-ranger-double-cab-platinum-4x4-10at',
+      '3.0l-v6-double-cab-platinum-4x4-10at',
+    ],
+  },
+  {
+    slug: 'ranger-tremor',
+    url: `${BASE}/new/ranger-tremor/`,
+    variantSlugs: ['ford-ranger-tremor', '3.0l-v6-double-cab-tremor-4x4-10at'],
+  },
+  {
+    slug: 'ranger-raptor',
+    url: `${BASE}/new/ranger-raptor/`,
+    variantSlugs: ['ranger-3.0t-v6-double-cab-raptor-4wd', '3.0l-v6-tt-double-cab-raptor-4x4-10at'],
+  },
+  {
+    slug: 'ranger-wildtrak',
+    url: `${BASE}/new/ranger-wildtrak/`,
+    variantSlugs: [
+      '2.0-biturbo-double-cab-wildtrak-4x2-10at',
+      '2.0-biturbo-double-cab-wildtrak-4x4-10at',
+      '2.3l-double-cab-wildtrak-4x2-10at',
+      '3.0td-v6-double-cab-wildtrak-4x4-10at',
+      '3.0l-v6-double-cab-wildtrak-4x4-10at',
+    ],
+  },
+  {
+    slug: 'ranger-wildtrak-x',
+    url: `${BASE}/new/ranger-wildtrak-x/`,
+    variantSlugs: ['2.0-biturbo-double-cab-wildtrak-x-4wd-10at'],
+  },
+  {
+    slug: 'ranger-xl',
+    url: `${BASE}/new/ranger-xl/`,
+    variantSlugs: [
+      'ranger-2.0l-sit-sc-xl-4x2-10at',
+      'ranger-2.0l-sit-sc-xl-4x4-10at',
+      'ranger-2.0l-sit-sc-xl-4x4-6mt',
+      'ranger-2.0l-sit-sup-xl-4x2-10at',
+      'ranger-2.0l-sit-sup-xl-4x4-10at',
+    ],
+  },
+  {
+    slug: 'ranger-xlt',
+    url: `${BASE}/new/ranger-xlt/`,
+    variantSlugs: [
+      '2.0-sit-double-cab-xlt-4x2-10at',
+      '2.0-sit-double-cab-xlt-4x4-10at',
+      '2.0-sit-super-cab-xlt-4x2-10at',
+      '2.0-sit-super-cab-xlt-4x4-10at',
+    ],
+  },
+  {
     slug: 'next-level-everest',
     url: `${BASE}/new/next-level-everest/`,
     variantSlugs: [

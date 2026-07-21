@@ -996,6 +996,1253 @@ const VEHICLE_DATA: VehicleDef[] = [
       },
     ],
   },
+  {
+    name: 'Ranger Sport',
+    slug: 'ranger-sport',
+    categorySlug: 'bakkies',
+    startingPrice: 735000,
+    description:
+      'Takes capability and injects it with adrenaline. Featuring a bold new look and dynamic handling, it’s designed for those who refuse to blend in. It’s the Ranger you trust, refined for the drive you crave.',
+    features: [
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Sport_img_1.webp',
+        featureImageAlt: 'Ranger Sport 12 Inch Screen — Ford feature and technology highlight',
+        featureTitle: '12 Inch Screen',
+        featureDescription:
+          'This expansive 12-inch display offers crystal-clear graphics and intuitive control for a smarter, more connected drive.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Sport_img_2.webp',
+        featureImageAlt:
+          'Ranger Sport 18 Inch Alloy Wheels — Ford feature and technology highlight',
+        featureTitle: '18 Inch Alloy Wheels',
+        featureDescription:
+          'Durable 18-inch alloy wheels are designed to handle tough tracks while looking sharp in the city.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Sport_img_3.webp',
+        featureImageAlt:
+          'Ranger Sport LED Headlights C-Clamp DTRL — Ford feature and technology highlight',
+        featureTitle: 'LED Headlights C-Clamp DTRL',
+        featureDescription:
+          'Precision-engineered LEDs and C-Clamp daytime running lamps offer a premium look and superior beam pattern.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Sport_img_4.webp',
+        featureImageAlt: 'Ranger Sport Tow Hooks — Ford feature and technology highlight',
+        featureTitle: 'Tow Hooks',
+        featureDescription:
+          'Twin recovery hooks integrated into the frame offer rugged backup for every off-road adventurer.',
+      },
+    ],
+    colours: [],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-Sport/./images/banner.webp',
+    heroImageAlt: 'Ford Ranger Sport bakkie hero banner — Eagle Ford South Africa',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-Sport/./images/hero.webp',
+    featureImageAlt: 'Ford Ranger Sport model overview — lifestyle Ford bakkies at Eagle Ford',
+    gallery: [],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Ranger-Sport/./files/brochures/20260324-Ranger-brochure.pdf',
+    brochureAlt: 'Ford Ranger Sport brochure PDF download — Eagle Ford South Africa',
+    pageUrl: 'https://www.eagleford.co.za/new/ranger-sport/',
+    variants: [
+      {
+        name: '2.3L Double Cab Sport 4x2 10AT',
+        slug: '2.3l-double-cab-sport-4x2-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252863_image.webp',
+        featureImageAlt:
+          'Ford 2.3L Double Cab Sport 4x2 10AT — Ranger Sport model variant at Eagle Ford South Africa',
+        price: 839600,
+        highlights: [
+          '360 Camera',
+          'E-Shifter',
+          'Adaptive Cruise Control with Stop/Go',
+          'Blind Spot Monitoring with Trailer Coverage',
+          'Colour Multi-Function Touch Screen Display: 12″ screen',
+          'Digital Instrument Cluster with Configurable Display: 8″',
+          'Electronic Park Brake',
+          'Engine Type: 2.3-Litre Turbo Gasoline',
+          'Maximum Power: 222kW @ 5900',
+          'Recovery Hooks: Front (x2)',
+          'Speakers: 6',
+          'SYNC® 4A',
+          'Zone Lighting',
+        ],
+      },
+      {
+        name: '2.3L Super Cab Sport 4x2 10AT',
+        slug: '2.3l-super-cab-sport-4x2-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252864_image.webp',
+        featureImageAlt:
+          'Ford 2.3L Super Cab Sport 4x2 10AT — Ranger Sport model variant at Eagle Ford South Africa',
+        price: 735000,
+        highlights: [
+          '360 Camera',
+          'Adaptive Cruise Control with Stop/Go',
+          'Blind Spot Monitoring with Trailer Coverage',
+          'Colour Multi-Function Touch Screen Display: 12″ screen',
+          'Digital Instrument Cluster with Configurable Display: 8″',
+          'Electronic Park Brake',
+          'Engine Type: 2.3-Litre Turbo Gasoline',
+          'E-Shifter',
+          'Maximum Power: 222kW @ 5900',
+          'Recovery Hooks: Front (x2)',
+          'Speakers: 6',
+          'SYNC® 4A',
+          'Zone Lighting',
+        ],
+      },
+      {
+        name: '3.0L V6TD Double Cab Sport 4x4 10AT',
+        slug: '3.0l-v6td-double-cab-sport-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252866_image.webp',
+        featureImageAlt:
+          'Ford 3.0L V6TD Double Cab Sport 4x4 10AT — Ranger Sport model variant at Eagle Ford South Africa',
+        price: 995000,
+        highlights: [
+          '360 Camera',
+          'Adaptive Cruise Control with Stop/Go',
+          'Blind Spot Monitoring with Trailer Coverage',
+          'Colour Multi-Function Touch Screen Display: 12″ screen',
+          'Digital Instrument Cluster with Configurable Display: 8″',
+          'Electronic Park Brake',
+          'Engine Type: 3.0-Litre V6 Turbo Diesel',
+          'E-Shifter',
+          'Full Time 4WD with Electromagnetic Transfer Case (eMTC)',
+          'Maximum Power: 184kW @ 3250',
+          'Recovery Hooks: Front (x2)',
+          'Speakers: 6',
+          'SYNC® 4A',
+          'Zone Lighting',
+        ],
+      },
+      {
+        name: '3.0TD V6 Super Cab Sport 4x4 10AT',
+        slug: '3.0td-v6-super-cab-sport-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252865_image.webp',
+        featureImageAlt:
+          'Ford 3.0TD V6 Super Cab Sport 4x4 10AT — Ranger Sport model variant at Eagle Ford South Africa',
+        price: 825000,
+        highlights: [
+          'Maximum Power: 184kW @ 3250',
+          '360 Camera',
+          'Adaptive Cruise Control with Stop/Go',
+          'Blind Spot Monitoring with Trailer Coverage',
+          'Colour Multi-Function Touch Screen Display: 12″ screen',
+          'Digital Instrument Cluster with Configurable Display: 8″',
+          'Electronic Park Brake',
+          'E-Shifter',
+          'Full Time 4WD with Electromagnetic Transfer Case (eMTC)',
+          'Recovery Hooks: Front (x2)',
+          'Speakers: 6',
+          'SYNC® 4A',
+          'Zone Lighting',
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: 'What is the starting price of the Ranger Sport?',
+        answer:
+          'The Ranger Sport range starts from R 735,000 for the 2.3L Super Cab Sport 4x2 10AT. Visit Eagle Ford for current pricing and specials.',
+      },
+      {
+        question: 'Which Ranger Sport derivatives are available?',
+        answer:
+          'Choose from 2.3L Super Cab and Double Cab 4x2 petrol Sports, plus 3.0L V6 turbo-diesel Super Cab and Double Cab 4x4 Sports.',
+      },
+      {
+        question: 'What makes Ranger Sport different from other Rangers?',
+        answer:
+          'Sport injects adrenaline into Ranger capability with a bolder look, dynamic handling, 18-inch alloys, LED C-Clamp lighting and lifestyle tech such as a 360 camera and zone lighting.',
+      },
+    ],
+  },
+  {
+    name: 'Ranger Platinum',
+    slug: 'ranger-platinum',
+    categorySlug: 'bakkies',
+    startingPrice: 1151000,
+    description:
+      'Ranger Platinum is all about having the luxuries of a premium SUV with the versatility of a pickup — elevated with exclusive touches including Acacia Green colour options.',
+    features: [
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Platinum_img_1.webp',
+        featureImageAlt: 'Ranger Platinum Grille — Ford feature and technology highlight',
+        featureTitle: 'Platinum Grille',
+        featureDescription:
+          'The Platinum grille, Matrix LED headlamps and damped tailgate deliver elegance with everyday convenience.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Platinum_img_2.webp',
+        featureImageAlt: 'Ranger Platinum Unique Wheels — Ford feature and technology highlight',
+        featureTitle: 'Unique Wheels',
+        featureDescription:
+          'Stylish 20-inch machine-faced alloy wheels with all-season tyres and a fixed sports hoop add flair.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Platinum_img_3.webp',
+        featureImageAlt:
+          'Ranger Platinum Coast-to-Coast Instrumental Panel — Ford feature and technology highlight',
+        featureTitle: 'Coast-to-Coast Instrumental Panel',
+        featureDescription:
+          'A 12-inch centre touchscreen, configurable 12.4-inch digital cluster, wireless charging and B&O premium audio define the cabin.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Platinum_img_4.webp',
+        featureImageAlt:
+          'Ranger Platinum Premium Interior Finish — Ford feature and technology highlight',
+        featureTitle: 'Premium Interior Finish',
+        featureDescription:
+          'Leather-accented quilt-design seats with heating, ventilation and Platinum badging, plus a heated steering wheel.',
+      },
+    ],
+    colours: [
+      {
+        colourName: 'Frozen White',
+        colourImageAlt: 'Ranger Platinum exterior in Frozen White paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/29131fa3-d6d9-4e33-a9ba-798afbb4255a_image-700x400--2-.webp',
+      },
+      {
+        colourName: 'Lucid Red',
+        colourImageAlt: 'Ranger Platinum exterior in Lucid Red paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/542e4612-c2b6-43a1-8a0f-9db849499ac9_image-700x400--4-.webp',
+      },
+      {
+        colourName: 'Carbonized Gray',
+        colourImageAlt: 'Ranger Platinum exterior in Carbonized Gray paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/74fd12a8-be39-4e8b-a83e-bb9326398c6e_image-700x400--1-.webp',
+      },
+      {
+        colourName: 'Agate Black',
+        colourImageAlt: 'Ranger Platinum exterior in Agate Black paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/adfc9c74-f62a-421a-b4c5-2491e14fa102_image-700x400--3-.webp',
+      },
+      {
+        colourName: 'Iconic Silver',
+        colourImageAlt: 'Ranger Platinum exterior in Iconic Silver paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/df198e44-02a3-41e6-b98f-59c3b29e0442_image-700x400--5-.webp',
+      },
+    ],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-Platinum/./images/banner.webp',
+    heroImageAlt: 'Ford Ranger Platinum luxury bakkie hero banner — Eagle Ford South Africa',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-Platinum/./images/hero.webp',
+    featureImageAlt: 'Ford Ranger Platinum model overview — premium Ford bakkies at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Platinum/./images/gallery/img_0.webp',
+        imageAlt: 'Ranger Platinum gallery photo 1',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Platinum/./images/gallery/img_1.webp',
+        imageAlt: 'Ranger Platinum gallery photo 2',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Platinum/./images/gallery/img_2.webp',
+        imageAlt: 'Ranger Platinum gallery photo 3',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Ranger-Platinum/./files/brochures/20260324-Ranger-brochure.pdf',
+    brochureAlt: 'Ford Ranger Platinum brochure PDF download — Eagle Ford South Africa',
+    pageUrl: 'https://www.eagleford.co.za/new/ranger-platinum/',
+    variants: [
+      {
+        name: '3.0TD V6 Ranger Double Cab Platinum 4x4 10AT',
+        slug: '3.0td-v6-ranger-double-cab-platinum-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/159488_image.webp',
+        featureImageAlt:
+          'Ford 3.0TD V6 Ranger Double Cab Platinum 4x4 10AT — Ranger Platinum model variant at Eagle Ford South Africa',
+        price: 1151000,
+        highlights: [
+          'Automatic',
+          'B&O Premium Audio System with 8 speakers',
+          'Colour Multi-Function Touch Screen Display: 12″ screen',
+          'Diesel',
+          'Digital Instrument Cluster with Configurable Display: 12.4″',
+          'Fuel Tank size: 80ℓ',
+          'Full Time 4WD with Electromagnetic Transfer Case (eMTC)',
+          'Leather Wrapped Steering Wheel & Gear Knob: Leather & Heated Steering',
+          'Number of seats: 5',
+          'Power output: 184kW',
+          'Recovery Hooks: Front (x2)',
+          'Seat Material: Premium Grade Leather',
+          'SYNC® 4',
+        ],
+      },
+      {
+        name: '3.0L V6 Double Cab Platinum 4x4 10AT',
+        slug: '3.0l-v6-double-cab-platinum-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252769_image.webp',
+        featureImageAlt:
+          'Ford 3.0L V6 Double Cab Platinum 4x4 10AT — Ranger Platinum / Next Level Ranger model at Eagle Ford',
+        price: 1179500,
+        highlights: [
+          '10-Way Power, Heating/Ventilation & Memory Function',
+          '20" Alloy Wheels',
+          'Badging – Seats & Mats',
+          'Cargo Management System',
+          'Chrome Interior Door Handles',
+          'Painted Grille',
+          'ST90 Fog Lamps',
+          'Wheel Lip Moulding with Painted Flare',
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: 'What is the starting price of the Ranger Platinum?',
+        answer:
+          'Ranger Platinum starts from R 1,151,000. Eagle Ford can confirm current pricing, packs and specials.',
+      },
+      {
+        question: 'Who is Ranger Platinum for?',
+        answer:
+          'Buyers who want SUV-like luxury with bakkie versatility — premium leather, B&O audio, Matrix LEDs and a 12.4-inch digital cluster.',
+      },
+    ],
+  },
+  {
+    name: 'Ranger Tremor',
+    slug: 'ranger-tremor',
+    categorySlug: 'bakkies',
+    startingPrice: 1009000,
+    description:
+      'The Ford Ranger Tremor is based on the XLT series with bespoke add-ons for a more rugged, off-road-ready counterpart.',
+    features: [
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Tremor_img_1.webp',
+        featureImageAlt: 'Ranger Tremor Grille — Ford feature and technology highlight',
+        featureTitle: 'Tremor Grille',
+        featureDescription:
+          'An off-road grille with bold grey painted highlights creates a rugged and distinctive front-end design.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Tremor_img_2.webp',
+        featureImageAlt: 'Ranger Tremor Unique Wheels — Ford feature and technology highlight',
+        featureTitle: 'Unique Wheels',
+        featureDescription:
+          '17″×8″ Asphalt Black machine-faced alloys with wider lip mouldings, cast aluminium side steps and Grabber AT3 all-terrain tyres.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Tremor_img_3.webp',
+        featureImageAlt:
+          'Ranger Tremor Coast-to-Coast Instrumental Panel — Ford feature and technology highlight',
+        featureTitle: 'Coast-to-Coast Instrumental Panel',
+        featureDescription:
+          'A 12-inch centre touchscreen and 8-inch digital cluster provide a comprehensive cabin interface.',
+      },
+    ],
+    colours: [
+      {
+        colourName: 'Frozen White',
+        colourImageAlt: 'Ranger Tremor exterior in Frozen White paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/c8dc0385-7e4a-4cbb-9a68-050c6840ac9d_image-700x400.webp',
+      },
+      {
+        colourName: 'Carbonized Gray',
+        colourImageAlt: 'Ranger Tremor exterior in Carbonized Gray paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/3361c1d7-5db7-463b-a8af-f668ec092364_image-700x400--3-.webp',
+      },
+      {
+        colourName: 'Agate Black',
+        colourImageAlt: 'Ranger Tremor exterior in Agate Black paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/460dad50-f58a-418f-94b1-ffae4bd7b2ce_image-700x400--2-.webp',
+      },
+      {
+        colourName: 'Iconic Silver',
+        colourImageAlt: 'Ranger Tremor exterior in Iconic Silver paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/320dcef0-eddf-49c9-b2e7-91f7de928cf9_image-700x400--4-.webp',
+      },
+    ],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-Tremor/./images/banner.webp',
+    heroImageAlt: 'Ford Ranger Tremor off-road bakkie hero banner — Eagle Ford South Africa',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-Tremor/./images/hero.webp',
+    featureImageAlt: 'Ford Ranger Tremor model overview — off-road Ford bakkies at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Tremor/./images/gallery/img_0.webp',
+        imageAlt: 'Ranger Tremor gallery photo 1',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Tremor/./images/gallery/img_1.webp',
+        imageAlt: 'Ranger Tremor gallery photo 2',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Tremor/./images/gallery/img_2.webp',
+        imageAlt: 'Ranger Tremor gallery photo 3',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Tremor/./images/gallery/img_3.webp',
+        imageAlt: 'Ranger Tremor gallery photo 4',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Tremor/./images/gallery/img_4.webp',
+        imageAlt: 'Ranger Tremor gallery photo 5',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Ranger-Tremor/./files/brochures/20251031-ranger-brochure.pdf',
+    brochureAlt: 'Ford Ranger Tremor brochure PDF download — Eagle Ford South Africa',
+    pageUrl: 'https://www.eagleford.co.za/new/ranger-tremor/',
+    variants: [
+      {
+        name: 'Ford Ranger Tremor',
+        slug: 'ford-ranger-tremor',
+        featureImageUrl: 'https://www.eagleford.co.za/159489_image.webp',
+        featureImageAlt:
+          'Ford Ranger Tremor — Ranger Tremor model variant at Eagle Ford South Africa',
+        price: 1009000,
+        highlights: [
+          '10-Speed Automatic Transmission',
+          '17″ Wheels with Off-road General Grabber Tyres',
+          'Diesel',
+          'Fuel Tank size: 80ℓ',
+          'Full Time 4WD with Electromagnetic Transfer Case (eMTC)(S)',
+          'Long Legged Sport Bar',
+          'Number of seats: 5',
+          'Off-Road Suspension with Bilstein Position Sensitive Dampers',
+          'Power output: 154kW',
+          'Pro Trailer Backup Assist',
+          'Selectable Drive Modes with Rotary Dial: Normal, Eco, Tow/Haul, Slippery, Mud/Ruts, Sand and Rock Crawl(S)',
+          'Unique Vinyl Flooring',
+        ],
+      },
+      {
+        name: '3.0L V6 Double Cab Tremor 4x4 10AT',
+        slug: '3.0l-v6-double-cab-tremor-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252768_image.webp',
+        featureImageAlt:
+          'Ford 3.0L V6 Double Cab Tremor 4x4 10AT — Ranger Tremor / Next Level Ranger model at Eagle Ford',
+        price: 1039000,
+        highlights: [
+          '3.0L V6 LION 184kW With 10AT (E-Shifter) Only',
+          '6 Speakers',
+          'Composite Off-Road Side Steps',
+          'Large Wheelarch Flares',
+          'Load Box Edge Protectors',
+          'Painted Front Fender Grille',
+          'Roll Bar',
+          'Unique Vinyl Seats with Embroidered Seat Logos',
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: 'What is the starting price of the Ranger Tremor?',
+        answer:
+          'Ranger Tremor starts from R 1,009,000. Speak to Eagle Ford for current off-road-ready stock and pricing.',
+      },
+      {
+        question: 'Is the Ranger Tremor built for off-road use?',
+        answer:
+          'Yes. Expect Bilstein dampers, Grabber AT tyres, unique vinyl flooring, a sport bar and selectable modes including Mud/Ruts, Sand and Rock Crawl.',
+      },
+    ],
+  },
+  {
+    name: 'Ranger Raptor',
+    slug: 'ranger-raptor',
+    categorySlug: 'bakkies',
+    startingPrice: 1271000,
+    description:
+      'The Ranger Raptor is the high-performance flagship — twin-turbo power, Fox suspension and Baja-ready drive modes for serious off-road thrills.',
+    features: [
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Raptor_img_1.webp',
+        featureImageAlt: 'Ranger Raptor Next Level of Technology — Ford feature highlight',
+        featureTitle: 'Next Level of Technology',
+        featureDescription:
+          'A 12.4-inch digital instrument cluster and advanced cabin tech keep you informed when the pace picks up.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Raptor_img_2.webp',
+        featureImageAlt: 'Ranger Raptor drive modes — Ford feature highlight',
+        featureTitle: 'The right drive mode for every surface',
+        featureDescription:
+          'Selectable modes including Baja and Rock Crawl let you tailor response to the terrain.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Raptor_img_3.webp',
+        featureImageAlt: 'Ranger Raptor Enhanced Power and Capability — Ford feature highlight',
+        featureTitle: 'Enhanced Power and Capability',
+        featureDescription:
+          'A 292kW 3.0-litre V6 twin-turbo petrol engine and Performance Fox Suspension define Raptor capability.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Raptor_img_4.webp',
+        featureImageAlt: 'Ranger Raptor Front and Rear Performance Seats — Ford feature highlight',
+        featureTitle: 'Front and Rear Performance Seats',
+        featureDescription:
+          'Performance seats help keep you planted when exploring high-speed off-road trails.',
+      },
+    ],
+    colours: [
+      {
+        colourName: 'Arctic White',
+        colourImageAlt: 'Ranger Raptor exterior in Arctic White paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/0efac2a4-e857-4aef-9a89-982b60e8a4e2_image-700x400.webp',
+      },
+      {
+        colourName: 'Command Grey',
+        colourImageAlt: 'Ranger Raptor exterior in Command Grey paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/0aef784a-b7ac-49e9-97f0-710dc622aca9_image-700x400--1-.webp',
+      },
+      {
+        colourName: 'Meteor Grey',
+        colourImageAlt: 'Ranger Raptor exterior in Meteor Grey paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/b1cd4967-78cd-48dd-8b0a-db9f3bc7b4e0_image-700x400--2-.webp',
+      },
+      {
+        colourName: 'Blue Lightning',
+        colourImageAlt: 'Ranger Raptor exterior in Blue Lightning paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/65dc1a11-d441-4b8b-be52-03355584a0f4_image-700x400--3-.webp',
+      },
+      {
+        colourName: 'Absolute Black',
+        colourImageAlt: 'Ranger Raptor exterior in Absolute Black paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/65067b6e-974b-494c-9800-91da0fb91472_image-700x400--4-.webp',
+      },
+      {
+        colourName: 'Code Orange',
+        colourImageAlt: 'Ranger Raptor exterior in Code Orange paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/0f360c55-419e-4ef9-ab9b-552978f40f74_image-700x400--5-.webp',
+      },
+    ],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-Raptor/./images/banner.webp',
+    heroImageAlt: 'Ford Ranger Raptor performance bakkie hero banner — Eagle Ford South Africa',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-Raptor/./images/hero.webp',
+    featureImageAlt:
+      'Ford Ranger Raptor model overview — high-performance Ford bakkies at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Raptor/./images/gallery/img_0.webp',
+        imageAlt: 'Ranger Raptor gallery photo 1',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-Raptor/./images/gallery/img_1.webp',
+        imageAlt: 'Ranger Raptor gallery photo 2',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Ranger-Raptor/./files/brochures/20251031-ranger-raptor-brochure.pdf',
+    brochureAlt: 'Ford Ranger Raptor brochure PDF download — Eagle Ford South Africa',
+    pageUrl: 'https://www.eagleford.co.za/new/ranger-raptor/',
+    variants: [
+      {
+        name: 'Ranger 3.0T V6 double cab Raptor 4WD',
+        slug: 'ranger-3.0t-v6-double-cab-raptor-4wd',
+        featureImageUrl: 'https://www.eagleford.co.za/159487_image.webp',
+        featureImageAlt:
+          'Ford Ranger 3.0T V6 double cab Raptor 4WD — Ranger Raptor model variant at Eagle Ford South Africa',
+        price: 1271000,
+        highlights: [
+          '12.4-Inch Digital Instrument Cluster',
+          '292kW 3.0-Litre V6 Turbo Petrol Engine',
+          'FORD Grille',
+          'Performance Fox Suspension',
+          'Selectable Drive Modes with Rotary Dial: Normal, Eco, Slippery, Mud, Sand, Baja, Rock Crawl',
+        ],
+      },
+      {
+        name: '3.0L V6 TT Double Cab Raptor 4x4 10AT',
+        slug: '3.0l-v6-tt-double-cab-raptor-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252770_image.webp',
+        featureImageAlt:
+          'Ford 3.0L V6 TT Double Cab Raptor 4x4 10AT — Ranger Raptor / Next Level Ranger model at Eagle Ford',
+        price: 1299000,
+        highlights: [
+          '12.4-Inch Digital Instrument Cluster',
+          'FORD Grille',
+          'Performance Fox Suspension',
+          '292kW 3.0-Litre V6 Turbo Petrol Engine',
+          'Selectable Drive Modes: Normal, Eco, Slippery, Mud, Sand, Baja, Rock Crawl',
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: 'What is the starting price of the Ranger Raptor?',
+        answer:
+          'Ranger Raptor starts from R 1,271,000. Contact Eagle Ford for current performance-bakkie pricing and stock.',
+      },
+      {
+        question: 'What engine does the Raptor use?',
+        answer:
+          'A 292kW 3.0-litre V6 twin-turbo petrol engine paired with Performance Fox Suspension and Baja-capable drive modes.',
+      },
+    ],
+  },
+  {
+    name: 'Ranger Wildtrak',
+    slug: 'ranger-wildtrak',
+    categorySlug: 'bakkies',
+    startingPrice: 895500,
+    description:
+      'Ranger Wildtrak blends lifestyle capability with premium cabin tech — Matrix LEDs, 18-inch alloys and a signature Wildtrak interior.',
+    features: [
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Wildtrak_img_1.webp',
+        featureImageAlt: 'Ranger Wildtrak Matrix LEDs & Front Grille — Ford feature highlight',
+        featureTitle: 'Matrix LEDs & Front Grille Design',
+        featureDescription:
+          'Matrix LED lighting and a distinctive Wildtrak grille set the lifestyle bakkie apart.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Wildtrak_img_2.webp',
+        featureImageAlt: 'Ranger Wildtrak 18 Inch Alloy Wheel — Ford feature highlight',
+        featureTitle: '18″ Alloy Wheel',
+        featureDescription:
+          '18-inch alloys with A/T tyres balance on-road presence and trail ability.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Wildtrak_img_3.webp',
+        featureImageAlt: 'Ranger Wildtrak 12 Inch IP Screen — Ford feature highlight',
+        featureTitle: '12″ IP Screen',
+        featureDescription:
+          'A large centre touchscreen anchors the coast-to-coast Wildtrak cabin experience.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Wildtrak_img_4.webp',
+        featureImageAlt: 'Ranger Wildtrak unique seats — Ford feature highlight',
+        featureTitle: 'Unique seats with Wildtrak styling',
+        featureDescription: 'Signature Wildtrak seat styling finishes the adventure-ready cabin.',
+      },
+    ],
+    colours: [
+      {
+        colourName: 'Frozen White',
+        colourImageAlt: 'Ranger Wildtrak exterior in Frozen White paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/1658cc43-d6d0-4b7b-83d4-80d28894e964_image-700x400.webp',
+      },
+      {
+        colourName: 'Lucid Red',
+        colourImageAlt: 'Ranger Wildtrak exterior in Lucid Red paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/118394a1-eeea-46c1-8813-f601134729ea_image-700x400--3-.webp',
+      },
+      {
+        colourName: 'Agate Black',
+        colourImageAlt: 'Ranger Wildtrak exterior in Agate Black paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/af32cec6-2f1e-43f1-933b-3ed12d490f59_image-700x400--2-.webp',
+      },
+      {
+        colourName: 'Carbonized Gray',
+        colourImageAlt: 'Ranger Wildtrak exterior in Carbonized Gray paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/c2afc4a7-89a1-44fa-a9bb-832755120bae_image-700x400--5-.webp',
+      },
+      {
+        colourName: 'Blue Lighting',
+        colourImageAlt: 'Ranger Wildtrak exterior in Blue Lighting paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/938ca57a-b7d0-4daf-9d88-42b63298cd8a_image-700x400--1-.webp',
+      },
+      {
+        colourName: 'Cyber Orange',
+        colourImageAlt: 'Ranger Wildtrak exterior in Cyber Orange paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/7f850aff-468b-4311-aa79-310568ec434d_image-700x400--6-.webp',
+      },
+      {
+        colourName: 'Iconic Silver',
+        colourImageAlt: 'Ranger Wildtrak exterior in Iconic Silver paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/c2b031aa-25f8-40f5-8ed8-72fc9fb33c6a_image-700x400--4-.webp',
+      },
+    ],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-Wildtrak/./images/banner.webp',
+    heroImageAlt: 'Ford Ranger Wildtrak lifestyle bakkie hero banner — Eagle Ford South Africa',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-Wildtrak/./images/hero.webp',
+    featureImageAlt: 'Ford Ranger Wildtrak model overview — lifestyle Ford bakkies at Eagle Ford',
+    gallery: [],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Ranger-Wildtrak/./files/brochures/20260324-Ranger-brochure.pdf',
+    brochureAlt: 'Ford Ranger Wildtrak brochure PDF download — Eagle Ford South Africa',
+    pageUrl: 'https://www.eagleford.co.za/new/ranger-wildtrak/',
+    variants: [
+      {
+        name: '2.0 BiTurbo Double Cab Wildtrak 4x2 10AT',
+        slug: '2.0-biturbo-double-cab-wildtrak-4x2-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/158677_image.webp',
+        featureImageAlt:
+          'Ford 2.0 BiTurbo Double Cab Wildtrak 4x2 10AT — Ranger Wildtrak model at Eagle Ford',
+        price: 895500,
+        highlights: [
+          '12″ colour touchscreen',
+          '18″ Alloy Wheels with A/T Tyres',
+          '2.0-Litre Bi-Turbo Diesel',
+          '8″ Digital Colour Instrument Cluster Display',
+          'B&O Play Amplifier',
+          'Branded / Premium Audio',
+          'Cruise Control',
+          'Maximum Power: 154kW',
+          'Maximum Torque: 500nm @ 1750-2000',
+          'Rear View Camera & Rear Parking Sensors',
+        ],
+      },
+      {
+        name: '2.0 BiTurbo Double Cab Wildtrak 4x4 10AT',
+        slug: '2.0-biturbo-double-cab-wildtrak-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/158678_image.webp',
+        featureImageAlt:
+          'Ford 2.0 BiTurbo Double Cab Wildtrak 4x4 10AT — Ranger Wildtrak model at Eagle Ford',
+        price: 983000,
+        highlights: [
+          '18″ Alloy Wheels with A/T Tyres',
+          '2.0-Litre Bi-Turbo Diesel',
+          '360 Degree Camera including 4x4 Offroad Screen',
+          'Branded / Premium Audio',
+          'Cruise Control',
+          'Maximum Power: 154kW',
+          'Maximum Torque: 500nm @ 1750-2000',
+          'Rear View Camera & Rear Parking Sensors',
+          'Subwoofer and extra speaker (10 Speakers)',
+        ],
+      },
+      {
+        name: '2.3L Double Cab Wildtrak 4x2 10AT',
+        slug: '2.3l-double-cab-wildtrak-4x2-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252862_image.webp',
+        featureImageAlt:
+          'Ford 2.3L Double Cab Wildtrak 4x2 10AT — Ranger Wildtrak / Next Level Ranger model at Eagle Ford',
+        price: 899000,
+        highlights: [
+          '10-speed Automatic Transmission',
+          '18″ Alloy Wheels',
+          'Adaptive Cruise Control with Stop/Go',
+          'Colour Multi-Function Touch Screen Display: 12″ screen',
+          'Digital Instrument Cluster with Configurable Display: 8″',
+          'Electronic Park Brake',
+          'Engine Type: 2.3-Litre Turbo Gasoline',
+          'E-Shifter',
+          'Fuel Type: Petrol',
+          'Maximum Power: 222kW',
+          'Speakers: 8',
+          'SYNC® 4',
+          'Zone Lighting',
+        ],
+      },
+      {
+        name: '3.0TD V6 Double Cab Wildtrak 4x4 10AT',
+        slug: '3.0td-v6-double-cab-wildtrak-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/158679_image.webp',
+        featureImageAlt:
+          'Ford 3.0TD V6 Double Cab Wildtrak 4x4 10AT — Ranger Wildtrak model at Eagle Ford',
+        price: 1070000,
+        highlights: [
+          '12″ colour touchscreen',
+          '18″ Alloy Wheels with A/T Tyres',
+          '3.0-Litre V6 Turbo Diesel',
+          '360 Degree Camera including 4x4 Offroad Screen',
+          'Adaptive Cruise Control',
+          'Branded / Premium Audio - B&O Play Amplifier',
+          'Maximum Power: 184kW',
+          'Maximum Torque: 600nm @ 1750-2250',
+          'Subwoofer and extra speaker (10 Speakers)',
+        ],
+      },
+      {
+        name: '3.0L V6 Double Cab Wildtrak 4x4 10AT',
+        slug: '3.0l-v6-double-cab-wildtrak-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252773_image.webp',
+        featureImageAlt:
+          'Ford 3.0L V6 Double Cab Wildtrak 4x4 10AT — Ranger Wildtrak / Next Level Ranger model at Eagle Ford',
+        price: 1070000,
+        highlights: [
+          '18" Alloy Wheels',
+          '2x USB Points & 400W Inverter Rear of Console',
+          '6-Way Manual Passenger Seat Adjust',
+          'Automatic Headlamp Levelling',
+          'Heated Front Seats',
+          'Matrix LED Headlamps',
+          'SYNC4 High Including Navigation',
+          '12" Colour Touchscreen',
+          '18" Steel Spare Wheel',
+          '8 Speakers',
+          'Pro Trailer Backup Assist',
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: 'What is the starting price of the Ranger Wildtrak?',
+        answer:
+          'Ranger Wildtrak starts from R 895,500 for the 2.0 BiTurbo Double Cab Wildtrak 4x2 10AT.',
+      },
+      {
+        question: 'Which Wildtrak powertrains are available?',
+        answer:
+          'Choose 2.0 BiTurbo diesel 4x2/4x4, 2.3L petrol Wildtrak, and 3.0L V6 turbo-diesel Wildtrak 4x4 derivatives.',
+      },
+    ],
+  },
+  {
+    name: 'Ranger Wildtrak X',
+    slug: 'ranger-wildtrak-x',
+    categorySlug: 'bakkies',
+    startingPrice: 1070500,
+    description:
+      'Wildtrak X adds off-road hardware — Bilstein dampers, Grabber tyres, flexible rack system and signature Wildtrak X interior accents.',
+    features: [
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Wildtrak%20X_img_1.webp',
+        featureImageAlt: 'Ranger Wildtrak X Off-Road Grille — Ford feature highlight',
+        featureTitle: 'Off-Road Grille',
+        featureDescription:
+          'A purpose-built off-road grille sets Wildtrak X apart from standard Wildtrak.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Wildtrak%20X_img_2.webp',
+        featureImageAlt: 'Ranger Wildtrak X Unique Wheels — Ford feature highlight',
+        featureTitle: 'Unique Wheels',
+        featureDescription:
+          '17″ wheels with General Grabber off-road tyres for serious trail work.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Wildtrak%20X_img_3.webp',
+        featureImageAlt: 'Ranger Wildtrak X Off Road Capabilities — Ford feature highlight',
+        featureTitle: 'Off Road Capabilities',
+        featureDescription:
+          'Off-road suspension with Bilstein Position Sensitive Dampers boosts confidence off the tar.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Wildtrak%20X_img_4.webp',
+        featureImageAlt: 'Ranger Wildtrak X Flexible Rack System — Ford feature highlight',
+        featureTitle: 'Flexible Rack System',
+        featureDescription: 'A flexible rack system helps carry adventure gear with less fuss.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Wildtrak%20X_img_5.webp',
+        featureImageAlt: 'Ranger Wildtrak X Technology — Ford feature highlight',
+        featureTitle: 'Technology to Match',
+        featureDescription:
+          'Matrix LED headlamps and Pro Trailer Backup Assist support modern adventure use.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20Wildtrak%20X_img_6.webp',
+        featureImageAlt: 'Ranger Wildtrak X Signature Interior — Ford feature highlight',
+        featureTitle: 'Signature Wildtrak X Interior',
+        featureDescription:
+          'Accented Wildtrak X leather finishes the cabin for the trail and the city.',
+      },
+    ],
+    colours: [
+      {
+        colourName: 'Frozen White',
+        colourImageAlt: 'Ranger Wildtrak X exterior in Frozen White paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/1a140557-29b8-4444-956e-a595196edc69_image-700x400.webp',
+      },
+      {
+        colourName: 'Blue Lighting',
+        colourImageAlt: 'Ranger Wildtrak X exterior in Blue Lighting paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/1963909c-7fae-47c3-9350-85604f5060a6_image-700x400--1-.webp',
+      },
+      {
+        colourName: 'Agate Black',
+        colourImageAlt: 'Ranger Wildtrak X exterior in Agate Black paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/37dcef89-2243-4d59-a3ab-5c80ec064a8d_image-700x400--2-.webp',
+      },
+      {
+        colourName: 'Iconic Silver',
+        colourImageAlt: 'Ranger Wildtrak X exterior in Iconic Silver paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/e6f97493-6ef1-42b2-b26a-71afb171a3a5_image-700x400--3-.webp',
+      },
+      {
+        colourName: 'Carbonized Gray',
+        colourImageAlt: 'Ranger Wildtrak X exterior in Carbonized Gray paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/718dc82a-4a14-4323-9463-8f625f36a15e_image-700x400--4-.webp',
+      },
+      {
+        colourName: 'Cyber Orange',
+        colourImageAlt: 'Ranger Wildtrak X exterior in Cyber Orange paint colour option',
+        colourImageUrl:
+          'https://assets.conexa.r-e-d.co.za/images/0210495f-f1fd-4575-b96c-cd8050770b9d_image-700x400--5-.webp',
+      },
+    ],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-Wildtrak-X/./images/banner.webp',
+    heroImageAlt: 'Ford Ranger Wildtrak X off-road bakkie hero banner — Eagle Ford South Africa',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-Wildtrak-X/./images/hero.webp',
+    featureImageAlt: 'Ford Ranger Wildtrak X model overview — off-road Ford bakkies at Eagle Ford',
+    gallery: [],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Ranger-Wildtrak-X/./files/brochures/20251031-ranger-brochure.pdf',
+    brochureAlt: 'Ford Ranger Wildtrak X brochure PDF download — Eagle Ford South Africa',
+    pageUrl: 'https://www.eagleford.co.za/new/ranger-wildtrak-x/',
+    variants: [
+      {
+        name: '2.0 BiTurbo Double Cab Wildtrak X 4WD 10AT',
+        slug: '2.0-biturbo-double-cab-wildtrak-x-4wd-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/158676_image.webp',
+        featureImageAlt:
+          'Ford 2.0 BiTurbo Double Cab Wildtrak X 4WD 10AT — Ranger Wildtrak X model at Eagle Ford',
+        price: 1070500,
+        highlights: [
+          '17″ Wheels with Off-road General Grabber Tyres',
+          'Accented Wildtrak X Leather',
+          'Matrix LED Headlamps',
+          'Off-Road Suspension with Bilstein Position Sensitive Dampers',
+          'Pro Trailer Backup Assist',
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: 'What is the starting price of the Ranger Wildtrak X?',
+        answer:
+          'Ranger Wildtrak X starts from R 1,070,500. Ask Eagle Ford about stock and accessories.',
+      },
+      {
+        question: 'How does Wildtrak X differ from Wildtrak?',
+        answer:
+          'Wildtrak X adds off-road-focused hardware such as Bilstein dampers, Grabber tyres, a flexible rack system and unique Wildtrak X interior accents.',
+      },
+    ],
+  },
+  {
+    name: 'Ranger XL',
+    slug: 'ranger-xl',
+    categorySlug: 'bakkies',
+    startingPrice: 590000,
+    description:
+      'Ranger XL is the hard-working entry point — durable wheels, a coast-to-coast dashboard and practical Single Cab / Super Cab layouts.',
+    features: [
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20XL_img_1.webp',
+        featureImageAlt: 'Ranger XL Bold Front Face — Ford feature highlight',
+        featureTitle: 'Bold Front Face',
+        featureDescription:
+          'A tough black grille and work-ready stance showcase Built Ford Tough design.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20XL_img_2.webp',
+        featureImageAlt: 'Ranger XL Durable Wheels — Ford feature highlight',
+        featureTitle: 'Durable Wheels',
+        featureDescription:
+          'Solid, durable wheels suited to rugged commercial and farm conditions.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20XL_img_3.webp',
+        featureImageAlt: 'Ranger XL Coast-to-coast Dashboard — Ford feature highlight',
+        featureTitle: 'Coast-to-coast Dashboard',
+        featureDescription:
+          'A modern dashboard with a large colour touchscreen keeps the work cabin connected.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20XL_img_4.webp',
+        featureImageAlt: 'Ranger XL Dark Interior Finish — Ford feature highlight',
+        featureTitle: 'Dark Interior Finish',
+        featureDescription: 'Practical dark interior materials are built for daily commercial use.',
+      },
+    ],
+    colours: [],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-XL/./images/banner.webp',
+    heroImageAlt: 'Ford Ranger XL work bakkie hero banner — Eagle Ford South Africa',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-XL/./images/hero.webp',
+    featureImageAlt: 'Ford Ranger XL model overview — commercial Ford bakkies at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-XL/./images/gallery/img_0.webp',
+        imageAlt: 'Ranger XL gallery photo 1',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-XL/./images/gallery/img_1.webp',
+        imageAlt: 'Ranger XL gallery photo 2',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-XL/./images/gallery/img_2.webp',
+        imageAlt: 'Ranger XL gallery photo 3',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-XL/./images/gallery/img_3.webp',
+        imageAlt: 'Ranger XL gallery photo 4',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Ranger-XL/./files/brochures/20260324-Ranger-brochure.pdf',
+    brochureAlt: 'Ford Ranger XL brochure PDF download — Eagle Ford South Africa',
+    pageUrl: 'https://www.eagleford.co.za/new/ranger-xl/',
+    variants: [
+      {
+        name: 'RANGER 2.0L SIT SC XL 4X2 10AT',
+        slug: 'ranger-2.0l-sit-sc-xl-4x2-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252886_image.webp',
+        featureImageAlt:
+          'Ford RANGER 2.0L SIT SC XL 4X2 10AT — Ranger XL model variant at Eagle Ford',
+        price: 590000,
+        highlights: [
+          '10-speed automatic transmission',
+          'Airbags - Dual Front, Front Side, Curtain & Driver Knee(S)',
+          'Colour Multi-Function Touch Screen Display:12″ screen',
+          'Digital Instrument Cluster with Configurable Display: 8″',
+          'Driveline: RWD',
+          'Engine Type: 2.0-Litre Single Turbo Diesel',
+          'Maximum Power: 125kW @ 3500',
+          'SYNC® 4(S)',
+          'Wireless Apple CarPlay™ & Android Auto™ (S)',
+        ],
+      },
+      {
+        name: 'RANGER 2.0L SIT SC XL 4X4 10AT',
+        slug: 'ranger-2.0l-sit-sc-xl-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252888_image.webp',
+        featureImageAlt:
+          'Ford RANGER 2.0L SIT SC XL 4X4 10AT — Ranger XL model variant at Eagle Ford',
+        price: 666000,
+        highlights: [
+          '10-speed automatic transmission',
+          'Driveline: 4x4 with Electronic Shift On The Fly (ESOF)(S)',
+          'Engine Type: 2.0-Litre Single Turbo Diesel',
+          'Maximum Power: 125kW @ 3500',
+          'SYNC® 4(S)',
+          'Wireless Apple CarPlay™ & Android Auto™ (S)',
+        ],
+      },
+      {
+        name: 'RANGER 2.0L SIT SC XL 4X4 6MT',
+        slug: 'ranger-2.0l-sit-sc-xl-4x4-6mt',
+        featureImageUrl: 'https://www.eagleford.co.za/252887_image.webp',
+        featureImageAlt:
+          'Ford RANGER 2.0L SIT SC XL 4X4 6MT — Ranger XL model variant at Eagle Ford',
+        price: 635200,
+        highlights: [
+          '6-speed manual transmission',
+          'Driveline: 4x4 with Electronic Shift On The Fly (ESOF)(S)',
+          'Engine Type: 2.0-Litre Single Turbo Diesel',
+          'Maximum Power: 125kW @ 3500',
+          'SYNC® 4(S)',
+          'Wireless Apple CarPlay™ & Android Auto™ (S)',
+        ],
+      },
+      {
+        name: 'RANGER 2.0L SIT SUP XL 4X2 10AT',
+        slug: 'ranger-2.0l-sit-sup-xl-4x2-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252889_image.webp',
+        featureImageAlt:
+          'Ford RANGER 2.0L SIT SUP XL 4X2 10AT — Ranger XL model variant at Eagle Ford',
+        price: 599500,
+        highlights: [
+          '10-speed automatic transmission',
+          'Driveline: RWD',
+          'Engine Type: 2.0-Litre Single Turbo Diesel',
+          'Maximum Power: 125kW @ 3500',
+          'SYNC® 4(S)',
+          'Wireless Apple CarPlay™ & Android Auto™ (S)',
+        ],
+      },
+      {
+        name: 'RANGER 2.0L SIT SUP XL 4X4 10AT',
+        slug: 'ranger-2.0l-sit-sup-xl-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252890_image.webp',
+        featureImageAlt:
+          'Ford RANGER 2.0L SIT SUP XL 4X4 10AT — Ranger XL model variant at Eagle Ford',
+        price: 675500,
+        highlights: [
+          '10-speed automatic transmission',
+          'Driveline: 4x4 with Electronic Shift On The Fly (ESOF)(S)',
+          'Engine Type: 2.0-Litre Single Turbo Diesel',
+          'Maximum Power: 125kW @ 3500',
+          'SYNC® 4(S)',
+          'Wireless Apple CarPlay™ & Android Auto™ (S)',
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: 'What is the starting price of the Ranger XL?',
+        answer: 'Ranger XL starts from R 590,000 for the 2.0L SiT Single Cab XL 4x2 10AT.',
+      },
+      {
+        question: 'Are Super Cab XL models available?',
+        answer:
+          'Yes. Super Cab XL 4x2 and 4x4 automatic derivatives sit alongside Single Cab XL options.',
+      },
+    ],
+  },
+  {
+    name: 'Ranger XLT',
+    slug: 'ranger-xlt',
+    categorySlug: 'bakkies',
+    startingPrice: 655000,
+    description:
+      'Ranger XLT steps up comfort and kit — LED headlamps, dual-zone climate and wireless smartphone integration across Double Cab and Super Cab layouts.',
+    features: [
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20XLT_img_1.webp',
+        featureImageAlt: 'Ranger XLT feature highlight 1',
+        featureTitle: 'Everyday capability',
+        featureDescription:
+          'XLT balances work and family use with LED lighting, SYNC® 4A and practical Double Cab / Super Cab choices.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20XLT_img_2.webp',
+        featureImageAlt: 'Ranger XLT feature highlight 2',
+        featureTitle: 'Connected cabin',
+        featureDescription:
+          'A 12-inch colour touchscreen with wireless Apple CarPlay™ and Android Auto™ keeps the cabin modern.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20XLT_img_3.webp',
+        featureImageAlt: 'Ranger XLT feature highlight 3',
+        featureTitle: '4x2 and 4x4 choice',
+        featureDescription:
+          'Pick rear-wheel drive for on-road efficiency or ESOF 4x4 when traction matters more.',
+      },
+      {
+        featureImageUrl: 'https://www.eagleford.co.za/Ranger%20XLT_img_4.webp',
+        featureImageAlt: 'Ranger XLT feature highlight 4',
+        featureTitle: 'Driver assistance',
+        featureDescription:
+          'Higher XLT derivatives add hill descent control and lane-keeping support for everyday confidence.',
+      },
+    ],
+    colours: [],
+    heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-XLT/./images/banner.webp',
+    heroImageAlt: 'Ford Ranger XLT bakkie hero banner — Eagle Ford South Africa',
+    featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-XLT/./images/hero.webp',
+    featureImageAlt: 'Ford Ranger XLT model overview — Ford bakkies at Eagle Ford',
+    gallery: [
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-XLT/./images/gallery/img_0.webp',
+        imageAlt: 'Ranger XLT gallery photo 1',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-XLT/./images/gallery/img_1.webp',
+        imageAlt: 'Ranger XLT gallery photo 2',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-XLT/./images/gallery/img_2.webp',
+        imageAlt: 'Ranger XLT gallery photo 3',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-XLT/./images/gallery/img_3.webp',
+        imageAlt: 'Ranger XLT gallery photo 4',
+      },
+      {
+        imageUrl: 'https://www.eagleford.co.za/new/Ranger-XLT/./images/gallery/img_4.webp',
+        imageAlt: 'Ranger XLT gallery photo 5',
+      },
+    ],
+    brochureUrl:
+      'https://www.eagleford.co.za/new/Ranger-XLT/./files/brochures/20260324-Ranger-brochure.pdf',
+    brochureAlt: 'Ford Ranger XLT brochure PDF download — Eagle Ford South Africa',
+    pageUrl: 'https://www.eagleford.co.za/new/ranger-xlt/',
+    variants: [
+      {
+        name: '2.0 SiT Double Cab XLT 4x2 10AT',
+        slug: '2.0-sit-double-cab-xlt-4x2-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252869_image.webp',
+        featureImageAlt:
+          'Ford 2.0 SiT Double Cab XLT 4x2 10AT — Ranger XLT / Next Level Ranger model at Eagle Ford',
+        price: 699500,
+        highlights: [
+          '10-Speed Automatic Transmission',
+          'Colour Multi-Function Touch Screen Display: 12″ screen',
+          'Driveline: 4x2',
+          'Engine Type: 2.0-Litre Single Turbo Diesel',
+          'Headlamps: LED',
+          'Maximum Power: 125 @ 3500',
+          'Speakers: 6',
+          'SYNC® 4A(S)',
+          'Wireless Apple CarPlay™ & Android Auto™ (S)',
+        ],
+      },
+      {
+        name: '2.0 SiT Double Cab XLT 4x4 10AT',
+        slug: '2.0-sit-double-cab-xlt-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/159414_image.webp',
+        featureImageAlt:
+          'Ford 2.0 SiT Double Cab XLT 4x4 10AT — Ranger XLT model variant at Eagle Ford',
+        price: 788500,
+        highlights: [
+          '10-Speed Automatic Transmission',
+          'Climate Control: Dual Zone Manual',
+          'Driveline: 4x4 with Electronic Shift On The Fly (ESOF)(S)',
+          'Engine Type: 2.0-Litre Single Turbo Diesel',
+          'Headlamps: LED',
+          'Hill Descent Control',
+          'Maximum Power: 125kW @ 3500',
+          'Speakers: 6',
+          'SYNC® 4A(S)',
+          'Wireless Apple CarPlay™ & Android Auto™ (S)',
+        ],
+      },
+      {
+        name: '2.0 SiT Super Cab XLT 4x2 10AT',
+        slug: '2.0-sit-super-cab-xlt-4x2-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/252868_image.webp',
+        featureImageAlt:
+          'Ford 2.0 SiT Super Cab XLT 4x2 10AT — Ranger XLT model variant at Eagle Ford',
+        price: 655000,
+        highlights: [
+          '10-Speed Automatic Transmission',
+          'Climate Control: Dual Zone Manual',
+          'Driveline: 4x2',
+          'Engine Type: 2.0-Litre Single Turbo Diesel',
+          'Headlamps: LED',
+          'Maximum Power: 125 @ 3500',
+          'Speakers: 6',
+          'SYNC® 4A(S)',
+          'Wheel Size & Type: 17″ Alloy',
+          'Wireless Apple CarPlay™ & Android Auto™ (S)',
+        ],
+      },
+      {
+        name: '2.0 SiT Super Cab XLT 4x4 10AT',
+        slug: '2.0-sit-super-cab-xlt-4x4-10at',
+        featureImageUrl: 'https://www.eagleford.co.za/159415_image.webp',
+        featureImageAlt:
+          'Ford 2.0 SiT Super Cab XLT 4x4 10AT — Ranger XLT model variant at Eagle Ford',
+        price: 731000,
+        highlights: [
+          '10-Speed Automatic Transmission',
+          'Climate Control: Dual Zone Manual',
+          'Driveline: 4x4 with Electronic Shift On The Fly (ESOF)(S)',
+          'Engine Type: 2.0-Litre Single Turbo Diesel',
+          'Headlamps: LED',
+          'Hill Descent Control',
+          'Maximum Power: 125 @ 3500',
+          'Speakers: 6',
+          'SYNC® 4A(S)',
+          'Wheel Size & Type: 17″ Alloy',
+          'Wireless Apple CarPlay™ & Android Auto™ (S)',
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: 'What is the starting price of the Ranger XLT?',
+        answer: 'Ranger XLT starts from R 655,000 for the 2.0 SiT Super Cab XLT 4x2 10AT.',
+      },
+      {
+        question: 'Does XLT offer Double Cab 4x4?',
+        answer:
+          'Yes. The 2.0 SiT Double Cab XLT 4x4 10AT adds ESOF 4x4, hill descent control and dual-zone climate.',
+      },
+    ],
+  },
   // ── SUVs ───────────────────────────────────────────────────────────────────
   {
     name: 'Next Level Everest',
@@ -2477,6 +3724,7 @@ export async function POST(): Promise<Response> {
           ...(brochureMediaId ? { brochure: brochureMediaId } : {}),
           startingPrice: veh.startingPrice,
           priceDisclaimer: 'Including Optional Service plan and excluding Packs & factory options',
+          showInMegaMenu: true,
           sortOrder: index + 1,
           _status: 'published',
         },
@@ -2543,11 +3791,33 @@ export async function POST(): Promise<Response> {
         )
 
         if (existing.totalDocs > 0) {
+          const existingDoc = existing.docs[0]
+          const existingParents = Array.isArray(existingDoc.vehicle)
+            ? existingDoc.vehicle
+            : existingDoc.vehicle
+              ? [existingDoc.vehicle]
+              : []
+          const parentIds = [
+            ...new Set(
+              existingParents
+                .map((parent) =>
+                  typeof parent === 'object' && parent !== null
+                    ? String(parent.id)
+                    : String(parent),
+                )
+                .filter(Boolean),
+            ),
+          ]
+          if (!parentIds.includes(vehicleId)) parentIds.push(vehicleId)
+
           const updateData: {
+            vehicle: string[]
             heroImage?: string
             featureImage?: string
             colours?: BuiltColour[]
-          } = {}
+          } = {
+            vehicle: parentIds,
+          }
 
           if (heroMediaId) updateData.heroImage = heroMediaId
           if (featureMediaId) updateData.featureImage = featureMediaId
@@ -2555,7 +3825,7 @@ export async function POST(): Promise<Response> {
 
           await payload.update({
             collection: 'vehicle-models',
-            id: existing.docs[0].id,
+            id: existingDoc.id,
             data: updateData,
             req: payloadReq,
             context: { disableRevalidate: true },
@@ -2574,7 +3844,7 @@ export async function POST(): Promise<Response> {
               name: variant.name,
               slug: variant.slug,
               generateSlug: false,
-              vehicle: vehicleId,
+              vehicle: [vehicleId],
               price: variant.price,
               highlights: variant.highlights.map((h) => ({ highlight: h })),
               ...(heroMediaId ? { heroImage: heroMediaId } : {}),
