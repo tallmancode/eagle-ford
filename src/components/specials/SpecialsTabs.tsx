@@ -13,14 +13,20 @@ import {
 } from '@/components/ui/accordion'
 import { MediaImage } from '@/components/ui/media-image'
 import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { FormBlockClient } from '@/lib/blocks/form-block/components/FormBlockClient'
 import type { FormBlockContextValues } from '@/lib/blocks/form-block/types/formContext'
+import { FinanceCalculatorClient } from '@/lib/blocks/finance-calculator-block/components/FinanceCalculatorClient'
+import type { FinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-block/getFinanceCalculatorDefaults'
 import { getOfferTypeLabel } from '@/lib/specials/constants'
 import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getSpecialCategoryPath } from '@/lib/specials/paths'
 import { formatZAR } from '@/lib/utils/formatZAR'
 import { getBrochureUrl } from '@/lib/utils/vehicleCta'
 import type { Form, Special, Vehicle, VehicleModel } from '@/payload-types'
+
+const FINANCE_DISCLAIMER =
+  'The instalment quoted does not include any admin costs, license and registration of the vehicle and any value added products. All calculations, rates quoted and payments shown are guidelines only and are not quotations.'
 
 export type SpecialTabItem = Pick<
   Special,
@@ -46,6 +52,8 @@ type SpecialsTabsProps = {
   fordPromiseHref: string | null
   specials: SpecialTabItem[]
   initialSpecialSlug?: string
+  offerDetails?: React.ReactNode
+  calculatorDefaults?: FinanceCalculatorDefaults | null
 }
 
 function findSpecialIndex(
@@ -92,7 +100,7 @@ function SpecialListPricing({ special }: { special: SpecialTabItem }) {
   if (special.offerType === 'price-point') {
     if (special.specialOffer == null && special.bestSaving == null) return null
     return (
-      <span className="flex justify-between gap-4">
+      <span className="flex flex-col items-start">
         {special.specialOffer != null && (
           <span className="flex items-center space-x-1">
             <span className="text-xs">Special Offer:</span>
@@ -141,11 +149,11 @@ function SpecialDetailPricing({ special }: { special: SpecialTabItem }) {
 
   if (special.offerType === 'price-point') {
     return (
-      <div className="space-y-2 sm:text-right">
+      <div className="space-y-2">
         {special.specialOffer != null && (
           <div className="flex flex-col">
             <span className="text-xs text-muted-foreground">{offerLabel}</span>
-            <span className="font-semibold text-secondary text-lg">
+            <span className="font-semibold text-secondary text-2xl">
               {formatZAR(special.specialOffer)}*
             </span>
           </div>
@@ -153,7 +161,7 @@ function SpecialDetailPricing({ special }: { special: SpecialTabItem }) {
         {special.bestSaving != null && (
           <div className="flex flex-col">
             <span className="text-xs text-muted-foreground">Best saving</span>
-            <span className="font-semibold text-secondary text-lg">
+            <span className="font-semibold text-secondary text-2xl">
               {formatZAR(special.bestSaving)}*
             </span>
           </div>
@@ -164,10 +172,10 @@ function SpecialDetailPricing({ special }: { special: SpecialTabItem }) {
 
   if (special.offerType === 'payment' && special.paymentFrom != null) {
     return (
-      <div className="space-y-2 sm:text-right">
+      <div className="space-y-2">
         <div className="flex flex-col">
           <span className="text-xs text-muted-foreground">Payment from</span>
-          <span className="font-semibold text-secondary text-lg">
+          <span className="font-semibold text-secondary text-2xl">
             {formatZAR(special.paymentFrom)}*pm
           </span>
         </div>
@@ -177,7 +185,7 @@ function SpecialDetailPricing({ special }: { special: SpecialTabItem }) {
 
   if (special.offerType === 'service' && special.specialOffer != null) {
     return (
-      <div className="space-y-2 sm:text-right">
+      <div className="space-y-2">
         <div className="flex flex-col">
           <span className="text-xs text-muted-foreground">{offerLabel}</span>
           <span className="font-semibold text-secondary text-lg">
@@ -191,11 +199,20 @@ function SpecialDetailPricing({ special }: { special: SpecialTabItem }) {
   return null
 }
 
+function scrollToSpecialDetails(specialId: string) {
+  const targets = document.querySelectorAll<HTMLElement>(`[data-special-details="${specialId}"]`)
+  const visible = Array.from(targets).find((el) => el.getClientRects().length > 0)
+  visible?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
 function SpecialCardImage({ special, priority }: { special: SpecialTabItem; priority?: boolean }) {
   if (!special.cardImage) return null
 
+  const hasPricing = hasSpecialDetailPricing(special)
+  const detailsHref = `#special-${special.id}-details`
+
   return (
-    <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-muted">
+    <div className="relative aspect-[3/2] max-h-[500px] rounded-2xl overflow-hidden bg-muted">
       <MediaImage
         resource={special.cardImage}
         fill
@@ -204,6 +221,22 @@ function SpecialCardImage({ special, priority }: { special: SpecialTabItem; prio
         size="(max-width: 1024px) 100vw, 66vw"
         priority={priority}
       />
+      {hasPricing && (
+        <a
+          href={detailsHref}
+          onClick={(event) => {
+            event.preventDefault()
+            scrollToSpecialDetails(String(special.id))
+            window.history.replaceState(null, '', detailsHref)
+          }}
+          className="absolute bottom-3 right-3 z-10 max-w-[min(100%,16rem)] rounded-xl bg-background/90 px-3 py-2 shadow-sm backdrop-blur-sm transition-opacity hover:opacity-90 sm:text-right"
+        >
+          <SpecialDetailPricing special={special} />
+          <p className="mt-1 text-[10px] leading-tight text-muted-foreground">
+            All subject to finance approval Ford Credit.
+          </p>
+        </a>
+      )}
     </div>
   )
 }
@@ -211,9 +244,13 @@ function SpecialCardImage({ special, priority }: { special: SpecialTabItem; prio
 function SpecialDetailInfo({
   special,
   fordPromiseHref,
+  offerDetails,
+  calculatorDefaults,
 }: {
   special: SpecialTabItem
   fordPromiseHref: string | null
+  offerDetails?: React.ReactNode
+  calculatorDefaults?: FinanceCalculatorDefaults | null
 }) {
   const title = getSpecialDisplayTitle(special)
   const model =
@@ -222,6 +259,9 @@ function SpecialDetailInfo({
     special.vehicle && typeof special.vehicle === 'object' ? (special.vehicle as Vehicle) : null
   const highlights = model?.highlights ?? []
   const hasHighlights = highlights.length > 0
+  const hasOfferDetails = Boolean(offerDetails)
+  const showFinanceCalculator = special.offerType === 'price-point'
+  const hasDetailTabs = hasHighlights || hasOfferDetails || showFinanceCalculator
   const hasPricing = hasSpecialDetailPricing(special)
   const brochureUrl = getBrochureUrl(vehicle?.brochure)
   const vehicleHref = vehicle?.slug ? `/vehicles/${vehicle.slug}` : null
@@ -254,27 +294,65 @@ function SpecialDetailInfo({
         </Button>
       </div>
 
-      {(hasHighlights || hasPricing) && (
-        <div className="mb-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
-          {hasHighlights && (
-            <div className="min-w-0 flex-1">
-              <h4 className="text-primary font-bold mb-3">Key Features</h4>
-              <ul className="space-y-2">
-                {highlights.map((item, i) => (
-                  <li
-                    key={item.id ?? i}
-                    className="flex items-start gap-2 text-sm text-muted-foreground"
-                  >
-                    <span className="text-primary mt-0.5 shrink-0">•</span>
-                    <span>{item.highlight}</span>
-                  </li>
-                ))}
-              </ul>
+      {(hasPricing || hasDetailTabs) && (
+        <div
+          data-special-details={special.id}
+          className="mb-8 flex flex-col gap-6 scroll-mt-24 sm:flex-row sm:items-start sm:justify-between sm:gap-8"
+        >
+          {hasPricing && (
+            <div className="shrink-0">
+              <SpecialDetailPricing special={special} />
             </div>
           )}
-          {hasPricing && (
-            <div className="shrink-0 sm:ml-auto">
-              <SpecialDetailPricing special={special} />
+          {hasDetailTabs && (
+            <div className="min-w-0 flex-1">
+              <Tabs key={special.id} defaultValue="offer-details">
+                <TabsList
+                  variant="line"
+                  className="mb-4 flex h-auto w-full flex-wrap justify-start gap-x-1"
+                >
+                  <TabsTrigger value="offer-details">Offer Details</TabsTrigger>
+                  <TabsTrigger value="key-features">Key Features</TabsTrigger>
+                  {showFinanceCalculator && (
+                    <TabsTrigger value="finance-calculator">Finance Calculator</TabsTrigger>
+                  )}
+                </TabsList>
+                <TabsContent value="offer-details">
+                  {hasOfferDetails ? (
+                    offerDetails
+                  ) : (
+                    <p className="text-sm text-muted-foreground">No offer details available.</p>
+                  )}
+                </TabsContent>
+                <TabsContent value="key-features">
+                  {hasHighlights ? (
+                    <ul className="space-y-2">
+                      {highlights.map((item, i) => (
+                        <li
+                          key={item.id ?? i}
+                          className="flex items-start gap-2 text-sm text-muted-foreground"
+                        >
+                          <span className="text-primary mt-0.5 shrink-0">•</span>
+                          <span>{item.highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">No key features available.</p>
+                  )}
+                </TabsContent>
+                {showFinanceCalculator && (
+                  <TabsContent value="finance-calculator">
+                    <FinanceCalculatorClient
+                      key={special.id}
+                      disclaimer={FINANCE_DISCLAIMER}
+                      defaultPurchasePrice={special.specialOffer}
+                      mode="repaymentOnly"
+                      defaults={calculatorDefaults}
+                    />
+                  </TabsContent>
+                )}
+              </Tabs>
             </div>
           )}
         </div>
@@ -312,8 +390,9 @@ function SpecialsTabsList({
 }) {
   return (
     <>
-      <div className="gap-4 px-4 pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+      <div className="gap-4 px-4 flex justify-between pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
         <span>Specials</span>
+        <span className="text-xs">*Click the specials below to view deatils</span>
       </div>
       <ul className="divide-y divide-border">
         {specials.map((special, index) => {
@@ -356,6 +435,8 @@ function SpecialsTabsInner({
   fordPromiseHref,
   specials,
   initialSpecialSlug,
+  offerDetails,
+  calculatorDefaults,
 }: SpecialsTabsProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -425,7 +506,12 @@ function SpecialsTabsInner({
                   <AccordionContent className="px-4 pt-2 pb-6">
                     <div className="flex flex-col gap-6">
                       <SpecialCardImage special={special} priority={isSelected} />
-                      <SpecialDetailInfo special={special} fordPromiseHref={fordPromiseHref} />
+                      <SpecialDetailInfo
+                        special={special}
+                        fordPromiseHref={fordPromiseHref}
+                        offerDetails={isSelected ? offerDetails : undefined}
+                        calculatorDefaults={calculatorDefaults}
+                      />
                     </div>
                   </AccordionContent>
                 </AccordionItem>
@@ -468,7 +554,12 @@ function SpecialsTabsInner({
         </div>
 
         <div className="col-start-2 row-start-2">
-          <SpecialDetailInfo special={selectedSpecial} fordPromiseHref={fordPromiseHref} />
+          <SpecialDetailInfo
+            special={selectedSpecial}
+            fordPromiseHref={fordPromiseHref}
+            offerDetails={offerDetails}
+            calculatorDefaults={calculatorDefaults}
+          />
         </div>
       </div>
     </div>
