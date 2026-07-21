@@ -4091,6 +4091,7 @@ export interface Footer {
 export interface Setting {
   id: string;
   contactInfo: ContactInfo1;
+  pricingCalculatorDefaults?: PricingCalculatorDefaults;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -4113,6 +4114,28 @@ export interface ContactInfo1 {
     postCode?: string | null;
     mapsLink?: string | null;
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PricingCalculatorDefaults".
+ */
+export interface PricingCalculatorDefaults {
+  /**
+   * Default deposit in Rands for finance calculators.
+   */
+  depositAmount?: number | null;
+  /**
+   * Default annual interest rate (%) for finance calculators.
+   */
+  interestRate?: number | null;
+  /**
+   * Default balloon payment (%) for finance calculators. Maximum 35%.
+   */
+  balloonPayment?: number | null;
+  /**
+   * Default repayment period for finance calculators.
+   */
+  repaymentPeriod?: ('36' | '48' | '54' | '60' | '72') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -4230,6 +4253,7 @@ export interface FooterSelect<T extends boolean = true> {
  */
 export interface SettingsSelect<T extends boolean = true> {
   contactInfo?: T | ContactInfoSelect<T>;
+  pricingCalculatorDefaults?: T | PricingCalculatorDefaultsSelect<T>;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -4252,6 +4276,16 @@ export interface ContactInfoSelect<T extends boolean = true> {
         postCode?: T;
         mapsLink?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PricingCalculatorDefaults_select".
+ */
+export interface PricingCalculatorDefaultsSelect<T extends boolean = true> {
+  depositAmount?: T;
+  interestRate?: T;
+  balloonPayment?: T;
+  repaymentPeriod?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

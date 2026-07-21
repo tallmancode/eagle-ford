@@ -1,5 +1,12 @@
 import type { GlobalConfig } from 'payload'
 import { revalidateGlobalSettings } from '@/globals/Settings/hooks/revalidateGlobalSettings'
+import {
+  DEFAULT_DEPOSIT_AMOUNT,
+  DEFAULT_INTEREST_RATE_NUMBER,
+  DEFAULT_PAYMENT_TERM,
+  MAX_BALLOON_PERCENT,
+  REPAYMENT_PERIOD_OPTIONS,
+} from '@/lib/blocks/finance-calculator-block/financeCalculatorOptions'
 import { isAdmin } from '@/lib/utils/accessUtil'
 import AddressField from '@/lib/fields/address-field/AddressField'
 
@@ -52,6 +59,59 @@ export const SettingsGlobal: GlobalConfig = {
               },
             },
             AddressField(),
+          ],
+        },
+        {
+          label: 'Pricing Calculator',
+          name: 'pricingCalculatorDefaults',
+          interfaceName: 'PricingCalculatorDefaults',
+          fields: [
+            {
+              name: 'depositAmount',
+              label: 'Deposit Amount',
+              type: 'number',
+              min: 0,
+              defaultValue: DEFAULT_DEPOSIT_AMOUNT,
+              admin: {
+                description: 'Default deposit in Rands for finance calculators.',
+              },
+            },
+            {
+              name: 'interestRate',
+              label: 'Interest Rate',
+              type: 'number',
+              min: 0,
+              defaultValue: DEFAULT_INTEREST_RATE_NUMBER,
+              admin: {
+                description: 'Default annual interest rate (%) for finance calculators.',
+                step: 0.01,
+              },
+            },
+            {
+              name: 'balloonPayment',
+              label: 'Balloon Payment',
+              type: 'number',
+              min: 0,
+              max: MAX_BALLOON_PERCENT,
+              defaultValue: 0,
+              admin: {
+                description: `Default balloon payment (%) for finance calculators. Maximum ${MAX_BALLOON_PERCENT}%.`,
+                step: 0.01,
+              },
+            },
+            {
+              name: 'repaymentPeriod',
+              label: 'Repayment Period',
+              type: 'select',
+              defaultValue: String(DEFAULT_PAYMENT_TERM),
+              options: REPAYMENT_PERIOD_OPTIONS.map((months) => ({
+                label: `${months} months`,
+                value: String(months),
+              })),
+              admin: {
+                description: 'Default repayment period for finance calculators.',
+              },
+            },
           ],
         },
         {

@@ -4,14 +4,17 @@ import { notFound } from 'next/navigation'
 import { formatPageTitle } from '@/constants/site'
 import { StockArchiveError } from '@/lib/blocks/stock-archive-block/components/StockArchiveError'
 import { getTaxonomySlug } from '@/lib/blocks/stock-archive-block/utils'
+import { getFinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-block/getFinanceCalculatorDefaults'
 import { getCachedStock } from '@/lib/motor-city-stock/getCachedStock'
 import { getCachedStockVehicle } from '@/lib/motor-city-stock/getCachedStockVehicle'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
 import { getVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
 import { buildStockVehiclePath, getStockVehicleCmsIdFromSlug } from '@/lib/stock-vehicle/paths'
 import { getStockHeroImage } from '@/lib/stock-vehicle/media'
+import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import { StockVehicleDetail } from '@/views/StockVehicle/StockVehicleDetail'
 import { getStockVehiclePageTitle } from '@/views/StockVehicle/StockVehicleSpecs'
+import type { Setting } from '@/payload-types'
 
 type Args = {
   params: Promise<{
@@ -49,11 +52,13 @@ export default async function ShowroomVehiclePage({ params: paramsPromise }: Arg
 
   let vehicle: Awaited<ReturnType<typeof getCachedStockVehicle>>
   let enquiryForm: Awaited<ReturnType<typeof getVehicleQuoteForm>>
+  let settings: Setting
 
   try {
-    ;[vehicle, enquiryForm] = await Promise.all([
+    ;[vehicle, enquiryForm, settings] = await Promise.all([
       getCachedStockVehicle(cmsId),
       getVehicleQuoteForm(),
+      getCachedGlobal('settings', 1) as Promise<Setting>,
     ])
   } catch (error) {
     if (error instanceof MotorCityStockError) {
@@ -67,12 +72,14 @@ export default async function ShowroomVehiclePage({ params: paramsPromise }: Arg
   }
 
   const similarVehicles = await getSimilarVehicles(vehicle)
+  const calculatorDefaults = getFinanceCalculatorDefaults(settings)
 
   return (
     <StockVehicleDetail
       vehicle={vehicle}
       similarVehicles={similarVehicles}
       enquiryForm={enquiryForm}
+      calculatorDefaults={calculatorDefaults}
     />
   )
 }
