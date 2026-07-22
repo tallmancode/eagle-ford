@@ -165,7 +165,7 @@ const VEHICLES = [
   {
     slug: 'transit-van',
     url: `${BASE}/new/transit-van/`,
-    variantSlugs: ['2.2-tdci-elwb-ambiente-6mt'],
+    variantSlugs: ['2.0-tdci-350lwb-base-8at', '2.0-tdci-470elwb-base-6mt'],
   },
 ]
 

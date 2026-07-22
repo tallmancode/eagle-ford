@@ -3106,7 +3106,7 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
     ],
     models: [
       {
-        name: 'Gt',
+        name: 'GT',
         slug: 'gt',
         showInMegaMenu: true,
         variants: [
@@ -3826,7 +3826,7 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
       {
         question: 'What is the starting price of the Transit Van?',
         answer:
-          'The Transit Van starts from R 1,011,500 for the 2.2 TDCi ELWB Ambiente 6MT. Speak to Eagle Ford for commercial quotes, stock and aftersales support.',
+          'The Transit Van starts from R 1,011,500 for the 2.0L TDCI 350LWB Base 8AT. Speak to Eagle Ford for commercial quotes, stock and aftersales support.',
       },
       {
         question: 'How much load space does the Transit Van offer?',
@@ -3844,9 +3844,9 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
           'Transit Van is the larger workhorse for volume and payload. Transit Custom suits mid-size urban and trade routes. Eagle Ford can size the right van to your routes and loads.',
       },
       {
-        question: 'What engine does the listed Ambiente use?',
+        question: 'Which Transit Van derivatives are available?',
         answer:
-          'The ELWB Ambiente is specified with a diesel powertrain and 6-speed manual. Broader Transit messaging also references EcoBlue outputs in the 100–121kW class — confirm the exact engine on the unit you buy.',
+          'Two Base configurations: 2.0L TDCI 350LWB with 8-speed automatic, and 2.0L TDCI 470ELWB with 6-speed manual. Both use the EcoBlue diesel in the 100–121kW class — confirm the exact engine on the unit you buy.',
       },
       {
         question: 'Does Transit Van have selectable drive modes?',
@@ -3854,14 +3854,14 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
           'Yes — up to four selectable drive modes help adapt the van to mixed conditions so you can take business almost anywhere.',
       },
       {
-        question: 'How many seats are in the Transit Van Ambiente?',
+        question: 'How many seats are in the Transit Van?',
         answer:
-          'The 2.2 TDCi ELWB Ambiente is listed with 3 seats — a practical crew-cab feel for a driver plus two without sacrificing the huge rear load space.',
+          'Transit Van Base derivatives are listed with 3 seats — a practical crew-cab feel for a driver plus two without sacrificing the huge rear load space.',
       },
       {
         question: 'What fuel tank size does it have?',
         answer:
-          'The Ambiente derivative quotes an 80L diesel tank, supporting longer working days between fills when routes are demanding.',
+          'Transit Van derivatives quote an 80L diesel tank, supporting longer working days between fills when routes are demanding.',
       },
       {
         question: 'Is security a focus on Transit Van?',
@@ -3871,7 +3871,7 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
       {
         question: 'Can Eagle Ford help with commercial Finance and fleet support?',
         answer:
-          'Yes. From choosing ELWB Ambiente specs to structuring business finance and planning servicing, Eagle Ford supports commercial buyers who need vans that stay earning.',
+          'Yes. From choosing 350LWB or 470ELWB Base specs to structuring business finance and planning servicing, Eagle Ford supports commercial buyers who need vans that stay earning.',
       },
     ],
     specHighlights: [
@@ -3890,26 +3890,28 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
     ],
     engineOptions: [
       {
-        name: '2.0L EcoBlue',
+        name: '2.0L TDCI EcoBlue',
         engineType: '100–121kW · 360–390Nm',
       },
     ],
     models: [
       {
-        name: 'Ambiente',
-        slug: 'ambiente',
+        name: '350LWB',
+        slug: '350lwb',
         showInMegaMenu: true,
+        sortOrder: 1,
         variants: [
           {
-            name: 'Transit 2.2 TDCi ELWB Ambiente 6MT',
-            slug: '2.2-tdci-elwb-ambiente-6mt',
+            name: 'Transit Van 2.0L TDCI 350LWB Base 8AT',
+            slug: '2.0-tdci-350lwb-base-8at',
             featureImageUrl:
               'https://www.ford.co.za/content/dam/Ford/za/nameplate/new-transit-van/overview/cards/transit-van.webp',
             featureImageAlt:
-              'Ford Transit Van 350 LWB — Transit Van Ambiente at Eagle Ford South Africa',
+              'Ford Transit Van 350 LWB Base — Transit Van at Eagle Ford South Africa',
             price: 1011500,
             highlights: [
-              'Diesel Powertrain with 6MT',
+              '2.0L TDCI EcoBlue Diesel with 8AT',
+              '350 Long Wheelbase',
               '13.5m³ Load Area Space',
               'Up to 2,270kg Max Gross Payload',
               '3 Seats',
@@ -3917,7 +3919,35 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
               'Up to 4 Selectable Drive Modes',
               'Security Systems for Commercial Peace of Mind',
               'Built for Bulk Deliveries & Equipment',
-              'ELWB Ambient Commercial Spec',
+              'Big Space · Tough Build · Ready to Work',
+            ],
+          },
+        ],
+      },
+      {
+        name: '470ELWB',
+        slug: '470elwb',
+        showInMegaMenu: true,
+        sortOrder: 2,
+        variants: [
+          {
+            name: 'Transit Van 2.0L TDCI 470ELWB Base 6MT',
+            slug: '2.0-tdci-470elwb-base-6mt',
+            featureImageUrl:
+              'https://www.ford.co.za/content/dam/Ford/za/nameplate/new-transit-van/overview/cards/transit-470-van-tile-za.webp',
+            featureImageAlt:
+              'Ford Transit Van 470 ELWB Base — Transit Van at Eagle Ford South Africa',
+            price: 1062000,
+            highlights: [
+              '2.0L TDCI EcoBlue Diesel with 6MT',
+              '470 Extra-Long Wheelbase',
+              '13.5m³ Load Area Space',
+              'Up to 2,270kg Max Gross Payload',
+              '3 Seats',
+              '80L Fuel Tank',
+              'Up to 4 Selectable Drive Modes',
+              'Security Systems for Commercial Peace of Mind',
+              'Built for Bulk Deliveries & Equipment',
               'Big Space · Tough Build · Ready to Work',
             ],
           },
