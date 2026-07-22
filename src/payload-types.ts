@@ -28,10 +28,6 @@ export type NavLinks =
       url?: string | null;
       document?: (string | null) | Media;
       /**
-       * Show vehicle families or individual model variants in the mega menu.
-       */
-      displayMode?: ('vehicles' | 'models') | null;
-      /**
        * Optional link for the parent menu label
        */
       parentLinkType?: ('none' | 'reference' | 'custom') | null;
@@ -161,6 +157,7 @@ export interface Config {
     'vehicle-model-highlights': VehicleModelHighlightsBlock;
     'vehicle-model-colors': VehicleModelColorsBlock;
     'vehicle-model-siblings': VehicleModelSiblingsBlock;
+    'vehicle-model-variants': VehicleModelVariantsBlock;
   };
   collections: {
     pages: Page;
@@ -173,6 +170,7 @@ export interface Config {
     'vehicle-model-templates': VehicleModelTemplate;
     vehicles: Vehicle;
     'vehicle-models': VehicleModel;
+    'vehicle-variants': VehicleVariant;
     users: User;
     redirects: Redirect;
     forms: Form;
@@ -197,6 +195,7 @@ export interface Config {
     'vehicle-model-templates': VehicleModelTemplatesSelect<false> | VehicleModelTemplatesSelect<true>;
     vehicles: VehiclesSelect<false> | VehiclesSelect<true>;
     'vehicle-models': VehicleModelsSelect<false> | VehicleModelsSelect<true>;
+    'vehicle-variants': VehicleVariantsSelect<false> | VehicleVariantsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
@@ -310,6 +309,7 @@ export interface Section {
         | VehicleModelHighlightsBlock
         | VehicleModelColorsBlock
         | VehicleModelSiblingsBlock
+        | VehicleModelVariantsBlock
       )[]
     | null;
   backgroundColor?:
@@ -452,6 +452,7 @@ export interface SectionInner {
         | VehicleModelHighlightsBlock
         | VehicleModelColorsBlock
         | VehicleModelSiblingsBlock
+        | VehicleModelVariantsBlock
       )[]
     | null;
   backgroundColor?:
@@ -591,6 +592,7 @@ export interface Row {
         | VehicleModelHighlightsBlock
         | VehicleModelColorsBlock
         | VehicleModelSiblingsBlock
+        | VehicleModelVariantsBlock
       )[]
     | null;
   backgroundColor?:
@@ -1781,6 +1783,7 @@ export interface FixedBackgroundBlockType {
         | VehicleModelHighlightsBlock
         | VehicleModelColorsBlock
         | VehicleModelSiblingsBlock
+        | VehicleModelVariantsBlock
       )[]
     | null;
   /**
@@ -2246,6 +2249,15 @@ export interface VehicleModelSiblingsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelVariantsBlock".
+ */
+export interface VehicleModelVariantsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-variants';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "specials".
  */
 export interface Special {
@@ -2269,9 +2281,13 @@ export interface Special {
    */
   vehicle?: (string | null) | Vehicle;
   /**
-   * Optional. Links this special to a specific model variant. Leave blank when not applicable.
+   * Optional. Links this special to a specific trim/model page. Leave blank when not applicable.
    */
   vehicleModel?: (string | null) | VehicleModel;
+  /**
+   * Optional. Links this special to a specific variant configuration. Public links go to the parent model page.
+   */
+  vehicleVariant?: (string | null) | VehicleVariant;
   /**
    * Cash price in Rand, e.g. 489900 for R489 900
    */
@@ -2539,7 +2555,7 @@ export interface Vehicle {
     metaImage?: (string | null) | Media;
   };
   /**
-   * When enabled, this vehicle appears in the New vehicles mega menu.
+   * When enabled, this vehicle family appears in the mega menu alongside any trims that also have Show in Mega Menu enabled.
    */
   showInMegaMenu?: boolean | null;
   /**
@@ -2550,10 +2566,6 @@ export interface Vehicle {
    * Optional. Layout template used to render this vehicle page.
    */
   template?: (string | null) | VehicleTemplate;
-  /**
-   * Optional. Layout used for all model detail pages under this vehicle.
-   */
-  modelTemplate?: (string | null) | VehicleModelTemplate;
   publishedAt?: string | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -2599,70 +2611,68 @@ export interface VehicleTemplate {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-model-templates".
- */
-export interface VehicleModelTemplate {
-  id: string;
-  /**
-   * e.g. "Standard Model Layout" or "Commercial Model Layout"
-   */
-  title: string;
-  section?: Section[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "vehicle-models".
  */
 export interface VehicleModel {
   id: string;
   /**
-   * e.g. "2.0 SiT Double Cab XL 4x2 6MT"
+   * Trim or series name, e.g. "Ranger Sport" or "Wildtrak".
    */
   name: string;
   /**
-   * Parent vehicle families this model belongs to.
+   * Parent vehicle family this trim belongs to.
    */
-  vehicle: (string | Vehicle)[];
+  vehicle: string | Vehicle;
   /**
-   * Specific price for this model variant, e.g. 621000 for R 621,000.
+   * Optional hero subtitle for this trim page.
    */
-  price: number;
+  tagline?: string | null;
   /**
-   * Full-width hero for this model variant. Falls back to the parent vehicle hero image if not set.
+   * Full-width hero for this trim. Falls back to the parent vehicle hero image if not set.
    */
   heroImage?: (string | null) | Media;
   /**
-   * Card/listing image for this model variant. Falls back to model hero, then parent vehicle feature/hero images.
+   * Card/listing image for this trim. Falls back to model hero, then parent vehicle images.
    */
   featureImage?: (string | null) | Media;
   /**
-   * Key feature bullet points shown on the model overview page.
+   * Marketing feature sections shown on the model page.
    */
-  highlights?:
+  features?:
     | {
-        highlight: string;
+        featureTitle: string;
+        featureDescription?: string | null;
+        featureImage?: (string | null) | Media;
         id?: string | null;
       }[]
     | null;
   /**
-   * Colour options for this specific model. Leave empty to inherit from the parent vehicle.
+   * Colour options for this trim. Leave empty to inherit from the parent vehicle.
    */
   colours?:
     | {
         colourName: string;
-        /**
-         * e.g. "Platinum Only"
-         */
         colourNote?: string | null;
         colourSwatch?: (string | null) | Media;
         id?: string | null;
       }[]
     | null;
+  gallery?:
+    | {
+        image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
   content?: {
     /**
-     * Model-specific marketing copy shown on the variant detail page.
+     * Trim-specific marketing copy shown on the model page.
      */
     description?: {
       root: {
@@ -2687,7 +2697,114 @@ export interface VehicleModel {
     metaImage?: (string | null) | Media;
   };
   /**
+   * When enabled, this trim appears in the mega menu alongside any vehicle families that also have Show in Mega Menu enabled.
+   */
+  showInMegaMenu?: boolean | null;
+  /**
    * Lower numbers appear first within a vehicle family.
+   */
+  sortOrder?: number | null;
+  /**
+   * Optional. Layout template used to render this model page.
+   */
+  template?: (string | null) | VehicleModelTemplate;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-model-templates".
+ */
+export interface VehicleModelTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Model Layout" or "Commercial Model Layout"
+   */
+  title: string;
+  section?: Section[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-variants".
+ */
+export interface VehicleVariant {
+  id: string;
+  /**
+   * e.g. "2.0 SiT Double Cab XL 4x2 6MT"
+   */
+  name: string;
+  /**
+   * Parent trim/series this configuration belongs to.
+   */
+  model: string | VehicleModel;
+  /**
+   * Specific price for this configuration, e.g. 621000 for R 621,000.
+   */
+  price: number;
+  /**
+   * Optional hero for this variant. Falls back to the parent model or vehicle images.
+   */
+  heroImage?: (string | null) | Media;
+  /**
+   * Card/listing image for this variant.
+   */
+  featureImage?: (string | null) | Media;
+  /**
+   * Key feature bullet points shown in the variant list on the model page.
+   */
+  highlights?:
+    | {
+        highlight: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Colour options for this variant. Leave empty to inherit from the parent model or vehicle.
+   */
+  colours?:
+    | {
+        colourName: string;
+        colourNote?: string | null;
+        colourSwatch?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  content?: {
+    /**
+     * Optional variant-specific copy shown in the in-page variant list.
+     */
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  meta?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    metaImage?: (string | null) | Media;
+  };
+  /**
+   * Lower numbers appear first within a model.
    */
   sortOrder?: number | null;
   publishedAt?: string | null;
@@ -3008,6 +3125,10 @@ export interface PayloadLockedDocument {
         value: string | VehicleModel;
       } | null)
     | ({
+        relationTo: 'vehicle-variants';
+        value: string | VehicleVariant;
+      } | null)
+    | ({
         relationTo: 'users';
         value: string | User;
       } | null)
@@ -3103,6 +3224,7 @@ export interface SpecialsSelect<T extends boolean = true> {
   cardImage?: T;
   vehicle?: T;
   vehicleModel?: T;
+  vehicleVariant?: T;
   pricingLabel?: T;
   specialOffer?: T;
   bestSaving?: T;
@@ -3373,7 +3495,6 @@ export interface VehiclesSelect<T extends boolean = true> {
   showInMegaMenu?: T;
   sortOrder?: T;
   template?: T;
-  modelTemplate?: T;
   publishedAt?: T;
   generateSlug?: T;
   slug?: T;
@@ -3388,6 +3509,68 @@ export interface VehiclesSelect<T extends boolean = true> {
 export interface VehicleModelsSelect<T extends boolean = true> {
   name?: T;
   vehicle?: T;
+  tagline?: T;
+  heroImage?: T;
+  featureImage?: T;
+  features?:
+    | T
+    | {
+        featureTitle?: T;
+        featureDescription?: T;
+        featureImage?: T;
+        id?: T;
+      };
+  colours?:
+    | T
+    | {
+        colourName?: T;
+        colourNote?: T;
+        colourSwatch?: T;
+        id?: T;
+      };
+  gallery?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  content?:
+    | T
+    | {
+        description?: T;
+        section?: T | {};
+      };
+  meta?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        metaImage?: T;
+      };
+  showInMegaMenu?: T;
+  sortOrder?: T;
+  template?: T;
+  publishedAt?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-variants_select".
+ */
+export interface VehicleVariantsSelect<T extends boolean = true> {
+  name?: T;
+  model?: T;
   price?: T;
   heroImage?: T;
   featureImage?: T;
@@ -3409,7 +3592,6 @@ export interface VehicleModelsSelect<T extends boolean = true> {
     | T
     | {
         description?: T;
-        section?: T | {};
       };
   meta?:
     | T
@@ -4172,7 +4354,6 @@ export interface NavLinksSelect<T extends boolean = true> {
   reference?: T;
   url?: T;
   document?: T;
-  displayMode?: T;
   parentLinkType?: T;
   children?:
     | T
@@ -4322,6 +4503,7 @@ export interface TaskCreateCollectionExport {
       | 'vehicle-model-templates'
       | 'vehicles'
       | 'vehicle-models'
+      | 'vehicle-variants'
       | 'users'
       | 'redirects'
       | 'forms'
@@ -4392,6 +4574,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'vehicle-models';
           value: string | VehicleModel;
+        } | null)
+      | ({
+          relationTo: 'vehicle-variants';
+          value: string | VehicleVariant;
         } | null);
     global?: string | null;
     user?: (string | null) | User;

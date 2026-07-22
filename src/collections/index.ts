@@ -7,6 +7,7 @@ import { SpecialTemplatesCollection } from '@/collections/SpecialTemplates'
 import { VehicleCategories } from '@/collections/VehicleCategories'
 import { VehiclesCollection } from '@/collections/Vehicles'
 import { VehicleModelsCollection } from '@/collections/VehicleModels'
+import { VehicleVariantsCollection } from '@/collections/VehicleVariants'
 import { VehicleTemplatesCollection } from '@/collections/VehicleTemplates'
 import { VehicleModelTemplatesCollection } from '@/collections/VehicleModelTemplates'
 
@@ -21,6 +22,7 @@ const collections: CollectionConfig[] = [
   VehicleModelTemplatesCollection,
   VehiclesCollection,
   VehicleModelsCollection,
+  VehicleVariantsCollection,
 ]
 
 export default collections

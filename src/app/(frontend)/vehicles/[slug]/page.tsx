@@ -11,6 +11,7 @@ import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 import type { Media, Vehicle, VehicleTemplate } from '@/payload-types'
 import { DefaultVehicleLayout } from './DefaultVehicleLayout'
+import { getModelStartingPrice } from '@/lib/utils/vehicleModel'
 import { getVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
 
 export async function generateStaticParams() {
@@ -66,7 +67,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   const useTemplate = Array.isArray(templateSections) && templateSections.length > 0
 
   const payload = await getPayload({ config: configPromise })
-  const [modelsResult, enquiryForm] = await Promise.all([
+  const [modelsResult, variantsResult, enquiryForm] = await Promise.all([
     payload.find({
       collection: 'vehicle-models',
       draft: false,
@@ -76,9 +77,38 @@ export default async function Page({ params: paramsPromise }: Args) {
       pagination: false,
       where: { vehicle: { equals: vehicle.id } },
     }),
+    payload.find({
+      collection: 'vehicle-variants',
+      where: { 'model.vehicle': { equals: vehicle.id } },
+      sort: 'sortOrder',
+      depth: 0,
+      draft: false,
+      overrideAccess: false,
+      pagination: false,
+      select: {
+        id: true,
+        price: true,
+        model: true,
+      },
+    }),
     getVehicleQuoteForm(),
   ])
-  const models = modelsResult.docs
+
+  const variantsByModelId = new Map<string, typeof variantsResult.docs>()
+  for (const variant of variantsResult.docs) {
+    const modelId =
+      typeof variant.model === 'object' && variant.model !== null
+        ? String(variant.model.id)
+        : String(variant.model)
+    const list = variantsByModelId.get(modelId) ?? []
+    list.push(variant)
+    variantsByModelId.set(modelId, list)
+  }
+
+  const models = modelsResult.docs.map((model) => ({
+    ...model,
+    startingPrice: getModelStartingPrice(variantsByModelId.get(String(model.id)) ?? []),
+  }))
 
   return (
     <div>

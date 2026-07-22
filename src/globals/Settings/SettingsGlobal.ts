@@ -154,6 +154,26 @@ export const SettingsGlobal: GlobalConfig = {
             },
           ],
         },
+        {
+          label: 'Cache',
+          admin: {
+            condition: (_data, _siblingData, { user }) => {
+              return Boolean(user?.roles?.includes('developer'))
+            },
+          },
+          fields: [
+            {
+              type: 'ui',
+              label: 'Cache bust',
+              name: 'cacheBustDisplay',
+              admin: {
+                components: {
+                  Field: '@/lib/fields/cache-bust/CacheBustComponent#CacheBustComponent',
+                },
+              },
+            },
+          ],
+        },
       ],
     },
   ],
