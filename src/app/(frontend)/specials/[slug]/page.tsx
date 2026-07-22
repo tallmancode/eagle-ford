@@ -45,6 +45,7 @@ type SpecialListItem = Pick<
   | 'cardImage'
   | 'vehicle'
   | 'vehicleModel'
+  | 'vehicleVariant'
   | 'enquiryForm'
   | 'template'
 >
@@ -392,6 +393,7 @@ const querySpecialsByCategoryId = cache(async ({ categoryId }: { categoryId: str
       cardImage: true,
       vehicle: true,
       vehicleModel: true,
+      vehicleVariant: true,
       enquiryForm: true,
       template: true,
     },

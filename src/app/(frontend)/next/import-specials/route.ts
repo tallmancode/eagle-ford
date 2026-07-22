@@ -45,9 +45,11 @@ async function buildCatalogIdMaps(
 ): Promise<{
   vehicleIdsBySlug: Map<string, string>
   modelIdsByKey: Map<string, string>
+  variantIdsByKey: Map<string, string>
 }> {
   const vehicleIdsBySlug = new Map<string, string>()
   const modelIdsByKey = new Map<string, string>()
+  const variantIdsByKey = new Map<string, string>()
 
   const vehicles = await payload.find({
     collection: 'vehicles',
@@ -76,37 +78,65 @@ async function buildCatalogIdMaps(
   for (const model of models.docs) {
     if (!model.slug) continue
 
-    const parentRefs = Array.isArray(model.vehicle)
-      ? model.vehicle
-      : model.vehicle
-        ? [model.vehicle]
-        : []
+    const parent = model.vehicle
+    const vehicleId =
+      typeof parent === 'object' && parent !== null
+        ? (parent.id as string)
+        : (parent as string | undefined)
+    if (!vehicleId) continue
 
-    for (const parent of parentRefs) {
-      const vehicleId =
-        typeof parent === 'object' && parent !== null
-          ? (parent.id as string)
-          : (parent as string | undefined)
-      if (!vehicleId) continue
-
-      let vehicleSlug: string | undefined
-      for (const [slug, id] of vehicleIdsBySlug.entries()) {
-        if (id === vehicleId) {
-          vehicleSlug = slug
-          break
-        }
+    let vehicleSlug: string | undefined
+    for (const [slug, id] of vehicleIdsBySlug.entries()) {
+      if (id === vehicleId) {
+        vehicleSlug = slug
+        break
       }
-      if (!vehicleSlug) continue
-      modelIdsByKey.set(`${vehicleSlug}::${model.slug}`, model.id as string)
-      // Seed linkedModel strips dots (e.g. 2.0-sit → 20-sit); index both forms
-      const undotted = model.slug.replace(/\./g, '')
-      if (undotted !== model.slug) {
-        modelIdsByKey.set(`${vehicleSlug}::${undotted}`, model.id as string)
-      }
+    }
+    if (!vehicleSlug) continue
+    modelIdsByKey.set(`${vehicleSlug}::${model.slug}`, model.id as string)
+    const undotted = model.slug.replace(/\./g, '')
+    if (undotted !== model.slug) {
+      modelIdsByKey.set(`${vehicleSlug}::${undotted}`, model.id as string)
     }
   }
 
-  return { vehicleIdsBySlug, modelIdsByKey }
+  const variants = await payload.find({
+    collection: 'vehicle-variants',
+    limit: 5000,
+    depth: 1,
+    draft: true,
+    overrideAccess: true,
+    pagination: false,
+    req,
+  })
+
+  for (const variant of variants.docs) {
+    if (!variant.slug) continue
+
+    const modelRef = variant.model
+    const modelId =
+      typeof modelRef === 'object' && modelRef !== null
+        ? (modelRef.id as string)
+        : (modelRef as string | undefined)
+    if (!modelId) continue
+
+    let matchKey: string | null = null
+    for (const [key, id] of modelIdsByKey.entries()) {
+      if (id === modelId) {
+        matchKey = key
+        break
+      }
+    }
+    if (!matchKey) continue
+
+    variantIdsByKey.set(`${matchKey}::${variant.slug}`, variant.id as string)
+    const undotted = variant.slug.replace(/\./g, '')
+    if (undotted !== variant.slug) {
+      variantIdsByKey.set(`${matchKey}::${undotted}`, variant.id as string)
+    }
+  }
+
+  return { vehicleIdsBySlug, modelIdsByKey, variantIdsByKey }
 }
 
 async function uploadSpecialImage(
@@ -150,6 +180,7 @@ export async function POST(): Promise<Response> {
       skipped: 0,
       imagesUploaded: 0,
       imagesMissing: 0,
+      linkedToVariant: 0,
       linkedToModel: 0,
       linkedToVehicleOnly: 0,
       errors: 0,
@@ -219,8 +250,13 @@ export async function POST(): Promise<Response> {
     }
 
     log.info('Loading vehicle catalog for specials links...')
-    const { vehicleIdsBySlug, modelIdsByKey } = await buildCatalogIdMaps(payload, payloadReq)
-    log.info(`Catalog ready — ${vehicleIdsBySlug.size} vehicles, ${modelIdsByKey.size} models`)
+    const { vehicleIdsBySlug, modelIdsByKey, variantIdsByKey } = await buildCatalogIdMaps(
+      payload,
+      payloadReq,
+    )
+    log.info(
+      `Catalog ready — ${vehicleIdsBySlug.size} vehicles, ${modelIdsByKey.size} models, ${variantIdsByKey.size} variants`,
+    )
 
     log.info(`Importing ${SPECIALS_SEED_DATA.length} specials from seed data...`)
 
@@ -249,19 +285,20 @@ export async function POST(): Promise<Response> {
           offerType: entry.offerType,
           linkedVehicle: entry.linkedVehicle,
           linkedModel: entry.linkedModel,
+          linkedVariant: entry.linkedVariant,
         })
 
         let vehicleSlug = catalog.vehicleSlug
         const modelSlug = catalog.modelSlug
+        const variantSlug = catalog.variantSlug
         let vehicleId = vehicleSlug ? (vehicleIdsBySlug.get(vehicleSlug) ?? null) : null
         let modelId: string | null = null
+        let variantId: string | null = null
 
         if (modelSlug) {
-          // Prefer vehicle+model composite key from catalog match
           if (vehicleSlug) {
             modelId = modelIdsByKey.get(`${vehicleSlug}::${modelSlug}`) ?? null
           }
-          // Fallback: linkedModel may be a CMS slug under another vehicle key
           if (!modelId) {
             const undottedTarget = modelSlug.replace(/\./g, '')
             for (const [key, id] of modelIdsByKey.entries()) {
@@ -279,7 +316,25 @@ export async function POST(): Promise<Response> {
           }
         }
 
-        if (vehicleSlug && modelSlug && modelId) {
+        if (variantSlug && modelId) {
+          if (vehicleSlug && modelSlug) {
+            variantId = variantIdsByKey.get(`${vehicleSlug}::${modelSlug}::${variantSlug}`) ?? null
+          }
+          if (!variantId) {
+            const undottedTarget = variantSlug.replace(/\./g, '')
+            for (const [key, id] of variantIdsByKey.entries()) {
+              const keyVariant = key.slice(key.lastIndexOf('::') + 2)
+              if (keyVariant === variantSlug || keyVariant.replace(/\./g, '') === undottedTarget) {
+                variantId = id
+                break
+              }
+            }
+          }
+        }
+
+        if (vehicleSlug && variantSlug && variantId) {
+          result.linkedToVariant++
+        } else if (vehicleSlug && modelSlug && modelId) {
           result.linkedToModel++
         } else if (vehicleSlug && vehicleId) {
           result.linkedToVehicleOnly++
@@ -289,6 +344,10 @@ export async function POST(): Promise<Response> {
           log.warn(`No vehicle found for slug "${vehicleSlug}" — run Import Vehicle Catalog first`)
         } else if (modelSlug && !modelId) {
           log.warn(`No model found for "${vehicleSlug ?? '?'}/${modelSlug}" — linking vehicle only`)
+        } else if (variantSlug && !variantId) {
+          log.warn(
+            `No variant found for "${vehicleSlug ?? '?'}/${modelSlug ?? '?'}/${variantSlug}" — linking model only`,
+          )
         }
 
         const categoryId = categoryIdsByTitle.get(entry.specialsCategory)
@@ -306,6 +365,7 @@ export async function POST(): Promise<Response> {
           ...(entry.paymentFrom != null ? { paymentFrom: entry.paymentFrom } : {}),
           ...(vehicleId ? { vehicle: vehicleId } : { vehicle: null }),
           ...(modelId ? { vehicleModel: modelId } : { vehicleModel: null }),
+          ...(variantId ? { vehicleVariant: variantId } : { vehicleVariant: null }),
           sortOrder: entry.sortOrder,
           slug: entry.slug,
           generateSlug: false,

@@ -210,11 +210,7 @@ const renderMobileMenuItem = (
           {item.label}
         </MobileAccordionTrigger>
         <AccordionContent className="pt-2">
-          <VehicleMegaMenuMobile
-            data={vehicleMegaMenuData}
-            displayMode={item.displayMode}
-            onNavigate={onNavigate}
-          />
+          <VehicleMegaMenuMobile data={vehicleMegaMenuData} onNavigate={onNavigate} />
         </AccordionContent>
       </AccordionItem>
     )

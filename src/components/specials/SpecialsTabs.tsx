@@ -23,7 +23,7 @@ import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getSpecialCategoryPath } from '@/lib/specials/paths'
 import { formatZAR } from '@/lib/utils/formatZAR'
 import { getBrochureUrl } from '@/lib/utils/vehicleCta'
-import type { Form, Special, Vehicle, VehicleModel } from '@/payload-types'
+import type { Form, Special, Vehicle, VehicleModel, VehicleVariant } from '@/payload-types'
 
 const FINANCE_DISCLAIMER =
   'The instalment quoted does not include any admin costs, license and registration of the vehicle and any value added products. All calculations, rates quoted and payments shown are guidelines only and are not quotations.'
@@ -42,6 +42,7 @@ export type SpecialTabItem = Pick<
   | 'cardImage'
   | 'vehicle'
   | 'vehicleModel'
+  | 'vehicleVariant'
   | 'enquiryForm'
 >
 
@@ -253,11 +254,13 @@ function SpecialDetailInfo({
   calculatorDefaults?: FinanceCalculatorDefaults | null
 }) {
   const title = getSpecialDisplayTitle(special)
-  const model =
-    special.vehicleModel && typeof special.vehicleModel === 'object' ? special.vehicleModel : null
+  const variant =
+    special.vehicleVariant && typeof special.vehicleVariant === 'object'
+      ? (special.vehicleVariant as VehicleVariant)
+      : null
   const vehicle =
     special.vehicle && typeof special.vehicle === 'object' ? (special.vehicle as Vehicle) : null
-  const highlights = model?.highlights ?? []
+  const highlights = variant?.highlights ?? []
   const hasHighlights = highlights.length > 0
   const hasOfferDetails = Boolean(offerDetails)
   const showFinanceCalculator = special.offerType === 'price-point'

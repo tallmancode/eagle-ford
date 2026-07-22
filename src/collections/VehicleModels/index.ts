@@ -2,7 +2,9 @@ import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 
 import { populatePublishedAt } from '@/lib/hooks/populatePublishedAt'
+import { validateScopedSlugUniqueness } from '@/lib/hooks/validateScopedSlugUniqueness'
 import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
+import { generatePreviewPath } from '@/lib/utils/generatePreviewPath'
 import {
   revalidateVehicleModel,
   revalidateVehicleModelDelete,
@@ -10,6 +12,7 @@ import {
 
 export const VehicleModelsCollection: CollectionConfig<'vehicle-models'> = {
   slug: 'vehicle-models',
+  indexes: [{ unique: true, fields: ['vehicle', 'slug'] }],
   labels: {
     singular: 'Vehicle Model',
     plural: 'Vehicle Models',
@@ -22,8 +25,70 @@ export const VehicleModelsCollection: CollectionConfig<'vehicle-models'> = {
   },
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'vehicle', 'price', 'updatedAt'],
+    defaultColumns: ['name', 'vehicle', 'showInMegaMenu', 'updatedAt'],
     group: 'Vehicles',
+    livePreview: {
+      url: async ({ data, req }) => {
+        if (!data?.slug || !data?.vehicle) return null
+
+        let vehicleSlug: string | undefined
+        if (typeof data.vehicle === 'object' && data.vehicle !== null && 'slug' in data.vehicle) {
+          vehicleSlug = data.vehicle.slug as string | undefined
+        } else {
+          const vehicleId =
+            typeof data.vehicle === 'object' ? data.vehicle.id : (data.vehicle as string)
+          if (vehicleId) {
+            const vehicle = await req.payload.findByID({
+              collection: 'vehicles',
+              id: vehicleId,
+              depth: 0,
+              overrideAccess: false,
+              select: { slug: true },
+            })
+            vehicleSlug = vehicle?.slug ?? undefined
+          }
+        }
+
+        if (!vehicleSlug) return null
+
+        return generatePreviewPath({
+          slug: `${vehicleSlug}/${data.slug}`,
+          collection: 'vehicle-models',
+          req,
+        })
+      },
+    },
+    preview: async (data, { req }) => {
+      if (!data?.slug || !data?.vehicle) return null
+
+      let vehicleSlug: string | undefined
+      if (typeof data.vehicle === 'object' && data.vehicle !== null && 'slug' in data.vehicle) {
+        vehicleSlug = data.vehicle.slug as string | undefined
+      } else {
+        const vehicleId =
+          typeof data.vehicle === 'object' && data.vehicle !== null && 'id' in data.vehicle
+            ? String(data.vehicle.id)
+            : (data.vehicle as string)
+        if (vehicleId) {
+          const vehicle = await req.payload.findByID({
+            collection: 'vehicles',
+            id: vehicleId,
+            depth: 0,
+            overrideAccess: false,
+            select: { slug: true },
+          })
+          vehicleSlug = vehicle?.slug ?? undefined
+        }
+      }
+
+      if (!vehicleSlug) return null
+
+      return generatePreviewPath({
+        slug: `${vehicleSlug}/${data.slug as string}`,
+        collection: 'vehicle-models',
+        req,
+      })
+    },
   },
   defaultSort: 'sortOrder',
   fields: [
@@ -39,28 +104,25 @@ export const VehicleModelsCollection: CollectionConfig<'vehicle-models'> = {
               type: 'text',
               required: true,
               admin: {
-                description: 'e.g. "2.0 SiT Double Cab XL 4x2 6MT"',
+                description: 'Trim or series name, e.g. "Ranger Sport" or "Wildtrak".',
               },
             },
             {
               name: 'vehicle',
-              label: 'Vehicle Families',
+              label: 'Vehicle Family',
               type: 'relationship',
               relationTo: 'vehicles',
-              hasMany: true,
               required: true,
               admin: {
-                description: 'Parent vehicle families this model belongs to.',
+                description: 'Parent vehicle family this trim belongs to.',
               },
             },
             {
-              name: 'price',
-              label: 'Retail Price (ZAR)',
-              type: 'number',
-              required: true,
-              min: 0,
+              name: 'tagline',
+              label: 'Tagline',
+              type: 'text',
               admin: {
-                description: 'Specific price for this model variant, e.g. 621000 for R 621,000.',
+                description: 'Optional hero subtitle for this trim page.',
               },
             },
             {
@@ -70,7 +132,7 @@ export const VehicleModelsCollection: CollectionConfig<'vehicle-models'> = {
               relationTo: 'media',
               admin: {
                 description:
-                  'Full-width hero for this model variant. Falls back to the parent vehicle hero image if not set.',
+                  'Full-width hero for this trim. Falls back to the parent vehicle hero image if not set.',
               },
             },
             {
@@ -80,32 +142,53 @@ export const VehicleModelsCollection: CollectionConfig<'vehicle-models'> = {
               relationTo: 'media',
               admin: {
                 description:
-                  'Card/listing image for this model variant. Falls back to model hero, then parent vehicle feature/hero images.',
+                  'Card/listing image for this trim. Falls back to model hero, then parent vehicle images.',
               },
             },
+          ],
+        },
+        {
+          label: 'Features',
+          fields: [
             {
-              name: 'highlights',
-              label: 'Highlights',
+              name: 'features',
+              label: 'Features',
               type: 'array',
               admin: {
-                description: 'Key feature bullet points shown on the model overview page.',
+                description: 'Marketing feature sections shown on the model page.',
               },
               fields: [
                 {
-                  name: 'highlight',
-                  label: 'Highlight',
+                  name: 'featureTitle',
+                  label: 'Title',
                   type: 'text',
                   required: true,
                 },
+                {
+                  name: 'featureDescription',
+                  label: 'Description',
+                  type: 'textarea',
+                },
+                {
+                  name: 'featureImage',
+                  label: 'Image',
+                  type: 'upload',
+                  relationTo: 'media',
+                },
               ],
             },
+          ],
+        },
+        {
+          label: 'Colours',
+          fields: [
             {
               name: 'colours',
               label: 'Available Colours',
               type: 'array',
               admin: {
                 description:
-                  'Colour options for this specific model. Leave empty to inherit from the parent vehicle.',
+                  'Colour options for this trim. Leave empty to inherit from the parent vehicle.',
               },
               fields: [
                 {
@@ -118,15 +201,55 @@ export const VehicleModelsCollection: CollectionConfig<'vehicle-models'> = {
                   name: 'colourNote',
                   label: 'Availability Note',
                   type: 'text',
-                  admin: {
-                    description: 'e.g. "Platinum Only"',
-                  },
                 },
                 {
                   name: 'colourSwatch',
                   label: 'Colour Swatch Image',
                   type: 'upload',
                   relationTo: 'media',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Images',
+          fields: [
+            {
+              name: 'gallery',
+              label: 'Gallery',
+              type: 'array',
+              fields: [
+                {
+                  name: 'image',
+                  label: 'Image',
+                  type: 'upload',
+                  relationTo: 'media',
+                  required: true,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'FAQ',
+          fields: [
+            {
+              name: 'faqs',
+              label: 'FAQs',
+              type: 'array',
+              fields: [
+                {
+                  name: 'question',
+                  label: 'Question',
+                  type: 'text',
+                  required: true,
+                },
+                {
+                  name: 'answer',
+                  label: 'Answer',
+                  type: 'textarea',
+                  required: true,
                 },
               ],
             },
@@ -141,7 +264,7 @@ export const VehicleModelsCollection: CollectionConfig<'vehicle-models'> = {
               label: 'Description',
               type: 'richText',
               admin: {
-                description: 'Model-specific marketing copy shown on the variant detail page.',
+                description: 'Trim-specific marketing copy shown on the model page.',
               },
             },
             {
@@ -178,6 +301,17 @@ export const VehicleModelsCollection: CollectionConfig<'vehicle-models'> = {
       ],
     },
     {
+      name: 'showInMegaMenu',
+      label: 'Show in Mega Menu',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        position: 'sidebar',
+        description:
+          'When enabled, this trim appears in the mega menu alongside any vehicle families that also have Show in Mega Menu enabled.',
+      },
+    },
+    {
       name: 'sortOrder',
       label: 'Sort Order',
       type: 'number',
@@ -185,6 +319,16 @@ export const VehicleModelsCollection: CollectionConfig<'vehicle-models'> = {
       admin: {
         position: 'sidebar',
         description: 'Lower numbers appear first within a vehicle family.',
+      },
+    },
+    {
+      name: 'template',
+      label: 'Page Template',
+      type: 'relationship',
+      relationTo: 'vehicle-model-templates',
+      admin: {
+        position: 'sidebar',
+        description: 'Optional. Layout template used to render this model page.',
       },
     },
     {
@@ -197,9 +341,17 @@ export const VehicleModelsCollection: CollectionConfig<'vehicle-models'> = {
         position: 'sidebar',
       },
     },
-    slugField({ fieldToUse: 'name' }),
+    slugField({ fieldToUse: 'name', disableUnique: true }),
   ],
   hooks: {
+    beforeValidate: [
+      validateScopedSlugUniqueness({
+        collection: 'vehicle-models',
+        entityLabel: 'model',
+        parentField: 'vehicle',
+        parentLabel: 'vehicle',
+      }),
+    ],
     afterChange: [revalidateVehicleModel],
     beforeChange: [populatePublishedAt],
     afterDelete: [revalidateVehicleModelDelete],

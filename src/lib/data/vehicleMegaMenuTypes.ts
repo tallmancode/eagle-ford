@@ -10,27 +10,15 @@ export type VehicleMegaMenuItem = {
   priceDisclaimer?: string | null
   categorySlug: string
   categoryTitle: string
+  sortOrder: number
 }
 
 export type VehicleMegaMenuData = {
-  vehicles: {
-    categories: { id: string; title: string; slug: string }[]
-    items: VehicleMegaMenuItem[]
-  }
-  models: {
-    categories: { id: string; title: string; slug: string }[]
-    items: VehicleMegaMenuItem[]
-  }
+  categories: { id: string; title: string; slug: string }[]
+  items: VehicleMegaMenuItem[]
 }
 
 export function navNeedsVehicleMegaMenu(links?: NavLinks | null): boolean {
   if (!links?.length) return false
   return links.some((link) => link.type === 'vehicleMegaMenu')
-}
-
-export function getMegaMenuDataForMode(
-  data: VehicleMegaMenuData,
-  displayMode?: 'vehicles' | 'models' | null,
-) {
-  return displayMode === 'models' ? data.models : data.vehicles
 }

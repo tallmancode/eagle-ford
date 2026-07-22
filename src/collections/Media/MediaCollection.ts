@@ -79,6 +79,7 @@ export const MediaCollection: CollectionConfig = {
       'image/jpeg',
       'image/gif',
       'image/webp',
+      'image/avif',
       'image/svg+xml',
       'application/pdf',
       'application/msword',

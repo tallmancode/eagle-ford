@@ -46,6 +46,7 @@ import type {
   VehicleModelHighlightsBlock,
   VehicleModelColorsBlock,
   VehicleModelSiblingsBlock,
+  VehicleModelVariantsBlock,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -93,6 +94,7 @@ import { VehicleModelHeroBlockComponent } from '@/lib/blocks/vehicle-model-hero-
 import { VehicleModelHighlightsBlockComponent } from '@/lib/blocks/vehicle-model-highlights-block/components/VehicleModelHighlightsBlockComponent'
 import { VehicleModelColorsBlockComponent } from '@/lib/blocks/vehicle-model-colors-block/components/VehicleModelColorsBlockComponent'
 import { VehicleModelSiblingsBlockComponent } from '@/lib/blocks/vehicle-model-siblings-block/components/VehicleModelSiblingsBlockComponent'
+import { VehicleModelVariantsBlockComponent } from '@/lib/blocks/vehicle-model-variants-block/components/VehicleModelVariantsBlockComponent'
 import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 
 type BlockComponentMap = {
@@ -142,6 +144,7 @@ type BlockComponentMap = {
   'vehicle-model-highlights': VehicleModelHighlightsBlock
   'vehicle-model-colors': VehicleModelColorsBlock
   'vehicle-model-siblings': VehicleModelSiblingsBlock
+  'vehicle-model-variants': VehicleModelVariantsBlock
 }
 
 type WithMeta<T> = T & { meta?: BlockRenderMeta }
@@ -199,6 +202,7 @@ const blockComponents: {
   'vehicle-model-highlights': VehicleModelHighlightsBlockComponent,
   'vehicle-model-colors': VehicleModelColorsBlockComponent,
   'vehicle-model-siblings': VehicleModelSiblingsBlockComponent,
+  'vehicle-model-variants': VehicleModelVariantsBlockComponent,
 } as const
 
 type Blocks = Config['blocks']

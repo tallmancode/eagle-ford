@@ -10,9 +10,10 @@ import { getModelHeroImage } from '@/lib/utils/vehicleModel'
 type VehicleModelHeroProps = {
   vehicle: Vehicle
   model: VehicleModel
+  startingPrice?: number | null
 }
 
-export function VehicleModelHero({ vehicle, model }: VehicleModelHeroProps) {
+export function VehicleModelHero({ vehicle, model, startingPrice }: VehicleModelHeroProps) {
   const heroImage = getModelHeroImage(model, vehicle)
 
   return (
@@ -33,10 +34,17 @@ export function VehicleModelHero({ vehicle, model }: VehicleModelHeroProps) {
         <h1 className="text-white text-3xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
           {model.name}
         </h1>
-        <div className="mb-6">
-          <p className="text-white/80 text-sm uppercase tracking-wide mb-1">Retail Price From</p>
-          <p className="text-white text-3xl md:text-4xl font-bold">{formatPrice(model.price)}</p>
-        </div>
+        {model.tagline && (
+          <p className="text-white/80 text-lg md:text-xl mb-4 max-w-2xl">{model.tagline}</p>
+        )}
+        {startingPrice != null && (
+          <div className="mb-6">
+            <p className="text-white/80 text-sm uppercase tracking-wide mb-1">Retail Price From</p>
+            <p className="text-white text-3xl md:text-4xl font-bold">
+              {formatPrice(startingPrice)}
+            </p>
+          </div>
+        )}
         <div className="flex flex-wrap gap-4">
           <a href="#enquire">
             <Button className="rounded-full bg-white text-black hover:bg-white/90 font-semibold">

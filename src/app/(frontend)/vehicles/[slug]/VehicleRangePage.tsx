@@ -12,8 +12,12 @@ import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
 
 type GalleryItem = NonNullable<NonNullable<Vehicle['gallery']>[number]>
 
+type ModelWithPricing = VehicleModel & {
+  startingPrice?: number | null
+}
+
 function getModelCardImage(
-  model: VehicleModel,
+  model: ModelWithPricing,
   vehicleFeatureImage: string | Media | null,
   vehicleHeroImage: string | Media | null,
 ) {
@@ -26,7 +30,7 @@ type Props = {
   vehicleName: string
   vehicleSlug: string
   gallery: GalleryItem[]
-  models: VehicleModel[]
+  models: ModelWithPricing[]
   vehicleFeatureImage: string | Media | null
   vehicleHeroImage: string | Media | null
 }
@@ -50,7 +54,7 @@ export default function VehicleRangePage({
         <section id="models" className="bg-muted/40 py-14 px-4">
           <div className="container mx-auto">
             <h2 className="mb-10 text-center text-3xl font-bold text-primary">
-              {vehicleName} Model Variants
+              {vehicleName} Trims
             </h2>
 
             <div className="relative">
@@ -86,21 +90,10 @@ export default function VehicleRangePage({
                         </div>
                       )}
                       <h3 className="mb-1 text-base leading-snug font-semibold">{model.name}</h3>
-                      <p className="mb-4 text-2xl font-bold text-primary">
-                        {formatPrice(model.price)}
-                      </p>
-                      {model.highlights && model.highlights.length > 0 && (
-                        <ul className="mb-6 flex-1 space-y-1.5">
-                          {model.highlights.map((h, i) => (
-                            <li
-                              key={h.id ?? i}
-                              className="flex items-start gap-2 text-sm text-muted-foreground"
-                            >
-                              <span className="mt-0.5 shrink-0 text-primary">•</span>
-                              <span>{h.highlight}</span>
-                            </li>
-                          ))}
-                        </ul>
+                      {model.startingPrice != null && (
+                        <p className="mb-4 text-2xl font-bold text-primary">
+                          {formatPrice(model.startingPrice)}
+                        </p>
                       )}
                       <Link href={getVehicleModelPath(vehicleSlug, model.slug ?? '')}>
                         <Button variant="outline" className="mt-auto w-full rounded-full">
@@ -160,7 +153,7 @@ export default function VehicleRangePage({
         </section>
       )}
 
-      <VehicleGallery vehicleName={vehicleName} gallery={gallery} />
+      {gallery.length > 0 && <VehicleGallery vehicleName={vehicleName} gallery={gallery} />}
     </>
   )
 }

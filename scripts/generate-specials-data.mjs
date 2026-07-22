@@ -74,171 +74,22 @@ function parseZarAmount(text) {
   return Number.isFinite(amount) ? amount : null
 }
 
-function tokenize(value) {
-  return value
-    .toLowerCase()
-    .replace(/&/g, ' and ')
-    .replace(/double[\s-]?cab|\bdc\b/g, ' doublecab ')
-    .replace(/super[\s-]?cab|supercab|\bsup\b|\bsc\b/g, ' supercab ')
-    .replace(/single[\s-]?cab/g, ' singlecab ')
-    .replace(/\b4wd\b/g, ' 4x4 ')
-    .replace(/\b10at\b|\b8at\b|\b6at\b/g, ' auto ')
-    .replace(/\b6mt\b|\bmanual\b/g, ' manual ')
-    .replace(/[^a-z0-9.]+/g, ' ')
-    .split(/\s+/)
-    .filter(Boolean)
-}
+async function matchCatalogLinks(title, labelOverride, slug, offerType) {
+  const { matchSpecialToCatalog } =
+    await import('../src/lib/specials-seed/matchSpecialToCatalog.ts')
+  const { VEHICLE_CATALOG_DATA } = await import('../src/lib/vehicle-seed/vehicle-catalog-data.ts')
 
-function tokenSet(value) {
-  return [...new Set(tokenize(value))]
-}
+  const match = matchSpecialToCatalog({ title, labelOverride, slug, offerType })
+  if (!match.vehicleSlug) return {}
 
-function scoreTokens(haystack, needle) {
-  if (needle.length === 0) return 0
-  let hits = 0
-  for (const token of needle) if (haystack.includes(token)) hits++
-  return hits / needle.length
-}
+  const vehicle = VEHICLE_CATALOG_DATA.find((v) => v.slug === match.vehicleSlug)
+  const model = vehicle?.models.find((m) => m.slug === match.modelSlug)
+  const variant = model?.variants.find((v) => v.slug === match.variantSlug)
 
-const CATALOG = [
-  {
-    slug: 'next-level-ranger',
-    name: 'Next Level Ranger',
-    variants: [
-      ['2.0-sit-double-cab-xl-4x2-6mt', '2.0 SiT Double Cab XL 4x2 6MT'],
-      ['2.0-sit-double-cab-xlt-4x2-10at', '2.0 SiT Double Cab XLT 4x2 10AT'],
-      ['2.3l-double-cab-sport-4x2-10at', '2.3L Double Cab Sport 4x2 10AT'],
-      ['2.3l-double-cab-wildtrak-4x2-10at', '2.3L Double Cab Wildtrak 4x2 10AT'],
-      ['3.0l-v6-double-cab-tremor-4x4-10at', '3.0L V6 Double Cab Tremor 4x4 10AT'],
-      ['3.0l-v6-double-cab-wildtrak-4x4-10at', '3.0L V6 Double Cab Wildtrak 4x4 10AT'],
-      ['3.0l-v6-double-cab-platinum-4x4-10at', '3.0L V6 Double Cab Platinum 4x4 10AT'],
-      ['3.0l-v6-tt-double-cab-raptor-4x4-10at', '3.0L V6 TT Double Cab Raptor 4x4 10AT'],
-    ],
-  },
-  {
-    slug: 'ranger-super-cab',
-    name: 'Ranger Super Cab',
-    variants: [
-      ['ranger-2.0-sit-supercab-xl-auto', 'Ranger 2.0 SiT SuperCab XL auto'],
-      ['ranger-2.0-sit-supercab-xlt', 'Ranger 2.0 SiT SuperCab XLT'],
-      [
-        'ford-ranger-2.0-biturbo-supercab-wildtrak-4x4',
-        'Ford Ranger 2.0 BiTurbo SuperCab Wildtrak 4x4',
-      ],
-    ],
-  },
-  {
-    slug: 'ranger-single-cab',
-    name: 'Ranger Single Cab',
-    variants: [
-      ['ranger-2.0-sit-single-cab-xl-4x2-auto', 'Ranger 2.0 SiT Single Cab XL 4x2 auto'],
-      ['2.0-sit-single-cab-xl-4x4-manual', '2.0 SiT Single Cab XL 4x4 Manual'],
-      ['ranger-2.0-sit-supercab-xl-4x4', 'Ranger 2.0 SiT SuperCab XL 4x4'],
-    ],
-  },
-  {
-    slug: 'next-level-everest',
-    name: 'Next Level Everest',
-    variants: [
-      ['2.0-sit-active-4x2-10at', '2.0 SiT Active 4x2 10AT'],
-      ['2.0-sit-active-4x4-10at', '2.0 SiT Active 4x4 10AT'],
-      ['3.0-v6-sport-4x4-10at', '3.0 V6 Sport 4x4 10AT'],
-      ['3.0-v6-wildtrak-4x4-10at', '3.0 V6 Wildtrak 4x4 10AT'],
-      ['3.0-v6-platinum-4x4-10at', '3.0 V6 Platinum 4x4 10AT'],
-    ],
-  },
-  {
-    slug: 'new-level-territory',
-    name: 'New Level Territory',
-    variants: [
-      ['territory-1.8t-ambiente', 'Territory 1.8T Ambiente'],
-      ['territory-1.8t-trend', 'Territory 1.8T Trend'],
-      ['1.8t-titanium', '1.8T Titanium'],
-    ],
-  },
-  {
-    slug: 'mustang-gt',
-    name: 'Mustang GT',
-    variants: [['mustang-5.0l-v8-gt-fastback-10at', 'MUSTANG 5.0L V8 GT FASTBACK 10AT']],
-  },
-  {
-    slug: 'mustang-dark-horse',
-    name: 'Mustang Dark Horse',
-    variants: [['mustang-5.0l-v8-dark-horse-10at', 'MUSTANG 5.0L V8 DARK HORSE 10AT']],
-  },
-  {
-    slug: 'new-tourneo-custom',
-    name: 'New Tourneo Custom',
-    variants: [
-      ['tourneo-trend', 'Tourneo Trend'],
-      ['tourneo-sport', 'Tourneo Sport'],
-      ['tourneo-titanium-x', 'Tourneo Titanium X'],
-    ],
-  },
-  {
-    slug: 'new-transit-custom',
-    name: 'New Transit Custom',
-    variants: [['transit-custom-2.0l-lwb-van-base-6mt', 'TRANSIT CUSTOM 2.0L LWB VAN BASE 6MT']],
-  },
-  {
-    slug: 'transit-van',
-    name: 'Transit Van',
-    variants: [['2.2-tdci-elwb-ambiente-6mt', '2.2 TDCi ELWB Ambiente 6MT']],
-  },
-].map((v) => ({
-  ...v,
-  variants: v.variants.map(([slug, name]) => ({
-    slug,
-    name,
-    tokens: tokenSet(`${name} ${slug}`),
-  })),
-}))
-
-function detectVehicle(title, subTitle, specialSlug) {
-  const hay = `${title} ${subTitle} ${specialSlug}`.toLowerCase()
-  if (/dark horse/.test(hay)) return CATALOG.find((v) => v.slug === 'mustang-dark-horse')
-  if (/mustang/.test(hay)) return CATALOG.find((v) => v.slug === 'mustang-gt')
-  if (/everest/.test(hay)) return CATALOG.find((v) => v.slug === 'next-level-everest')
-  if (/territory/.test(hay)) return CATALOG.find((v) => v.slug === 'new-level-territory')
-  if (/tourneo/.test(hay)) return CATALOG.find((v) => v.slug === 'new-tourneo-custom')
-  if (/transit custom/.test(hay)) return CATALOG.find((v) => v.slug === 'new-transit-custom')
-  if (/transit/.test(hay)) return CATALOG.find((v) => v.slug === 'transit-van')
-  if (/ranger/.test(hay) || /raptor/.test(hay)) {
-    if (/single\s*cab|\bsinglecab\b/.test(hay) || /ranger-sc-/.test(specialSlug)) {
-      return CATALOG.find((v) => v.slug === 'ranger-single-cab')
-    }
-    if (
-      /super\s*cab|\bsupercab\b|\bsup\b/.test(hay) ||
-      /ranger-sup-/.test(specialSlug) ||
-      /-super-cab-/.test(specialSlug)
-    ) {
-      return CATALOG.find((v) => v.slug === 'ranger-super-cab')
-    }
-    return CATALOG.find((v) => v.slug === 'next-level-ranger')
-  }
-  return null
-}
-
-function bestVariant(vehicle, subTitle, specialSlug) {
-  const needle = tokenSet(`${subTitle} ${specialSlug}`).filter(
-    (t) => !['ford', 'next', 'level', 'new', 'ranger', 'everest', 'offer'].includes(t),
-  )
-  let best = null
-  for (const variant of vehicle.variants) {
-    const score = scoreTokens(variant.tokens, needle.length > 0 ? needle : tokenSet(subTitle))
-    if (!best || score > best.score) best = { slug: variant.slug, name: variant.name, score }
-  }
-  if (!best || best.score < 0.45) return null
-  // CMS slug style used in seed linkedModel (dots stripped)
-  return best.slug.replace(/\./g, '')
-}
-
-function matchCatalogNames(title, labelOverride, slug) {
-  const vehicle = detectVehicle(title, labelOverride, slug)
-  if (!vehicle) return { linkedVehicle: undefined, linkedModel: undefined }
   return {
-    linkedVehicle: vehicle.name,
-    linkedModel: bestVariant(vehicle, labelOverride, slug) ?? undefined,
+    ...(vehicle?.name ? { linkedVehicle: vehicle.name } : {}),
+    ...(model?.name ? { linkedModel: model.name } : {}),
+    ...(variant?.name ? { linkedVariant: variant.name } : {}),
   }
 }
 
@@ -317,7 +168,12 @@ async function main() {
     const title = extractTitleFromHeading(titleHtml)
     const labelOverride = stripHtml(subtitleHtml)
     const slug = extractSlug(href)
-    const { linkedVehicle, linkedModel } = matchCatalogNames(title, labelOverride, slug)
+    const { linkedVehicle, linkedModel, linkedVariant } = await matchCatalogLinks(
+      title,
+      labelOverride,
+      slug,
+      offerType,
+    )
 
     const imageUrl = toAbsoluteUrl(imageSrc)
     const entry = {
@@ -328,6 +184,7 @@ async function main() {
       detailImageUrl: imageUrl,
       ...(linkedVehicle ? { linkedVehicle } : {}),
       ...(linkedModel ? { linkedModel } : {}),
+      ...(linkedVariant ? { linkedVariant } : {}),
       slug,
     }
 
@@ -369,8 +226,10 @@ export type SpecialSeedItem = {
   detailImageUrl: string
   /** Catalog vehicle family name or slug (e.g. "Next Level Ranger" / "next-level-ranger") */
   linkedVehicle?: string
-  /** CMS vehicle-model slug (preferred) or catalog display name */
+  /** CMS vehicle-model name or slug (trim level, e.g. "Ranger XL" / "xl") */
   linkedModel?: string
+  /** CMS vehicle-variant name or slug (configuration) */
+  linkedVariant?: string
   specialOffer?: number
   bestSaving?: number
   paymentFrom?: number

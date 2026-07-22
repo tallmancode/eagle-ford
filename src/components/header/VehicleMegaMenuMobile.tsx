@@ -4,22 +4,15 @@ import { useMemo, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { VehicleMegaMenuCard } from '@/components/header/VehicleMegaMenuCard'
 import type { VehicleMegaMenuData } from '@/lib/data/vehicleMegaMenuTypes'
-import { getMegaMenuDataForMode } from '@/lib/data/vehicleMegaMenuTypes'
 import { cn } from '@/lib/utils/cn'
 
 type VehicleMegaMenuMobileProps = {
   data: VehicleMegaMenuData
-  displayMode?: 'vehicles' | 'models' | null
   onNavigate?: () => void
 }
 
-export function VehicleMegaMenuMobile({
-  data,
-  displayMode,
-  onNavigate,
-}: VehicleMegaMenuMobileProps) {
-  const menuData = getMegaMenuDataForMode(data, displayMode)
-  const { categories, items } = menuData
+export function VehicleMegaMenuMobile({ data, onNavigate }: VehicleMegaMenuMobileProps) {
+  const { categories, items } = data
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const lastActiveCategoryRef = useRef<string | null>(null)
   const backButtonRef = useRef<HTMLButtonElement>(null)

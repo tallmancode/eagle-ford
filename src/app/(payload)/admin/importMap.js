@@ -40,6 +40,7 @@ import { ColorField as ColorField_31c0780c96066ad2689556a239466438 } from '@/lib
 import { SocialIconRowLabel as SocialIconRowLabel_27f6a7a8b6f24a71f102f20c13591ee6 } from '@/lib/fields/social-icons/components/SocialIconRowLabel'
 import { SeedButtonsComponent as SeedButtonsComponent_fdfc3e37576a0e6bfa4567073a5dec60 } from '@/lib/fields/seed-buttons/SeedButtonsComponent'
 import { MediaCleanupComponent as MediaCleanupComponent_75003b8b08ca0a0451295f801b7dc13a } from '@/lib/fields/media-cleanup/MediaCleanupComponent'
+import { CacheBustComponent as CacheBustComponent_18d9d289e2207348fc87a9a60d05e532 } from '@/lib/fields/cache-bust/CacheBustComponent'
 import { SpacingLayoutField as SpacingLayoutField_159c820f40a576f4549e5527a6f70bac } from '@/lib/fields/layout-field/components/SpacingLayoutField'
 import { VisibilityLayoutField as VisibilityLayoutField_a24a3da0769b86a04fcfabb0206dea74 } from '@/lib/fields/layout-field/components/VisibilityLayoutField'
 import { default as default_e301b8bae2b26609d383354140baa92e } from '../../../lib/blocks/section-block/components/SectionBlockLabel'
@@ -175,6 +176,8 @@ export const importMap = {
     SeedButtonsComponent_fdfc3e37576a0e6bfa4567073a5dec60,
   '@/lib/fields/media-cleanup/MediaCleanupComponent#MediaCleanupComponent':
     MediaCleanupComponent_75003b8b08ca0a0451295f801b7dc13a,
+  '@/lib/fields/cache-bust/CacheBustComponent#CacheBustComponent':
+    CacheBustComponent_18d9d289e2207348fc87a9a60d05e532,
   '@/lib/fields/layout-field/components/SpacingLayoutField#SpacingLayoutField':
     SpacingLayoutField_159c820f40a576f4549e5527a6f70bac,
   '@/lib/fields/layout-field/components/VisibilityLayoutField#VisibilityLayoutField':
