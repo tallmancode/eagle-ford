@@ -89,8 +89,8 @@ export const renderNavItem = (item: NavLink, index: number, options: NavItemRend
           { linkClassName, activeClassName, pathname },
           `Open ${item.label} vehicle menu`,
         )}
-        <NavigationMenuContent className={megaMenuContentClassName}>
-          <VehicleMegaMenu data={vehicleMegaMenuData} displayMode={item.displayMode} />
+        <NavigationMenuContent className={cn(megaMenuContentClassName)}>
+          <VehicleMegaMenu data={vehicleMegaMenuData} />
         </NavigationMenuContent>
       </NavigationMenuItem>
     )

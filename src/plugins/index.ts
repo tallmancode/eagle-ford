@@ -7,6 +7,7 @@ import { Plugin } from 'payload'
 import type { Field } from 'payload'
 import { revalidateRedirects } from '@/lib/hooks/revalidateRedirects'
 import { GenerateURL } from '@payloadcms/plugin-seo/types'
+import generateDescription from '@/lib/utils/generateDescription'
 import generateTitle from '@/lib/utils/generateTitle'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 
@@ -20,6 +21,8 @@ import {
 import { SubheadingBlock } from '@/lib/blocks/form-block/SubheadingBlock'
 import { handleMultiStepFormUploads } from '@/lib/blocks/form-block/hooks/handleMultiStepFormUploads'
 import { importExportPlugin } from '@payloadcms/plugin-import-export'
+import { aiSeoPlugin } from '@/plugins/ai-seo'
+import { aiMediaSuggestionsPlugin } from '@/plugins/ai-media-suggestions'
 
 const formStepRowLabelPath = '@/lib/blocks/form-block/components/FormStepRowLabel#FormStepRowLabel'
 
@@ -54,8 +57,11 @@ export const plugins: Plugin[] = [
   }),
   seoPlugin({
     generateTitle,
+    generateDescription,
     generateURL,
   }),
+  aiSeoPlugin(),
+  aiMediaSuggestionsPlugin(),
   formBuilderPlugin({
     fields: {
       date: true,

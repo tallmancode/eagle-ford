@@ -18,6 +18,7 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { LinkFeatureClient as LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { AISuggestionsField as AISuggestionsField_0190be129daba9a859a99c82bea4405d } from '@/plugins/ai-media-suggestions/components/AISuggestionsField'
 import { FormFieldNameInput as FormFieldNameInput_5007207a7f34924ed7587506bd56b263 } from '@/lib/blocks/form-block/components/FormFieldNameInput'
 import { FormFieldRowLabel as FormFieldRowLabel_a109948c17002fcd236dfd1580ad32fc } from '@/lib/blocks/form-block/components/FormFieldRowLabel'
 import { FormStepRowLabel as FormStepRowLabel_4877ce19d078fdaae63ddc21b2694074 } from '@/lib/blocks/form-block/components/FormStepRowLabel'
@@ -40,6 +41,10 @@ import { ColorField as ColorField_31c0780c96066ad2689556a239466438 } from '@/lib
 import { SocialIconRowLabel as SocialIconRowLabel_27f6a7a8b6f24a71f102f20c13591ee6 } from '@/lib/fields/social-icons/components/SocialIconRowLabel'
 import { SeedButtonsComponent as SeedButtonsComponent_fdfc3e37576a0e6bfa4567073a5dec60 } from '@/lib/fields/seed-buttons/SeedButtonsComponent'
 import { MediaCleanupComponent as MediaCleanupComponent_75003b8b08ca0a0451295f801b7dc13a } from '@/lib/fields/media-cleanup/MediaCleanupComponent'
+import { CacheBustComponent as CacheBustComponent_18d9d289e2207348fc87a9a60d05e532 } from '@/lib/fields/cache-bust/CacheBustComponent'
+import { RefetchModelsButton as RefetchModelsButton_1482bb9764efcd52471be065d8f464e8 } from '@/plugins/ai-media-suggestions/components/RefetchModelsButton'
+import { RedactedApiKeyField as RedactedApiKeyField_b7c1f6f5bcf865fd1e7d2a5036e8a253 } from '@/plugins/ai-media-suggestions/components/RedactedApiKeyField'
+import { TestProviderButton as TestProviderButton_133a27e68db993634d085274a9f982aa } from '@/plugins/ai-media-suggestions/components/TestProviderButton'
 import { SpacingLayoutField as SpacingLayoutField_159c820f40a576f4549e5527a6f70bac } from '@/lib/fields/layout-field/components/SpacingLayoutField'
 import { VisibilityLayoutField as VisibilityLayoutField_a24a3da0769b86a04fcfabb0206dea74 } from '@/lib/fields/layout-field/components/VisibilityLayoutField'
 import { default as default_e301b8bae2b26609d383354140baa92e } from '../../../lib/blocks/section-block/components/SectionBlockLabel'
@@ -136,6 +141,8 @@ export const importMap = {
     ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   '@payloadcms/richtext-lexical/client#LinkFeatureClient':
     LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  '@/plugins/ai-media-suggestions/components/AISuggestionsField#AISuggestionsField':
+    AISuggestionsField_0190be129daba9a859a99c82bea4405d,
   '@/lib/blocks/form-block/components/FormFieldNameInput#FormFieldNameInput':
     FormFieldNameInput_5007207a7f34924ed7587506bd56b263,
   '@/lib/blocks/form-block/components/FormFieldRowLabel#FormFieldRowLabel':
@@ -175,6 +182,14 @@ export const importMap = {
     SeedButtonsComponent_fdfc3e37576a0e6bfa4567073a5dec60,
   '@/lib/fields/media-cleanup/MediaCleanupComponent#MediaCleanupComponent':
     MediaCleanupComponent_75003b8b08ca0a0451295f801b7dc13a,
+  '@/lib/fields/cache-bust/CacheBustComponent#CacheBustComponent':
+    CacheBustComponent_18d9d289e2207348fc87a9a60d05e532,
+  '@/plugins/ai-media-suggestions/components/RefetchModelsButton#RefetchModelsButton':
+    RefetchModelsButton_1482bb9764efcd52471be065d8f464e8,
+  '@/plugins/ai-media-suggestions/components/RedactedApiKeyField#RedactedApiKeyField':
+    RedactedApiKeyField_b7c1f6f5bcf865fd1e7d2a5036e8a253,
+  '@/plugins/ai-media-suggestions/components/TestProviderButton#TestProviderButton':
+    TestProviderButton_133a27e68db993634d085274a9f982aa,
   '@/lib/fields/layout-field/components/SpacingLayoutField#SpacingLayoutField':
     SpacingLayoutField_159c820f40a576f4549e5527a6f70bac,
   '@/lib/fields/layout-field/components/VisibilityLayoutField#VisibilityLayoutField':

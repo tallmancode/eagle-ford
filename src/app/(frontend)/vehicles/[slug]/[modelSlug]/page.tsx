@@ -9,9 +9,9 @@ import React, { cache } from 'react'
 
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
-import type { Media, Vehicle, VehicleModel, VehicleModelTemplate } from '@/payload-types'
+import type { Media, VehicleModel, VehicleModelTemplate, VehicleVariant } from '@/payload-types'
 import { DefaultModelLayout } from './DefaultModelLayout'
-import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
+import { getModelStartingPrice, getVehicleModelPath } from '@/lib/utils/vehicleModel'
 import { getVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
 
 export async function generateStaticParams() {
@@ -32,16 +32,10 @@ export async function generateStaticParams() {
   return models.docs.flatMap((model) => {
     if (!model.slug) return []
 
-    const parents = Array.isArray(model.vehicle)
-      ? model.vehicle
-      : model.vehicle
-        ? [model.vehicle]
-        : []
+    const vehicle = model.vehicle
+    if (!vehicle || typeof vehicle === 'string' || !vehicle.slug) return []
 
-    return parents.flatMap((vehicle) => {
-      if (!vehicle || typeof vehicle === 'string' || !vehicle.slug) return []
-      return [{ slug: vehicle.slug, modelSlug: model.slug! }]
-    })
+    return [{ slug: vehicle.slug, modelSlug: model.slug! }]
   })
 }
 
@@ -53,7 +47,7 @@ type Args = {
 }
 
 async function resolveModelTemplate(
-  template: Vehicle['modelTemplate'],
+  template: VehicleModel['template'],
 ): Promise<VehicleModelTemplate | null> {
   if (!template) return null
 
@@ -88,12 +82,12 @@ export default async function Page({ params: paramsPromise }: Args) {
   })
   if (!model) return <PayloadRedirects url={url} />
 
-  const template = await resolveModelTemplate(vehicle.modelTemplate)
+  const template = await resolveModelTemplate(model.template)
   const templateSections = template?.section
   const useTemplate = Array.isArray(templateSections) && templateSections.length > 0
 
   const payload = await getPayload({ config: configPromise })
-  const [modelsResult, enquiryForm] = await Promise.all([
+  const [modelsResult, variantsResult, enquiryForm] = await Promise.all([
     payload.find({
       collection: 'vehicle-models',
       draft: false,
@@ -103,9 +97,49 @@ export default async function Page({ params: paramsPromise }: Args) {
       pagination: false,
       where: { vehicle: { equals: vehicle.id } },
     }),
+    payload.find({
+      collection: 'vehicle-variants',
+      draft: false,
+      depth: 1,
+      sort: 'sortOrder',
+      overrideAccess: false,
+      pagination: false,
+      where: { model: { equals: model.id } },
+    }),
     getVehicleQuoteForm(),
   ])
-  const siblingModels = modelsResult.docs
+
+  const variants = variantsResult.docs as VehicleVariant[]
+  const variantsByModelId = new Map<string, VehicleVariant[]>()
+  const allVariantsResult = await payload.find({
+    collection: 'vehicle-variants',
+    where: { 'model.vehicle': { equals: vehicle.id } },
+    sort: 'sortOrder',
+    depth: 0,
+    draft: false,
+    overrideAccess: false,
+    pagination: false,
+    select: {
+      id: true,
+      price: true,
+      model: true,
+    },
+  })
+
+  for (const variant of allVariantsResult.docs) {
+    const modelId =
+      typeof variant.model === 'object' && variant.model !== null
+        ? String(variant.model.id)
+        : String(variant.model)
+    const list = variantsByModelId.get(modelId) ?? []
+    list.push(variant as VehicleVariant)
+    variantsByModelId.set(modelId, list)
+  }
+
+  const siblingModels = modelsResult.docs.map((sibling) => ({
+    ...sibling,
+    startingPrice: getModelStartingPrice(variantsByModelId.get(String(sibling.id)) ?? []),
+  }))
 
   const meta = {
     vehicle,
@@ -127,6 +161,7 @@ export default async function Page({ params: paramsPromise }: Args) {
         <DefaultModelLayout
           vehicle={vehicle}
           model={model}
+          variants={variants}
           siblingModels={siblingModels}
           enquiryForm={enquiryForm}
         />

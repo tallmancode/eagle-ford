@@ -471,7 +471,8 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
       defaultValue: true,
       admin: {
         position: 'sidebar',
-        description: 'When enabled, this vehicle appears in the New vehicles mega menu.',
+        description:
+          'When enabled, this vehicle family appears in the mega menu alongside any trims that also have Show in Mega Menu enabled.',
       },
     },
     {
@@ -492,16 +493,6 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
       admin: {
         position: 'sidebar',
         description: 'Optional. Layout template used to render this vehicle page.',
-      },
-    },
-    {
-      name: 'modelTemplate',
-      label: 'Model Page Template',
-      type: 'relationship',
-      relationTo: 'vehicle-model-templates',
-      admin: {
-        position: 'sidebar',
-        description: 'Optional. Layout used for all model detail pages under this vehicle.',
       },
     },
     {
