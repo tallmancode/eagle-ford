@@ -888,7 +888,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/12778-mustang-5.0-gt-fastback-10at/images/12778-14b06fee-bded-48d7-a6c3-ac92cb32483345641573-5a5a-400e-bb36-c1783fb8709d_Mustang-GT-700x340-.webp',
         linkedVehicle: 'Mustang',
-        linkedModel: 'Gt',
+        linkedModel: 'Mustang GT',
         slug: '12778-mustang-5.0-gt-fastback-10at',
         paymentFrom: 19999,
         linkedVariant: 'Mustang GT',
@@ -901,7 +901,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/17862-mustang-dark-horse/images/17862-5bbe1ab8-cae6-4067-8954-85e9ffcab6daa5dac075-4205-4e99-8df0-76e620b6ffcb_download.webp',
         linkedVehicle: 'Mustang',
-        linkedModel: 'Dark Horse',
+        linkedModel: 'Mustang Dark Horse',
         slug: '17862-mustang-dark-horse',
         specialOffer: 1399900,
         bestSaving: 145100,
@@ -915,7 +915,7 @@ export const DATA: SpecialSeedCategory[] = [
         detailImageUrl:
           'https://www.eagleford.co.za/specials/12779-mustang-dark-horse-10at/images/12779-bf2cc23a-a3a3-49a0-b466-6a04e95577188e6e0094-53c0-4ece-b04b-0f750a8da416_Mustang-Dark-Horse-700x340-.webp',
         linkedVehicle: 'Mustang',
-        linkedModel: 'Dark Horse',
+        linkedModel: 'Mustang Dark Horse',
         slug: '12779-mustang-dark-horse-10at',
         paymentFrom: 22999,
         linkedVariant: 'Mustang Dark Horse',

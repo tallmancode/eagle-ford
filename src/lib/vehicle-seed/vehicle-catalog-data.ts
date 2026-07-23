@@ -143,7 +143,8 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
     ],
     heroImageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/banner.webp',
     heroImageAlt: 'Ford Next Level Ranger bakkie hero banner on South African roads — Eagle Ford',
-    featureImageUrl: 'https://www.eagleford.co.za/new/Next-Level-Ranger/./images/hero.webp',
+    featureImageUrl:
+      'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/ranger-header-jb.jpg',
     featureImageAlt: 'Ford Next Level Ranger side profile — new Ford bakkies at Eagle Ford',
     gallery: [
       {
@@ -803,7 +804,8 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
         ],
         heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-Sport/./images/banner.webp',
         heroImageAlt: 'Ford Ranger Sport bakkie hero banner — Eagle Ford South Africa',
-        featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-Sport/./images/hero.webp',
+        featureImageUrl:
+          'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/ranger-sport-header-jb.jpg',
         featureImageAlt: 'Ford Ranger Sport model overview — lifestyle Ford bakkies at Eagle Ford',
         gallery: [
           {
@@ -1080,7 +1082,8 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
         ],
         heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-Platinum/./images/banner.webp',
         heroImageAlt: 'Ford Ranger Platinum luxury bakkie hero banner — Eagle Ford South Africa',
-        featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-Platinum/./images/hero.webp',
+        featureImageUrl:
+          'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/ranger-platinum-header-jb.jpg',
         featureImageAlt: 'Ford Ranger Platinum model overview — premium Ford bakkies at Eagle Ford',
         gallery: [
           {
@@ -1195,7 +1198,8 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
         ],
         heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-Tremor/./images/banner.webp',
         heroImageAlt: 'Ford Ranger Tremor off-road bakkie hero banner — Eagle Ford South Africa',
-        featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-Tremor/./images/hero.webp',
+        featureImageUrl:
+          'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/ranger-tremor-header-jb.jpg',
         featureImageAlt: 'Ford Ranger Tremor model overview — off-road Ford bakkies at Eagle Ford',
         gallery: [
           {
@@ -1332,7 +1336,8 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
         ],
         heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-Raptor/./images/banner.webp',
         heroImageAlt: 'Ford Ranger Raptor performance bakkie hero banner — Eagle Ford South Africa',
-        featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-Raptor/./images/hero.webp',
+        featureImageUrl:
+          'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/ranger-raptor-header-jb.jpg',
         featureImageAlt:
           'Ford Ranger Raptor model overview — high-performance Ford bakkies at Eagle Ford',
         gallery: [
@@ -1460,7 +1465,8 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
         ],
         heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-Wildtrak/./images/banner.webp',
         heroImageAlt: 'Ford Ranger Wildtrak lifestyle bakkie hero banner — Eagle Ford South Africa',
-        featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-Wildtrak/./images/hero.webp',
+        featureImageUrl:
+          'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/ranger-wildtrak-header-jb.jpg',
         featureImageAlt:
           'Ford Ranger Wildtrak model overview — lifestyle Ford bakkies at Eagle Ford',
         gallery: [],
@@ -1774,7 +1780,8 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
         ],
         heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-XL/./images/banner.webp',
         heroImageAlt: 'Ford Ranger XL work bakkie hero banner — Eagle Ford South Africa',
-        featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-XL/./images/hero.webp',
+        featureImageUrl:
+          'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/ranger-xl-header-jb.jpg',
         featureImageAlt: 'Ford Ranger XL model overview — commercial Ford bakkies at Eagle Ford',
         gallery: [
           {
@@ -1995,7 +2002,8 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
         ],
         heroImageUrl: 'https://www.eagleford.co.za/new/Ranger-XLT/./images/banner.webp',
         heroImageAlt: 'Ford Ranger XLT bakkie hero banner — Eagle Ford South Africa',
-        featureImageUrl: 'https://www.eagleford.co.za/new/Ranger-XLT/./images/hero.webp',
+        featureImageUrl:
+          'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/ranger-xlt-header-jb.jpg',
         featureImageAlt: 'Ford Ranger XLT model overview — Ford bakkies at Eagle Ford',
         gallery: [
           {
@@ -2272,7 +2280,8 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
     colours: [],
     heroImageUrl: 'https://www.eagleford.co.za/new/Next-Level-Everest/./images/banner.webp',
     heroImageAlt: 'Ford Next Level Everest SUV adventure hero banner — Eagle Ford',
-    featureImageUrl: 'https://www.eagleford.co.za/new/Next-Level-Everest/./images/hero.webp',
+    featureImageUrl:
+      'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/everest.jpg',
     featureImageAlt: 'Ford Next Level Everest model overview — new Ford SUVs at Eagle Ford',
     gallery: [
       {
@@ -2617,7 +2626,8 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
     colours: [],
     heroImageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/banner.webp',
     heroImageAlt: 'Ford New Level Territory family SUV hero banner — Eagle Ford',
-    featureImageUrl: 'https://www.eagleford.co.za/new/New-Level-Territory/./images/hero.webp',
+    featureImageUrl:
+      'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/ambiente-jb.webp',
     featureImageAlt: 'Ford New Level Territory model overview — Ford SUVs at Eagle Ford',
     gallery: [
       {
@@ -2990,7 +3000,7 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
       'https://www.ford.co.za/content/dam/Ford/za/nameplate/mustang/overview/billboard/mustang-overview-billboard-desk-new.webp',
     heroImageAlt: 'Ford Mustang performance hero billboard — Stay ahead of the pack at Eagle Ford',
     featureImageUrl:
-      'https://www.ford.co.za/content/dam/Ford/za/nameplate/mustang/overview/models/mustang-gt.webp',
+      'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/mustang-gt-vapor-blue.webp',
     featureImageAlt: 'Ford Mustang GT Fastback — passenger cars overview at Eagle Ford',
     gallery: [
       {
@@ -3106,9 +3116,12 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
     ],
     models: [
       {
-        name: 'GT',
+        name: 'Mustang GT',
         slug: 'gt',
         showInMegaMenu: true,
+        featureImageUrl:
+          'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/mustang-gt-vapor-blue.webp',
+        featureImageAlt: 'Ford Mustang GT — passenger cars at Eagle Ford',
         variants: [
           {
             name: 'Mustang GT',
@@ -3133,9 +3146,12 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
         ],
       },
       {
-        name: 'Dark Horse',
+        name: 'Mustang Dark Horse',
         slug: 'dark-horse',
         showInMegaMenu: true,
+        featureImageUrl:
+          'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/mustang-dh-blue-ember.webp',
+        featureImageAlt: 'Ford Mustang Dark Horse — passenger cars at Eagle Ford',
         variants: [
           {
             name: 'Mustang Dark Horse',
@@ -3256,7 +3272,8 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
     ],
     heroImageUrl: 'https://www.eagleford.co.za/new/New-Tourneo-Custom/./images/banner.webp',
     heroImageAlt: 'Ford Tourneo Custom 8-seater people mover hero banner — Eagle Ford',
-    featureImageUrl: 'https://www.eagleford.co.za/new/New-Tourneo-Custom/./images/hero.webp',
+    featureImageUrl:
+      'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/tourneo-za-new.jpg',
     featureImageAlt: 'Ford Tourneo Custom model overview — Ford vans and buses at Eagle Ford',
     gallery: [
       {
@@ -3544,7 +3561,8 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
     ],
     heroImageUrl: 'https://www.eagleford.co.za/new/New-Transit-Custom/./images/banner.webp',
     heroImageAlt: 'Ford Transit Custom commercial panel van hero banner — Eagle Ford',
-    featureImageUrl: 'https://www.eagleford.co.za/new/New-Transit-Custom/./images/hero.webp',
+    featureImageUrl:
+      'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/all-new-transit-custom.jpg',
     featureImageAlt: 'Ford Transit Custom model overview — Ford commercial vans at Eagle Ford',
     gallery: [
       {
@@ -3764,7 +3782,8 @@ export const VEHICLE_CATALOG_DATA: VehicleDef[] = [
     ],
     heroImageUrl: 'https://www.eagleford.co.za/new/Transit-Van/./images/banner.webp',
     heroImageAlt: 'Ford Transit Van large capacity commercial van hero banner — Eagle Ford',
-    featureImageUrl: 'https://www.eagleford.co.za/new/Transit-Van/./images/hero.webp',
+    featureImageUrl:
+      'https://www.ford.co.za/content/dam/na/ford/en_za/images/global-nav/jellybeans/transit-van.webp',
     featureImageAlt: 'Ford Transit Van model overview — Ford commercial vehicles at Eagle Ford',
     gallery: [
       {
