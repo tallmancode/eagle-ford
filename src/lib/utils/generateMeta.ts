@@ -3,7 +3,12 @@ import type { Metadata } from 'next'
 import type { Media, Page, Config, Special } from '@/payload-types'
 
 import { CRAWLER_ROBOTS } from '@/constants/crawlerPolicy'
-import { DEFAULT_OG_DESCRIPTION, DEFAULT_OG_IMAGE_PATH, formatPageTitle, SITE_NAME } from '@/constants/site'
+import {
+  DEFAULT_OG_DESCRIPTION,
+  DEFAULT_OG_IMAGE_PATH,
+  formatPageTitle,
+  SITE_NAME,
+} from '@/constants/site'
 import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
 import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getPagePath } from '@/lib/utils/getPagePath'
