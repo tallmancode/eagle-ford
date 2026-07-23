@@ -173,6 +173,7 @@ export interface Config {
     'vehicle-variants': VehicleVariant;
     users: User;
     redirects: Redirect;
+    'ai-models': AiModel;
     forms: Form;
     'form-submissions': FormSubmission;
     exports: Export;
@@ -198,6 +199,7 @@ export interface Config {
     'vehicle-variants': VehicleVariantsSelect<false> | VehicleVariantsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    'ai-models': AiModelsSelect<false> | AiModelsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     exports: ExportsSelect<false> | ExportsSelect<true>;
@@ -216,11 +218,13 @@ export interface Config {
     header: Header;
     footer: Footer;
     settings: Setting;
+    'ai-provider-settings': AiProviderSetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
+    'ai-provider-settings': AiProviderSettingsSelect<false> | AiProviderSettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -2869,6 +2873,24 @@ export interface Redirect {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-models".
+ */
+export interface AiModel {
+  id: string;
+  provider: 'ollama' | 'ollama-cloud' | 'google-gemini' | 'claude-api';
+  /**
+   * API identifier (e.g. llava:latest, models/gemini-2.5-flash)
+   */
+  modelId: string;
+  /**
+   * Human-readable label for the dropdown
+   */
+  displayName?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -3135,6 +3157,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'redirects';
         value: string | Redirect;
+      } | null)
+    | ({
+        relationTo: 'ai-models';
+        value: string | AiModel;
       } | null)
     | ({
         relationTo: 'forms';
@@ -3647,6 +3673,17 @@ export interface RedirectsSelect<T extends boolean = true> {
         reference?: T;
         url?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-models_select".
+ */
+export interface AiModelsSelect<T extends boolean = true> {
+  provider?: T;
+  modelId?: T;
+  displayName?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -4325,6 +4362,33 @@ export interface PricingCalculatorDefaults {
   repaymentPeriod?: ('36' | '48' | '54' | '60' | '72') | null;
 }
 /**
+ * Configure AI provider settings for media suggestions
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-provider-settings".
+ */
+export interface AiProviderSetting {
+  id: string;
+  /**
+   * Select the AI vision provider to use for generating media suggestions
+   */
+  provider: 'ollama' | 'ollama-cloud' | 'google-gemini' | 'claude-api';
+  /**
+   * Select from cached models. Use 'Refetch models' if the list is empty or outdated.
+   */
+  model?: (string | null) | AiModel;
+  /**
+   * API endpoint URL - Ollama Local: http://localhost:11434 | Ollama Cloud: https://ollama.com (default)
+   */
+  apiUrl?: string | null;
+  /**
+   * API key - Optional for Ollama Local | Required for Ollama Cloud, Google Gemini, and Claude API (console.anthropic.com)
+   */
+  apiKey?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
@@ -4475,6 +4539,19 @@ export interface PricingCalculatorDefaultsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-provider-settings_select".
+ */
+export interface AiProviderSettingsSelect<T extends boolean = true> {
+  provider?: T;
+  model?: T;
+  apiUrl?: T;
+  apiKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collections_widget".
  */
 export interface CollectionsWidget {
@@ -4506,6 +4583,7 @@ export interface TaskCreateCollectionExport {
       | 'vehicle-variants'
       | 'users'
       | 'redirects'
+      | 'ai-models'
       | 'forms'
       | 'form-submissions'
       | 'exports'

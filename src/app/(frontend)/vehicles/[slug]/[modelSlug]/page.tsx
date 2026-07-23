@@ -9,12 +9,7 @@ import React, { cache } from 'react'
 
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
-import type {
-  Media,
-  VehicleModel,
-  VehicleModelTemplate,
-  VehicleVariant,
-} from '@/payload-types'
+import type { Media, VehicleModel, VehicleModelTemplate, VehicleVariant } from '@/payload-types'
 import { DefaultModelLayout } from './DefaultModelLayout'
 import { getModelStartingPrice, getVehicleModelPath } from '@/lib/utils/vehicleModel'
 import { getVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
