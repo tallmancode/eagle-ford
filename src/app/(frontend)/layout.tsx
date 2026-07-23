@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 
 import { cn } from '@/lib/utils/cn'
-import { GeistMono } from 'geist/font/mono'
-import { GeistSans } from 'geist/font/sans'
 import localFont from 'next/font/local'
 import React from 'react'
 import { AdminBar } from '@/components/AdminBar'
@@ -12,10 +10,12 @@ import { draftMode } from 'next/headers'
 import './globals.css'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
 import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
-import { CRAWLER_BLOCK_ROBOTS } from '@/constants/crawlerPolicy'
+import { CRAWLER_ROBOTS } from '@/constants/crawlerPolicy'
+import { DEFAULT_OG_DESCRIPTION, SITE_NAME } from '@/constants/site'
 import { SITE_FAVICON_ICONS } from '@/constants/siteIcons'
 import { SiteHeader } from '@/components/header/SiteHeader'
 import { SiteFooter } from '@/components/footer/SiteFooter'
+import { SiteJsonLd } from '@/components/seo/SiteJsonLd'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import { navNeedsVehicleMegaMenu } from '@/lib/data/vehicleMegaMenuTypes'
 import { getVehicleMegaMenuData } from '@/lib/data/getVehicleMegaMenuData'
@@ -32,6 +32,7 @@ const fordF1 = localFont({
   ],
   variable: '--font-ford-f1',
   display: 'swap',
+  preload: true,
 })
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -49,13 +50,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     : null
 
   return (
-    <html
-      className={cn(GeistSans.variable, GeistMono.variable, fordF1.variable)}
-      data-theme="light"
-      lang="en"
-    >
+    <html className={cn(fordF1.variable)} data-theme="light" lang="en">
       <PrivacyProvider>
         <body className="font-ford">
+          <SiteJsonLd settings={globalSettings} />
           <Providers>
             <AdminBar
               adminBarProps={{
@@ -80,7 +78,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
 export const metadata: Metadata = {
   metadataBase: new URL(getServerSideURL()),
-  robots: CRAWLER_BLOCK_ROBOTS,
+  title: SITE_NAME,
+  description: DEFAULT_OG_DESCRIPTION,
+  robots: CRAWLER_ROBOTS,
   openGraph: mergeOpenGraph(),
   icons: SITE_FAVICON_ICONS,
   twitter: {

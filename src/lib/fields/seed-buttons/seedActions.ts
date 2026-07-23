@@ -90,6 +90,14 @@ export const importSeedActions: SeedAction[] = [
       'Import all specials from bundled specials-data.ts (images downloaded from live URLs). Run "Create Special Offer Enquiry Form" first.',
     allowRetry: true,
   },
+  {
+    endpoint: '/next/seed-page-seo',
+    label: 'Seed Page SEO Meta',
+    successText: 'Page SEO meta seeded successfully!',
+    description:
+      'Upsert SEO plugin title & description on existing Pages by slug (home, about-us, service, etc.). Missing pages are skipped safely — re-run after creating them.',
+    allowRetry: true,
+  },
 ]
 
 export const diagnosticSeedActions: SeedAction[] = [

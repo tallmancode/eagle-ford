@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
-import { formatPageTitle } from '@/constants/site'
+import { DEFAULT_OG_DESCRIPTION, formatPageTitle } from '@/constants/site'
+import { CRAWLER_ROBOTS } from '@/constants/crawlerPolicy'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
@@ -13,6 +14,8 @@ import type { Media, Vehicle, VehicleModel, VehicleModelTemplate } from '@/paylo
 import { DefaultModelLayout } from './DefaultModelLayout'
 import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
 import { getVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
+import { getServerSideURL } from '@/lib/utils/getServerSideURL'
+import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -134,19 +137,20 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const decodedModelSlug = decodeURIComponent(modelSlug)
 
   const vehicle = await queryVehicleBySlug({ slug: decodedSlug })
-  if (!vehicle) return { title: formatPageTitle('Vehicle Model') }
+  if (!vehicle) return { title: formatPageTitle('Vehicle Model'), robots: CRAWLER_ROBOTS }
 
   const model = await queryModelBySlug({
     slug: decodedModelSlug,
     vehicleId: vehicle.id,
   })
-  if (!model) return { title: formatPageTitle(vehicle.name) }
+  if (!model) return { title: formatPageTitle(vehicle.name), robots: CRAWLER_ROBOTS }
 
   const title = model.meta?.metaTitle
     ? formatPageTitle(model.meta.metaTitle)
     : formatPageTitle(`${model.name} | ${vehicle.name}`)
 
-  const description = model.meta?.metaDescription ?? vehicle.meta?.metaDescription ?? undefined
+  const description =
+    model.meta?.metaDescription ?? vehicle.meta?.metaDescription ?? DEFAULT_OG_DESCRIPTION
 
   const metaImage = model.meta?.metaImage ?? vehicle.meta?.metaImage
   const imageUrl =
@@ -154,15 +158,22 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
       ? ((metaImage as Media).url ?? undefined)
       : undefined
 
+  const path = getVehicleModelPath(vehicle.slug ?? decodedSlug, model.slug ?? decodedModelSlug)
+  const serverUrl = getServerSideURL()
+
   return {
     title,
     description,
-    openGraph: {
+    robots: CRAWLER_ROBOTS,
+    alternates: {
+      canonical: `${serverUrl}${path}`,
+    },
+    openGraph: mergeOpenGraph({
       title,
       description,
       images: imageUrl ? [{ url: imageUrl }] : undefined,
-      url: getVehicleModelPath(vehicle.slug ?? decodedSlug, model.slug ?? decodedModelSlug),
-    },
+      url: path,
+    }),
   }
 }
 

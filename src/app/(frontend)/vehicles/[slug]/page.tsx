@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
-import { formatPageTitle } from '@/constants/site'
+import { DEFAULT_OG_DESCRIPTION, formatPageTitle } from '@/constants/site'
+import { CRAWLER_ROBOTS } from '@/constants/crawlerPolicy'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
@@ -12,6 +13,8 @@ import { LivePreviewListener } from '@/components/LivePreviewListener'
 import type { Media, Vehicle, VehicleTemplate } from '@/payload-types'
 import { DefaultVehicleLayout } from './DefaultVehicleLayout'
 import { getVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
+import { getServerSideURL } from '@/lib/utils/getServerSideURL'
+import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -102,11 +105,13 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const decodedSlug = decodeURIComponent(slug)
   const vehicle = await queryVehicleBySlug({ slug: decodedSlug })
 
-  if (!vehicle) return { title: formatPageTitle('Vehicle') }
+  if (!vehicle) return { title: formatPageTitle('Vehicle'), robots: CRAWLER_ROBOTS }
 
   const title = vehicle.meta?.metaTitle
     ? formatPageTitle(vehicle.meta.metaTitle)
     : formatPageTitle(vehicle.name)
+
+  const description = vehicle.meta?.metaDescription ?? DEFAULT_OG_DESCRIPTION
 
   const metaImage = vehicle.meta?.metaImage
   const imageUrl =
@@ -114,15 +119,22 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
       ? ((metaImage as Media).url ?? undefined)
       : undefined
 
+  const path = `/vehicles/${vehicle.slug}`
+  const serverUrl = getServerSideURL()
+
   return {
     title,
-    description: vehicle.meta?.metaDescription ?? undefined,
-    openGraph: {
-      title,
-      description: vehicle.meta?.metaDescription ?? undefined,
-      images: imageUrl ? [{ url: imageUrl }] : undefined,
-      url: `/vehicles/${vehicle.slug}`,
+    description,
+    robots: CRAWLER_ROBOTS,
+    alternates: {
+      canonical: `${serverUrl}${path}`,
     },
+    openGraph: mergeOpenGraph({
+      title,
+      description,
+      images: imageUrl ? [{ url: imageUrl }] : undefined,
+      url: path,
+    }),
   }
 }
 

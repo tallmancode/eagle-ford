@@ -6,12 +6,10 @@ import * as Sentry from '@sentry/nextjs'
 import { Plugin } from 'payload'
 import type { Field } from 'payload'
 import { revalidateRedirects } from '@/lib/hooks/revalidateRedirects'
-import { GenerateURL } from '@payloadcms/plugin-seo/types'
-import generateTitle from '@/lib/utils/generateTitle'
+import generateTitle, { generateDescription } from '@/lib/utils/generateTitle'
+import generateURL from '@/lib/utils/generateUrl'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 
-import { Page } from '@/payload-types'
-import { getServerSideURL } from '@/lib/utils/getServerSideURL'
 import {
   FORM_UPLOAD_COLLECTIONS,
   getFormInputBlocks,
@@ -22,12 +20,6 @@ import { handleMultiStepFormUploads } from '@/lib/blocks/form-block/hooks/handle
 import { importExportPlugin } from '@payloadcms/plugin-import-export'
 
 const formStepRowLabelPath = '@/lib/blocks/form-block/components/FormStepRowLabel#FormStepRowLabel'
-
-const generateURL: GenerateURL<Page> = ({ doc }) => {
-  const url = getServerSideURL()
-
-  return doc?.slug ? `${url}/${doc.slug}` : url
-}
 
 export const plugins: Plugin[] = [
   redirectsPlugin({
@@ -54,6 +46,7 @@ export const plugins: Plugin[] = [
   }),
   seoPlugin({
     generateTitle,
+    generateDescription,
     generateURL,
   }),
   formBuilderPlugin({

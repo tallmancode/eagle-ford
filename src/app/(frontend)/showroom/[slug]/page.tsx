@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import { formatPageTitle } from '@/constants/site'
+import { DEFAULT_OG_DESCRIPTION, formatPageTitle } from '@/constants/site'
+import { CRAWLER_ROBOTS } from '@/constants/crawlerPolicy'
 import { StockArchiveError } from '@/lib/blocks/stock-archive-block/components/StockArchiveError'
 import { getTaxonomySlug } from '@/lib/blocks/stock-archive-block/utils'
 import { getCachedStock } from '@/lib/motor-city-stock/getCachedStock'
@@ -12,6 +13,8 @@ import { buildStockVehiclePath, getStockVehicleCmsIdFromSlug } from '@/lib/stock
 import { getStockHeroImage } from '@/lib/stock-vehicle/media'
 import { StockVehicleDetail } from '@/views/StockVehicle/StockVehicleDetail'
 import { getStockVehiclePageTitle } from '@/views/StockVehicle/StockVehicleSpecs'
+import { getServerSideURL } from '@/lib/utils/getServerSideURL'
+import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
 
 type Args = {
   params: Promise<{
@@ -83,30 +86,38 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const cmsId = getStockVehicleCmsIdFromSlug(decodedSlug)
 
   if (!cmsId) {
-    return { title: formatPageTitle('Vehicle') }
+    return { title: formatPageTitle('Vehicle'), robots: CRAWLER_ROBOTS }
   }
 
   try {
     const vehicle = await getCachedStockVehicle(cmsId)
     if (!vehicle) {
-      return { title: formatPageTitle('Vehicle') }
+      return { title: formatPageTitle('Vehicle'), robots: CRAWLER_ROBOTS }
     }
 
     const title = formatPageTitle(getStockVehiclePageTitle(vehicle))
     const heroImage = getStockHeroImage(vehicle.media)
-    const url = buildStockVehiclePath(vehicle)
+    const path = buildStockVehiclePath(vehicle)
+    const serverUrl = getServerSideURL()
+    const description = `${getStockVehiclePageTitle(vehicle)} available at Eagle Ford Johannesburg. ${DEFAULT_OG_DESCRIPTION}`
 
     return {
       title,
-      openGraph: {
-        title,
-        url,
-        images: heroImage?.url ? [{ url: heroImage.url }] : undefined,
+      description,
+      robots: CRAWLER_ROBOTS,
+      alternates: {
+        canonical: `${serverUrl}${path}`,
       },
+      openGraph: mergeOpenGraph({
+        title,
+        description,
+        url: path,
+        images: heroImage?.url ? [{ url: heroImage.url }] : undefined,
+      }),
     }
   } catch (error) {
     if (error instanceof MotorCityStockError) {
-      return { title: formatPageTitle('Vehicle') }
+      return { title: formatPageTitle('Vehicle'), robots: CRAWLER_ROBOTS }
     }
     throw error
   }

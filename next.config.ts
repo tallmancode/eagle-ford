@@ -71,6 +71,22 @@ const nextConfig: NextConfig = {
   },
   reactStrictMode: true,
   async headers() {
+    const allowIndexing = process.env.ALLOW_SEARCH_INDEXING === 'true'
+
+    // Keep staging/dev out of Google; production opts in via ALLOW_SEARCH_INDEXING=true
+    if (allowIndexing) {
+      return [
+        {
+          source: '/admin/:path*',
+          headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+        },
+        {
+          source: '/api/:path*',
+          headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+        },
+      ]
+    }
+
     return [
       {
         source: '/:path*',
