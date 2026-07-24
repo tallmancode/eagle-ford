@@ -9,12 +9,15 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+# Install dependencies based on the preferred package manager.
+# pnpm-workspace.yaml + patches/ are required so patchedDependencies match the lockfile.
+# Use pnpm 11 to match the lockfile (pnpm 10 fails with ERR_PNPM_LOCKFILE_CONFIG_MISMATCH on patches).
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* pnpm-workspace.yaml* .npmrc* ./
+COPY patches ./patches
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm i --frozen-lockfile; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm i --frozen-lockfile; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -38,7 +41,7 @@ RUN --mount=type=secret,id=env,required=true --network=host \
   export DATABASE_URL="${BUILD_DATABASE_URL:-$DATABASE_URL}" && \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm run build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm run build; \
   else echo "Lockfile not found." && exit 1; \
   fi
 

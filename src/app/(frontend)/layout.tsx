@@ -19,7 +19,11 @@ import { SiteFooter } from '@/components/footer/SiteFooter'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import { navNeedsVehicleMegaMenu } from '@/lib/data/vehicleMegaMenuTypes'
 import { getVehicleMegaMenuData } from '@/lib/data/getVehicleMegaMenuData'
-import type { Header as GlobalHeader, Setting as GlobalSettings } from '@/payload-types'
+import type {
+  Footer as GlobalFooter,
+  Header as GlobalHeader,
+  Setting as GlobalSettings,
+} from '@/payload-types'
 import { PrivacyProvider } from '@/lib/providers/privacy'
 import { PrivacyBanner } from '@/lib/components/privacy-banner/PrivacyBanner'
 import { BackToTopButton } from '@/lib/components/back-to-top/BackToTopButton'
@@ -37,11 +41,11 @@ const fordF1 = localFont({
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
 
-  const [globalHeader, , globalSettings] = (await Promise.all([
-    getCachedGlobal('header', 1)(),
-    getCachedGlobal('footer', 1)(),
-    getCachedGlobal('settings', 1)(),
-  ])) as [GlobalHeader, unknown, GlobalSettings]
+  const [globalHeader, globalFooter, globalSettings] = (await Promise.all([
+    getCachedGlobal('header', 1),
+    getCachedGlobal('footer', 1),
+    getCachedGlobal('settings', 1),
+  ])) as [GlobalHeader, GlobalFooter, GlobalSettings]
 
   const allNavLinks = [...(globalHeader.leftLinks ?? []), ...(globalHeader.rightLinks ?? [])]
   const vehicleMegaMenuData = navNeedsVehicleMegaMenu(allNavLinks)
@@ -70,7 +74,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             {children}
             <BackToTopButton />
             <PrivacyBanner></PrivacyBanner>
-            <SiteFooter />
+            <SiteFooter footer={globalFooter} />
           </Providers>
         </body>
       </PrivacyProvider>

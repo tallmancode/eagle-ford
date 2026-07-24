@@ -1,9 +1,7 @@
-import { buildSpecialContent } from '@/lib/specials-seed/buildSpecialContent'
 import { SPECIALS_SEED_DATA, type SpecialSeedEntry } from '@/lib/specials-seed/specials-data'
 import { matchSpecialToCatalog } from '@/lib/specials-seed/matchSpecialToCatalog'
 import { createSeedStreamResponse } from '@/lib/seed/createSeedStreamResponse'
 import { fetchRemoteImage, uploadSeedImage, type ImageImportStats } from '@/lib/seed/media'
-import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
 import { buildSpecialMediaFilename } from '@/lib/vehicle-seed-images'
 import config from '@payload-config'
 import { headers } from 'next/headers'
@@ -47,9 +45,11 @@ async function buildCatalogIdMaps(
 ): Promise<{
   vehicleIdsBySlug: Map<string, string>
   modelIdsByKey: Map<string, string>
+  variantIdsByKey: Map<string, string>
 }> {
   const vehicleIdsBySlug = new Map<string, string>()
   const modelIdsByKey = new Map<string, string>()
+  const variantIdsByKey = new Map<string, string>()
 
   const vehicles = await payload.find({
     collection: 'vehicles',
@@ -77,10 +77,12 @@ async function buildCatalogIdMaps(
 
   for (const model of models.docs) {
     if (!model.slug) continue
+
+    const parent = model.vehicle
     const vehicleId =
-      typeof model.vehicle === 'object' && model.vehicle !== null
-        ? (model.vehicle.id as string)
-        : (model.vehicle as string | undefined)
+      typeof parent === 'object' && parent !== null
+        ? (parent.id as string)
+        : (parent as string | undefined)
     if (!vehicleId) continue
 
     let vehicleSlug: string | undefined
@@ -92,9 +94,49 @@ async function buildCatalogIdMaps(
     }
     if (!vehicleSlug) continue
     modelIdsByKey.set(`${vehicleSlug}::${model.slug}`, model.id as string)
+    const undotted = model.slug.replace(/\./g, '')
+    if (undotted !== model.slug) {
+      modelIdsByKey.set(`${vehicleSlug}::${undotted}`, model.id as string)
+    }
   }
 
-  return { vehicleIdsBySlug, modelIdsByKey }
+  const variants = await payload.find({
+    collection: 'vehicle-variants',
+    limit: 5000,
+    depth: 1,
+    draft: true,
+    overrideAccess: true,
+    pagination: false,
+    req,
+  })
+
+  for (const variant of variants.docs) {
+    if (!variant.slug) continue
+
+    const modelRef = variant.model
+    const modelId =
+      typeof modelRef === 'object' && modelRef !== null
+        ? (modelRef.id as string)
+        : (modelRef as string | undefined)
+    if (!modelId) continue
+
+    let matchKey: string | null = null
+    for (const [key, id] of modelIdsByKey.entries()) {
+      if (id === modelId) {
+        matchKey = key
+        break
+      }
+    }
+    if (!matchKey) continue
+
+    variantIdsByKey.set(`${matchKey}::${variant.slug}`, variant.id as string)
+    const undotted = variant.slug.replace(/\./g, '')
+    if (undotted !== variant.slug) {
+      variantIdsByKey.set(`${matchKey}::${undotted}`, variant.id as string)
+    }
+  }
+
+  return { vehicleIdsBySlug, modelIdsByKey, variantIdsByKey }
 }
 
 async function uploadSpecialImage(
@@ -113,7 +155,7 @@ async function uploadSpecialImage(
 
   const ext = fileExtFromUrl(imageUrl)
   const mediaFilename = buildSpecialMediaFilename(entry.slug, role, ext)
-  const alt = `${entry.title} — Eagle Ford special offer`
+  const alt = `${entry.labelOverride} — Eagle Ford special offer`
 
   return uploadSeedImage(payload, req, remote, mediaFilename, alt, stats)
 }
@@ -138,6 +180,7 @@ export async function POST(): Promise<Response> {
       skipped: 0,
       imagesUploaded: 0,
       imagesMissing: 0,
+      linkedToVariant: 0,
       linkedToModel: 0,
       linkedToVehicleOnly: 0,
       errors: 0,
@@ -172,7 +215,19 @@ export async function POST(): Promise<Response> {
       })
 
       if (existing.totalDocs > 0) {
-        categoryIdsByTitle.set(title, existing.docs[0].id as string)
+        const categoryId = existing.docs[0].id as string
+        await payload.update({
+          collection: 'special-categories',
+          id: categoryId,
+          data: {
+            enquiryForm: formId,
+            sortOrder: index,
+          },
+          overrideAccess: true,
+          req: payloadReq,
+          context: { disableRevalidate: true },
+        })
+        categoryIdsByTitle.set(title, categoryId)
         result.categoriesSkipped++
         continue
       }
@@ -184,6 +239,7 @@ export async function POST(): Promise<Response> {
           slug,
           generateSlug: false,
           sortOrder: index,
+          enquiryForm: formId,
         },
         overrideAccess: true,
         req: payloadReq,
@@ -194,18 +250,23 @@ export async function POST(): Promise<Response> {
     }
 
     log.info('Loading vehicle catalog for specials links...')
-    const { vehicleIdsBySlug, modelIdsByKey } = await buildCatalogIdMaps(payload, payloadReq)
-    log.info(`Catalog ready — ${vehicleIdsBySlug.size} vehicles, ${modelIdsByKey.size} models`)
+    const { vehicleIdsBySlug, modelIdsByKey, variantIdsByKey } = await buildCatalogIdMaps(
+      payload,
+      payloadReq,
+    )
+    log.info(
+      `Catalog ready — ${vehicleIdsBySlug.size} vehicles, ${modelIdsByKey.size} models, ${variantIdsByKey.size} variants`,
+    )
 
     log.info(`Importing ${SPECIALS_SEED_DATA.length} specials from seed data...`)
 
     for (const [index, entry] of SPECIALS_SEED_DATA.entries()) {
       try {
-        log.info(`[${index + 1}/${SPECIALS_SEED_DATA.length}] ${entry.title}`)
+        log.info(`[${index + 1}/${SPECIALS_SEED_DATA.length}] ${entry.labelOverride}`)
 
         const cardImageId = await uploadSpecialImage(
           entry,
-          entry.cardImageUrl,
+          entry.cardImage,
           'card',
           stats,
           payload,
@@ -218,68 +279,93 @@ export async function POST(): Promise<Response> {
           continue
         }
 
-        const detailImageId = await uploadSpecialImage(
-          entry,
-          entry.detailImageUrl,
-          'detail',
-          stats,
-          payload,
-          payloadReq,
-        )
+        const catalog = matchSpecialToCatalog({
+          labelOverride: entry.labelOverride,
+          slug: entry.slug,
+          offerType: entry.offerType,
+          linkedVehicle: entry.linkedVehicle,
+          linkedModel: entry.linkedModel,
+          linkedVariant: entry.linkedVariant,
+        })
 
-        const catalog = matchSpecialToCatalog(entry)
-        const vehicleId = catalog.vehicleSlug
-          ? (vehicleIdsBySlug.get(catalog.vehicleSlug) ?? null)
-          : null
-        const modelId =
-          catalog.vehicleSlug && catalog.modelSlug
-            ? (modelIdsByKey.get(`${catalog.vehicleSlug}::${catalog.modelSlug}`) ?? null)
-            : null
+        let vehicleSlug = catalog.vehicleSlug
+        const modelSlug = catalog.modelSlug
+        const variantSlug = catalog.variantSlug
+        let vehicleId = vehicleSlug ? (vehicleIdsBySlug.get(vehicleSlug) ?? null) : null
+        let modelId: string | null = null
+        let variantId: string | null = null
 
-        let modelHref: string | null = null
-        if (catalog.vehicleSlug && catalog.modelSlug && modelId) {
-          modelHref = getVehicleModelPath(catalog.vehicleSlug, catalog.modelSlug)
+        if (modelSlug) {
+          if (vehicleSlug) {
+            modelId = modelIdsByKey.get(`${vehicleSlug}::${modelSlug}`) ?? null
+          }
+          if (!modelId) {
+            const undottedTarget = modelSlug.replace(/\./g, '')
+            for (const [key, id] of modelIdsByKey.entries()) {
+              const keyModel = key.includes('::') ? key.slice(key.lastIndexOf('::') + 2) : key
+              if (keyModel === modelSlug || keyModel.replace(/\./g, '') === undottedTarget) {
+                modelId = id
+                const inferredVehicleSlug = key.slice(0, key.length - keyModel.length - 2)
+                if (!vehicleSlug) {
+                  vehicleSlug = inferredVehicleSlug
+                  vehicleId = vehicleIdsBySlug.get(inferredVehicleSlug) ?? null
+                }
+                break
+              }
+            }
+          }
+        }
+
+        if (variantSlug && modelId) {
+          if (vehicleSlug && modelSlug) {
+            variantId = variantIdsByKey.get(`${vehicleSlug}::${modelSlug}::${variantSlug}`) ?? null
+          }
+          if (!variantId) {
+            const undottedTarget = variantSlug.replace(/\./g, '')
+            for (const [key, id] of variantIdsByKey.entries()) {
+              const keyVariant = key.slice(key.lastIndexOf('::') + 2)
+              if (keyVariant === variantSlug || keyVariant.replace(/\./g, '') === undottedTarget) {
+                variantId = id
+                break
+              }
+            }
+          }
+        }
+
+        if (vehicleSlug && variantSlug && variantId) {
+          result.linkedToVariant++
+        } else if (vehicleSlug && modelSlug && modelId) {
           result.linkedToModel++
-        } else if (catalog.vehicleSlug && vehicleId) {
-          modelHref = `/vehicles/${catalog.vehicleSlug}`
+        } else if (vehicleSlug && vehicleId) {
           result.linkedToVehicleOnly++
         }
 
-        if (catalog.vehicleSlug && !vehicleId) {
+        if (vehicleSlug && !vehicleId) {
+          log.warn(`No vehicle found for slug "${vehicleSlug}" — run Import Vehicle Catalog first`)
+        } else if (modelSlug && !modelId) {
+          log.warn(`No model found for "${vehicleSlug ?? '?'}/${modelSlug}" — linking vehicle only`)
+        } else if (variantSlug && !variantId) {
           log.warn(
-            `No vehicle found for slug "${catalog.vehicleSlug}" — run Import Vehicle Catalog first`,
-          )
-        } else if (catalog.modelSlug && !modelId) {
-          log.warn(
-            `No model found for "${catalog.vehicleSlug}/${catalog.modelSlug}" — linking vehicle only`,
+            `No variant found for "${vehicleSlug ?? '?'}/${modelSlug ?? '?'}/${variantSlug}" — linking model only`,
           )
         }
 
-        const content = buildSpecialContent({
-          title: entry.title,
-          subheading: entry.contentSubheading,
-          bodyHtml: entry.bodyHtml,
-          detailImageId: detailImageId ?? cardImageId,
-          formId,
-          modelHref,
-        })
         const categoryId = categoryIdsByTitle.get(entry.specialsCategory)
         if (!categoryId) {
           throw new Error(`Missing special category "${entry.specialsCategory}"`)
         }
 
         const specialData = {
-          title: entry.title,
-          subTitle: entry.subTitle,
+          title: entry.labelOverride,
           offerType: entry.offerType,
           category: categoryId,
           cardImage: cardImageId,
-          ...(entry.pricingLabel ? { pricingLabel: entry.pricingLabel } : {}),
           ...(entry.specialOffer != null ? { specialOffer: entry.specialOffer } : {}),
           ...(entry.bestSaving != null ? { bestSaving: entry.bestSaving } : {}),
+          ...(entry.paymentFrom != null ? { paymentFrom: entry.paymentFrom } : {}),
           ...(vehicleId ? { vehicle: vehicleId } : { vehicle: null }),
           ...(modelId ? { vehicleModel: modelId } : { vehicleModel: null }),
-          content,
+          ...(variantId ? { vehicleVariant: variantId } : { vehicleVariant: null }),
           sortOrder: entry.sortOrder,
           slug: entry.slug,
           generateSlug: false,

@@ -1,6 +1,7 @@
 'use client'
 
 import { FinanceCalculatorClient } from '@/lib/blocks/finance-calculator-block/components/FinanceCalculatorClient'
+import type { FinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-block/getFinanceCalculatorDefaults'
 import { getVehiclePrice } from '@/lib/blocks/stock-archive-block/utils'
 import type { MotorCityStockVehicle } from '@/lib/motor-city-stock/types'
 import { Button } from '@/components/ui/button'
@@ -11,9 +12,10 @@ const FINANCE_DISCLAIMER =
 
 type Props = {
   vehicle: MotorCityStockVehicle
+  calculatorDefaults?: FinanceCalculatorDefaults | null
 }
 
-export function StockVehicleFinance({ vehicle }: Props) {
+export function StockVehicleFinance({ vehicle, calculatorDefaults }: Props) {
   const price = getVehiclePrice(vehicle)
 
   return (
@@ -27,10 +29,10 @@ export function StockVehicleFinance({ vehicle }: Props) {
         </div>
 
         <FinanceCalculatorClient
-          heading={null}
           disclaimer={FINANCE_DISCLAIMER}
           defaultPurchasePrice={price > 0 ? price : null}
           mode="repaymentOnly"
+          defaults={calculatorDefaults}
         />
       </div>
     </section>

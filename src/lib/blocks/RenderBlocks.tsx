@@ -6,6 +6,7 @@ import type {
   Hero,
   RichText,
   FeatureList,
+  FeatureRows,
   FormBlockType,
   ContactInfo,
   IconText,
@@ -14,6 +15,7 @@ import type {
   Map,
   TeamGrid,
   ImageBlock,
+  FixedBackgroundBlockType,
   CtaCards,
   ImageCards,
   StatsBlock,
@@ -29,6 +31,7 @@ import type {
   SpecialsArchive,
   StockArchive,
   Partners,
+  Reviews,
   Row,
   VehicleTabsBlock,
   VehicleCatalogBlock,
@@ -38,10 +41,12 @@ import type {
   VehicleColorsBlock,
   VehicleGalleryBlock,
   VehicleFeaturesBlock,
+  VehicleSpecialCategoriesBlock,
   VehicleModelHeroBlock,
   VehicleModelHighlightsBlock,
   VehicleModelColorsBlock,
   VehicleModelSiblingsBlock,
+  VehicleModelVariantsBlock,
 } from '@/payload-types'
 import { SectionBlock } from '@/lib/blocks/section-block/components/SectionBlockComponent'
 import React, { Fragment } from 'react'
@@ -49,6 +54,7 @@ import { HeadingBlockComponent } from '@/lib/blocks/heading-block/components/Hea
 import { HeroBlock } from '@/lib/blocks/hero-block/components/HeroBlockComponent'
 import { RichTextBlockComponent } from '@/lib/blocks/rich-text-block/components/RichTextBlockComponent'
 import { FeatureListBlockComponent } from '@/lib/blocks/feature-list-block/components/FeatureListBlockComponent'
+import { FeatureRowsBlockComponent } from '@/lib/blocks/feature-rows-block/components/FeatureRowsBlockComponent'
 import { FormBlockComponent } from '@/lib/blocks/form-block/components/FormBlockComponent'
 import { ContactInfoBlockComponent } from '@/lib/blocks/contact-info-block/components/ContactInfoBlockComponent'
 import { IconTextBlockComponent } from '@/lib/blocks/icon-text-block/components/IconTextBlockComponent'
@@ -60,6 +66,7 @@ import { StatsBlockComponent } from '@/lib/blocks/stats-block/components/StatsBl
 import { CtaCardsBlockComponent } from '@/lib/blocks/cta-cards-block/components/CtaCardsBlockComponent'
 import { ImageCardsBlockComponent } from '@/lib/blocks/image-cards-block/components/ImageCardsBlockComponent'
 import { ImageBlockComponent } from '@/lib/blocks/image-block/components/ImageBlockComponent'
+import { FixedBackgroundBlockComponent } from '@/lib/blocks/fixed-background-block/components/FixedBackgroundBlockComponent'
 import { HoursTabsBlockComponent } from '@/lib/blocks/hours-tabs-block/components/HoursTabsBlockComponent'
 import { FaqBlockComponent } from '@/lib/blocks/faq-block/components/FaqBlockComponent'
 import { ContactFooterBlockComponent } from '@/lib/blocks/contact-footer-block/components/ContactFooterBlockComponent'
@@ -72,6 +79,7 @@ import { BenefitsGridBlockComponent } from '@/lib/blocks/benefits-grid-block/com
 import { SpecialsArchiveBlockComponent } from '@/lib/blocks/specials-archive-block/components/SpecialsArchiveBlockComponent'
 import { StockArchiveBlockComponent } from '@/lib/blocks/stock-archive-block/components/StockArchiveBlockComponent'
 import { PartnersBlockComponent } from '@/lib/blocks/partners-block/components/PartnersBlockComponent'
+import { ReviewsBlockComponent } from '@/lib/blocks/reviews-block/components/ReviewsBlockComponent'
 import { RowBlockComponent } from '@/lib/blocks/row-block/components/RowBlockComponent'
 import { VehicleTabsBlockComponent } from '@/lib/blocks/vehicle-tabs-block/components/VehicleTabsBlockComponent'
 import { VehicleCatalogBlockComponent } from '@/lib/blocks/vehicle-catalog-block/components/VehicleCatalogBlockComponent'
@@ -81,10 +89,12 @@ import { VehicleFaqBlockComponent } from '@/lib/blocks/vehicle-faq-block/compone
 import { VehicleColorsBlockComponent } from '@/lib/blocks/vehicle-colors-block/components/VehicleColorsBlockComponent'
 import { VehicleGalleryBlockComponent } from '@/lib/blocks/vehicle-gallery-block/components/VehicleGalleryBlockComponent'
 import { VehicleFeaturesBlockComponent } from '@/lib/blocks/vehicle-features-block/components/VehicleFeaturesBlockComponent'
+import { VehicleSpecialCategoriesBlockComponent } from '@/lib/blocks/vehicle-special-categories-block/components/VehicleSpecialCategoriesBlockComponent'
 import { VehicleModelHeroBlockComponent } from '@/lib/blocks/vehicle-model-hero-block/components/VehicleModelHeroBlockComponent'
 import { VehicleModelHighlightsBlockComponent } from '@/lib/blocks/vehicle-model-highlights-block/components/VehicleModelHighlightsBlockComponent'
 import { VehicleModelColorsBlockComponent } from '@/lib/blocks/vehicle-model-colors-block/components/VehicleModelColorsBlockComponent'
 import { VehicleModelSiblingsBlockComponent } from '@/lib/blocks/vehicle-model-siblings-block/components/VehicleModelSiblingsBlockComponent'
+import { VehicleModelVariantsBlockComponent } from '@/lib/blocks/vehicle-model-variants-block/components/VehicleModelVariantsBlockComponent'
 import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 
 type BlockComponentMap = {
@@ -95,6 +105,7 @@ type BlockComponentMap = {
   hero: Hero
   'rich-text': RichText
   'feature-list': FeatureList
+  'feature-rows': FeatureRows
   formBlock: FormBlockType
   'contact-info': ContactInfo
   'icon-text': IconText
@@ -104,6 +115,7 @@ type BlockComponentMap = {
   map: Map
   'team-grid': TeamGrid
   'image-block': ImageBlock
+  fixedBackgroundBlock: FixedBackgroundBlockType
   'cta-cards': CtaCards
   'image-cards': ImageCards
   statsBlock: StatsBlock
@@ -118,6 +130,7 @@ type BlockComponentMap = {
   'specials-archive': SpecialsArchive
   'stock-archive': StockArchive
   partners: Partners
+  reviews: Reviews
   'vehicle-tabs': VehicleTabsBlock
   'vehicle-catalog': VehicleCatalogBlock
   'vehicle-hero': VehicleHeroBlock
@@ -126,10 +139,12 @@ type BlockComponentMap = {
   'vehicle-colors': VehicleColorsBlock
   'vehicle-gallery': VehicleGalleryBlock
   'vehicle-features': VehicleFeaturesBlock
+  'vehicle-special-categories': VehicleSpecialCategoriesBlock
   'vehicle-model-hero': VehicleModelHeroBlock
   'vehicle-model-highlights': VehicleModelHighlightsBlock
   'vehicle-model-colors': VehicleModelColorsBlock
   'vehicle-model-siblings': VehicleModelSiblingsBlock
+  'vehicle-model-variants': VehicleModelVariantsBlock
 }
 
 type WithMeta<T> = T & { meta?: BlockRenderMeta }
@@ -144,6 +159,7 @@ const blockComponents: {
   hero: HeroBlock,
   'rich-text': RichTextBlockComponent,
   'feature-list': FeatureListBlockComponent,
+  'feature-rows': FeatureRowsBlockComponent,
   formBlock: FormBlockComponent as unknown as React.ComponentType<WithMeta<FormBlockType>>,
   'contact-info': ContactInfoBlockComponent as unknown as React.ComponentType<
     WithMeta<ContactInfo>
@@ -155,6 +171,7 @@ const blockComponents: {
   map: MapBlockComponent as unknown as React.ComponentType<WithMeta<Map>>,
   'team-grid': TeamGridBlockComponent,
   'image-block': ImageBlockComponent,
+  fixedBackgroundBlock: FixedBackgroundBlockComponent,
   'cta-cards': CtaCardsBlockComponent,
   'image-cards': ImageCardsBlockComponent,
   statsBlock: StatsBlockComponent,
@@ -171,6 +188,7 @@ const blockComponents: {
   'specials-archive': SpecialsArchiveBlockComponent,
   'stock-archive': StockArchiveBlockComponent,
   partners: PartnersBlockComponent,
+  reviews: ReviewsBlockComponent,
   'vehicle-tabs': VehicleTabsBlockComponent,
   'vehicle-catalog': VehicleCatalogBlockComponent,
   'vehicle-hero': VehicleHeroBlockComponent,
@@ -179,10 +197,12 @@ const blockComponents: {
   'vehicle-colors': VehicleColorsBlockComponent,
   'vehicle-gallery': VehicleGalleryBlockComponent,
   'vehicle-features': VehicleFeaturesBlockComponent,
+  'vehicle-special-categories': VehicleSpecialCategoriesBlockComponent,
   'vehicle-model-hero': VehicleModelHeroBlockComponent,
   'vehicle-model-highlights': VehicleModelHighlightsBlockComponent,
   'vehicle-model-colors': VehicleModelColorsBlockComponent,
   'vehicle-model-siblings': VehicleModelSiblingsBlockComponent,
+  'vehicle-model-variants': VehicleModelVariantsBlockComponent,
 } as const
 
 type Blocks = Config['blocks']

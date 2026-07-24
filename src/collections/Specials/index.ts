@@ -18,7 +18,15 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
     update: isAuthenticated,
   },
   admin: {
-    defaultColumns: ['title', 'category', 'offerType', 'updatedAt'],
+    defaultColumns: [
+      'title',
+      'category',
+      'offerType',
+      'updatedAt',
+      'vehicle',
+      'vehicleModel',
+      'vehicleVariant',
+    ],
     useAsTitle: 'title',
     group: 'Content',
   },
@@ -28,6 +36,7 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
     category: true,
     vehicle: true,
     vehicleModel: true,
+    vehicleVariant: true,
   },
   fields: [
     {
@@ -92,7 +101,7 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
             },
             {
               name: 'vehicleModel',
-              label: 'Linked Model / Variant',
+              label: 'Linked Model / Trim',
               type: 'relationship',
               relationTo: 'vehicle-models',
               filterOptions: ({ siblingData }) => {
@@ -108,7 +117,33 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
               },
               admin: {
                 description:
-                  'Optional. Links this special to a specific model variant. Leave blank when not applicable.',
+                  'Optional. Links this special to a specific trim/model page. Leave blank when not applicable.',
+              },
+            },
+            {
+              name: 'vehicleVariant',
+              label: 'Linked Variant',
+              type: 'relationship',
+              relationTo: 'vehicle-variants',
+              filterOptions: ({ siblingData }) => {
+                const data = siblingData as {
+                  vehicleModel?: string | { id?: string } | null
+                }
+                if (data?.vehicleModel) {
+                  return {
+                    model: {
+                      equals:
+                        typeof data.vehicleModel === 'object'
+                          ? data.vehicleModel.id
+                          : data.vehicleModel,
+                    },
+                  }
+                }
+                return true
+              },
+              admin: {
+                description:
+                  'Optional. Links this special to a specific variant configuration. Public links go to the parent model page.',
               },
             },
           ],
@@ -159,8 +194,8 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
           ],
         },
         {
-          label: 'Content',
           name: 'content',
+          label: 'Content',
           fields: [
             {
               name: 'section',
@@ -181,6 +216,28 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
       admin: {
         position: 'sidebar',
         description: 'Lower numbers appear first within a section.',
+      },
+    },
+    {
+      name: 'template',
+      label: 'Page Template',
+      type: 'relationship',
+      relationTo: 'special-templates',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Optional. Overrides the category template when this special is selected. If blank, the category template is used.',
+      },
+    },
+    {
+      name: 'enquiryForm',
+      label: 'Enquiry Form',
+      type: 'relationship',
+      relationTo: 'forms',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Optional. Overrides the category enquire form when this special is selected. If blank, the category form is used.',
       },
     },
     {

@@ -34,6 +34,7 @@ export function VehicleFeatures({ features }: VehicleFeaturesProps) {
                       resource={feature.featureImage}
                       fill
                       imgClassName="object-cover"
+                      maxWidth={1400}
                       size="(max-width: 1024px) 100vw, 50vw"
                     />
                   </div>

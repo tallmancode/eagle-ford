@@ -38,6 +38,8 @@ export const CtaOverlayBanner: React.FC<Hero> = (props) => {
         imgClassName="object-cover object-center"
         priority
         loading="eager"
+        maxWidth={1920}
+        size="100vw"
       />
 
       <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/20" />
@@ -61,7 +63,7 @@ export const CtaOverlayBanner: React.FC<Hero> = (props) => {
           <div className="flex flex-wrap gap-4">
             {primaryButton?.label && primaryButton.href && (
               <a href={primaryButton.href}>
-                <Button className="rounded-full bg-white text-black hover:bg-white/90 gap-2">
+                <Button className="rounded-full gap-2" variant="secondary">
                   <ButtonIcon name={primaryButton.icon} className="size-4" />
                   {primaryButton.label}
                 </Button>
@@ -69,10 +71,7 @@ export const CtaOverlayBanner: React.FC<Hero> = (props) => {
             )}
             {secondaryButton?.label && secondaryButton.href && (
               <a href={secondaryButton.href}>
-                <Button
-                  variant="outline"
-                  className="rounded-full border-white text-white bg-transparent hover:bg-white/10 gap-2"
-                >
+                <Button variant="default" className="rounded-full gap-2">
                   <ButtonIcon name={secondaryButton.icon} className="size-4" />
                   {secondaryButton.label}
                 </Button>

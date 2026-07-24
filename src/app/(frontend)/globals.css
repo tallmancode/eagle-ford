@@ -8,6 +8,8 @@
 @custom-variant lg (@media (width >= theme(--breakpoint-lg)));
 @custom-variant xl (@media (width >= theme(--breakpoint-xl)));
 @custom-variant 2xl (@media (width >= theme(--breakpoint-2xl)));
+@custom-variant 3xl (@media (width >= theme(--breakpoint-3xl)));
+@custom-variant 4xl (@media (width >= theme(--breakpoint-4xl)));
 
 @layer base {
   h1,
@@ -84,6 +86,8 @@
   --breakpoint-lg: 64rem;
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 86rem;
+  --breakpoint-3xl: 100rem; /* 1600px */
+  --breakpoint-4xl: 120rem; /* 1920px */
   --font-mono: var(--font-geist-mono);
   --font-sans: var(--font-geist-sans);
   --font-ford: var(--font-ford-f1);
@@ -124,6 +128,18 @@
   @variant 2xl {
     .container {
       max-width: var(--breakpoint-2xl);
+    }
+  }
+
+  @variant 3xl {
+    .container {
+      max-width: var(--breakpoint-3xl);
+    }
+  }
+
+  @variant 4xl {
+    .container {
+      max-width: var(--breakpoint-4xl);
     }
   }
 }
