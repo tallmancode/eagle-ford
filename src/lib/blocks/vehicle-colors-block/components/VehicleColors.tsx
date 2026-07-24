@@ -20,47 +20,50 @@ export function VehicleColors({ vehicleName, colours }: VehicleColorsProps) {
   }
 
   return (
-    <section className="py-14 px-4">
+    <section className="px-4 py-14">
       <div className="container mx-auto">
-        <h2 className="text-primary text-3xl font-bold text-center mb-10">{vehicleName} Colours</h2>
+        <h2 className="mb-10 text-center text-3xl font-bold text-primary">{vehicleName} Colours</h2>
 
-        <div className="relative aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden mb-4 bg-muted flex items-center justify-center">
+        <div className="relative mx-auto mb-4 aspect-[16/10] w-full max-w-3xl overflow-hidden rounded-2xl bg-muted sm:aspect-[16/9]">
           {colours[selectedColour]?.colourSwatch ? (
-            <MediaImage
-              resource={colours[selectedColour].colourSwatch}
-              imgClassName="w-auto h-auto max-w-full max-h-full object-contain"
-              size="(max-width: 768px) 100vw, 1280px"
-              priority
-            />
+            <div className="absolute inset-3 sm:inset-5 md:inset-6">
+              <MediaImage
+                resource={colours[selectedColour].colourSwatch}
+                fill
+                imgClassName="object-contain object-center"
+                size="(max-width: 768px) 100vw, 768px"
+                priority
+              />
+            </div>
           ) : (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-muted-foreground text-lg">{colours[selectedColour]?.colourName}</p>
+            <div className="flex h-full items-center justify-center">
+              <p className="text-lg text-muted-foreground">{colours[selectedColour]?.colourName}</p>
             </div>
           )}
         </div>
 
-        <p className="text-center font-semibold mb-0.5">{colours[selectedColour]?.colourName}</p>
+        <p className="mb-0.5 text-center font-semibold">{colours[selectedColour]?.colourName}</p>
         {colours[selectedColour]?.colourNote && (
-          <p className="text-center text-sm text-muted-foreground mb-6">
+          <p className="mb-6 text-center text-sm text-muted-foreground">
             ({colours[selectedColour].colourNote})
           </p>
         )}
         {!colours[selectedColour]?.colourNote && <div className="mb-6" />}
 
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-5">
           {colours.map((colour, i) => (
             <button
               key={colour.id ?? i}
               onClick={() => setSelectedColour(i)}
-              className="group flex flex-col items-center gap-1.5 focus:outline-none"
+              className="group flex flex-col items-center gap-2 focus:outline-none"
               title={colour.colourName}
               aria-pressed={selectedColour === i}
               aria-label={colour.colourName}
             >
               <div
-                className={`relative w-16 h-10 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                className={`relative h-16 w-28 overflow-hidden rounded-lg border-2 transition-all duration-200 sm:h-20 sm:w-36 ${
                   selectedColour === i
-                    ? 'border-primary shadow-md scale-110'
+                    ? 'scale-105 border-primary shadow-md'
                     : 'border-transparent hover:border-muted-foreground/40'
                 }`}
               >
@@ -69,17 +72,17 @@ export function VehicleColors({ vehicleName, colours }: VehicleColorsProps) {
                     resource={colour.colourSwatch}
                     fill
                     imgClassName="object-cover object-center"
-                    size="64px"
+                    size="144px"
                   />
                 ) : (
-                  <div className="w-full h-full bg-muted-foreground/20 flex items-center justify-center">
-                    <span className="text-[7px] text-center px-0.5 leading-tight text-muted-foreground">
+                  <div className="flex h-full w-full items-center justify-center bg-muted-foreground/20">
+                    <span className="px-1 text-center text-[10px] leading-tight text-muted-foreground">
                       {colour.colourName}
                     </span>
                   </div>
                 )}
               </div>
-              <span className="text-[10px] text-muted-foreground text-center max-w-[64px] leading-tight">
+              <span className="max-w-[7rem] text-center text-xs leading-tight text-muted-foreground sm:max-w-[9rem]">
                 {colour.colourName}
               </span>
             </button>

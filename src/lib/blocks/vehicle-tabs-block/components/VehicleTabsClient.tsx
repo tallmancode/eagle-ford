@@ -25,25 +25,25 @@ function VehicleCard({ vehicle }: { vehicle: VehicleTabItem }) {
   return (
     <Link
       href={`/vehicles/${vehicle.slug}`}
-      className="group flex flex-col items-center bg-light-50 rounded-lg shadow-card border border-border/40 hover:shadow-lg transition-shadow"
+      className="group flex h-full flex-col items-center bg-card rounded-lg shadow-sm p-4 border border-border/40 hover:shadow-md transition-shadow"
     >
-      <div className="w-full overflow-hidden rounded-t-lg mb-3">
-        <MediaImage
-          resource={vehicle.featureImage}
-          imgClassName="w-full h-auto"
-          maxWidth={600}
-          size="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-        />
+      <div className="relative mb-3 aspect-[3/2] w-full shrink-0 overflow-hidden">
+        {vehicle.featureImage ? (
+          <MediaImage
+            resource={vehicle.featureImage}
+            fill
+            imgClassName="object-contain object-center"
+            size="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          />
+        ) : null}
       </div>
-      <div className="px-4 pb-4 flex flex-col">
-        <h3 className="uppercase text-primary font-bold text-center text-sm leading-tight">
+      <div className="flex w-full flex-1 flex-col items-center justify-start">
+        <h3 className="flex min-h-[2.5rem] items-end justify-center text-center text-sm font-bold leading-tight uppercase text-primary">
           {vehicle.name}
         </h3>
-        {vehicle.badge && (
-          <span className="mt-1 text-xs text-muted-foreground text-center">
-            {badgeLabels[vehicle.badge] ?? vehicle.badge}
-          </span>
-        )}
+        <span className="mt-1 min-h-[1rem] text-center text-xs text-muted-foreground">
+          {vehicle.badge ? (badgeLabels[vehicle.badge] ?? vehicle.badge) : '\u00A0'}
+        </span>
       </div>
     </Link>
   )
