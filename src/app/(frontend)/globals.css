@@ -89,7 +89,8 @@
   --breakpoint-3xl: 100rem; /* 1600px */
   --breakpoint-4xl: 120rem; /* 1920px */
   --font-mono: var(--font-geist-mono);
-  --font-sans: var(--font-geist-sans);
+  /* Prefer Ford brand font as the default sans stack (avoids loading unused Geist Sans). */
+  --font-sans: var(--font-ford-f1);
   --font-ford: var(--font-ford-f1);
 }
 

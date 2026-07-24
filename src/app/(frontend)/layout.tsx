@@ -2,12 +2,11 @@ import type { Metadata } from 'next'
 
 import { cn } from '@/lib/utils/cn'
 import { GeistMono } from 'geist/font/mono'
-import { GeistSans } from 'geist/font/sans'
 import localFont from 'next/font/local'
 import React from 'react'
 import { AdminBar } from '@/components/AdminBar'
+import { JsonLd } from '@/components/JsonLd/JsonLd'
 import { Providers } from '@/providers'
-import { draftMode } from 'next/headers'
 
 import './globals.css'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
@@ -19,6 +18,7 @@ import { SiteFooter } from '@/components/footer/SiteFooter'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import { navNeedsVehicleMegaMenu } from '@/lib/data/vehicleMegaMenuTypes'
 import { getVehicleMegaMenuData } from '@/lib/data/getVehicleMegaMenuData'
+import { getDealershipJsonLd } from '@/lib/seo/dealershipJsonLd'
 import type {
   Footer as GlobalFooter,
   Header as GlobalHeader,
@@ -36,11 +36,10 @@ const fordF1 = localFont({
   ],
   variable: '--font-ford-f1',
   display: 'swap',
+  preload: true,
 })
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { isEnabled } = await draftMode()
-
   const [globalHeader, globalFooter, globalSettings] = (await Promise.all([
     getCachedGlobal('header', 1),
     getCachedGlobal('footer', 1),
@@ -53,19 +52,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     : null
 
   return (
-    <html
-      className={cn(GeistSans.variable, GeistMono.variable, fordF1.variable)}
-      data-theme="light"
-      lang="en"
-    >
+    <html className={cn(GeistMono.variable, fordF1.variable)} data-theme="light" lang="en">
       <PrivacyProvider>
         <body className="font-ford">
+          <JsonLd data={getDealershipJsonLd()} />
           <Providers>
-            <AdminBar
-              adminBarProps={{
-                preview: isEnabled,
-              }}
-            />
+            {/* preview is resolved client-side via admin-bar auth; avoid draftMode() here so pages can cache */}
+            <AdminBar adminBarProps={{ preview: true }} />
             <SiteHeader
               globalHeader={globalHeader}
               globalSettings={globalSettings}

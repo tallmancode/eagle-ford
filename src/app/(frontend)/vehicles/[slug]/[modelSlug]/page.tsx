@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
-import { formatPageTitle } from '@/constants/site'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
+import { JsonLd } from '@/components/JsonLd/JsonLd'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
@@ -13,6 +13,11 @@ import type { Media, VehicleModel, VehicleModelTemplate, VehicleVariant } from '
 import { DefaultModelLayout } from './DefaultModelLayout'
 import { getModelStartingPrice, getVehicleModelPath } from '@/lib/utils/vehicleModel'
 import { getVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
+import { buildDocumentMetadata, resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
+import { getVehicleJsonLd } from '@/lib/seo/dealershipJsonLd'
+
+/** ISR: model pages refresh at most every 5 minutes unless revalidated by CMS hooks. */
+export const revalidate = 300
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -154,6 +159,18 @@ export default async function Page({ params: paramsPromise }: Args) {
     <div>
       <PayloadRedirects disableNotFound url={url} />
       {draft && <LivePreviewListener />}
+      <JsonLd
+        data={getVehicleJsonLd({
+          name: `${vehicle.name} ${model.name}`,
+          description: model.meta?.metaDescription ?? vehicle.meta?.metaDescription,
+          path: url,
+          imageUrl: resolveMediaOgUrl(
+            typeof (model.meta?.metaImage ?? vehicle.meta?.metaImage) === 'object'
+              ? ((model.meta?.metaImage ?? vehicle.meta?.metaImage) as Media)
+              : null,
+          ),
+        })}
+      />
 
       {useTemplate ? (
         <RenderBlocks blocks={templateSections} meta={meta} />
@@ -174,38 +191,34 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const { slug = '', modelSlug = '' } = await paramsPromise
   const decodedSlug = decodeURIComponent(slug)
   const decodedModelSlug = decodeURIComponent(modelSlug)
+  const fallbackPath = getVehicleModelPath(decodedSlug, decodedModelSlug)
 
   const vehicle = await queryVehicleBySlug({ slug: decodedSlug })
-  if (!vehicle) return { title: formatPageTitle('Vehicle Model') }
+  if (!vehicle) {
+    return buildDocumentMetadata({ title: 'Vehicle Model', path: fallbackPath })
+  }
 
   const model = await queryModelBySlug({
     slug: decodedModelSlug,
     vehicleId: vehicle.id,
   })
-  if (!model) return { title: formatPageTitle(vehicle.name) }
-
-  const title = model.meta?.metaTitle
-    ? formatPageTitle(model.meta.metaTitle)
-    : formatPageTitle(`${model.name} | ${vehicle.name}`)
-
-  const description = model.meta?.metaDescription ?? vehicle.meta?.metaDescription ?? undefined
-
-  const metaImage = model.meta?.metaImage ?? vehicle.meta?.metaImage
-  const imageUrl =
-    typeof metaImage === 'object' && metaImage && 'url' in metaImage
-      ? ((metaImage as Media).url ?? undefined)
-      : undefined
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: imageUrl ? [{ url: imageUrl }] : undefined,
-      url: getVehicleModelPath(vehicle.slug ?? decodedSlug, model.slug ?? decodedModelSlug),
-    },
+  if (!model) {
+    return buildDocumentMetadata({
+      title: vehicle.name,
+      path: `/vehicles/${vehicle.slug ?? decodedSlug}`,
+    })
   }
+
+  const path = getVehicleModelPath(vehicle.slug ?? decodedSlug, model.slug ?? decodedModelSlug)
+  const metaImage = model.meta?.metaImage ?? vehicle.meta?.metaImage
+  const imageUrl = resolveMediaOgUrl(typeof metaImage === 'object' ? (metaImage as Media) : null)
+
+  return buildDocumentMetadata({
+    title: model.meta?.metaTitle || `${model.name} | ${vehicle.name}`,
+    description: model.meta?.metaDescription ?? vehicle.meta?.metaDescription,
+    path,
+    imageUrl,
+  })
 }
 
 const queryVehicleBySlug = cache(async ({ slug }: { slug: string }) => {

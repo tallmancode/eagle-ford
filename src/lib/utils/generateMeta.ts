@@ -2,21 +2,21 @@ import type { Metadata } from 'next'
 
 import type { Media, Page, Config, Special } from '@/payload-types'
 
-import { CRAWLER_BLOCK_ROBOTS } from '@/constants/crawlerPolicy'
-import { DEFAULT_OG_IMAGE_PATH, formatPageTitle, SITE_NAME } from '@/constants/site'
-import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
+import { DEFAULT_OG_IMAGE_PATH } from '@/constants/site'
+import { buildDocumentMetadata, resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
 import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
+import { getPagePath } from '@/lib/utils/getPagePath'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
 
 const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   const serverUrl = getServerSideURL()
-
   let url = serverUrl + DEFAULT_OG_IMAGE_PATH
 
   if (image && typeof image === 'object' && 'url' in image) {
-    const ogUrl = image.sizes?.og?.url
-
-    url = ogUrl ? serverUrl + ogUrl : serverUrl + image.url
+    const ogPath = resolveMediaOgUrl(image)
+    if (ogPath) {
+      url = ogPath.startsWith('http') ? ogPath : serverUrl + ogPath
+    }
   }
 
   return url
@@ -29,46 +29,46 @@ function isSpecial(doc: Partial<Page> | Partial<Special> | null): doc is Partial
 export const generateMeta = async (args: {
   doc: Partial<Page> | Partial<Special> | null
 }): Promise<Metadata> => {
-  const { doc } = args
+  try {
+    const { doc } = args
 
-  if (isSpecial(doc)) {
-    const displayTitle = getSpecialDisplayTitle(doc as Special)
-    const title = formatPageTitle(displayTitle)
-    const cardImage = typeof doc.cardImage === 'object' ? doc.cardImage : undefined
-    const ogImage = getImageURL(cardImage)
-    const url = doc.slug ? `/specials/${doc.slug}` : '/'
+    if (isSpecial(doc)) {
+      const displayTitle = getSpecialDisplayTitle(doc as Special)
+      const cardImage = typeof doc.cardImage === 'object' ? doc.cardImage : undefined
+      const ogImage = getImageURL(cardImage)
+      const path = doc.slug ? `/specials/${doc.slug}` : '/'
 
-    return {
-      robots: CRAWLER_BLOCK_ROBOTS,
-      openGraph: mergeOpenGraph({
-        description: '',
-        images: ogImage ? [{ url: ogImage }] : undefined,
-        title,
-        url,
-      }),
-      title,
+      return buildDocumentMetadata({
+        title: displayTitle,
+        description: null,
+        path,
+        imageUrl: ogImage,
+      })
     }
-  }
 
-  const ogImage = getImageURL(doc?.meta?.image)
+    if (!doc) {
+      return buildDocumentMetadata({
+        title: '',
+        path: '/',
+      })
+    }
 
-  const title = doc?.meta?.title ? formatPageTitle(doc.meta.title) : SITE_NAME
+    const path = getPagePath(doc)
+    const ogImage = getImageURL(doc.meta?.image)
+    const title = doc.meta?.title || doc.title || ''
 
-  return {
-    description: doc?.meta?.description,
-    robots: CRAWLER_BLOCK_ROBOTS,
-    openGraph: mergeOpenGraph({
-      description: doc?.meta?.description || '',
-      images: ogImage
-        ? [
-            {
-              url: ogImage,
-            },
-          ]
-        : undefined,
+    return buildDocumentMetadata({
       title,
-      url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
-    }),
-    title,
+      description: doc.meta?.description,
+      path,
+      imageUrl: ogImage,
+    })
+  } catch (error) {
+    const { captureException } = await import('@sentry/nextjs')
+    captureException(error, { tags: { area: 'generateMeta' } })
+    return buildDocumentMetadata({
+      title: '',
+      path: '/',
+    })
   }
 }
