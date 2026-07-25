@@ -7,17 +7,17 @@ import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 
 import { SpecialsTabs } from '@/components/specials/SpecialsTabs'
-import { CRAWLER_BLOCK_ROBOTS } from '@/constants/crawlerPolicy'
-import { DEFAULT_OG_IMAGE_PATH, formatPageTitle } from '@/constants/site'
+import { DEFAULT_OG_IMAGE_PATH } from '@/constants/site'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { getFinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-block/getFinanceCalculatorDefaults'
 import { getOfferTypeLabel } from '@/lib/specials/constants'
 import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getSpecialCategoryPath } from '@/lib/specials/paths'
+import { getSpecialCategorySeoDescription } from '@/lib/seo-seed/seo-seed-data'
+import { buildDocumentMetadata, resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import { getPagePath } from '@/lib/utils/getPagePath'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
-import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
 import type {
   Form,
   Media,
@@ -29,7 +29,8 @@ import type {
   VehicleModel,
 } from '@/payload-types'
 
-export const dynamic = 'force-dynamic'
+/** Prefer ISR over force-dynamic; searchParams still allow deep-links to a special. */
+export const revalidate = 300
 
 type SpecialListItem = Pick<
   Special,
@@ -313,9 +314,10 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const category = await queryCategoryBySlug({ slug: decodedSlug })
 
   if (!category) {
-    return {
-      title: formatPageTitle('Special Category'),
-    }
+    return buildDocumentMetadata({
+      title: 'Special Category',
+      path: `/specials/${decodedSlug}`,
+    })
   }
 
   const featureImage =
@@ -323,25 +325,40 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
       ? (category.featureImage as Media)
       : null
 
-  const title = formatPageTitle(category.title)
   const serverUrl = getServerSideURL()
-  const ogImageUrl = featureImage?.sizes?.og?.url
-    ? serverUrl + featureImage.sizes.og.url
-    : featureImage?.url
-      ? serverUrl + featureImage.url
-      : serverUrl + DEFAULT_OG_IMAGE_PATH
+  const ogPath = resolveMediaOgUrl(featureImage)
+  const ogImageUrl = ogPath
+    ? ogPath.startsWith('http')
+      ? ogPath
+      : serverUrl + ogPath
+    : serverUrl + DEFAULT_OG_IMAGE_PATH
   const pageUrl = getSpecialCategoryPath(category.slug)
+  const description =
+    getSpecialCategorySeoDescription(category.slug) ||
+    `${category.title} — current Ford offers at Eagle Ford in Sandton, Johannesburg.`
 
-  return {
-    title,
-    robots: CRAWLER_BLOCK_ROBOTS,
-    openGraph: mergeOpenGraph({
-      description: '',
-      images: [{ url: ogImageUrl }],
-      title,
-      url: pageUrl,
-    }),
-  }
+  return buildDocumentMetadata({
+    title: category.title,
+    description,
+    path: pageUrl,
+    imageUrl: ogImageUrl,
+  })
+}
+
+export async function generateStaticParams() {
+  const payload = await getPayload({ config: configPromise })
+  const categories = await payload.find({
+    collection: 'special-categories',
+    draft: false,
+    limit: 1000,
+    overrideAccess: false,
+    pagination: false,
+    select: { slug: true },
+  })
+
+  return categories.docs
+    .filter((doc) => Boolean(doc.slug))
+    .map(({ slug }) => ({ slug: slug as string }))
 }
 
 const queryCategoryBySlug = cache(async ({ slug }: { slug: string }) => {
