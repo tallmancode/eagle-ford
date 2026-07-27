@@ -20,6 +20,9 @@ import {
 } from '@/plugins/form-builder/formInputBlocks'
 import { SubheadingBlock } from '@/lib/blocks/form-block/SubheadingBlock'
 import { handleMultiStepFormUploads } from '@/lib/blocks/form-block/hooks/handleMultiStepFormUploads'
+import { getLmsLeadInjectionFields } from '@/lib/motor-city-leads/formFields'
+import { getMotorCityLeadSubmissionFields } from '@/lib/motor-city-leads/formSubmissionFields'
+import { injectFormSubmissionLead } from '@/lib/motor-city-leads/injectFormSubmissionLead'
 import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import { aiSeoPlugin } from '@/plugins/ai-seo'
 import { aiMediaSuggestionsPlugin } from '@/plugins/ai-media-suggestions'
@@ -71,8 +74,10 @@ export const plugins: Plugin[] = [
     uploadCollections: [...FORM_UPLOAD_COLLECTIONS],
     redirectRelationships: ['pages'],
     formSubmissionOverrides: {
+      fields: ({ defaultFields }) => [...defaultFields, ...getMotorCityLeadSubmissionFields()],
       hooks: {
         beforeChange: [handleMultiStepFormUploads],
+        afterChange: [injectFormSubmissionLead],
       },
     },
     formOverrides: {
@@ -186,7 +191,7 @@ export const plugins: Plugin[] = [
           )
         }
 
-        return result
+        return [...result, getLmsLeadInjectionFields()]
       },
     },
   }),

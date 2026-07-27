@@ -17,6 +17,13 @@ This app is a **satellite site** that consumes live stock from Eagle Motor City 
 - Data is cached in Next.js only — do **not** create stock collections or write to the Ford database
 - Dev server runs on port **3001** (Motor City runs on 3000)
 
+## CMS LMS leads (via Motor City)
+
+- Opt-in per form in Payload admin: **Forms → [form] → CMS LMS Lead Injection**
+- Enabled forms POST normalized leads to Motor City `POST /api/leads/site-forms` (same stock API key)
+- Motor City owns CMS LMS credentials and the actual LMS push — this site never calls CMS LMS directly
+- Implementation: `src/lib/motor-city-leads/`
+
 ## Vehicle Catalog Hierarchy
 
 Three tiers — only vehicles and models have public pages:

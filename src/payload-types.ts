@@ -1553,6 +1553,63 @@ export interface Form {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Opt-in only. When enabled, this form’s submissions are sent to Eagle Motor City, which forwards them to CMS LMS. Other forms are unaffected.
+   */
+  lmsLeadInjection?: {
+    /**
+     * Off by default. Enable only for forms that should create LMS leads.
+     */
+    enabled?: boolean | null;
+    /**
+     * CMS dealer code (must match CMS LMS). Required when injection is enabled.
+     */
+    dealerRef?: string | null;
+    /**
+     * CMS floor code (e.g. NEWFORD, USED, CALLCENTRE). Required when injection is enabled.
+     */
+    dealerFloor?: string | null;
+    /**
+     * CMS lead source code (validated by CMS). Required when injection is enabled.
+     */
+    source?: string | null;
+    defaultUsed?: ('0' | '1') | null;
+    defaultBrand?: string | null;
+    defaultModel?: string | null;
+    /**
+     * Optional text prepended to seeks.comments
+     */
+    commentsPrefix?: string | null;
+    /**
+     * Map form field names to LMS paths. Common names (firstName, lastName, phone, email, model, message) are auto-mapped when omitted.
+     */
+    fieldMappings?:
+      | {
+          /**
+           * Form field `name` (case-insensitive)
+           */
+          formFieldName: string;
+          lmsPath:
+            | 'contact.firstName'
+            | 'contact.surname'
+            | 'contact.email'
+            | 'contact.cellPhone'
+            | 'contact.title'
+            | 'contact.preferredContactMethod'
+            | 'seeks.brand'
+            | 'seeks.model'
+            | 'seeks.modelrange'
+            | 'seeks.used'
+            | 'seeks.year'
+            | 'seeks.kms'
+            | 'seeks.stockNr'
+            | 'seeks.comments'
+            | 'seeks.vin'
+            | 'seeks.regno';
+          id?: string | null;
+        }[]
+      | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -2913,6 +2970,18 @@ export interface FormSubmission {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Eagle Motor City site-form-leads document id
+   */
+  motorCityLeadId?: string | null;
+  /**
+   * Last known Motor City / LMS push status
+   */
+  motorCityLeadStatus?: string | null;
+  /**
+   * Error from the last Motor City lead forward attempt
+   */
+  motorCityLeadError?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -4034,6 +4103,25 @@ export interface FormsSelect<T extends boolean = true> {
         message?: T;
         id?: T;
       };
+  lmsLeadInjection?:
+    | T
+    | {
+        enabled?: T;
+        dealerRef?: T;
+        dealerFloor?: T;
+        source?: T;
+        defaultUsed?: T;
+        defaultBrand?: T;
+        defaultModel?: T;
+        commentsPrefix?: T;
+        fieldMappings?:
+          | T
+          | {
+              formFieldName?: T;
+              lmsPath?: T;
+              id?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -4067,6 +4155,9 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         value?: T;
         id?: T;
       };
+  motorCityLeadId?: T;
+  motorCityLeadStatus?: T;
+  motorCityLeadError?: T;
   updatedAt?: T;
   createdAt?: T;
 }
