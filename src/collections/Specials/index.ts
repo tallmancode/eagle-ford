@@ -17,6 +17,7 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
     read: isAuthenticatedOrPublished,
     update: isAuthenticated,
   },
+  orderable: true,
   admin: {
     defaultColumns: [
       'title',
@@ -30,7 +31,7 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
     useAsTitle: 'title',
     group: 'Content',
   },
-  defaultSort: 'sortOrder',
+  defaultSort: '_order',
   defaultPopulate: {
     offerType: true,
     category: true,
@@ -207,16 +208,6 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
           ],
         },
       ],
-    },
-    {
-      name: 'sortOrder',
-      label: 'Sort Order',
-      type: 'number',
-      defaultValue: 0,
-      admin: {
-        position: 'sidebar',
-        description: 'Lower numbers appear first within a section.',
-      },
     },
     {
       name: 'template',

@@ -9,31 +9,44 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
-import { Hero, Page } from '@/payload-types'
+import { Hero, Page, Special, SpecialCategory } from '@/payload-types'
 import Autoplay from 'embla-carousel-autoplay'
 import { MediaImage } from '@/components/ui/media-image'
+import { getSpecialCategoryPath } from '@/lib/specials/paths'
 import { getPagePath } from '@/lib/utils/getPagePath'
 import Link from 'next/link'
 
 const DEFAULT_INTERVAL = 5000
 
-function resolveSlideHref(
-  reference:
-    | {
-        relationTo: 'pages'
-        value: string | Page
-      }
-    | null
-    | undefined,
-): string | null {
+type SlideReference = NonNullable<
+  NonNullable<Hero['carouselHeroContent']>['standardCarouselContent']
+>['slides'][number]['reference']
+
+function resolveSlideHref(reference: SlideReference): string | null {
   if (!reference) return null
   const { relationTo, value } = reference
   if (typeof value === 'string') return null
+
   if (relationTo === 'pages') {
     const page = value as Page
     if (!page.slug) return null
     return getPagePath(page)
   }
+
+  if (relationTo === 'special-categories') {
+    const category = value as SpecialCategory
+    if (!category.slug) return null
+    return getSpecialCategoryPath(category.slug)
+  }
+
+  if (relationTo === 'specials') {
+    const special = value as Special
+    if (!special.slug) return null
+    const category = special.category
+    if (typeof category !== 'object' || !category?.slug) return null
+    return getSpecialCategoryPath(category.slug, special.slug)
+  }
+
   return null
 }
 

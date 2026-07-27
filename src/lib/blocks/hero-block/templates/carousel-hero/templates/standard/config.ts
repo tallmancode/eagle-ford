@@ -35,7 +35,7 @@ export const standardCarouselConfig: GroupField = {
           type: 'relationship',
           label: 'Document to link to',
           maxDepth: 2,
-          relationTo: ['pages'],
+          relationTo: ['pages', 'specials', 'special-categories'],
         },
       ],
     },

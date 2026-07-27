@@ -120,7 +120,7 @@ function SpecialListPricing({ special }: { special: SpecialTabItem }) {
 
   if (special.offerType === 'payment' && special.paymentFrom != null) {
     return (
-      <span className="flex justify-end">
+      <span className="flex justify-start">
         <span className="flex items-center space-x-1">
           <span className="text-xs">Payment From:</span>
           <span className="font-semibold text-secondary">{formatZAR(special.paymentFrom)}*pm</span>
