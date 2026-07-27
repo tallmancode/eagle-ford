@@ -366,7 +366,6 @@ export async function POST(): Promise<Response> {
           ...(vehicleId ? { vehicle: vehicleId } : { vehicle: null }),
           ...(modelId ? { vehicleModel: modelId } : { vehicleModel: null }),
           ...(variantId ? { vehicleVariant: variantId } : { vehicleVariant: null }),
-          sortOrder: entry.sortOrder,
           slug: entry.slug,
           generateSlug: false,
           _status: 'published' as const,

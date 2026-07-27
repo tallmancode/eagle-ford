@@ -392,7 +392,7 @@ const querySpecialsByCategoryId = cache(async ({ categoryId }: { categoryId: str
     overrideAccess: draft,
     pagination: false,
     depth: 2,
-    sort: 'sortOrder',
+    sort: '_order',
     where: {
       category: {
         equals: categoryId,

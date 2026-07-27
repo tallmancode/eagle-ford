@@ -30,7 +30,6 @@ export type SpecialSeedCategory = {
 /** Flat entry used by the import route (category + item). */
 export type SpecialSeedEntry = SpecialSeedItem & {
   specialsCategory: string
-  sortOrder: number
 }
 
 export const DATA: SpecialSeedCategory[] = [
@@ -1044,9 +1043,8 @@ export const DATA: SpecialSeedCategory[] = [
 ]
 
 export const SPECIALS_SEED_DATA: SpecialSeedEntry[] = DATA.flatMap((category) =>
-  category.specials.map((special, index) => ({
+  category.specials.map((special) => ({
     ...special,
     specialsCategory: category.specialsCategory,
-    sortOrder: index + 1,
   })),
 )

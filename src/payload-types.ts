@@ -825,10 +825,19 @@ export interface StandardCarousel {
      * Recommended: 1920×1080px, WebP or JPEG.
      */
     image: string | Media;
-    reference?: {
-      relationTo: 'pages';
-      value: string | Page;
-    } | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'specials';
+          value: string | Special;
+        } | null)
+      | ({
+          relationTo: 'special-categories';
+          value: string | SpecialCategory;
+        } | null);
     id?: string | null;
   }[];
 }
@@ -959,176 +968,122 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "OverlayCarousel".
+ * via the `definition` "specials".
  */
-export interface OverlayCarousel {
-  slides: {
-    /**
-     * Recommended: 1920×1080px, WebP or JPEG.
-     */
-    image: string | Media;
-    heading?: string | null;
-    subheading?: string | null;
-    alignment?: ('left' | 'center' | 'right') | null;
-    id?: string | null;
-  }[];
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "BannerHero".
- */
-export interface BannerHero {
-  bannerTemplate: 'full-width' | 'overlay' | 'cta-overlay';
-  fullWidthBannerContent?: FullWidthBanner;
-  overlayBannerContent?: OverlayBanner;
-  ctaOverlayContent?: CtaOverlayBanner;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FullWidthBanner".
- */
-export interface FullWidthBanner {
+export interface Special {
+  id: string;
+  _order?: string | null;
+  offerType: 'price-point' | 'payment' | 'service' | 'enquiry';
   /**
-   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   * Groups this special under a campaign or theme (e.g. Truck Month, Holiday).
    */
-  image: string | Media;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "OverlayBanner".
- */
-export interface OverlayBanner {
+  category: string | SpecialCategory;
   /**
-   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   * Optional. Defaults to the offer type label if left blank.
    */
-  image: string | Media;
-  heading?: string | null;
-  subheading?: string | null;
-  alignment?: ('left' | 'center' | 'right') | null;
+  title?: string | null;
   /**
-   * Adds a semi-transparent dark tint over the image to improve text legibility.
+   * Optional. Defaults to the offer type label if left blank.
    */
-  darkOverlay?: boolean | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CtaOverlayBanner".
- */
-export interface CtaOverlayBanner {
+  subTitle?: string | null;
+  cardImage: string | Media;
   /**
-   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   * Optional. Links this special to a vehicle family page. Leave blank for service or non-vehicle offers.
    */
-  image: string | Media;
+  vehicle?: (string | null) | Vehicle;
   /**
-   * Small uppercase label above the heading (e.g. "Eagle Ford — Service Centre").
+   * Optional. Links this special to a specific trim/model page. Leave blank when not applicable.
    */
-  eyebrow?: string | null;
-  heading: string;
-  subheading?: string | null;
-  primaryButton?: {
-    label?: string | null;
-    /**
-     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
-     */
-    href?: string | null;
-    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
+  vehicleModel?: (string | null) | VehicleModel;
+  /**
+   * Optional. Links this special to a specific variant configuration. Public links go to the parent model page.
+   */
+  vehicleVariant?: (string | null) | VehicleVariant;
+  /**
+   * Cash price in Rand, e.g. 489900 for R489 900
+   */
+  pricingLabel?: string | null;
+  /**
+   * Cash price in Rand, e.g. 489900 for R489 900
+   */
+  specialOffer?: number | null;
+  /**
+   * Saving amount in Rand, e.g. 100100 for R100 100
+   */
+  bestSaving?: number | null;
+  /**
+   * Monthly payment in Rand, e.g. 7799 for R7 799*pm
+   */
+  paymentFrom?: number | null;
+  content?: {
+    section?: Section[] | null;
   };
-  secondaryButton?: {
-    label?: string | null;
-    /**
-     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
-     */
-    href?: string | null;
-    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
-  };
+  /**
+   * Optional. Overrides the category template when this special is selected. If blank, the category template is used.
+   */
+  template?: (string | null) | SpecialTemplate;
+  /**
+   * Optional. Overrides the category enquire form when this special is selected. If blank, the category form is used.
+   */
+  enquiryForm?: (string | null) | Form;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rich-text".
+ * via the `definition` "special-categories".
  */
-export interface RichText {
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'rich-text';
+export interface SpecialCategory {
+  id: string;
+  title: string;
+  /**
+   * Image shown on specials archive category cards.
+   */
+  featureImage?: (string | null) | Media;
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
+  /**
+   * Optional. Default layout for specials in this category. Individual specials can override this.
+   */
+  template?: (string | null) | SpecialTemplate;
+  /**
+   * Optional. Default enquire form for specials in this category. Individual specials can override this.
+   */
+  enquiryForm?: (string | null) | Form;
+  /**
+   * Optional. Internal page linked by the Ford Family Promise button on specials in this category.
+   */
+  fordPromisePage?: (string | null) | Page;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "feature-list".
+ * via the `definition` "special-templates".
  */
-export interface FeatureList {
-  features: {
-    title: string;
-    description: string;
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'feature-list';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FeatureRows".
- */
-export interface FeatureRows {
-  rows: {
-    icon: string;
-    title: string;
-    description: string;
-    link?: {
-      type?: ('reference' | 'custom') | null;
-      newTab?: boolean | null;
-      reference?: {
-        relationTo: 'pages';
-        value: string | Page;
-      } | null;
-      url?: string | null;
-    };
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'feature-rows';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FormBlockType".
- */
-export interface FormBlockType {
-  form: string | Form;
-  enableIntro?: boolean | null;
-  introContent?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'formBlock';
+export interface SpecialTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Special Layout" or "Vehicle Offer Layout"
+   */
+  title: string;
+  section?: Section[] | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1623,6 +1578,618 @@ export interface SubheadingBlockType {
   id?: string | null;
   blockName?: string | null;
   blockType: 'subheading';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicles".
+ */
+export interface Vehicle {
+  id: string;
+  /**
+   * e.g. "Next Level Ranger"
+   */
+  name: string;
+  /**
+   * Optional marketing badge displayed on listing cards.
+   */
+  badge?: ('newly-launched' | 'coming-soon' | 'limited') | null;
+  category: string | VehicleCategory;
+  /**
+   * Hero subtitle, e.g. "Built here. Built different."
+   */
+  tagline?: string | null;
+  /**
+   * Hero call-to-action buttons. "Enquiry" scrolls to the form; "Brochure" links to the brochure PDF.
+   */
+  ctaButtons?:
+    | {
+        label: string;
+        action: 'enquiry' | 'brochure' | 'link';
+        /**
+         * Internal path (e.g. /contact) or external URL.
+         */
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Key stats shown in a horizontal strip, e.g. towing capacity or payload.
+   */
+  specHighlights?:
+    | {
+        /**
+         * e.g. "3500kg"
+         */
+        value: string;
+        /**
+         * e.g. "Towing"
+         */
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Available powertrain options displayed as chips.
+   */
+  engineOptions?:
+    | {
+        /**
+         * e.g. "3.0L V6"
+         */
+        name: string;
+        /**
+         * e.g. "Turbo Diesel"
+         */
+        engineType: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * PDF brochure available for download on the vehicle page.
+   */
+  brochure?: (string | null) | Media;
+  /**
+   * Marketing feature sections shown on the vehicle page with alternating image and text.
+   */
+  features?:
+    | {
+        featureTitle: string;
+        featureDescription?: string | null;
+        featureImage?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  colours?:
+    | {
+        /**
+         * e.g. "Frozen White"
+         */
+        colourName: string;
+        /**
+         * e.g. "Platinum Only" or "Sport & Tremor Only"
+         */
+        colourNote?: string | null;
+        colourSwatch?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Full-width background image displayed at the top of the vehicle page.
+   */
+  heroImage: string | Media;
+  /**
+   * Image shown on vehicle listing cards (e.g. a cut-out or top-down shot). Falls back to Hero Image if not set.
+   */
+  featureImage?: (string | null) | Media;
+  gallery?:
+    | {
+        image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Arbitrary key/value pairs. Reference these by key inside template blocks.
+   */
+  customFields?:
+    | {
+        /**
+         * Unique identifier, e.g. "warrantyYears".
+         */
+        key: string;
+        value?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Lowest variant price as a whole number, e.g. 621000 for R 621,000.
+   */
+  startingPrice?: number | null;
+  priceDisclaimer?: string | null;
+  /**
+   * Finance monthly payment as a whole number, e.g. 6799 for R 6,799 p/m.
+   */
+  monthlyPrice?: number | null;
+  monthlyPriceNote?: string | null;
+  /**
+   * Finance and payment option cards shown on the vehicle page.
+   */
+  paymentOptions?:
+    | {
+        title: string;
+        description?: string | null;
+        ctaLabel: string;
+        /**
+         * Internal path (e.g. #enquire) or external URL.
+         */
+        ctaUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  content?: {
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    section?: Section[] | null;
+  };
+  meta?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    metaImage?: (string | null) | Media;
+  };
+  /**
+   * When enabled, this vehicle family appears in the mega menu alongside any trims that also have Show in Mega Menu enabled.
+   */
+  showInMegaMenu?: boolean | null;
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
+  /**
+   * Optional. Layout template used to render this vehicle page.
+   */
+  template?: (string | null) | VehicleTemplate;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-categories".
+ */
+export interface VehicleCategory {
+  id: string;
+  title: string;
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-templates".
+ */
+export interface VehicleTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Vehicle Layout" or "Commercial Vehicle Layout"
+   */
+  title: string;
+  section?: Section[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-models".
+ */
+export interface VehicleModel {
+  id: string;
+  /**
+   * Trim or series name, e.g. "Ranger Sport" or "Wildtrak".
+   */
+  name: string;
+  /**
+   * Parent vehicle family this trim belongs to.
+   */
+  vehicle: string | Vehicle;
+  /**
+   * Optional hero subtitle for this trim page.
+   */
+  tagline?: string | null;
+  /**
+   * Full-width hero for this trim. Falls back to the parent vehicle hero image if not set.
+   */
+  heroImage?: (string | null) | Media;
+  /**
+   * Card/listing image for this trim. Falls back to model hero, then parent vehicle images.
+   */
+  featureImage?: (string | null) | Media;
+  /**
+   * Marketing feature sections shown on the model page.
+   */
+  features?:
+    | {
+        featureTitle: string;
+        featureDescription?: string | null;
+        featureImage?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Colour options for this trim. Leave empty to inherit from the parent vehicle.
+   */
+  colours?:
+    | {
+        colourName: string;
+        colourNote?: string | null;
+        colourSwatch?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  gallery?:
+    | {
+        image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  content?: {
+    /**
+     * Trim-specific marketing copy shown on the model page.
+     */
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    section?: Section[] | null;
+  };
+  meta?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    metaImage?: (string | null) | Media;
+  };
+  /**
+   * When enabled, this trim appears in the mega menu alongside any vehicle families that also have Show in Mega Menu enabled.
+   */
+  showInMegaMenu?: boolean | null;
+  /**
+   * Lower numbers appear first within a vehicle family.
+   */
+  sortOrder?: number | null;
+  /**
+   * Optional. Layout template used to render this model page.
+   */
+  template?: (string | null) | VehicleModelTemplate;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-model-templates".
+ */
+export interface VehicleModelTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Model Layout" or "Commercial Model Layout"
+   */
+  title: string;
+  section?: Section[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-variants".
+ */
+export interface VehicleVariant {
+  id: string;
+  /**
+   * e.g. "2.0 SiT Double Cab XL 4x2 6MT"
+   */
+  name: string;
+  /**
+   * Parent trim/series this configuration belongs to.
+   */
+  model: string | VehicleModel;
+  /**
+   * Specific price for this configuration, e.g. 621000 for R 621,000.
+   */
+  price: number;
+  /**
+   * Optional hero for this variant. Falls back to the parent model or vehicle images.
+   */
+  heroImage?: (string | null) | Media;
+  /**
+   * Card/listing image for this variant.
+   */
+  featureImage?: (string | null) | Media;
+  /**
+   * Key feature bullet points shown in the variant list on the model page.
+   */
+  highlights?:
+    | {
+        highlight: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Colour options for this variant. Leave empty to inherit from the parent model or vehicle.
+   */
+  colours?:
+    | {
+        colourName: string;
+        colourNote?: string | null;
+        colourSwatch?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  content?: {
+    /**
+     * Optional variant-specific copy shown in the in-page variant list.
+     */
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  meta?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    metaImage?: (string | null) | Media;
+  };
+  /**
+   * Lower numbers appear first within a model.
+   */
+  sortOrder?: number | null;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OverlayCarousel".
+ */
+export interface OverlayCarousel {
+  slides: {
+    /**
+     * Recommended: 1920×1080px, WebP or JPEG.
+     */
+    image: string | Media;
+    heading?: string | null;
+    subheading?: string | null;
+    alignment?: ('left' | 'center' | 'right') | null;
+    id?: string | null;
+  }[];
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BannerHero".
+ */
+export interface BannerHero {
+  bannerTemplate: 'full-width' | 'overlay' | 'cta-overlay';
+  fullWidthBannerContent?: FullWidthBanner;
+  overlayBannerContent?: OverlayBanner;
+  ctaOverlayContent?: CtaOverlayBanner;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FullWidthBanner".
+ */
+export interface FullWidthBanner {
+  /**
+   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   */
+  image: string | Media;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OverlayBanner".
+ */
+export interface OverlayBanner {
+  /**
+   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   */
+  image: string | Media;
+  heading?: string | null;
+  subheading?: string | null;
+  alignment?: ('left' | 'center' | 'right') | null;
+  /**
+   * Adds a semi-transparent dark tint over the image to improve text legibility.
+   */
+  darkOverlay?: boolean | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaOverlayBanner".
+ */
+export interface CtaOverlayBanner {
+  /**
+   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   */
+  image: string | Media;
+  /**
+   * Small uppercase label above the heading (e.g. "Eagle Ford — Service Centre").
+   */
+  eyebrow?: string | null;
+  heading: string;
+  subheading?: string | null;
+  primaryButton?: {
+    label?: string | null;
+    /**
+     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
+     */
+    href?: string | null;
+    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
+  };
+  secondaryButton?: {
+    label?: string | null;
+    /**
+     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
+     */
+    href?: string | null;
+    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rich-text".
+ */
+export interface RichText {
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'rich-text';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "feature-list".
+ */
+export interface FeatureList {
+  features: {
+    title: string;
+    description: string;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'feature-list';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureRows".
+ */
+export interface FeatureRows {
+  rows: {
+    icon: string;
+    title: string;
+    description: string;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'feature-rows';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormBlockType".
+ */
+export interface FormBlockType {
+  form: string | Form;
+  enableIntro?: boolean | null;
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'formBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2319,567 +2886,6 @@ export interface VehicleModelVariantsBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "specials".
- */
-export interface Special {
-  id: string;
-  offerType: 'price-point' | 'payment' | 'service' | 'enquiry';
-  /**
-   * Groups this special under a campaign or theme (e.g. Truck Month, Holiday).
-   */
-  category: string | SpecialCategory;
-  /**
-   * Optional. Defaults to the offer type label if left blank.
-   */
-  title?: string | null;
-  /**
-   * Optional. Defaults to the offer type label if left blank.
-   */
-  subTitle?: string | null;
-  cardImage: string | Media;
-  /**
-   * Optional. Links this special to a vehicle family page. Leave blank for service or non-vehicle offers.
-   */
-  vehicle?: (string | null) | Vehicle;
-  /**
-   * Optional. Links this special to a specific trim/model page. Leave blank when not applicable.
-   */
-  vehicleModel?: (string | null) | VehicleModel;
-  /**
-   * Optional. Links this special to a specific variant configuration. Public links go to the parent model page.
-   */
-  vehicleVariant?: (string | null) | VehicleVariant;
-  /**
-   * Cash price in Rand, e.g. 489900 for R489 900
-   */
-  pricingLabel?: string | null;
-  /**
-   * Cash price in Rand, e.g. 489900 for R489 900
-   */
-  specialOffer?: number | null;
-  /**
-   * Saving amount in Rand, e.g. 100100 for R100 100
-   */
-  bestSaving?: number | null;
-  /**
-   * Monthly payment in Rand, e.g. 7799 for R7 799*pm
-   */
-  paymentFrom?: number | null;
-  content?: {
-    section?: Section[] | null;
-  };
-  /**
-   * Lower numbers appear first within a section.
-   */
-  sortOrder?: number | null;
-  /**
-   * Optional. Overrides the category template when this special is selected. If blank, the category template is used.
-   */
-  template?: (string | null) | SpecialTemplate;
-  /**
-   * Optional. Overrides the category enquire form when this special is selected. If blank, the category form is used.
-   */
-  enquiryForm?: (string | null) | Form;
-  publishedAt?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "special-categories".
- */
-export interface SpecialCategory {
-  id: string;
-  title: string;
-  /**
-   * Image shown on specials archive category cards.
-   */
-  featureImage?: (string | null) | Media;
-  /**
-   * Lower numbers appear first.
-   */
-  sortOrder?: number | null;
-  /**
-   * Optional. Default layout for specials in this category. Individual specials can override this.
-   */
-  template?: (string | null) | SpecialTemplate;
-  /**
-   * Optional. Default enquire form for specials in this category. Individual specials can override this.
-   */
-  enquiryForm?: (string | null) | Form;
-  /**
-   * Optional. Internal page linked by the Ford Family Promise button on specials in this category.
-   */
-  fordPromisePage?: (string | null) | Page;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "special-templates".
- */
-export interface SpecialTemplate {
-  id: string;
-  /**
-   * e.g. "Standard Special Layout" or "Vehicle Offer Layout"
-   */
-  title: string;
-  section?: Section[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicles".
- */
-export interface Vehicle {
-  id: string;
-  /**
-   * e.g. "Next Level Ranger"
-   */
-  name: string;
-  /**
-   * Optional marketing badge displayed on listing cards.
-   */
-  badge?: ('newly-launched' | 'coming-soon' | 'limited') | null;
-  category: string | VehicleCategory;
-  /**
-   * Hero subtitle, e.g. "Built here. Built different."
-   */
-  tagline?: string | null;
-  /**
-   * Hero call-to-action buttons. "Enquiry" scrolls to the form; "Brochure" links to the brochure PDF.
-   */
-  ctaButtons?:
-    | {
-        label: string;
-        action: 'enquiry' | 'brochure' | 'link';
-        /**
-         * Internal path (e.g. /contact) or external URL.
-         */
-        url?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Key stats shown in a horizontal strip, e.g. towing capacity or payload.
-   */
-  specHighlights?:
-    | {
-        /**
-         * e.g. "3500kg"
-         */
-        value: string;
-        /**
-         * e.g. "Towing"
-         */
-        label: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Available powertrain options displayed as chips.
-   */
-  engineOptions?:
-    | {
-        /**
-         * e.g. "3.0L V6"
-         */
-        name: string;
-        /**
-         * e.g. "Turbo Diesel"
-         */
-        engineType: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * PDF brochure available for download on the vehicle page.
-   */
-  brochure?: (string | null) | Media;
-  /**
-   * Marketing feature sections shown on the vehicle page with alternating image and text.
-   */
-  features?:
-    | {
-        featureTitle: string;
-        featureDescription?: string | null;
-        featureImage?: (string | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  colours?:
-    | {
-        /**
-         * e.g. "Frozen White"
-         */
-        colourName: string;
-        /**
-         * e.g. "Platinum Only" or "Sport & Tremor Only"
-         */
-        colourNote?: string | null;
-        colourSwatch?: (string | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Full-width background image displayed at the top of the vehicle page.
-   */
-  heroImage: string | Media;
-  /**
-   * Image shown on vehicle listing cards (e.g. a cut-out or top-down shot). Falls back to Hero Image if not set.
-   */
-  featureImage?: (string | null) | Media;
-  gallery?:
-    | {
-        image: string | Media;
-        id?: string | null;
-      }[]
-    | null;
-  faqs?:
-    | {
-        question: string;
-        answer: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Arbitrary key/value pairs. Reference these by key inside template blocks.
-   */
-  customFields?:
-    | {
-        /**
-         * Unique identifier, e.g. "warrantyYears".
-         */
-        key: string;
-        value?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Lowest variant price as a whole number, e.g. 621000 for R 621,000.
-   */
-  startingPrice?: number | null;
-  priceDisclaimer?: string | null;
-  /**
-   * Finance monthly payment as a whole number, e.g. 6799 for R 6,799 p/m.
-   */
-  monthlyPrice?: number | null;
-  monthlyPriceNote?: string | null;
-  /**
-   * Finance and payment option cards shown on the vehicle page.
-   */
-  paymentOptions?:
-    | {
-        title: string;
-        description?: string | null;
-        ctaLabel: string;
-        /**
-         * Internal path (e.g. #enquire) or external URL.
-         */
-        ctaUrl?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  content?: {
-    description?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    section?: Section[] | null;
-  };
-  meta?: {
-    metaTitle?: string | null;
-    metaDescription?: string | null;
-    metaImage?: (string | null) | Media;
-  };
-  /**
-   * When enabled, this vehicle family appears in the mega menu alongside any trims that also have Show in Mega Menu enabled.
-   */
-  showInMegaMenu?: boolean | null;
-  /**
-   * Lower numbers appear first.
-   */
-  sortOrder?: number | null;
-  /**
-   * Optional. Layout template used to render this vehicle page.
-   */
-  template?: (string | null) | VehicleTemplate;
-  publishedAt?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-categories".
- */
-export interface VehicleCategory {
-  id: string;
-  title: string;
-  /**
-   * Lower numbers appear first.
-   */
-  sortOrder?: number | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-templates".
- */
-export interface VehicleTemplate {
-  id: string;
-  /**
-   * e.g. "Standard Vehicle Layout" or "Commercial Vehicle Layout"
-   */
-  title: string;
-  section?: Section[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-models".
- */
-export interface VehicleModel {
-  id: string;
-  /**
-   * Trim or series name, e.g. "Ranger Sport" or "Wildtrak".
-   */
-  name: string;
-  /**
-   * Parent vehicle family this trim belongs to.
-   */
-  vehicle: string | Vehicle;
-  /**
-   * Optional hero subtitle for this trim page.
-   */
-  tagline?: string | null;
-  /**
-   * Full-width hero for this trim. Falls back to the parent vehicle hero image if not set.
-   */
-  heroImage?: (string | null) | Media;
-  /**
-   * Card/listing image for this trim. Falls back to model hero, then parent vehicle images.
-   */
-  featureImage?: (string | null) | Media;
-  /**
-   * Marketing feature sections shown on the model page.
-   */
-  features?:
-    | {
-        featureTitle: string;
-        featureDescription?: string | null;
-        featureImage?: (string | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Colour options for this trim. Leave empty to inherit from the parent vehicle.
-   */
-  colours?:
-    | {
-        colourName: string;
-        colourNote?: string | null;
-        colourSwatch?: (string | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  gallery?:
-    | {
-        image: string | Media;
-        id?: string | null;
-      }[]
-    | null;
-  faqs?:
-    | {
-        question: string;
-        answer: string;
-        id?: string | null;
-      }[]
-    | null;
-  content?: {
-    /**
-     * Trim-specific marketing copy shown on the model page.
-     */
-    description?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    section?: Section[] | null;
-  };
-  meta?: {
-    metaTitle?: string | null;
-    metaDescription?: string | null;
-    metaImage?: (string | null) | Media;
-  };
-  /**
-   * When enabled, this trim appears in the mega menu alongside any vehicle families that also have Show in Mega Menu enabled.
-   */
-  showInMegaMenu?: boolean | null;
-  /**
-   * Lower numbers appear first within a vehicle family.
-   */
-  sortOrder?: number | null;
-  /**
-   * Optional. Layout template used to render this model page.
-   */
-  template?: (string | null) | VehicleModelTemplate;
-  publishedAt?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-model-templates".
- */
-export interface VehicleModelTemplate {
-  id: string;
-  /**
-   * e.g. "Standard Model Layout" or "Commercial Model Layout"
-   */
-  title: string;
-  section?: Section[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-variants".
- */
-export interface VehicleVariant {
-  id: string;
-  /**
-   * e.g. "2.0 SiT Double Cab XL 4x2 6MT"
-   */
-  name: string;
-  /**
-   * Parent trim/series this configuration belongs to.
-   */
-  model: string | VehicleModel;
-  /**
-   * Specific price for this configuration, e.g. 621000 for R 621,000.
-   */
-  price: number;
-  /**
-   * Optional hero for this variant. Falls back to the parent model or vehicle images.
-   */
-  heroImage?: (string | null) | Media;
-  /**
-   * Card/listing image for this variant.
-   */
-  featureImage?: (string | null) | Media;
-  /**
-   * Key feature bullet points shown in the variant list on the model page.
-   */
-  highlights?:
-    | {
-        highlight: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Colour options for this variant. Leave empty to inherit from the parent model or vehicle.
-   */
-  colours?:
-    | {
-        colourName: string;
-        colourNote?: string | null;
-        colourSwatch?: (string | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  content?: {
-    /**
-     * Optional variant-specific copy shown in the in-page variant list.
-     */
-    description?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-  };
-  meta?: {
-    metaTitle?: string | null;
-    metaDescription?: string | null;
-    metaImage?: (string | null) | Media;
-  };
-  /**
-   * Lower numbers appear first within a model.
-   */
-  sortOrder?: number | null;
-  publishedAt?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -3312,6 +3318,7 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "specials_select".
  */
 export interface SpecialsSelect<T extends boolean = true> {
+  _order?: T;
   offerType?: T;
   category?: T;
   title?: T;
@@ -3329,7 +3336,6 @@ export interface SpecialsSelect<T extends boolean = true> {
     | {
         section?: T | {};
       };
-  sortOrder?: T;
   template?: T;
   enquiryForm?: T;
   publishedAt?: T;
