@@ -1,0 +1,6 @@
+export const MOTOR_CITY_SITE_KEY = 'eagle-ford'
+export const LMS_DEFAULT_BRAND = 'Ford'
+export const LMS_DEFAULT_MODEL = 'General Enquiry'
+export const LMS_DEFAULT_USED = '0'
+export const LMS_DEFAULT_DEALER_FLOOR = 'CALLCENTRE'
+export const LMS_DEFAULT_SOURCE = 'EAGLE-FORD-WEB'
