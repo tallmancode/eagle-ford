@@ -5,7 +5,7 @@ services:
   app:
     image: ${APP_IMAGE:-eagle-ford-app:latest}
     ports:
-      - '${APP_HOST_PORT:-4411}:3000'
+      - '127.0.0.1:${APP_HOST_PORT:-4411}:3000'
     env_file:
       - .env
     volumes:
@@ -32,7 +32,7 @@ services:
   mongo:
     image: mongo:latest
     ports:
-      - '${MONGO_HOST_PORT:-4422}:27017'
+      - '127.0.0.1:${MONGO_HOST_PORT:-4422}:27017'
     command:
       - --storageEngine=wiredTiger
     volumes:
