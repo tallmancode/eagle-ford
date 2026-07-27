@@ -91,6 +91,11 @@ export default buildConfig({
       },
     },
   }),
+  upload: {
+    limits: {
+      fileSize: 15000000,
+    },
+  },
   jobs: {
     access: {
       run: ({ req }: { req: PayloadRequest }): boolean => {

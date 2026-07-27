@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
   sassOptions: {
     loadPaths: ['./node_modules/@payloadcms/ui/dist/scss/'],
   },
+  // Middleware clones request bodies (default 10MB). Must exceed Payload upload.limits.fileSize
+  // so multipart uploads are not truncated → "Unexpected end of form".
+  experimental: {
+    proxyClientMaxBodySize: '20mb',
+  },
   output: 'standalone',
   images: {
     qualities: [65, 75, 100],
