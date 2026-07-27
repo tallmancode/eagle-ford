@@ -73,6 +73,12 @@ export const MediaCollection: CollectionConfig = {
     formatOptions: {
       format: 'webp',
     },
+    resizeOptions: {
+      width: 3440,
+      height: 1440,
+      fit: 'fill',
+      withoutEnlargement: true,
+    },
     mimeTypes: [
       'image/png',
       'image/jpg',
