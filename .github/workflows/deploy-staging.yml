@@ -10,10 +10,57 @@ env:
   NODE_ENV: production
   NEXT_TELEMETRY_DISABLED: 1
 
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
 jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      mongo:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval \"db.adminCommand('ping')\""
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: mongodb://127.0.0.1:27017/eagle-ford-ci
+      NEXT_PUBLIC_SERVER_URL: http://localhost:3001
+      NEXT_SERVER_ACTIONS_ENCRYPTION_KEY: ci-server-actions-encryption-key
+      PAYLOAD_SECRET: ci-payload-secret
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.17.0
+          cache: pnpm
+
+      - name: Enable pnpm
+        run: corepack enable && corepack prepare pnpm@11.8.0 --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run quality checks
+        run: |
+          pnpm exec tsc --noEmit
+          pnpm lint
+          pnpm test:int
+
   deploy-staging:
+    needs: quality
     runs-on: ubuntu-latest
     environment: staging
+    timeout-minutes: 30
 
     steps:
       - name: Validate required secrets
@@ -34,11 +81,21 @@ jobs:
             echo "::error::Missing APP_ENV (set on the staging environment or repository secrets)"
             exit 1
           fi
+          if [ -z "${{ secrets.SSH_KNOWN_HOSTS }}" ]; then
+            echo "::error::Missing SSH_KNOWN_HOSTS (set the staging server's pinned SSH host key)"
+            exit 1
+          fi
 
       - name: Setup SSH Agent
-        uses: webfactory/ssh-agent@v0.10.0
+        uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Configure known hosts
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
 
       - name: Deploy to Server
         env:
@@ -48,11 +105,12 @@ jobs:
           APP_ENV: ${{ secrets.APP_ENV }}
           APP_DIR: ${{ secrets.APP_DIR || '/www/wwwroot' }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          DEPLOY_REVISION: ${{ github.sha }}
         run: |
           set -e
 
-          SSH_OPTS="-o StrictHostKeyChecking=no -p $SSH_PORT"
-          SCP_OPTS="-o StrictHostKeyChecking=no -P $SSH_PORT"
+          SSH_OPTS="-o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -p $SSH_PORT"
+          SCP_OPTS="-o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts -P $SSH_PORT"
           DEPLOY_BRANCH="staging"
           ENV_FILE="$(mktemp)"
           trap 'rm -f "$ENV_FILE"' EXIT
@@ -67,6 +125,12 @@ jobs:
             echo "::error::Remove it from the staging environment secret — the container resolves config via @payload-config at /app."
             exit 1
           fi
+          for key in DATABASE_URL BUILD_DATABASE_URL NEXT_PUBLIC_SERVER_URL PAYLOAD_SECRET NEXT_SERVER_ACTIONS_ENCRYPTION_KEY; do
+            if ! grep -q "^${key}=." "$ENV_FILE"; then
+              echo "::error::APP_ENV must define ${key}"
+              exit 1
+            fi
+          done
 
           echo "========================================"
           echo "Syncing repository on $APP_DIR"
@@ -81,8 +145,6 @@ jobs:
             [ -f ~/.profile ] && source ~/.profile || true
 
             SERVER_PATH='$APP_DIR'
-
-            git config --global --add safe.directory \"\$SERVER_PATH\"
 
             if [ ! -d \"\$SERVER_PATH/.git\" ]; then
               echo 'Cloning repository...'
@@ -101,14 +163,13 @@ jobs:
               if [ ! -d \"\$SERVER_PATH/.git\" ]; then
                 mkdir -p \"\$SERVER_PATH\"
                 git clone git@github.com:$GITHUB_REPOSITORY.git \"\$SERVER_PATH\"
-                cd \"\$SERVER_PATH\"
-                git checkout '$DEPLOY_BRANCH' || git checkout -b '$DEPLOY_BRANCH' origin/'$DEPLOY_BRANCH'
+                git -C \"\$SERVER_PATH\" -c safe.directory=\"\$SERVER_PATH\" checkout '$DEPLOY_BRANCH' || \
+                  git -C \"\$SERVER_PATH\" -c safe.directory=\"\$SERVER_PATH\" checkout -b '$DEPLOY_BRANCH' origin/'$DEPLOY_BRANCH'
               fi
             else
               echo 'Pulling latest changes...'
-              cd \"\$SERVER_PATH\"
-              git fetch origin
-              git reset --hard origin/'$DEPLOY_BRANCH'
+              git -C \"\$SERVER_PATH\" -c safe.directory=\"\$SERVER_PATH\" fetch origin '$DEPLOY_BRANCH'
+              git -C \"\$SERVER_PATH\" -c safe.directory=\"\$SERVER_PATH\" reset --hard origin/'$DEPLOY_BRANCH'
             fi
 
             echo 'Repository updated successfully'
@@ -148,7 +209,7 @@ jobs:
             echo 'Building and starting Docker containers'
             echo '========================================'
 
-            if ! ./scripts/docker-deploy-prod.sh; then
+            if ! DEPLOY_REVISION='$DEPLOY_REVISION' ./scripts/docker-deploy-prod.sh; then
               echo 'ERROR: docker-deploy-prod.sh failed. Check the output above.'
               exit 1
             fi
@@ -160,37 +221,40 @@ jobs:
 
             docker compose -f docker-compose.prod.yml ps
 
-            if ! docker compose -f docker-compose.prod.yml ps --status running | grep -q app; then
+            if [ -z \"\$(docker compose -f docker-compose.prod.yml ps --status running -q app)\" ]; then
               echo 'ERROR: app container is not running'
               docker compose -f docker-compose.prod.yml logs app --tail 50
               exit 1
             fi
 
-            if ! docker compose -f docker-compose.prod.yml ps --status running | grep -q mongo; then
+            if [ -z \"\$(docker compose -f docker-compose.prod.yml ps --status running -q mongo)\" ]; then
               echo 'ERROR: mongo container is not running'
               docker compose -f docker-compose.prod.yml logs mongo --tail 50
               exit 1
             fi
 
-            if ! curl -sf http://127.0.0.1:4411 > /dev/null; then
+            APP_HOST_PORT=\"\$(awk -F= '/^APP_HOST_PORT=/{print \$2; exit}' .env | tr -d '\\r')\"
+            APP_HOST_PORT=\"\${APP_HOST_PORT:-4411}\"
+
+            if ! curl -sf \"http://127.0.0.1:\${APP_HOST_PORT}/api/health\" > /dev/null; then
               echo 'App not ready immediately — waiting for startup (Next.js can take up to 2 minutes)...'
               ready=0
               for i in \$(seq 1 30); do
-                if curl -sf http://127.0.0.1:4411 > /dev/null; then
+                if curl -sf \"http://127.0.0.1:\${APP_HOST_PORT}/api/health\" > /dev/null; then
                   ready=1
-                  echo \"✓ App responded on port 4411 (attempt \$i)\"
+                  echo \"✓ App health check responded on port \${APP_HOST_PORT} (attempt \$i)\"
                   break
                 fi
                 echo \"  Attempt \$i/30 — not ready yet, waiting 5s...\"
                 sleep 5
               done
               if [ \"\$ready\" -ne 1 ]; then
-                echo 'ERROR: app is not responding on port 4411 after 150s'
+                echo \"ERROR: app health check is not responding on port \${APP_HOST_PORT} after 150s\"
                 docker compose -f docker-compose.prod.yml logs app --tail 100
                 exit 1
               fi
             else
-              echo '✓ App responded on port 4411'
+              echo \"✓ App health check responded on port \${APP_HOST_PORT}\"
             fi
 
             echo ''

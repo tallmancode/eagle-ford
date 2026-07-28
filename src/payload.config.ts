@@ -70,6 +70,9 @@ export default buildConfig({
   }),
   collections: [...Collections, UsersCollection],
   cors: [getServerSideURL()].filter(Boolean),
+  graphQL: {
+    disable: true,
+  },
   globals: Globals,
   blocks: [...Blocks],
   plugins,
