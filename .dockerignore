@@ -1,0 +1,27 @@
+# Version control
+.git
+.github
+
+# Build output — rebuilt inside Docker
+.next
+
+# Dependencies — installed inside Docker
+node_modules
+
+# Media uploads — served from a named volume in production
+public/media
+
+# Secrets — injected at build time via --secret id=env,src=.env
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dev / utility scripts not needed in the image
+scripts/*.mjs
+scripts/*.sh

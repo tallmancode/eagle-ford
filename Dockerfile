@@ -28,10 +28,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+# Disable Next.js telemetry during the build.
+# https://nextjs.org/telemetry
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build with: docker build --secret id=env,src=.env --network=host -t esm-app:latest .
 # Env is mounted at /run/secrets/env (not baked into image layers).
@@ -50,8 +49,7 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -61,8 +59,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 RUN mkdir -p public/media/uploads && chown -R nextjs:nodejs public
 
 # Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+RUN mkdir .next && chown nextjs:nodejs .next
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
