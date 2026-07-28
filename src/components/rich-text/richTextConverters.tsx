@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils/cn'
 import { getPagePath } from '@/lib/utils/getPagePath'
 import type { Page } from '@/payload-types'
 import { richTextColorState } from '@/lib/blocks/rich-text-block/richTextColors'
+import { richTextSizeState } from '@/lib/blocks/rich-text-block/richTextSizes'
 
 type NodeTypes = DefaultNodeTypes
 
@@ -112,10 +113,10 @@ export const richTextConverters: JSXConvertersFunction<NodeTypes> = ({ defaultCo
     const nodeState = (node as Record<string, unknown>)['$'] as Record<string, string> | undefined
     if (!nodeState) return baseText
 
-    // Build inline style from all active state values
+    // Build inline style from all active state values (color + size)
     const inlineStyle: Record<string, string> = {}
-    for (const colorKey of Object.values(nodeState)) {
-      const entry = richTextColorState[colorKey]
+    for (const stateKey of Object.values(nodeState)) {
+      const entry = richTextColorState[stateKey] ?? richTextSizeState[stateKey]
       if (entry?.css) {
         Object.assign(inlineStyle, entry.css)
       }

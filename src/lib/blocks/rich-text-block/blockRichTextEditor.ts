@@ -9,6 +9,7 @@ import {
   UnorderedListFeature,
 } from '@payloadcms/richtext-lexical'
 import { richTextColorState } from './richTextColors'
+import { richTextSizeState } from './richTextSizes'
 
 export const blockRichTextEditor = lexicalEditor({
   features: ({ rootFeatures }) => [
@@ -22,6 +23,7 @@ export const blockRichTextEditor = lexicalEditor({
     TextStateFeature({
       state: {
         color: richTextColorState,
+        size: richTextSizeState,
       },
     }),
   ],

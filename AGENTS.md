@@ -7,15 +7,24 @@ This app is a **satellite site** that consumes live stock from Eagle Motor City 
 
 **Related project:** [`../eagle-motor-city/AGENTS.md`](../eagle-motor-city/AGENTS.md) — Eagle Motor City mothership that ingests and serves stock data.
 
+**Live reference:** https://www.eagleford.co.za/
+
 ## Stock (satellite — no local persistence)
 
 - Fetches live stock from Motor City via `@/lib/motor-city-stock` (`fetchStock`, `getCachedStock`)
 - For filter UIs, call Motor City's `GET /api/stock/[dealerCode]/filters` endpoint — see [`../eagle-motor-city/AGENTS.md`](../eagle-motor-city/AGENTS.md) for query params and response shape
 - Admin view: **Live Stock** link in the Payload sidebar (below nav groups)
 - Requires env: `MOTOR_CITY_STOCK_API_URL`, `MOTOR_CITY_STOCK_API_KEY`
+- Auth header: `Authorization: stock-api-clients API-Key <key>`
 - Stock requests return all enabled dealer feeds from Motor City (no brand-key scoping on the Ford side)
 - Data is cached in Next.js only — do **not** create stock collections or write to the Ford database
 - Dev server runs on port **3001** (Motor City runs on 3000)
+
+### Motor City API key (required — not inventable)
+
+1. Start Eagle Motor City (`cd ../eagle-motor-city && pnpm dev` → http://localhost:3000)
+2. Admin → **Stock → Stock API Clients** → create client e.g. "Eagle Ford" → generate key
+3. Copy into this project's `.env` as `MOTOR_CITY_STOCK_API_KEY` (same key for stock reads and site-form leads)
 
 ## CMS LMS leads (via Motor City)
 
@@ -23,6 +32,16 @@ This app is a **satellite site** that consumes live stock from Eagle Motor City 
 - Enabled forms POST normalized leads to Motor City `POST /api/leads/site-forms` (same stock API key)
 - Motor City owns CMS LMS credentials and the actual LMS push — this site never calls CMS LMS directly
 - Implementation: `src/lib/motor-city-leads/`
+
+## Branding / theming
+
+Configurable tokens live in:
+
+- `src/styles/base.css` — CSS variables (Ford deep blue primary palette; `--color-primary-*` scale at ~265deg hue)
+- `src/app/(frontend)/globals.css` — `--font-brand` / Tailwind theme wiring
+- `src/app/(frontend)/layout.tsx` — Ford F-1 webfonts (`src/assets/fonts/FordF-1-*.woff2`; `--font-ford-f1`, body class `font-ford`)
+- `src/constants/site.ts` — site name / OG defaults
+- Header/Footer/Settings globals in Payload for logos, nav, contact
 
 ## Vehicle Catalog Hierarchy
 
