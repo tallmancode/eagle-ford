@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 COMPOSE="docker compose -f docker-compose.prod.yml"
