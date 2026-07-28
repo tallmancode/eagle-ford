@@ -1,12 +1,16 @@
 import type { CollectionBeforeChangeHook } from 'payload'
 
-export const populatePublishedAt: CollectionBeforeChangeHook = ({ data, operation, req }) => {
+export const populatePublishedAt: CollectionBeforeChangeHook = ({
+  data,
+  operation,
+  originalDoc,
+}) => {
   if (operation === 'create' || operation === 'update') {
-    if (req.data && !req.data.publishedAt) {
-      const now = new Date()
+    const alreadyHasPublishedAt = Boolean(data?.publishedAt ?? originalDoc?.publishedAt)
+    if (!alreadyHasPublishedAt) {
       return {
         ...data,
-        publishedAt: now,
+        publishedAt: new Date(),
       }
     }
   }

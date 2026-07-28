@@ -1,16 +1,23 @@
 import type { ContactFooter, Setting } from '@/payload-types'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import { formatContactAddress } from '@/lib/utils/formatContactAddress'
-import { Clock, MapPin } from 'lucide-react'
+import { formatPhoneNumber } from '@/lib/utils/formatPhoneNumber'
+import { Clock, MapPin, Phone } from 'lucide-react'
 import React from 'react'
 
-export async function ContactFooterBlockComponent(_props: ContactFooter) {
+export async function ContactFooterBlockComponent({
+  addressOverride,
+  hoursOverride,
+  phoneOverride,
+}: ContactFooter) {
   const settings = (await getCachedGlobal('settings', 1)) as Setting
-  const address = settings?.contactInfo?.address
-  const addressLine = formatContactAddress(address)
-  const hours = settings?.contactInfo?.operationHours?.trim()
+  const settingsAddress = settings?.contactInfo?.address
+  const hasAddressOverride = Boolean(addressOverride?.trim())
+  const addressLine = addressOverride?.trim() || formatContactAddress(settingsAddress)
+  const hours = hoursOverride?.trim() || settings?.contactInfo?.operationHours?.trim()
+  const phone = phoneOverride?.trim() || settings?.contactInfo?.phone?.trim()
 
-  if (!addressLine && !hours) return null
+  if (!addressLine && !hours && !phone) return null
 
   const addressContent = (
     <>
@@ -19,13 +26,15 @@ export async function ContactFooterBlockComponent(_props: ContactFooter) {
     </>
   )
 
+  const showMapsLink = !hasAddressOverride && Boolean(settingsAddress?.mapsLink)
+
   return (
     <section className="border-t py-8 px-4">
       <div className="container mx-auto flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 text-sm text-muted-foreground">
         {addressLine &&
-          (address?.mapsLink ? (
+          (showMapsLink ? (
             <a
-              href={address.mapsLink}
+              href={settingsAddress!.mapsLink!}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2"
@@ -35,6 +44,12 @@ export async function ContactFooterBlockComponent(_props: ContactFooter) {
           ) : (
             <div className="flex items-center gap-2">{addressContent}</div>
           ))}
+        {phone && (
+          <a href={`tel:${phone.replace(/\D/g, '')}`} className="flex items-center gap-2">
+            <Phone className="size-4 text-primary shrink-0" />
+            <span>{formatPhoneNumber(phone)}</span>
+          </a>
+        )}
         {hours && (
           <div className="flex items-center gap-2">
             <Clock className="size-4 text-primary shrink-0" />

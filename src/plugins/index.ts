@@ -23,7 +23,6 @@ import { handleMultiStepFormUploads } from '@/lib/blocks/form-block/hooks/handle
 import { getLmsLeadInjectionFields } from '@/lib/motor-city-leads/formFields'
 import { getMotorCityLeadSubmissionFields } from '@/lib/motor-city-leads/formSubmissionFields'
 import { injectFormSubmissionLead } from '@/lib/motor-city-leads/injectFormSubmissionLead'
-import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import { aiSeoPlugin } from '@/plugins/ai-seo'
 import { aiMediaSuggestionsPlugin } from '@/plugins/ai-media-suggestions'
 
@@ -194,27 +193,6 @@ export const plugins: Plugin[] = [
         return [...result, getLmsLeadInjectionFields()]
       },
     },
-  }),
-  importExportPlugin({
-    overrideExportCollection: ({ collection }) => ({
-      ...collection,
-      admin: {
-        ...collection.admin,
-        group: 'Data Management',
-      },
-      depth: 5,
-    }),
-    overrideImportCollection: ({ collection }) => ({
-      ...collection,
-      admin: {
-        ...collection.admin,
-        group: 'Data Management',
-      },
-    }),
-    collections: [
-      { slug: 'users', export: { disableJobsQueue: true }, import: { disableJobsQueue: true } },
-      { slug: 'pages', export: { disableJobsQueue: true }, import: { disableJobsQueue: true } },
-    ],
   }),
   // Keep enabled so AdminErrorBoundary stays in the import map (generate:importmap
   // runs in non-production). Sentry.init already gates reporting on NODE_ENV.

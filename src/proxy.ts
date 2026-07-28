@@ -20,7 +20,7 @@ function isObviousProbe(request: NextRequest): boolean {
   return false
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (isObviousProbe(request)) {
     return new NextResponse(null, { status: 400 })
   }
