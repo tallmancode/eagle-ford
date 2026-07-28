@@ -11,7 +11,13 @@ if [ -f .env ] && grep -q '^PAYLOAD_CONFIG_PATH=' .env; then
 fi
 
 # 1. Start mongo, wait for compose health + host port (build uses 127.0.0.1:4422)
-$COMPOSE up mongo -d --wait --wait-timeout 120
+if ! $COMPOSE up mongo -d --wait --wait-timeout 120; then
+  echo ""
+  echo "=== MongoDB container logs ==="
+  $COMPOSE logs mongo --tail 80
+  echo "ERROR: MongoDB failed to become healthy. Check logs above."
+  exit 1
+fi
 
 echo "Waiting for Mongo on 127.0.0.1:4422..."
 for i in $(seq 1 60); do

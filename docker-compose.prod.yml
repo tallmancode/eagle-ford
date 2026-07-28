@@ -30,7 +30,7 @@ services:
       start_period: 60s
 
   mongo:
-    image: mongo:latest
+    image: mongo:8
     ports:
       - '127.0.0.1:${MONGO_HOST_PORT:-4422}:27017'
     command:
