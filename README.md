@@ -13,10 +13,35 @@ Website for Eagle Ford dealership, powered by [Payload CMS](https://payloadcms.c
 1. Copy environment variables: `cp .env.example .env`
 2. Install dependencies: `pnpm install`
 3. Start the dev server: `pnpm dev`
-4. Open [http://localhost:3000](http://localhost:3000) for the website
-5. Open [http://localhost:3000/admin](http://localhost:3000/admin) for the CMS
+4. Open [http://localhost:3001](http://localhost:3001) for the website
+5. Open [http://localhost:3001/admin](http://localhost:3001/admin) for the CMS
 
 Changes in `./src` are reflected automatically during development.
+
+### Docker deployment
+
+The staging deploy workflow builds and starts the production Compose stack on the VPS. The server needs Docker with the Compose plugin, and the deploy user needs Docker access plus a GitHub deploy key for the repository.
+
+The Docker `.env` has two database URLs:
+
+```bash
+# Used by the running app on the Compose network.
+DATABASE_URL=mongodb://mongo:27017/eagle-ford
+
+# Used only while Docker builds with host networking.
+BUILD_DATABASE_URL=mongodb://127.0.0.1:4422/eagle-ford
+
+APP_HOST_PORT=4411
+MONGO_HOST_PORT=4422
+```
+
+Deploy from a prepared server checkout with:
+
+```bash
+pnpm docker:deploy
+```
+
+The workflow stores this full environment file in its `APP_ENV` secret. It also requires `SSH_KNOWN_HOSTS` to pin the staging server’s SSH host key.
 
 ### Useful commands
 
@@ -32,6 +57,8 @@ Changes in `./src` are reflected automatically during development.
 | `pnpm test`           | Run integration and e2e tests       |
 | `pnpm test:int`       | Run Vitest integration tests        |
 | `pnpm test:e2e`       | Run Playwright e2e tests            |
+| `pnpm docker:up`      | Start the local Docker development stack |
+| `pnpm docker:deploy`  | Build and start the production Compose stack |
 
 ## Seeding
 

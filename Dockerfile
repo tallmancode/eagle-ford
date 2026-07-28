@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.7
 # To use this Dockerfile, you have to set `output: 'standalone'` in your next.config.js file.
 # From https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
 
@@ -9,17 +10,15 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager.
 # pnpm-workspace.yaml + patches/ are required so patchedDependencies match the lockfile.
 # Use pnpm 11 to match the lockfile (pnpm 10 fails with ERR_PNPM_LOCKFILE_CONFIG_MISMATCH on patches).
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* pnpm-workspace.yaml* .npmrc* ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY patches ./patches
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+  corepack enable && \
+  corepack prepare pnpm@11.8.0 --activate && \
+  pnpm config set store-dir /pnpm/store && \
+  pnpm install --frozen-lockfile
 
 
 # Rebuild the source code only when needed
@@ -28,30 +27,26 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build with: docker build --secret id=env,src=.env --network=host -t esm-app:latest .
 # Env is mounted at /run/secrets/env (not baked into image layers).
-# BUILD_DATABASE_URL in .env overrides DATABASE_URL during build only (--network=host reaches port 4222).
-RUN --mount=type=secret,id=env,required=true --network=host \
+# BUILD_DATABASE_URL in .env overrides DATABASE_URL during build only (--network=host reaches port 4422).
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+  --mount=type=secret,id=env,required=true --network=host \
   set -a && . /run/secrets/env && set +a && \
   export DATABASE_URL="${BUILD_DATABASE_URL:-$DATABASE_URL}" && \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm run build; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+  corepack enable && \
+  corepack prepare pnpm@11.8.0 --activate && \
+  pnpm config set store-dir /pnpm/store && \
+  pnpm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
