@@ -72,6 +72,7 @@ describe('fetchStockVehicle', () => {
   it('sends API key authorization header', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
+      headers: { get: () => null },
       json: async () => ({
         dealerCode: 'EC167',
         vehicle: {
@@ -88,15 +89,17 @@ describe('fetchStockVehicle', () => {
     await fetchStockVehicle({ cmsId: 'ec170df60use14458' })
 
     expect(fetchMock).toHaveBeenCalledWith(
+      expect.anything(),
       expect.objectContaining({
-        href: 'http://localhost:3000/api/stock/EC167/vehicles/ec170df60use14458',
-      }),
-      expect.objectContaining({
-        headers: {
+        headers: expect.objectContaining({
           Authorization: 'stock-api-clients API-Key test-api-key',
-        },
+          Accept: 'application/json',
+        }),
+        next: { revalidate: 300 },
       }),
     )
+    const calledUrl = String(fetchMock.mock.calls[0]?.[0])
+    expect(calledUrl).toContain('/api/stock/EC167/vehicles/ec170df60use14458')
   })
 
   it('throws MotorCityStockError for 404 responses', async () => {
@@ -105,6 +108,7 @@ describe('fetchStockVehicle', () => {
       vi.fn().mockResolvedValue({
         ok: false,
         status: 404,
+        headers: { get: () => null },
         json: async () => ({ error: 'Vehicle not found' }),
       }),
     )

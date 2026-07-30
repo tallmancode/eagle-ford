@@ -18,6 +18,8 @@ This app is a **satellite site** that consumes live stock from Eagle Motor City 
 - Auth header: `Authorization: stock-api-clients API-Key <key>`
 - Stock requests return all enabled dealer feeds from Motor City (no brand-key scoping on the Ford side)
 - Data is cached in Next.js only — do **not** create stock collections or write to the Ford database
+- HTTP layer uses timeout + bounded retry (`fetchMotorCityJson`); successful responses keep `next: { revalidate: 300 }` / `unstable_cache`
+- Failures report to Sentry (`captureStockFetchEvent`); archive UI soft-fails filters when the list still loads
 - Dev server runs on port **3001** (Motor City runs on 3000)
 
 ### Motor City API key (required — not inventable)
@@ -32,6 +34,10 @@ This app is a **satellite site** that consumes live stock from Eagle Motor City 
 - Enabled forms POST normalized leads to Motor City `POST /api/leads/site-forms` (same stock API key)
 - Motor City owns CMS LMS credentials and the actual LMS push — this site never calls CMS LMS directly
 - Implementation: `src/lib/motor-city-leads/`
+- **Lead paths audited:** Payload form-submissions (form block + multi-step uploads) are the only LMS opt-in source. There are no webhook-originated LMS lead routes on this satellite.
+- **Durability:** form-submission documents are the durable store. On transient Motor City failures the submission is marked `pending_retry` with `motorCityLeadNextRetryAt` / attempt count. `extLeadRef` is the form-submission id (idempotent on Motor City).
+- **Retries:** short in-request backoff (up to 3 attempts), then Payload jobs (`forwardMotorCityLead` + `sweepMotorCityLeads` every 5 minutes on queue `motor-city-leads`). Production needs `CRON_SECRET` and the `lead-jobs` sidecar in `docker-compose.prod.yml` polling `/api/payload-jobs/run?queue=motor-city-leads`.
+- **Sentry:** failures report via `captureLeadForwardEvent` with scrubbed context (no contact PII / API keys).
 
 ## Branding / theming
 
@@ -40,8 +46,9 @@ Configurable tokens live in:
 - `src/styles/base.css` — CSS variables (Ford deep blue primary palette; `--color-primary-*` scale at ~265deg hue)
 - `src/app/(frontend)/globals.css` — `--font-brand` / Tailwind theme wiring
 - `src/app/(frontend)/layout.tsx` — Ford F-1 webfonts (`src/assets/fonts/FordF-1-*.woff2`; `--font-ford-f1`, body class `font-ford`)
-- `src/constants/site.ts` — site name / OG defaults
+- `src/constants/site.ts` — site name / OG defaults (`DEFAULT_OG_IMAGE_PATH` → `/og-default.png`)
 - Header/Footer/Settings globals in Payload for logos, nav, contact
+- Search indexing is gated by `ALLOW_SEARCH_INDEXING=true` (staging stays noindex). See `src/constants/crawlerPolicy.ts`.
 
 ## Vehicle Catalog Hierarchy
 

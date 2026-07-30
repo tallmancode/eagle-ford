@@ -34,6 +34,33 @@ services:
       retries: 12
       start_period: 60s
 
+  # Polls Payload jobs so pending Motor City lead forwards are retried with backoff.
+  lead-jobs:
+    image: curlimages/curl:8.12.1
+    env_file:
+      - .env
+    networks:
+      - internal
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
+    entrypoint: ['/bin/sh', '-c']
+    command:
+      - |
+        if [ -z "$$CRON_SECRET" ]; then
+          echo "lead-jobs: CRON_SECRET is not set; refusing to start"
+          exit 1
+        fi
+        echo "lead-jobs: polling motor-city-leads every 60s"
+        while true; do
+          curl -sf \
+            -H "Authorization: Bearer $$CRON_SECRET" \
+            "http://app:3000/api/payload-jobs/run?queue=motor-city-leads&limit=10" \
+            || echo "lead-jobs: motor-city-leads run request failed"
+          sleep 60
+        done
+
   mongo:
     image: mongo:8
     ports:

@@ -215,12 +215,14 @@ export interface Config {
     footer: Footer;
     settings: Setting;
     'ai-provider-settings': AiProviderSetting;
+    'payload-jobs-stats': PayloadJobsStat;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
     'ai-provider-settings': AiProviderSettingsSelect<false> | AiProviderSettingsSelect<true>;
+    'payload-jobs-stats': PayloadJobsStatsSelect<false> | PayloadJobsStatsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -229,6 +231,8 @@ export interface Config {
   user: User;
   jobs: {
     tasks: {
+      forwardMotorCityLead: TaskForwardMotorCityLead;
+      sweepMotorCityLeads: TaskSweepMotorCityLeads;
       schedulePublish: TaskSchedulePublish;
       inline: {
         input: unknown;
@@ -2987,13 +2991,25 @@ export interface FormSubmission {
    */
   motorCityLeadId?: string | null;
   /**
-   * Last known Motor City / LMS push status
+   * Last known Motor City / LMS push status (pending_retry, queued, failed, exhausted, …)
    */
   motorCityLeadStatus?: string | null;
   /**
-   * Error from the last Motor City lead forward attempt
+   * Error from the last Motor City lead forward attempt (no PII beyond field labels)
    */
   motorCityLeadError?: string | null;
+  /**
+   * Durable forward attempts so far (max 8)
+   */
+  motorCityLeadAttempts?: number | null;
+  /**
+   * Earliest time the sweeper may retry a pending_retry forward
+   */
+  motorCityLeadNextRetryAt?: string | null;
+  /**
+   * Whether the last failure was classified as transient
+   */
+  motorCityLeadRetryable?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -3066,7 +3082,7 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug: 'inline' | 'schedulePublish';
+        taskSlug: 'inline' | 'forwardMotorCityLead' | 'sweepMotorCityLeads' | 'schedulePublish';
         taskID: string;
         input?:
           | {
@@ -3099,10 +3115,19 @@ export interface PayloadJob {
         id?: string | null;
       }[]
     | null;
-  taskSlug?: ('inline' | 'schedulePublish') | null;
+  taskSlug?: ('inline' | 'forwardMotorCityLead' | 'sweepMotorCityLeads' | 'schedulePublish') | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
+  meta?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -4096,6 +4121,9 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
   motorCityLeadId?: T;
   motorCityLeadStatus?: T;
   motorCityLeadError?: T;
+  motorCityLeadAttempts?: T;
+  motorCityLeadNextRetryAt?: T;
+  motorCityLeadRetryable?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -4135,6 +4163,7 @@ export interface PayloadJobsSelect<T extends boolean = true> {
   queue?: T;
   waitUntil?: T;
   processing?: T;
+  meta?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -4376,6 +4405,24 @@ export interface AiProviderSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs-stats".
+ */
+export interface PayloadJobsStat {
+  id: string;
+  stats?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -4547,6 +4594,16 @@ export interface AiProviderSettingsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs-stats_select".
+ */
+export interface PayloadJobsStatsSelect<T extends boolean = true> {
+  stats?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collections_widget".
  */
 export interface CollectionsWidget {
@@ -4554,6 +4611,33 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskForwardMotorCityLead".
+ */
+export interface TaskForwardMotorCityLead {
+  input: {
+    /**
+     * Payload form-submissions document id (also used as extLeadRef)
+     */
+    formSubmissionId: string;
+  };
+  output: {
+    outcome: string;
+    status?: string | null;
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskSweepMotorCityLeads".
+ */
+export interface TaskSweepMotorCityLeads {
+  input?: unknown;
+  output: {
+    examined: number;
+    queued: number;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
