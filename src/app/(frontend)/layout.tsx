@@ -27,6 +27,7 @@ import type {
 import { PrivacyProvider } from '@/lib/providers/privacy'
 import { PrivacyBanner } from '@/lib/components/privacy-banner/PrivacyBanner'
 import { BackToTopButton } from '@/lib/components/back-to-top/BackToTopButton'
+import { ConsentAwareGoogleTagManager } from '@/components/analytics/ConsentAwareGoogleTagManager'
 
 const fordF1 = localFont({
   src: [
@@ -55,6 +56,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html className={cn(GeistMono.variable, fordF1.variable)} data-theme="light" lang="en">
       <PrivacyProvider>
         <body className="font-ford">
+          <ConsentAwareGoogleTagManager
+            containerId={globalSettings.analytics?.googleTagManagerId}
+            enabled={globalSettings.analytics?.enableGoogleTagManager}
+          />
           <JsonLd data={getDealershipJsonLd()} />
           <Providers>
             {/* preview is resolved client-side via admin-bar auth; avoid draftMode() here so pages can cache */}

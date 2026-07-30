@@ -4287,6 +4287,7 @@ export interface Setting {
   id: string;
   contactInfo: ContactInfo1;
   pricingCalculatorDefaults?: PricingCalculatorDefaults;
+  analytics: AnalyticsSettings;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -4331,6 +4332,20 @@ export interface PricingCalculatorDefaults {
    * Default repayment period for finance calculators.
    */
   repaymentPeriod?: ('36' | '48' | '54' | '60' | '72') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AnalyticsSettings".
+ */
+export interface AnalyticsSettings {
+  /**
+   * Loads Google Tag Manager only after a visitor has granted cookie consent.
+   */
+  enableGoogleTagManager?: boolean | null;
+  /**
+   * The public GTM container ID in the format GTM-XXXXXXXX.
+   */
+  googleTagManagerId: string;
 }
 /**
  * Configure AI provider settings for media suggestions
@@ -4475,6 +4490,7 @@ export interface FooterSelect<T extends boolean = true> {
 export interface SettingsSelect<T extends boolean = true> {
   contactInfo?: T | ContactInfoSelect<T>;
   pricingCalculatorDefaults?: T | PricingCalculatorDefaultsSelect<T>;
+  analytics?: T | AnalyticsSettingsSelect<T>;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -4507,6 +4523,14 @@ export interface PricingCalculatorDefaultsSelect<T extends boolean = true> {
   interestRate?: T;
   balloonPayment?: T;
   repaymentPeriod?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AnalyticsSettings_select".
+ */
+export interface AnalyticsSettingsSelect<T extends boolean = true> {
+  enableGoogleTagManager?: T;
+  googleTagManagerId?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
