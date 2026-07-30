@@ -9,6 +9,9 @@ import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { generateMeta } from '@/lib/utils/generateMeta'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
 
+/** ISR for CMS pages (home + [slug]). */
+export const revalidate = 300
+
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
   const pages = await payload.find({

@@ -1,5 +1,12 @@
 import type { GlobalConfig } from 'payload'
 import { revalidateGlobalSettings } from '@/globals/Settings/hooks/revalidateGlobalSettings'
+import {
+  DEFAULT_DEPOSIT_AMOUNT,
+  DEFAULT_INTEREST_RATE_NUMBER,
+  DEFAULT_PAYMENT_TERM,
+  MAX_BALLOON_PERCENT,
+  REPAYMENT_PERIOD_OPTIONS,
+} from '@/lib/blocks/finance-calculator-block/financeCalculatorOptions'
 import { isAdmin } from '@/lib/utils/accessUtil'
 import AddressField from '@/lib/fields/address-field/AddressField'
 
@@ -55,6 +62,94 @@ export const SettingsGlobal: GlobalConfig = {
           ],
         },
         {
+          label: 'Pricing Calculator',
+          name: 'pricingCalculatorDefaults',
+          interfaceName: 'PricingCalculatorDefaults',
+          fields: [
+            {
+              name: 'depositAmount',
+              label: 'Deposit Amount',
+              type: 'number',
+              min: 0,
+              defaultValue: DEFAULT_DEPOSIT_AMOUNT,
+              admin: {
+                description: 'Default deposit in Rands for finance calculators.',
+              },
+            },
+            {
+              name: 'interestRate',
+              label: 'Interest Rate',
+              type: 'number',
+              min: 0,
+              defaultValue: DEFAULT_INTEREST_RATE_NUMBER,
+              admin: {
+                description: 'Default annual interest rate (%) for finance calculators.',
+                step: 0.01,
+              },
+            },
+            {
+              name: 'balloonPayment',
+              label: 'Balloon Payment',
+              type: 'number',
+              min: 0,
+              max: MAX_BALLOON_PERCENT,
+              defaultValue: 0,
+              admin: {
+                description: `Default balloon payment (%) for finance calculators. Maximum ${MAX_BALLOON_PERCENT}%.`,
+                step: 0.01,
+              },
+            },
+            {
+              name: 'repaymentPeriod',
+              label: 'Repayment Period',
+              type: 'select',
+              defaultValue: String(DEFAULT_PAYMENT_TERM),
+              options: REPAYMENT_PERIOD_OPTIONS.map((months) => ({
+                label: `${months} months`,
+                value: String(months),
+              })),
+              admin: {
+                description: 'Default repayment period for finance calculators.',
+              },
+            },
+          ],
+        },
+        {
+          label: 'Analytics',
+          name: 'analytics',
+          interfaceName: 'AnalyticsSettings',
+          fields: [
+            {
+              name: 'enableGoogleTagManager',
+              label: 'Enable Google Tag Manager',
+              type: 'checkbox',
+              defaultValue: false,
+              admin: {
+                description:
+                  'Loads Google Tag Manager only after a visitor has granted cookie consent.',
+              },
+            },
+            {
+              name: 'googleTagManagerId',
+              label: 'Google Tag Manager Container ID',
+              type: 'text',
+              required: true,
+              defaultValue: 'GTM-P2JCNCLC',
+              admin: {
+                description: 'The public GTM container ID in the format GTM-XXXXXXXX.',
+              },
+              validate: (value: string | null | undefined) => {
+                if (!value) return 'Google Tag Manager Container ID is required.'
+
+                return (
+                  /^GTM-[A-Z0-9]+$/.test(value.trim()) ||
+                  'Must be a valid Google Tag Manager container ID (e.g. GTM-ABC12345).'
+                )
+              },
+            },
+          ],
+        },
+        {
           label: 'Data Seeds',
           admin: {
             condition: (_data, _siblingData, { user }) => {
@@ -89,6 +184,26 @@ export const SettingsGlobal: GlobalConfig = {
               admin: {
                 components: {
                   Field: '@/lib/fields/media-cleanup/MediaCleanupComponent#MediaCleanupComponent',
+                },
+              },
+            },
+          ],
+        },
+        {
+          label: 'Cache',
+          admin: {
+            condition: (_data, _siblingData, { user }) => {
+              return Boolean(user?.roles?.includes('developer'))
+            },
+          },
+          fields: [
+            {
+              type: 'ui',
+              label: 'Cache bust',
+              name: 'cacheBustDisplay',
+              admin: {
+                components: {
+                  Field: '@/lib/fields/cache-bust/CacheBustComponent#CacheBustComponent',
                 },
               },
             },

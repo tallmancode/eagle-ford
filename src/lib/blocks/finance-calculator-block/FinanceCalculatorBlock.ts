@@ -20,14 +20,6 @@ export const FinanceCalculatorBlock: Block = {
   },
   fields: [
     {
-      name: 'heading',
-      type: 'text',
-      label: 'Heading',
-      admin: {
-        description: 'Optional heading displayed above the calculator.',
-      },
-    },
-    {
       name: 'defaultPurchasePrice',
       type: 'number',
       label: 'Default Purchase Price',

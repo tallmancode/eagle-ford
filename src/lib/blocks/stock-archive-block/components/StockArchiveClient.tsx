@@ -9,11 +9,10 @@ import {
   type StockArchiveVehicle,
 } from '../utils'
 import { StockArchiveGrid } from './StockArchiveGrid'
-import { StockArchiveHeader } from './StockArchiveHeader'
+import { StockArchivePagination } from './StockArchivePagination'
 import { StockArchiveToolbar } from './StockArchiveToolbar'
 
 type Props = {
-  heading: string
   vehicles: StockArchiveVehicle[]
   filterOptions: MotorCityStockFilterOptions
   activeFilters: StockArchiveFilters
@@ -28,7 +27,6 @@ type Props = {
 }
 
 export function StockArchiveClient({
-  heading,
   vehicles,
   filterOptions,
   activeFilters,
@@ -63,11 +61,10 @@ export function StockArchiveClient({
   )
 
   const currentPage = Math.min(activeFilters.page ?? 1, pagination.totalPages)
+  const handlePageChange = (page: number) => navigateWithFilters({ page })
 
   return (
     <div>
-      <StockArchiveHeader heading={heading} />
-
       <StockArchiveToolbar
         vehicles={vehicles}
         filterOptions={filterOptions}
@@ -77,11 +74,19 @@ export function StockArchiveClient({
         totalDocs={pagination.totalDocs}
         limit={limit}
         showPagination={showPagination}
-        onPageChange={(page) => navigateWithFilters({ page })}
+        onPageChange={handlePageChange}
         onApplyFilters={applyFilters}
       />
 
       <StockArchiveGrid vehicles={vehicles} enquireUrl={enquireUrl} />
+
+      <StockArchivePagination
+        className="mt-8"
+        currentPage={currentPage}
+        totalPages={pagination.totalPages}
+        showPagination={showPagination}
+        onPageChange={handlePageChange}
+      />
     </div>
   )
 }

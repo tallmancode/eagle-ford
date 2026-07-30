@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import { generateNavHref, getNavLinkTarget } from '@/lib/fields/navigation/resolveNavHref'
 import {
   SocialIconSvg,
@@ -57,9 +56,7 @@ function renderStars(rating: number): string {
   return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty)
 }
 
-export const SiteFooter = async () => {
-  const footer = (await getCachedGlobal('footer', 1)()) as Footer
-
+export const SiteFooter = ({ footer }: { footer: Footer }) => {
   const columns = footer.columns ?? []
 
   return (

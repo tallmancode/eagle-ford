@@ -64,6 +64,9 @@ export default buildConfig({
       icons: [...SITE_FAVICON_LINKS],
     },
   },
+  graphQL: {
+    disable: true,
+  },
   editor: defaultLexical,
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
@@ -91,6 +94,11 @@ export default buildConfig({
       },
     },
   }),
+  upload: {
+    limits: {
+      fileSize: 15000000,
+    },
+  },
   jobs: {
     access: {
       run: ({ req }: { req: PayloadRequest }): boolean => {

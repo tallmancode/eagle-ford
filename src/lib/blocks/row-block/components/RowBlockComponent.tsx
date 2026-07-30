@@ -1,5 +1,6 @@
 import type { Row } from '@/payload-types'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
+import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 import React, { JSX } from 'react'
 import type {
   LayoutSpacingValue,
@@ -43,9 +44,18 @@ const landmarkElementMap: Record<string, keyof JSX.IntrinsicElements> = {
   form: 'form',
 }
 
-export const RowBlockComponent: React.FC<Row> = (props) => {
-  const { content, container, accessibility, backgroundColor, align, verticalAlign, gap, wrap } =
-    props
+export const RowBlockComponent: React.FC<Row & { meta?: BlockRenderMeta }> = (props) => {
+  const {
+    content,
+    container,
+    accessibility,
+    backgroundColor,
+    align,
+    verticalAlign,
+    gap,
+    wrap,
+    meta,
+  } = props
 
   const raw = props.layout?.spacing
   const layoutSpacingNormalized =
@@ -106,13 +116,14 @@ export const RowBlockComponent: React.FC<Row> = (props) => {
   }
 
   const contentClasses = cn(containerClass, spacingClassPadding, rowClass)
+  const nestedMeta: BlockRenderMeta = { ...meta, inRow: true }
 
   if (backgroundClass && container) {
     const outerClassName = cn(backgroundClass, spacingClassMargin, visibilityClass)
     return (
       <Tag className={outerClassName} style={spacingStyle} {...ariaProps}>
         <div className={contentClasses || undefined}>
-          <RenderBlocks blocks={content} meta={{ inRow: true }} />
+          <RenderBlocks blocks={content} meta={nestedMeta} />
         </div>
       </Tag>
     )
@@ -129,7 +140,7 @@ export const RowBlockComponent: React.FC<Row> = (props) => {
 
   return (
     <Tag className={className} style={spacingStyle} {...ariaProps}>
-      <RenderBlocks blocks={content} meta={{ inRow: true }} />
+      <RenderBlocks blocks={content} meta={nestedMeta} />
     </Tag>
   )
 }

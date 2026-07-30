@@ -3,14 +3,6 @@
 import { useState } from 'react'
 import { SlidersHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination'
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import type { MotorCityStockFilterOptions } from '@/lib/motor-city-stock/types'
 import { cn } from '@/lib/utils/cn'
@@ -21,6 +13,7 @@ import {
   type StockArchiveVehicle,
 } from '../utils'
 import { StockArchiveFilters as StockArchiveFiltersPanel } from './StockArchiveFilters'
+import { StockArchivePagination } from './StockArchivePagination'
 
 const EMPTY_FILTERS: StockArchiveFilters = {}
 
@@ -97,40 +90,12 @@ export function StockArchiveToolbar({
           </div>
 
           <div className="flex flex-col items-center gap-2">
-            {showPagination && totalPages > 1 && (
-              <Pagination>
-                <PaginationContent className="flex-wrap justify-center">
-                  <PaginationItem>
-                    <PaginationPrevious
-                      onClick={() => {
-                        if (currentPage > 1) onPageChange(currentPage - 1)
-                      }}
-                      className={currentPage <= 1 ? 'pointer-events-none opacity-50' : ''}
-                    />
-                  </PaginationItem>
-
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <PaginationItem key={page}>
-                      <PaginationLink
-                        isActive={page === currentPage}
-                        onClick={() => onPageChange(page)}
-                      >
-                        {page}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ))}
-
-                  <PaginationItem>
-                    <PaginationNext
-                      onClick={() => {
-                        if (currentPage < totalPages) onPageChange(currentPage + 1)
-                      }}
-                      className={currentPage >= totalPages ? 'pointer-events-none opacity-50' : ''}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            )}
+            <StockArchivePagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              showPagination={showPagination}
+              onPageChange={onPageChange}
+            />
 
             <p className="text-sm text-neutral-500">
               {total === 0 ? 'No vehicles found' : `Showing ${start}–${end} of ${total}`}

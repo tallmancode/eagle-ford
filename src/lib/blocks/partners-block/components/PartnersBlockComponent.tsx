@@ -17,6 +17,7 @@ function PartnerCard({ partner }: { partner: PartnerItem }) {
         width={180}
         height={90}
         imgClassName="object-contain max-h-20"
+        maxWidth={300}
         size="224px"
       />
     </div>

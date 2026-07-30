@@ -34,6 +34,7 @@ function ImageCard({ item }: { item: ImageCardItem }) {
         alt={item.imageAlt ?? undefined}
         fill
         imgClassName="object-cover"
+        maxWidth={900}
         size="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
       />
     </div>

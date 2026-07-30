@@ -12,14 +12,13 @@ type VehicleMegaMenuCardProps = {
 
 export function VehicleMegaMenuCard({ item, className, onNavigate }: VehicleMegaMenuCardProps) {
   const showDisclaimer = Boolean(item.priceDisclaimer)
+  const href = item.modelSlug
+    ? `/vehicles/${item.slug}/${item.modelSlug}`
+    : `/vehicles/${item.slug}`
 
   return (
     <div className={cn('flex flex-col items-center text-center', className)}>
-      <Link
-        href={`/vehicles/${item.slug}`}
-        className="group flex w-full flex-col items-center"
-        onClick={onNavigate}
-      >
+      <Link href={href} className="group flex w-full flex-col items-center" onClick={onNavigate}>
         <div className="relative mb-3 aspect-[3/2] w-full">
           <MediaImage
             resource={item.featureImage}

@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
   sassOptions: {
     loadPaths: ['./node_modules/@payloadcms/ui/dist/scss/'],
   },
+  // Middleware clones request bodies (default 10MB). Must exceed Payload upload.limits.fileSize
+  // so multipart uploads are not truncated → "Unexpected end of form".
+  experimental: {
+    proxyClientMaxBodySize: '20mb',
+  },
   output: 'standalone',
   images: {
     qualities: [65, 75, 100],
@@ -58,6 +63,11 @@ const nextConfig: NextConfig = {
         hostname: 'cdn.cmscloud.co.za',
         pathname: '/stock-images/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '/**',
+      },
     ],
   },
   webpack: (webpackConfig) => {
@@ -78,6 +88,24 @@ const nextConfig: NextConfig = {
           {
             key: 'X-Robots-Tag',
             value: 'noindex, nofollow, noarchive, nosnippet',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/api/media/file/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
           },
         ],
       },

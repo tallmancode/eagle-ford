@@ -12,14 +12,18 @@ import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
 
 const MODELS_PER_PAGE = 3
 
+type ModelWithPricing = VehicleModel & {
+  startingPrice?: number | null
+}
+
 type VehicleModelSiblingsProps = {
   vehicle: Vehicle
   currentModel: VehicleModel
-  models: VehicleModel[]
+  models: ModelWithPricing[]
 }
 
 function getCardImage(
-  model: VehicleModel,
+  model: ModelWithPricing,
   vehicleFeatureImage: string | Media | null,
   vehicleHeroImage: string | Media | null,
 ) {
@@ -43,7 +47,7 @@ export function VehicleModelSiblings({ vehicle, currentModel, models }: VehicleM
   return (
     <section id="models" className="bg-muted/40 py-14 px-4">
       <div className="container mx-auto">
-        <h2 className="text-primary text-3xl font-bold text-center mb-10">{vehicle.name} Models</h2>
+        <h2 className="text-primary text-3xl font-bold text-center mb-10">{vehicle.name} Trims</h2>
 
         <div className="relative">
           {modelPages > 1 && (
@@ -73,24 +77,16 @@ export function VehicleModelSiblings({ vehicle, currentModel, models }: VehicleM
                         resource={cardImage}
                         fill
                         imgClassName="object-contain"
+                        maxWidth={600}
                         size="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw"
                       />
                     </div>
                   )}
                   <h3 className="font-semibold text-base mb-1 leading-snug">{model.name}</h3>
-                  <p className="text-primary text-2xl font-bold mb-4">{formatPrice(model.price)}</p>
-                  {model.highlights && model.highlights.length > 0 && (
-                    <ul className="space-y-1.5 flex-1 mb-6">
-                      {model.highlights.slice(0, 5).map((h, i) => (
-                        <li
-                          key={h.id ?? i}
-                          className="flex items-start gap-2 text-sm text-muted-foreground"
-                        >
-                          <span className="text-primary mt-0.5 shrink-0">•</span>
-                          <span>{h.highlight}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  {model.startingPrice != null && (
+                    <p className="text-primary text-2xl font-bold mb-4">
+                      {formatPrice(model.startingPrice)}
+                    </p>
                   )}
                   <Link href={href} className="mt-auto">
                     <Button variant="outline" className="rounded-full w-full">

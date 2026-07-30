@@ -4,16 +4,64 @@ import {
   emptyLayoutSpacingValue,
 } from '@/lib/fields/layout-field/utils/layout-utils'
 import { htmlToLexicalRoot } from '@/lib/specials-seed/lexical'
+import type { OfferType } from '@/lib/specials/constants'
+import { formatZAR } from '@/lib/utils/formatZAR'
 import type { Section } from '@/payload-types'
 
 type BuildSpecialContentInput = {
   title: string
-  subheading: string | null
-  bodyHtml: string
+  /** Optional; when omitted, synthesized from pricing fields */
+  subheading?: string | null
+  /** Optional; when omitted, synthesized from pricing + standard T&Cs */
+  bodyHtml?: string | null
   detailImageId: string
   formId: string
   /** Frontend path to vehicle or model page, e.g. /vehicles/next-level-ranger/... */
   modelHref?: string | null
+  offerType?: OfferType | Extract<OfferType, 'price-point' | 'payment'>
+  specialOffer?: number | null
+  bestSaving?: number | null
+  paymentFrom?: number | null
+}
+
+function synthesizePricingContent(input: {
+  offerType?: string
+  specialOffer?: number | null
+  bestSaving?: number | null
+  paymentFrom?: number | null
+}): { subheading: string | null; bodyHtml: string } {
+  const lines: string[] = []
+
+  if (input.offerType === 'payment' && input.paymentFrom != null) {
+    const line = `From ${formatZAR(input.paymentFrom)}*pm`
+    lines.push(`<p><strong>${line}</strong></p>`)
+    return {
+      subheading: line,
+      bodyHtml: `${lines.join('')}<p><br></p><p>Terms and conditions apply.</p><p><br></p><p>All subject to finance approval Ford Credit.</p><p>All including 6 year / 90 000 km Service Plan.</p>`,
+    }
+  }
+
+  if (input.offerType === 'price-point') {
+    if (input.specialOffer != null) {
+      const line = `Special Offer: ${formatZAR(input.specialOffer)}*`
+      lines.push(`<p><strong>${line}</strong></p>`)
+    }
+    if (input.bestSaving != null) {
+      lines.push(`<p><strong>Best Saving: ${formatZAR(input.bestSaving)}*</strong></p>`)
+    }
+    const subheading =
+      input.specialOffer != null ? `Special Offer: ${formatZAR(input.specialOffer)}*` : null
+    return {
+      subheading,
+      bodyHtml: `${lines.join('')}<p><br></p><p>Terms and conditions apply.</p><p><br></p><p>All subject to finance approval Ford Credit.</p><p>All including 6 year / 90 000 km Service Plan.</p>`,
+    }
+  }
+
+  return {
+    subheading: null,
+    bodyHtml:
+      '<p>Terms and conditions apply.</p><p><br></p><p>All subject to finance approval Ford Credit.</p>',
+  }
 }
 
 const defaultSectionInnerLayout = {
@@ -50,12 +98,25 @@ function standardHeading(heading: string, subheading?: string | null, size: 'lg'
 
 export function buildSpecialContent({
   title,
-  subheading,
-  bodyHtml,
+  subheading: subheadingInput,
+  bodyHtml: bodyHtmlInput,
   detailImageId,
   formId,
   modelHref,
+  offerType,
+  specialOffer,
+  bestSaving,
+  paymentFrom,
 }: BuildSpecialContentInput): { section: Section[] } {
+  const synthesized = synthesizePricingContent({
+    offerType,
+    specialOffer,
+    bestSaving,
+    paymentFrom,
+  })
+  const subheading = subheadingInput ?? synthesized.subheading
+  const bodyHtml = bodyHtmlInput?.trim() ? bodyHtmlInput : synthesized.bodyHtml
+
   const ctaButtons = [
     {
       blockType: 'cta-button' as const,

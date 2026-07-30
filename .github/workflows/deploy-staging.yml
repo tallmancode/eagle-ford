@@ -14,31 +14,48 @@ jobs:
   deploy-staging:
     runs-on: ubuntu-latest
     environment: staging
+    timeout-minutes: 30
 
     steps:
       - name: Validate required secrets
+        env:
+          _SSH_KEY: ${{ secrets.SSH_KEY }}
+          _SSH_HOST: ${{ secrets.SSH_HOST }}
+          _SSH_USER: ${{ secrets.SSH_USER }}
+          _APP_ENV: ${{ secrets.APP_ENV }}
         run: |
-          if [ -z "${{ secrets.SSH_KEY }}" ]; then
+          missing=0
+          if [ -z "$_SSH_KEY" ]; then
             echo "::error::Missing SSH_KEY (set on the staging environment or repository secrets)"
-            exit 1
+            missing=1
           fi
-          if [ -z "${{ secrets.SSH_HOST }}" ]; then
+          if [ -z "$_SSH_HOST" ]; then
             echo "::error::Missing SSH_HOST (set on the staging environment or repository secrets)"
-            exit 1
+            missing=1
           fi
-          if [ -z "${{ secrets.SSH_USER }}" ]; then
+          if [ -z "$_SSH_USER" ]; then
             echo "::error::Missing SSH_USER (set on the staging environment or repository secrets)"
-            exit 1
+            missing=1
           fi
-          if [ -z "${{ secrets.APP_ENV }}" ]; then
+          if [ -z "$_APP_ENV" ]; then
             echo "::error::Missing APP_ENV (set on the staging environment or repository secrets)"
-            exit 1
+            missing=1
           fi
+          [ "$missing" -eq 0 ] || exit 1
 
       - name: Setup SSH Agent
-        uses: webfactory/ssh-agent@v0.10.0
+        # webfactory/ssh-agent v0.10.0 — pinned to full commit SHA
+        uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Add server to known hosts
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts
 
       - name: Deploy to Server
         env:
@@ -51,8 +68,8 @@ jobs:
         run: |
           set -e
 
-          SSH_OPTS="-o StrictHostKeyChecking=no -p $SSH_PORT"
-          SCP_OPTS="-o StrictHostKeyChecking=no -P $SSH_PORT"
+          SSH_OPTS="-p $SSH_PORT"
+          SCP_OPTS="-P $SSH_PORT"
           DEPLOY_BRANCH="staging"
           ENV_FILE="$(mktemp)"
           trap 'rm -f "$ENV_FILE"' EXIT
@@ -140,7 +157,6 @@ jobs:
             echo \"Docker version: \$(docker --version)\"
             echo \"Compose version: \$(docker compose version)\"
 
-            export DOCKER_BUILDKIT=1
             chmod +x scripts/docker-deploy-prod.sh
 
             echo ''

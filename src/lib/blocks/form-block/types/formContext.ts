@@ -1,4 +1,4 @@
-import type { Vehicle, VehicleModel } from '@/payload-types'
+import type { Vehicle, VehicleModel, VehicleVariant } from '@/payload-types'
 
 export type FormBlockContextValues = Record<string, string>
 
@@ -10,6 +10,7 @@ export type BlockRenderMeta = FormBlockMeta & {
   inRow?: boolean
   vehicle?: Vehicle
   vehicleModel?: VehicleModel
+  vehicleVariant?: VehicleVariant
   searchParams?: Record<string, string | string[] | undefined>
 }
 

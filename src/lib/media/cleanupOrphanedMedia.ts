@@ -7,10 +7,12 @@ const VERSIONED_COLLECTIONS = [
   'specials',
   'vehicles',
   'vehicle-models',
+  'vehicle-variants',
 ] as const satisfies CollectionSlug[]
 
 const SCAN_COLLECTIONS = [
   ...VERSIONED_COLLECTIONS,
+  'special-categories',
   'vehicle-templates',
   'vehicle-model-templates',
   'form-submissions',

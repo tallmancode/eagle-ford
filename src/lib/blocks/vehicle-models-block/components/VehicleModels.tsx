@@ -18,20 +18,24 @@ import type { Media, Vehicle, VehicleModel } from '@/payload-types'
 import { formatPrice } from '@/lib/utils/formatPrice'
 import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
 
+type ModelWithPricing = VehicleModel & {
+  startingPrice?: number | null
+}
+
 type VehicleModelsProps = {
   vehicle: Vehicle
-  models: VehicleModel[]
+  models: ModelWithPricing[]
 }
 
 type ModelDetailContentProps = {
-  model: VehicleModel
+  model: ModelWithPricing
   vehicle: Vehicle
   vehicleFeatureImage: string | Media | null
   vehicleHeroImage: string | Media | null
 }
 
 function getModelImage(
-  model: VehicleModel,
+  model: ModelWithPricing,
   vehicleFeatureImage: string | Media | null,
   vehicleHeroImage: string | Media | null,
 ) {
@@ -60,7 +64,6 @@ function ModelDetailContent({
   vehicleHeroImage,
 }: ModelDetailContentProps) {
   const detailImage = getModelImage(model, vehicleFeatureImage, vehicleHeroImage)
-  const highlights = model.highlights ?? []
   const description = model.content?.description
 
   return (
@@ -71,6 +74,7 @@ function ModelDetailContent({
             resource={detailImage}
             fill
             imgClassName="object-cover object-center"
+            maxWidth={1400}
             size="(max-width: 1024px) 100vw, 66vw"
             priority
           />
@@ -89,28 +93,13 @@ function ModelDetailContent({
           </div>
         )}
 
-        {highlights.length > 0 && (
-          <div className="mb-8">
-            <h4 className="text-primary font-bold mb-3">Key Features</h4>
-            <ul className="space-y-2">
-              {highlights.map((item, i) => (
-                <li
-                  key={item.id ?? i}
-                  className="flex items-start gap-2 text-sm text-muted-foreground"
-                >
-                  <span className="text-primary mt-0.5 shrink-0">•</span>
-                  <span>{item.highlight}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 pt-4 border-t border-border">
-          <div>
-            <p className="text-primary text-3xl font-bold">{formatPrice(model.price)}</p>
-            <p className="text-sm text-muted-foreground">Starting From</p>
-          </div>
+          {model.startingPrice != null && (
+            <div>
+              <p className="text-primary text-3xl font-bold">{formatPrice(model.startingPrice)}</p>
+              <p className="text-sm text-muted-foreground">Starting From</p>
+            </div>
+          )}
           <div className="flex flex-wrap gap-3">
             <Link href={getVehicleModelPath(vehicle.slug ?? '', model.slug ?? '')}>
               <Button variant="outline" className="rounded-full">
@@ -156,7 +145,7 @@ export function VehicleModels({ vehicle, models }: VehicleModelsProps) {
                         {model.name}
                       </span>
                       <span className="text-sm font-medium whitespace-nowrap text-muted-foreground group-data-[state=open]:text-primary">
-                        {formatPrice(model.price)}
+                        {model.startingPrice != null ? formatPrice(model.startingPrice) : '—'}
                       </span>
                     </span>
                   </AccordionTrigger>
@@ -209,7 +198,7 @@ export function VehicleModels({ vehicle, models }: VehicleModelsProps) {
                             isSelected ? 'text-primary' : 'text-muted-foreground'
                           }`}
                         >
-                          {formatPrice(model.price)}
+                          {model.startingPrice != null ? formatPrice(model.startingPrice) : '—'}
                         </span>
                       </button>
                     </li>

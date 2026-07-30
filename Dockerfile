@@ -9,12 +9,15 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+# Install dependencies based on the preferred package manager.
+# pnpm-workspace.yaml + patches/ are required so patchedDependencies match the lockfile.
+# Use pnpm 11 to match the lockfile (pnpm 10 fails with ERR_PNPM_LOCKFILE_CONFIG_MISMATCH on patches).
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* pnpm-workspace.yaml* .npmrc* ./
+COPY patches ./patches
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm i --frozen-lockfile; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm i --frozen-lockfile; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -25,10 +28,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+# Disable Next.js telemetry during the build.
+# https://nextjs.org/telemetry
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build with: docker build --secret id=env,src=.env --network=host -t esm-app:latest .
 # Env is mounted at /run/secrets/env (not baked into image layers).
@@ -38,7 +40,7 @@ RUN --mount=type=secret,id=env,required=true --network=host \
   export DATABASE_URL="${BUILD_DATABASE_URL:-$DATABASE_URL}" && \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@10.33.0 --activate && pnpm run build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable && corepack prepare pnpm@11.8.0 --activate && pnpm run build; \
   else echo "Lockfile not found." && exit 1; \
   fi
 
@@ -47,8 +49,7 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -58,8 +59,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 RUN mkdir -p public/media/uploads && chown -R nextjs:nodejs public
 
 # Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+RUN mkdir .next && chown nextjs:nodejs .next
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing

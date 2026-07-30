@@ -26,7 +26,7 @@ const getCachedSitemapEntries = unstable_cache(
     const siteUrl = getSiteUrl()
     const dateFallback = new Date().toISOString()
 
-    const [pages, vehicles, vehicleModels, specials] = await Promise.all([
+    const [pages, vehicles, vehicleModels, specialCategories] = await Promise.all([
       payload.find({
         collection: 'pages',
         overrideAccess: false,
@@ -68,13 +68,12 @@ const getCachedSitemapEntries = unstable_cache(
         },
       }),
       payload.find({
-        collection: 'specials',
+        collection: 'special-categories',
         overrideAccess: false,
         draft: false,
         depth: 0,
         limit: 1000,
         pagination: false,
-        where: publishedWhere,
         select: {
           slug: true,
           updatedAt: true,
@@ -98,26 +97,26 @@ const getCachedSitemapEntries = unstable_cache(
       )
 
     const vehicleModelEntries = vehicleModels.docs.flatMap((model) => {
+      if (!model.slug) return []
+
       const vehicle = model.vehicle
-      if (!vehicle || typeof vehicle === 'string' || !vehicle.slug || !model.slug) {
-        return []
-      }
+      if (!vehicle || typeof vehicle === 'string' || !vehicle.slug) return []
 
       return [
         toSitemapEntry(
-          `${siteUrl}${getVehicleModelPath(vehicle.slug, model.slug)}`,
+          `${siteUrl}${getVehicleModelPath(vehicle.slug, model.slug!)}`,
           model.updatedAt ?? dateFallback,
         ),
       ]
     })
 
-    const specialEntries = specials.docs
-      .filter((special) => Boolean(special.slug))
-      .map((special) =>
-        toSitemapEntry(`${siteUrl}/specials/${special.slug}`, special.updatedAt ?? dateFallback),
+    const specialCategoryEntries = specialCategories.docs
+      .filter((category) => Boolean(category.slug))
+      .map((category) =>
+        toSitemapEntry(`${siteUrl}/specials/${category.slug}`, category.updatedAt ?? dateFallback),
       )
 
-    return [...pageEntries, ...vehicleEntries, ...vehicleModelEntries, ...specialEntries]
+    return [...pageEntries, ...vehicleEntries, ...vehicleModelEntries, ...specialCategoryEntries]
   },
   ['sitemap'],
   {

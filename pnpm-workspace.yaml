@@ -4,3 +4,6 @@ allowBuilds:
   esbuild: true
   sharp: true
   unrs-resolver: true
+patchedDependencies:
+  '@payloadcms/plugin-seo@3.85.1': patches/@payloadcms__plugin-seo@3.85.1.patch
+  '@payloadcms/ui@3.85.1': patches/@payloadcms__ui@3.85.1.patch

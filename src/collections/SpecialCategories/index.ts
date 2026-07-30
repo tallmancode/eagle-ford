@@ -2,6 +2,10 @@ import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 
 import { isAnyone, isAuthenticated } from '@/lib/utils/accessUtil'
+import {
+  revalidateSpecialCategory,
+  revalidateSpecialCategoryDelete,
+} from './hooks/revalidateSpecialCategory'
 
 export const SpecialCategories: CollectionConfig = {
   slug: 'special-categories',
@@ -17,15 +21,28 @@ export const SpecialCategories: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'slug', 'sortOrder'],
+    defaultColumns: ['title', 'slug', 'sortOrder', 'updatedAt'],
     group: 'Content',
   },
   defaultSort: 'sortOrder',
+  hooks: {
+    afterChange: [revalidateSpecialCategory],
+    afterDelete: [revalidateSpecialCategoryDelete],
+  },
   fields: [
     {
       name: 'title',
       type: 'text',
       required: true,
+    },
+    {
+      name: 'featureImage',
+      label: 'Feature Image',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Image shown on specials archive category cards.',
+      },
     },
     {
       name: 'sortOrder',
@@ -34,6 +51,39 @@ export const SpecialCategories: CollectionConfig = {
       admin: {
         position: 'sidebar',
         description: 'Lower numbers appear first.',
+      },
+    },
+    {
+      name: 'template',
+      label: 'Page Template',
+      type: 'relationship',
+      relationTo: 'special-templates',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Optional. Default layout for specials in this category. Individual specials can override this.',
+      },
+    },
+    {
+      name: 'enquiryForm',
+      label: 'Enquiry Form',
+      type: 'relationship',
+      relationTo: 'forms',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Optional. Default enquire form for specials in this category. Individual specials can override this.',
+      },
+    },
+    {
+      name: 'fordPromisePage',
+      label: 'Ford Promise Page',
+      type: 'relationship',
+      relationTo: 'pages',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Optional. Internal page linked by the Ford Family Promise button on specials in this category.',
       },
     },
     slugField(),

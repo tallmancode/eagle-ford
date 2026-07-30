@@ -28,10 +28,6 @@ export type NavLinks =
       url?: string | null;
       document?: (string | null) | Media;
       /**
-       * Show vehicle families or individual model variants in the mega menu.
-       */
-      displayMode?: ('vehicles' | 'models') | null;
-      /**
        * Optional link for the parent menu label
        */
       parentLinkType?: ('none' | 'reference' | 'custom') | null;
@@ -122,6 +118,7 @@ export interface Config {
     heading: Heading;
     'rich-text': RichText;
     'feature-list': FeatureList;
+    'feature-rows': FeatureRows;
     formBlock: FormBlockType;
     'contact-info': ContactInfo;
     'icon-text': IconText;
@@ -130,6 +127,7 @@ export interface Config {
     map: Map;
     'team-grid': TeamGrid;
     'image-block': ImageBlock;
+    fixedBackgroundBlock: FixedBackgroundBlockType;
     'cta-cards': CtaCards;
     'image-cards': ImageCards;
     statsBlock: StatsBlock;
@@ -145,6 +143,7 @@ export interface Config {
     'specials-archive': SpecialsArchive;
     'stock-archive': StockArchive;
     partners: Partners;
+    reviews: Reviews;
     'vehicle-tabs': VehicleTabsBlock;
     'vehicle-catalog': VehicleCatalogBlock;
     'vehicle-hero': VehicleHeroBlock;
@@ -153,27 +152,30 @@ export interface Config {
     'vehicle-colors': VehicleColorsBlock;
     'vehicle-gallery': VehicleGalleryBlock;
     'vehicle-features': VehicleFeaturesBlock;
+    'vehicle-special-categories': VehicleSpecialCategoriesBlock;
     'vehicle-model-hero': VehicleModelHeroBlock;
     'vehicle-model-highlights': VehicleModelHighlightsBlock;
     'vehicle-model-colors': VehicleModelColorsBlock;
     'vehicle-model-siblings': VehicleModelSiblingsBlock;
+    'vehicle-model-variants': VehicleModelVariantsBlock;
   };
   collections: {
     pages: Page;
     specials: Special;
     'special-categories': SpecialCategory;
+    'special-templates': SpecialTemplate;
     media: Media;
     'vehicle-categories': VehicleCategory;
     'vehicle-templates': VehicleTemplate;
     'vehicle-model-templates': VehicleModelTemplate;
     vehicles: Vehicle;
     'vehicle-models': VehicleModel;
+    'vehicle-variants': VehicleVariant;
     users: User;
     redirects: Redirect;
+    'ai-models': AiModel;
     forms: Form;
     'form-submissions': FormSubmission;
-    exports: Export;
-    imports: Import;
     'payload-kv': PayloadKv;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
@@ -185,18 +187,19 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     specials: SpecialsSelect<false> | SpecialsSelect<true>;
     'special-categories': SpecialCategoriesSelect<false> | SpecialCategoriesSelect<true>;
+    'special-templates': SpecialTemplatesSelect<false> | SpecialTemplatesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'vehicle-categories': VehicleCategoriesSelect<false> | VehicleCategoriesSelect<true>;
     'vehicle-templates': VehicleTemplatesSelect<false> | VehicleTemplatesSelect<true>;
     'vehicle-model-templates': VehicleModelTemplatesSelect<false> | VehicleModelTemplatesSelect<true>;
     vehicles: VehiclesSelect<false> | VehiclesSelect<true>;
     'vehicle-models': VehicleModelsSelect<false> | VehicleModelsSelect<true>;
+    'vehicle-variants': VehicleVariantsSelect<false> | VehicleVariantsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    'ai-models': AiModelsSelect<false> | AiModelsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
-    exports: ExportsSelect<false> | ExportsSelect<true>;
-    imports: ImportsSelect<false> | ImportsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -211,11 +214,13 @@ export interface Config {
     header: Header;
     footer: Footer;
     settings: Setting;
+    'ai-provider-settings': AiProviderSetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
+    'ai-provider-settings': AiProviderSettingsSelect<false> | AiProviderSettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -224,8 +229,6 @@ export interface Config {
   user: User;
   jobs: {
     tasks: {
-      createCollectionExport: TaskCreateCollectionExport;
-      createCollectionImport: TaskCreateCollectionImport;
       schedulePublish: TaskSchedulePublish;
       inline: {
         input: unknown;
@@ -265,6 +268,7 @@ export interface Section {
         | Hero
         | RichText
         | FeatureList
+        | FeatureRows
         | FormBlockType
         | ContactInfo
         | IconText
@@ -274,6 +278,7 @@ export interface Section {
         | Map
         | TeamGrid
         | ImageBlock
+        | FixedBackgroundBlockType
         | CtaCards
         | ImageCards
         | StatsBlock
@@ -288,6 +293,7 @@ export interface Section {
         | SpecialsArchive
         | StockArchive
         | Partners
+        | Reviews
         | VehicleTabsBlock
         | VehicleCatalogBlock
         | VehicleHeroBlock
@@ -296,10 +302,12 @@ export interface Section {
         | VehicleFaqBlock
         | VehicleGalleryBlock
         | VehicleFeaturesBlock
+        | VehicleSpecialCategoriesBlock
         | VehicleModelHeroBlock
         | VehicleModelHighlightsBlock
         | VehicleModelColorsBlock
         | VehicleModelSiblingsBlock
+        | VehicleModelVariantsBlock
       )[]
     | null;
   backgroundColor?:
@@ -403,6 +411,7 @@ export interface SectionInner {
         | Hero
         | RichText
         | FeatureList
+        | FeatureRows
         | FormBlockType
         | ContactInfo
         | IconText
@@ -412,6 +421,7 @@ export interface SectionInner {
         | Map
         | TeamGrid
         | ImageBlock
+        | FixedBackgroundBlockType
         | CtaCards
         | ImageCards
         | StatsBlock
@@ -426,6 +436,7 @@ export interface SectionInner {
         | SpecialsArchive
         | StockArchive
         | Partners
+        | Reviews
         | VehicleTabsBlock
         | VehicleCatalogBlock
         | VehicleHeroBlock
@@ -434,10 +445,12 @@ export interface SectionInner {
         | VehicleFaqBlock
         | VehicleGalleryBlock
         | VehicleFeaturesBlock
+        | VehicleSpecialCategoriesBlock
         | VehicleModelHeroBlock
         | VehicleModelHighlightsBlock
         | VehicleModelColorsBlock
         | VehicleModelSiblingsBlock
+        | VehicleModelVariantsBlock
       )[]
     | null;
   backgroundColor?:
@@ -538,6 +551,7 @@ export interface Row {
         | Hero
         | RichText
         | FeatureList
+        | FeatureRows
         | FormBlockType
         | ContactInfo
         | IconText
@@ -547,6 +561,7 @@ export interface Row {
         | Map
         | TeamGrid
         | ImageBlock
+        | FixedBackgroundBlockType
         | CtaCards
         | ImageCards
         | StatsBlock
@@ -561,6 +576,7 @@ export interface Row {
         | SpecialsArchive
         | StockArchive
         | Partners
+        | Reviews
         | VehicleTabsBlock
         | VehicleCatalogBlock
         | VehicleHeroBlock
@@ -569,10 +585,12 @@ export interface Row {
         | VehicleFaqBlock
         | VehicleGalleryBlock
         | VehicleFeaturesBlock
+        | VehicleSpecialCategoriesBlock
         | VehicleModelHeroBlock
         | VehicleModelHighlightsBlock
         | VehicleModelColorsBlock
         | VehicleModelSiblingsBlock
+        | VehicleModelVariantsBlock
       )[]
     | null;
   backgroundColor?:
@@ -801,10 +819,19 @@ export interface StandardCarousel {
      * Recommended: 1920×1080px, WebP or JPEG.
      */
     image: string | Media;
-    reference?: {
-      relationTo: 'pages';
-      value: string | Page;
-    } | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'specials';
+          value: string | Special;
+        } | null)
+      | ({
+          relationTo: 'special-categories';
+          value: string | SpecialCategory;
+        } | null);
     id?: string | null;
   }[];
 }
@@ -935,152 +962,122 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "OverlayCarousel".
+ * via the `definition` "specials".
  */
-export interface OverlayCarousel {
-  slides: {
-    /**
-     * Recommended: 1920×1080px, WebP or JPEG.
-     */
-    image: string | Media;
-    heading?: string | null;
-    subheading?: string | null;
-    alignment?: ('left' | 'center' | 'right') | null;
-    id?: string | null;
-  }[];
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "BannerHero".
- */
-export interface BannerHero {
-  bannerTemplate: 'full-width' | 'overlay' | 'cta-overlay';
-  fullWidthBannerContent?: FullWidthBanner;
-  overlayBannerContent?: OverlayBanner;
-  ctaOverlayContent?: CtaOverlayBanner;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FullWidthBanner".
- */
-export interface FullWidthBanner {
+export interface Special {
+  id: string;
+  _order?: string | null;
+  offerType: 'price-point' | 'payment' | 'service' | 'enquiry';
   /**
-   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   * Groups this special under a campaign or theme (e.g. Truck Month, Holiday).
    */
-  image: string | Media;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "OverlayBanner".
- */
-export interface OverlayBanner {
+  category: string | SpecialCategory;
   /**
-   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   * Optional. Defaults to the offer type label if left blank.
    */
-  image: string | Media;
-  heading?: string | null;
-  subheading?: string | null;
-  alignment?: ('left' | 'center' | 'right') | null;
+  title?: string | null;
   /**
-   * Adds a semi-transparent dark tint over the image to improve text legibility.
+   * Optional. Defaults to the offer type label if left blank.
    */
-  darkOverlay?: boolean | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CtaOverlayBanner".
- */
-export interface CtaOverlayBanner {
+  subTitle?: string | null;
+  cardImage: string | Media;
   /**
-   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   * Optional. Links this special to a vehicle family page. Leave blank for service or non-vehicle offers.
    */
-  image: string | Media;
+  vehicle?: (string | null) | Vehicle;
   /**
-   * Small uppercase label above the heading (e.g. "Eagle Ford — Service Centre").
+   * Optional. Links this special to a specific trim/model page. Leave blank when not applicable.
    */
-  eyebrow?: string | null;
-  heading: string;
-  subheading?: string | null;
-  primaryButton?: {
-    label?: string | null;
-    /**
-     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
-     */
-    href?: string | null;
-    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
+  vehicleModel?: (string | null) | VehicleModel;
+  /**
+   * Optional. Links this special to a specific variant configuration. Public links go to the parent model page.
+   */
+  vehicleVariant?: (string | null) | VehicleVariant;
+  /**
+   * Cash price in Rand, e.g. 489900 for R489 900
+   */
+  pricingLabel?: string | null;
+  /**
+   * Cash price in Rand, e.g. 489900 for R489 900
+   */
+  specialOffer?: number | null;
+  /**
+   * Saving amount in Rand, e.g. 100100 for R100 100
+   */
+  bestSaving?: number | null;
+  /**
+   * Monthly payment in Rand, e.g. 7799 for R7 799*pm
+   */
+  paymentFrom?: number | null;
+  content?: {
+    section?: Section[] | null;
   };
-  secondaryButton?: {
-    label?: string | null;
-    /**
-     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
-     */
-    href?: string | null;
-    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
-  };
+  /**
+   * Optional. Overrides the category template when this special is selected. If blank, the category template is used.
+   */
+  template?: (string | null) | SpecialTemplate;
+  /**
+   * Optional. Overrides the category enquire form when this special is selected. If blank, the category form is used.
+   */
+  enquiryForm?: (string | null) | Form;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rich-text".
+ * via the `definition` "special-categories".
  */
-export interface RichText {
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'rich-text';
+export interface SpecialCategory {
+  id: string;
+  title: string;
+  /**
+   * Image shown on specials archive category cards.
+   */
+  featureImage?: (string | null) | Media;
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
+  /**
+   * Optional. Default layout for specials in this category. Individual specials can override this.
+   */
+  template?: (string | null) | SpecialTemplate;
+  /**
+   * Optional. Default enquire form for specials in this category. Individual specials can override this.
+   */
+  enquiryForm?: (string | null) | Form;
+  /**
+   * Optional. Internal page linked by the Ford Family Promise button on specials in this category.
+   */
+  fordPromisePage?: (string | null) | Page;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "feature-list".
+ * via the `definition` "special-templates".
  */
-export interface FeatureList {
-  features: {
-    title: string;
-    description: string;
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'feature-list';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FormBlockType".
- */
-export interface FormBlockType {
-  form: string | Form;
-  enableIntro?: boolean | null;
-  introContent?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'formBlock';
+export interface SpecialTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Special Layout" or "Vehicle Offer Layout"
+   */
+  title: string;
+  section?: Section[] | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1505,6 +1502,63 @@ export interface Form {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Opt-in only. When enabled, this form’s submissions are sent to Eagle Motor City, which forwards them to CMS LMS. Other forms are unaffected.
+   */
+  lmsLeadInjection?: {
+    /**
+     * Off by default. Enable only for forms that should create LMS leads.
+     */
+    enabled?: boolean | null;
+    /**
+     * CMS dealer code (must match CMS LMS). Required when injection is enabled.
+     */
+    dealerRef?: string | null;
+    /**
+     * CMS floor code (e.g. NEWFORD, USED, CALLCENTRE). Required when injection is enabled.
+     */
+    dealerFloor?: string | null;
+    /**
+     * CMS lead source code (validated by CMS). Required when injection is enabled.
+     */
+    source?: string | null;
+    defaultUsed?: ('0' | '1') | null;
+    defaultBrand?: string | null;
+    defaultModel?: string | null;
+    /**
+     * Optional text prepended to seeks.comments
+     */
+    commentsPrefix?: string | null;
+    /**
+     * Map form field names to LMS paths. Common names (firstName, lastName, phone, email, model, message) are auto-mapped when omitted.
+     */
+    fieldMappings?:
+      | {
+          /**
+           * Form field `name` (case-insensitive)
+           */
+          formFieldName: string;
+          lmsPath:
+            | 'contact.firstName'
+            | 'contact.surname'
+            | 'contact.email'
+            | 'contact.cellPhone'
+            | 'contact.title'
+            | 'contact.preferredContactMethod'
+            | 'seeks.brand'
+            | 'seeks.model'
+            | 'seeks.modelrange'
+            | 'seeks.used'
+            | 'seeks.year'
+            | 'seeks.kms'
+            | 'seeks.stockNr'
+            | 'seeks.comments'
+            | 'seeks.vin'
+            | 'seeks.regno';
+          id?: string | null;
+        }[]
+      | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1518,695 +1572,6 @@ export interface SubheadingBlockType {
   id?: string | null;
   blockName?: string | null;
   blockType: 'subheading';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-info".
- */
-export interface ContactInfo {
-  heading?: string | null;
-  phone: string;
-  email: string;
-  addressLine1: string;
-  addressLine2?: string | null;
-  businessHours: {
-    label: string;
-    hours: string;
-    id?: string | null;
-  }[];
-  ctaButtons?:
-    | {
-        link?: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?: {
-            relationTo: 'pages';
-            value: string | Page;
-          } | null;
-          url?: string | null;
-          label?: string | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  backgroundColor?:
-    | ('none' | 'card' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
-    | null;
-  border?: ('none' | 'default') | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'contact-info';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "icon-text".
- */
-export interface IconText {
-  icon: string;
-  text: string;
-  color?: ('default' | 'primary' | 'neutral' | 'success' | 'danger' | 'warning' | 'white') | null;
-  enableLink?: boolean | null;
-  /**
-   * e.g. tel:0104400510, mailto:info@example.com, /contact
-   */
-  url?: string | null;
-  newTab?: boolean | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'icon-text';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "cta-button".
- */
-export interface CtaButton {
-  label: string;
-  icon?: string | null;
-  linkType: 'url' | 'reference' | 'anchor';
-  variant?: ('default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'white') | null;
-  /**
-   * e.g. /contact, https://example.com, tel:0105971555, mailto:info@example.com
-   */
-  url?: string | null;
-  reference?: {
-    relationTo: 'pages';
-    value: string | Page;
-  } | null;
-  newTab?: boolean | null;
-  /**
-   * The Section ID of the target section (without #). Set on the target section via its Accessibility settings.
-   */
-  anchorId?: string | null;
-  size?: ('sm' | 'default' | 'lg') | null;
-  align?: ('left' | 'center' | 'right') | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'cta-button';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "back-button".
- */
-export interface BackButton {
-  label: string;
-  variant?: ('default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'white') | null;
-  /**
-   * Used when there is no browser history (e.g. direct link or new tab).
-   */
-  fallbackUrl?: string | null;
-  showIcon?: boolean | null;
-  size?: ('sm' | 'default' | 'lg') | null;
-  align?: ('left' | 'center' | 'right') | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'back-button';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "WhyCards".
- */
-export interface WhyCards {
-  columns?: ('1' | '2' | '3' | '4') | null;
-  cards: {
-    icon: string;
-    title: string;
-    description: string;
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'why-cards';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Map".
- */
-export interface Map {
-  /**
-   * Paste the embed URL from Google Maps: open the location → Share → Embed a map → copy the src URL from the iframe code.
-   */
-  embedUrl: string;
-  /**
-   * Accessible title for the map iframe. Defaults to "Location map".
-   */
-  title?: string | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'map';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TeamGrid".
- */
-export interface TeamGrid {
-  members: {
-    name: string;
-    image?: (string | null) | Media;
-    /**
-     * YouTube embed or Shorts URL. Leave empty for non-clickable cards.
-     */
-    videoUrl?: string | null;
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'team-grid';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ImageBlock".
- */
-export interface ImageBlock {
-  image: string | Media;
-  /**
-   * Override the alt text from the media library. Leave empty to use the media alt text.
-   */
-  alt?: string | null;
-  cornerRadius?: ('none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl') | null;
-  aspectRatio?: ('auto' | '1/1' | '4/3' | '3/2' | '16/9' | '21/9') | null;
-  shadow?: ('none' | 'sm' | 'md' | 'lg') | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'image-block';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CtaCards".
- */
-export interface CtaCards {
-  cards: {
-    title: string;
-    description: string;
-    label: string;
-    link?: {
-      type?: ('reference' | 'custom') | null;
-      newTab?: boolean | null;
-      reference?: {
-        relationTo: 'pages';
-        value: string | Page;
-      } | null;
-      url?: string | null;
-    };
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'cta-cards';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ImageCards".
- */
-export interface ImageCards {
-  columns?: ('1' | '2' | '3' | '4') | null;
-  items: {
-    image: string | Media;
-    /**
-     * Override the alt text from the media library. Leave empty to use the media alt text.
-     */
-    imageAlt?: string | null;
-    imageLink?: {
-      type?: ('reference' | 'custom') | null;
-      newTab?: boolean | null;
-      reference?: {
-        relationTo: 'pages';
-        value: string | Page;
-      } | null;
-      url?: string | null;
-      label?: string | null;
-    };
-    title: string;
-    description: string;
-    link?: {
-      type?: ('reference' | 'custom') | null;
-      newTab?: boolean | null;
-      reference?: {
-        relationTo: 'pages';
-        value: string | Page;
-      } | null;
-      url?: string | null;
-      label?: string | null;
-    };
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'image-cards';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "StatsBlock".
- */
-export interface StatsBlock {
-  stats: {
-    value: string;
-    label: string;
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'statsBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "HoursTabs".
- */
-export interface HoursTabs {
-  departments: {
-    label: string;
-    rows: {
-      day: string;
-      /**
-       * Enter exactly "Closed" to apply muted styling.
-       */
-      hours: string;
-      id?: string | null;
-    }[];
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'hours-tabs';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Faq".
- */
-export interface Faq {
-  items: {
-    question: string;
-    answer?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    image?: (string | null) | Media;
-    /**
-     * Override the alt text from the media library. Leave empty to use the media alt text.
-     */
-    imageAlt?: string | null;
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'faq';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContactFooter".
- */
-export interface ContactFooter {
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'contact-footer';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FeatureGrid".
- */
-export interface FeatureGrid {
-  columns?: ('1' | '2' | '3') | null;
-  items: {
-    icon: string;
-    label: string;
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'feature-grid';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Benefits".
- */
-export interface Benefits {
-  columns?: ('1' | '2' | '3') | null;
-  items: {
-    icon: string;
-    title: string;
-    description: string;
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'benefits';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "BenefitsGrid".
- */
-export interface BenefitsGrid {
-  columns?: ('1' | '2' | '3') | null;
-  items: {
-    image: string | Media;
-    /**
-     * Override the alt text from the media library. Leave empty to use the media alt text.
-     */
-    imageAlt?: string | null;
-    title: string;
-    description: string;
-    link?: {
-      type?: ('reference' | 'custom') | null;
-      newTab?: boolean | null;
-      reference?: {
-        relationTo: 'pages';
-        value: string | Page;
-      } | null;
-      url?: string | null;
-      label?: string | null;
-    };
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'benefits-grid';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "PopupCards".
- */
-export interface PopupCards {
-  columns?: ('1' | '2' | '3') | null;
-  cards: {
-    image: string | Media;
-    /**
-     * Override the alt text from the media library. Leave empty to use the media alt text.
-     */
-    imageAlt?: string | null;
-    icon: string;
-    title: string;
-    description: string;
-    buttonLabel: string;
-    popupTitle: string;
-    popupSubtitle?: string | null;
-    /**
-     * Optional paragraph shown before popup sections.
-     */
-    popupIntro?: string | null;
-    popupSections?:
-      | {
-          label?: string | null;
-          style: 'text' | 'checkList' | 'numberedList' | 'richText';
-          text?: string | null;
-          items?:
-            | {
-                text: string;
-                id?: string | null;
-              }[]
-            | null;
-          content?: {
-            root: {
-              type: string;
-              children: {
-                type: any;
-                version: number;
-                [k: string]: unknown;
-              }[];
-              direction: ('ltr' | 'rtl') | null;
-              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-              indent: number;
-              version: number;
-            };
-            [k: string]: unknown;
-          } | null;
-          /**
-           * Adds a top border before this section.
-           */
-          showDivider?: boolean | null;
-          id?: string | null;
-        }[]
-      | null;
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'popup-cards';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FinanceCalculatorBlockType".
- */
-export interface FinanceCalculatorBlockType {
-  /**
-   * Optional heading displayed above the calculator.
-   */
-  heading?: string | null;
-  /**
-   * Pre-fills the purchase price field (ZAR).
-   */
-  defaultPurchasePrice?: number | null;
-  /**
-   * Optional legal or estimate disclaimer shown below the results.
-   */
-  disclaimer?: string | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'financeCalculatorBlock';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "SpecialsArchive".
- */
-export interface SpecialsArchive {
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'specials-archive';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "StockArchive".
- */
-export interface StockArchive {
-  heading?: string | null;
-  conditionFilter?: ('all' | 'new' | 'pre-owned') | null;
-  limit?: number | null;
-  showPagination?: boolean | null;
-  /**
-   * Internal path (e.g. /contact), tel:, or mailto: link for card CTA buttons.
-   */
-  enquireUrl?: string | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'stock-archive';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Partners".
- */
-export interface Partners {
-  partners: {
-    logo: string | Media;
-    /**
-     * Override the alt text from the media library. Leave empty to use the media alt text.
-     */
-    imageAlt?: string | null;
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'partners';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "VehicleTabsBlock".
- */
-export interface VehicleTabsBlock {
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'vehicle-tabs';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "VehicleCatalogBlock".
- */
-export interface VehicleCatalogBlock {
-  /**
-   * Optional heading displayed above the tabs (e.g. "All Vehicles")
-   */
-  heading?: string | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'vehicle-catalog';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "VehicleHeroBlock".
- */
-export interface VehicleHeroBlock {
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'vehicle-hero';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "VehicleModelsBlock".
- */
-export interface VehicleModelsBlock {
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'vehicle-models';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "VehicleColorsBlock".
- */
-export interface VehicleColorsBlock {
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'vehicle-colors';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "VehicleFaqBlock".
- */
-export interface VehicleFaqBlock {
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'vehicle-faq';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "VehicleGalleryBlock".
- */
-export interface VehicleGalleryBlock {
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'vehicle-gallery';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "VehicleFeaturesBlock".
- */
-export interface VehicleFeaturesBlock {
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'vehicle-features';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "VehicleModelHeroBlock".
- */
-export interface VehicleModelHeroBlock {
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'vehicle-model-hero';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "VehicleModelHighlightsBlock".
- */
-export interface VehicleModelHighlightsBlock {
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'vehicle-model-highlights';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "VehicleModelColorsBlock".
- */
-export interface VehicleModelColorsBlock {
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'vehicle-model-colors';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "VehicleModelSiblingsBlock".
- */
-export interface VehicleModelSiblingsBlock {
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'vehicle-model-siblings';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "specials".
- */
-export interface Special {
-  id: string;
-  offerType: 'price-point' | 'payment' | 'service' | 'enquiry';
-  /**
-   * Groups this special under a campaign or theme (e.g. Truck Month, Holiday).
-   */
-  category: string | SpecialCategory;
-  /**
-   * Optional. Defaults to the offer type label if left blank.
-   */
-  title?: string | null;
-  /**
-   * Optional. Defaults to the offer type label if left blank.
-   */
-  subTitle?: string | null;
-  cardImage: string | Media;
-  /**
-   * Optional. Links this special to a vehicle family page. Leave blank for service or non-vehicle offers.
-   */
-  vehicle?: (string | null) | Vehicle;
-  /**
-   * Optional. Links this special to a specific model variant. Leave blank when not applicable.
-   */
-  vehicleModel?: (string | null) | VehicleModel;
-  /**
-   * Cash price in Rand, e.g. 489900 for R489 900
-   */
-  pricingLabel?: string | null;
-  /**
-   * Cash price in Rand, e.g. 489900 for R489 900
-   */
-  specialOffer?: number | null;
-  /**
-   * Saving amount in Rand, e.g. 100100 for R100 100
-   */
-  bestSaving?: number | null;
-  /**
-   * Monthly payment in Rand, e.g. 7799 for R7 799*pm
-   */
-  paymentFrom?: number | null;
-  content?: {
-    section?: Section[] | null;
-  };
-  /**
-   * Lower numbers appear first within a section.
-   */
-  sortOrder?: number | null;
-  publishedAt?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "special-categories".
- */
-export interface SpecialCategory {
-  id: string;
-  title: string;
-  /**
-   * Lower numbers appear first.
-   */
-  sortOrder?: number | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2385,6 +1750,10 @@ export interface Vehicle {
     metaImage?: (string | null) | Media;
   };
   /**
+   * When enabled, this vehicle family appears in the mega menu alongside any trims that also have Show in Mega Menu enabled.
+   */
+  showInMegaMenu?: boolean | null;
+  /**
    * Lower numbers appear first.
    */
   sortOrder?: number | null;
@@ -2392,10 +1761,6 @@ export interface Vehicle {
    * Optional. Layout template used to render this vehicle page.
    */
   template?: (string | null) | VehicleTemplate;
-  /**
-   * Optional. Layout used for all model detail pages under this vehicle.
-   */
-  modelTemplate?: (string | null) | VehicleModelTemplate;
   publishedAt?: string | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -2441,70 +1806,68 @@ export interface VehicleTemplate {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-model-templates".
- */
-export interface VehicleModelTemplate {
-  id: string;
-  /**
-   * e.g. "Standard Model Layout" or "Commercial Model Layout"
-   */
-  title: string;
-  section?: Section[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "vehicle-models".
  */
 export interface VehicleModel {
   id: string;
   /**
-   * e.g. "2.0 SiT Double Cab XL 4x2 6MT"
+   * Trim or series name, e.g. "Ranger Sport" or "Wildtrak".
    */
   name: string;
   /**
-   * The parent vehicle this model belongs to.
+   * Parent vehicle family this trim belongs to.
    */
   vehicle: string | Vehicle;
   /**
-   * Specific price for this model variant, e.g. 621000 for R 621,000.
+   * Optional hero subtitle for this trim page.
    */
-  price: number;
+  tagline?: string | null;
   /**
-   * Full-width hero for this model variant. Falls back to the parent vehicle hero image if not set.
+   * Full-width hero for this trim. Falls back to the parent vehicle hero image if not set.
    */
   heroImage?: (string | null) | Media;
   /**
-   * Card/listing image for this model variant. Falls back to model hero, then parent vehicle feature/hero images.
+   * Card/listing image for this trim. Falls back to model hero, then parent vehicle images.
    */
   featureImage?: (string | null) | Media;
   /**
-   * Key feature bullet points shown on the model overview page.
+   * Marketing feature sections shown on the model page.
    */
-  highlights?:
+  features?:
     | {
-        highlight: string;
+        featureTitle: string;
+        featureDescription?: string | null;
+        featureImage?: (string | null) | Media;
         id?: string | null;
       }[]
     | null;
   /**
-   * Colour options for this specific model. Leave empty to inherit from the parent vehicle.
+   * Colour options for this trim. Leave empty to inherit from the parent vehicle.
    */
   colours?:
     | {
         colourName: string;
-        /**
-         * e.g. "Platinum Only"
-         */
         colourNote?: string | null;
         colourSwatch?: (string | null) | Media;
         id?: string | null;
       }[]
     | null;
+  gallery?:
+    | {
+        image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
   content?: {
     /**
-     * Model-specific marketing copy shown on the variant detail page.
+     * Trim-specific marketing copy shown on the model page.
      */
     description?: {
       root: {
@@ -2529,7 +1892,114 @@ export interface VehicleModel {
     metaImage?: (string | null) | Media;
   };
   /**
+   * When enabled, this trim appears in the mega menu alongside any vehicle families that also have Show in Mega Menu enabled.
+   */
+  showInMegaMenu?: boolean | null;
+  /**
    * Lower numbers appear first within a vehicle family.
+   */
+  sortOrder?: number | null;
+  /**
+   * Optional. Layout template used to render this model page.
+   */
+  template?: (string | null) | VehicleModelTemplate;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-model-templates".
+ */
+export interface VehicleModelTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Model Layout" or "Commercial Model Layout"
+   */
+  title: string;
+  section?: Section[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-variants".
+ */
+export interface VehicleVariant {
+  id: string;
+  /**
+   * e.g. "2.0 SiT Double Cab XL 4x2 6MT"
+   */
+  name: string;
+  /**
+   * Parent trim/series this configuration belongs to.
+   */
+  model: string | VehicleModel;
+  /**
+   * Specific price for this configuration, e.g. 621000 for R 621,000.
+   */
+  price: number;
+  /**
+   * Optional hero for this variant. Falls back to the parent model or vehicle images.
+   */
+  heroImage?: (string | null) | Media;
+  /**
+   * Card/listing image for this variant.
+   */
+  featureImage?: (string | null) | Media;
+  /**
+   * Key feature bullet points shown in the variant list on the model page.
+   */
+  highlights?:
+    | {
+        highlight: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Colour options for this variant. Leave empty to inherit from the parent model or vehicle.
+   */
+  colours?:
+    | {
+        colourName: string;
+        colourNote?: string | null;
+        colourSwatch?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  content?: {
+    /**
+     * Optional variant-specific copy shown in the in-page variant list.
+     */
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  meta?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    metaImage?: (string | null) | Media;
+  };
+  /**
+   * Lower numbers appear first within a model.
    */
   sortOrder?: number | null;
   publishedAt?: string | null;
@@ -2541,6 +2011,884 @@ export interface VehicleModel {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OverlayCarousel".
+ */
+export interface OverlayCarousel {
+  slides: {
+    /**
+     * Recommended: 1920×1080px, WebP or JPEG.
+     */
+    image: string | Media;
+    heading?: string | null;
+    subheading?: string | null;
+    alignment?: ('left' | 'center' | 'right') | null;
+    id?: string | null;
+  }[];
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BannerHero".
+ */
+export interface BannerHero {
+  bannerTemplate: 'full-width' | 'overlay' | 'cta-overlay';
+  fullWidthBannerContent?: FullWidthBanner;
+  overlayBannerContent?: OverlayBanner;
+  ctaOverlayContent?: CtaOverlayBanner;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FullWidthBanner".
+ */
+export interface FullWidthBanner {
+  /**
+   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   */
+  image: string | Media;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OverlayBanner".
+ */
+export interface OverlayBanner {
+  /**
+   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   */
+  image: string | Media;
+  heading?: string | null;
+  subheading?: string | null;
+  alignment?: ('left' | 'center' | 'right') | null;
+  /**
+   * Adds a semi-transparent dark tint over the image to improve text legibility.
+   */
+  darkOverlay?: boolean | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaOverlayBanner".
+ */
+export interface CtaOverlayBanner {
+  /**
+   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   */
+  image: string | Media;
+  /**
+   * Small uppercase label above the heading (e.g. "Eagle Ford — Service Centre").
+   */
+  eyebrow?: string | null;
+  heading: string;
+  subheading?: string | null;
+  primaryButton?: {
+    label?: string | null;
+    /**
+     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
+     */
+    href?: string | null;
+    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
+  };
+  secondaryButton?: {
+    label?: string | null;
+    /**
+     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
+     */
+    href?: string | null;
+    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rich-text".
+ */
+export interface RichText {
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'rich-text';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "feature-list".
+ */
+export interface FeatureList {
+  features: {
+    title: string;
+    description: string;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'feature-list';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureRows".
+ */
+export interface FeatureRows {
+  rows: {
+    icon: string;
+    title: string;
+    description: string;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'feature-rows';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormBlockType".
+ */
+export interface FormBlockType {
+  form: string | Form;
+  enableIntro?: boolean | null;
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'formBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-info".
+ */
+export interface ContactInfo {
+  heading?: string | null;
+  phone: string;
+  email: string;
+  addressLine1: string;
+  addressLine2?: string | null;
+  businessHours: {
+    label: string;
+    hours: string;
+    id?: string | null;
+  }[];
+  ctaButtons?:
+    | {
+        link?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?: {
+            relationTo: 'pages';
+            value: string | Page;
+          } | null;
+          url?: string | null;
+          label?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  backgroundColor?:
+    | ('none' | 'card' | 'white' | 'light' | 'neutral' | 'primary-light' | 'primary' | 'secondary' | 'dark')
+    | null;
+  border?: ('none' | 'default') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contact-info';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "icon-text".
+ */
+export interface IconText {
+  icon: string;
+  text: string;
+  color?: ('default' | 'primary' | 'neutral' | 'success' | 'danger' | 'warning' | 'white') | null;
+  enableLink?: boolean | null;
+  /**
+   * e.g. tel:0104400510, mailto:info@example.com, /contact
+   */
+  url?: string | null;
+  newTab?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'icon-text';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cta-button".
+ */
+export interface CtaButton {
+  label: string;
+  icon?: string | null;
+  linkType: 'url' | 'reference' | 'anchor';
+  variant?: ('default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'white') | null;
+  /**
+   * e.g. /contact, https://example.com, tel:0105971555, mailto:info@example.com
+   */
+  url?: string | null;
+  reference?: {
+    relationTo: 'pages';
+    value: string | Page;
+  } | null;
+  newTab?: boolean | null;
+  /**
+   * The Section ID of the target section (without #). Set on the target section via its Accessibility settings.
+   */
+  anchorId?: string | null;
+  size?: ('sm' | 'default' | 'lg') | null;
+  align?: ('left' | 'center' | 'right') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cta-button';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "back-button".
+ */
+export interface BackButton {
+  label: string;
+  variant?: ('default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'white') | null;
+  /**
+   * Used when there is no browser history (e.g. direct link or new tab).
+   */
+  fallbackUrl?: string | null;
+  showIcon?: boolean | null;
+  size?: ('sm' | 'default' | 'lg') | null;
+  align?: ('left' | 'center' | 'right') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'back-button';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WhyCards".
+ */
+export interface WhyCards {
+  columns?: ('1' | '2' | '3' | '4') | null;
+  cards: {
+    icon: string;
+    title: string;
+    description: string;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'why-cards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Map".
+ */
+export interface Map {
+  /**
+   * Paste the embed URL from Google Maps: open the location → Share → Embed a map → copy the src URL from the iframe code.
+   */
+  embedUrl: string;
+  /**
+   * Accessible title for the map iframe. Defaults to "Location map".
+   */
+  title?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'map';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TeamGrid".
+ */
+export interface TeamGrid {
+  members: {
+    name: string;
+    image?: (string | null) | Media;
+    /**
+     * YouTube embed or Shorts URL. Leave empty for non-clickable cards.
+     */
+    videoUrl?: string | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'team-grid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImageBlock".
+ */
+export interface ImageBlock {
+  image: string | Media;
+  /**
+   * Override the alt text from the media library. Leave empty to use the media alt text.
+   */
+  alt?: string | null;
+  cornerRadius?: ('none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl') | null;
+  aspectRatio?: ('auto' | '1/1' | '4/3' | '3/2' | '16/9' | '21/9') | null;
+  shadow?: ('none' | 'sm' | 'md' | 'lg') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'image-block';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FixedBackgroundBlockType".
+ */
+export interface FixedBackgroundBlockType {
+  backgroundImage: string | Media;
+  content?:
+    | (
+        | Heading
+        | Hero
+        | RichText
+        | FeatureList
+        | FeatureRows
+        | FormBlockType
+        | ContactInfo
+        | IconText
+        | CtaButton
+        | BackButton
+        | WhyCards
+        | Map
+        | TeamGrid
+        | ImageBlock
+        | CtaCards
+        | ImageCards
+        | StatsBlock
+        | HoursTabs
+        | Faq
+        | ContactFooter
+        | FeatureGrid
+        | Benefits
+        | BenefitsGrid
+        | PopupCards
+        | FinanceCalculatorBlockType
+        | SpecialsArchive
+        | StockArchive
+        | Partners
+        | Reviews
+        | VehicleTabsBlock
+        | VehicleCatalogBlock
+        | VehicleHeroBlock
+        | VehicleModelsBlock
+        | VehicleColorsBlock
+        | VehicleFaqBlock
+        | VehicleGalleryBlock
+        | VehicleFeaturesBlock
+        | VehicleSpecialCategoriesBlock
+        | VehicleModelHeroBlock
+        | VehicleModelHighlightsBlock
+        | VehicleModelColorsBlock
+        | VehicleModelSiblingsBlock
+        | VehicleModelVariantsBlock
+      )[]
+    | null;
+  /**
+   * Dark overlay over the background image (0–100). Helps text readability on bright images.
+   */
+  overlayOpacity?: number | null;
+  container?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'fixedBackgroundBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaCards".
+ */
+export interface CtaCards {
+  cards: {
+    title: string;
+    description: string;
+    label: string;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cta-cards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ImageCards".
+ */
+export interface ImageCards {
+  columns?: ('1' | '2' | '3' | '4') | null;
+  items: {
+    image: string | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    imageLink?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+      label?: string | null;
+    };
+    title: string;
+    description: string;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+      label?: string | null;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'image-cards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBlock".
+ */
+export interface StatsBlock {
+  stats: {
+    value: string;
+    label: string;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'statsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HoursTabs".
+ */
+export interface HoursTabs {
+  departments: {
+    label: string;
+    rows: {
+      day: string;
+      /**
+       * Enter exactly "Closed" to apply muted styling.
+       */
+      hours: string;
+      id?: string | null;
+    }[];
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hours-tabs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Faq".
+ */
+export interface Faq {
+  items: {
+    question: string;
+    answer?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    image?: (string | null) | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactFooter".
+ */
+export interface ContactFooter {
+  /**
+   * Leave blank to use Settings → Contact Information address.
+   */
+  addressOverride?: string | null;
+  /**
+   * Leave blank to use Settings → Contact Information operating hours.
+   */
+  hoursOverride?: string | null;
+  /**
+   * Leave blank to use Settings → Contact Information phone.
+   */
+  phoneOverride?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contact-footer';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureGrid".
+ */
+export interface FeatureGrid {
+  columns?: ('1' | '2' | '3') | null;
+  items: {
+    icon: string;
+    label: string;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'feature-grid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Benefits".
+ */
+export interface Benefits {
+  columns?: ('1' | '2' | '3') | null;
+  items: {
+    icon: string;
+    title: string;
+    description: string;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'benefits';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BenefitsGrid".
+ */
+export interface BenefitsGrid {
+  columns?: ('1' | '2' | '3') | null;
+  items: {
+    image: string | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    title: string;
+    description: string;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+      label?: string | null;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'benefits-grid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PopupCards".
+ */
+export interface PopupCards {
+  columns?: ('1' | '2' | '3') | null;
+  cards: {
+    image: string | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    icon: string;
+    title: string;
+    description: string;
+    buttonLabel: string;
+    popupTitle: string;
+    popupSubtitle?: string | null;
+    /**
+     * Optional paragraph shown before popup sections.
+     */
+    popupIntro?: string | null;
+    popupSections?:
+      | {
+          label?: string | null;
+          style: 'text' | 'checkList' | 'numberedList' | 'richText';
+          text?: string | null;
+          items?:
+            | {
+                text: string;
+                id?: string | null;
+              }[]
+            | null;
+          content?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          /**
+           * Adds a top border before this section.
+           */
+          showDivider?: boolean | null;
+          id?: string | null;
+        }[]
+      | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'popup-cards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FinanceCalculatorBlockType".
+ */
+export interface FinanceCalculatorBlockType {
+  /**
+   * Pre-fills the purchase price field (ZAR).
+   */
+  defaultPurchasePrice?: number | null;
+  /**
+   * Optional legal or estimate disclaimer shown below the results.
+   */
+  disclaimer?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'financeCalculatorBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SpecialsArchive".
+ */
+export interface SpecialsArchive {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'specials-archive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StockArchive".
+ */
+export interface StockArchive {
+  conditionFilter?: ('all' | 'new' | 'pre-owned') | null;
+  limit?: number | null;
+  showPagination?: boolean | null;
+  /**
+   * Internal path (e.g. /contact), tel:, or mailto: link for card CTA buttons.
+   */
+  enquireUrl?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stock-archive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Partners".
+ */
+export interface Partners {
+  partners: {
+    logo: string | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'partners';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "Reviews".
+ */
+export interface Reviews {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'reviews';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleTabsBlock".
+ */
+export interface VehicleTabsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-tabs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleCatalogBlock".
+ */
+export interface VehicleCatalogBlock {
+  /**
+   * Optional heading displayed above the tabs (e.g. "All Vehicles")
+   */
+  heading?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-catalog';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleHeroBlock".
+ */
+export interface VehicleHeroBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-hero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelsBlock".
+ */
+export interface VehicleModelsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-models';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleColorsBlock".
+ */
+export interface VehicleColorsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-colors';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleFaqBlock".
+ */
+export interface VehicleFaqBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-faq';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleGalleryBlock".
+ */
+export interface VehicleGalleryBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-gallery';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleFeaturesBlock".
+ */
+export interface VehicleFeaturesBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-features';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleSpecialCategoriesBlock".
+ */
+export interface VehicleSpecialCategoriesBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-special-categories';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelHeroBlock".
+ */
+export interface VehicleModelHeroBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-hero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelHighlightsBlock".
+ */
+export interface VehicleModelHighlightsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-highlights';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelColorsBlock".
+ */
+export interface VehicleModelColorsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-colors';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelSiblingsBlock".
+ */
+export interface VehicleModelSiblingsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-siblings';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VehicleModelVariantsBlock".
+ */
+export interface VehicleModelVariantsBlock {
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicle-model-variants';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2594,6 +2942,24 @@ export interface Redirect {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-models".
+ */
+export interface AiModel {
+  id: string;
+  provider: 'ollama' | 'ollama-cloud' | 'google-gemini' | 'claude-api';
+  /**
+   * API identifier (e.g. llava:latest, models/gemini-2.5-flash)
+   */
+  modelId: string;
+  /**
+   * Human-readable label for the dropdown
+   */
+  displayName?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -2616,82 +2982,20 @@ export interface FormSubmission {
         id?: string | null;
       }[]
     | null;
+  /**
+   * Eagle Motor City site-form-leads document id
+   */
+  motorCityLeadId?: string | null;
+  /**
+   * Last known Motor City / LMS push status
+   */
+  motorCityLeadStatus?: string | null;
+  /**
+   * Error from the last Motor City lead forward attempt
+   */
+  motorCityLeadError?: string | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "exports".
- */
-export interface Export {
-  id: string;
-  name?: string | null;
-  format: 'csv' | 'json';
-  limit?: number | null;
-  page?: number | null;
-  sort?: string | null;
-  sortOrder?: ('asc' | 'desc') | null;
-  drafts?: ('yes' | 'no') | null;
-  selectionToUse?: ('currentSelection' | 'currentFilters' | 'all') | null;
-  fields?: string[] | null;
-  collectionSlug: string;
-  where?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "imports".
- */
-export interface Import {
-  id: string;
-  collectionSlug: string;
-  importMode?: ('create' | 'update' | 'upsert') | null;
-  matchField?: string | null;
-  status?: ('pending' | 'completed' | 'partial' | 'failed') | null;
-  summary?: {
-    imported?: number | null;
-    updated?: number | null;
-    total?: number | null;
-    issues?: number | null;
-    issueDetails?:
-      | {
-          [k: string]: unknown;
-        }
-      | unknown[]
-      | string
-      | number
-      | boolean
-      | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2762,7 +3066,7 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug: 'inline' | 'createCollectionExport' | 'createCollectionImport' | 'schedulePublish';
+        taskSlug: 'inline' | 'schedulePublish';
         taskID: string;
         input?:
           | {
@@ -2795,7 +3099,7 @@ export interface PayloadJob {
         id?: string | null;
       }[]
     | null;
-  taskSlug?: ('inline' | 'createCollectionExport' | 'createCollectionImport' | 'schedulePublish') | null;
+  taskSlug?: ('inline' | 'schedulePublish') | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
@@ -2822,6 +3126,10 @@ export interface PayloadLockedDocument {
         value: string | SpecialCategory;
       } | null)
     | ({
+        relationTo: 'special-templates';
+        value: string | SpecialTemplate;
+      } | null)
+    | ({
         relationTo: 'media';
         value: string | Media;
       } | null)
@@ -2846,12 +3154,20 @@ export interface PayloadLockedDocument {
         value: string | VehicleModel;
       } | null)
     | ({
+        relationTo: 'vehicle-variants';
+        value: string | VehicleVariant;
+      } | null)
+    | ({
         relationTo: 'users';
         value: string | User;
       } | null)
     | ({
         relationTo: 'redirects';
         value: string | Redirect;
+      } | null)
+    | ({
+        relationTo: 'ai-models';
+        value: string | AiModel;
       } | null)
     | ({
         relationTo: 'forms';
@@ -2934,6 +3250,7 @@ export interface PagesSelect<T extends boolean = true> {
  * via the `definition` "specials_select".
  */
 export interface SpecialsSelect<T extends boolean = true> {
+  _order?: T;
   offerType?: T;
   category?: T;
   title?: T;
@@ -2941,6 +3258,7 @@ export interface SpecialsSelect<T extends boolean = true> {
   cardImage?: T;
   vehicle?: T;
   vehicleModel?: T;
+  vehicleVariant?: T;
   pricingLabel?: T;
   specialOffer?: T;
   bestSaving?: T;
@@ -2950,7 +3268,8 @@ export interface SpecialsSelect<T extends boolean = true> {
     | {
         section?: T | {};
       };
-  sortOrder?: T;
+  template?: T;
+  enquiryForm?: T;
   publishedAt?: T;
   generateSlug?: T;
   slug?: T;
@@ -2964,9 +3283,23 @@ export interface SpecialsSelect<T extends boolean = true> {
  */
 export interface SpecialCategoriesSelect<T extends boolean = true> {
   title?: T;
+  featureImage?: T;
   sortOrder?: T;
+  template?: T;
+  enquiryForm?: T;
+  fordPromisePage?: T;
   generateSlug?: T;
   slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "special-templates_select".
+ */
+export interface SpecialTemplatesSelect<T extends boolean = true> {
+  title?: T;
+  section?: T | {};
   updatedAt?: T;
   createdAt?: T;
 }
@@ -3192,9 +3525,9 @@ export interface VehiclesSelect<T extends boolean = true> {
         metaDescription?: T;
         metaImage?: T;
       };
+  showInMegaMenu?: T;
   sortOrder?: T;
   template?: T;
-  modelTemplate?: T;
   publishedAt?: T;
   generateSlug?: T;
   slug?: T;
@@ -3209,6 +3542,68 @@ export interface VehiclesSelect<T extends boolean = true> {
 export interface VehicleModelsSelect<T extends boolean = true> {
   name?: T;
   vehicle?: T;
+  tagline?: T;
+  heroImage?: T;
+  featureImage?: T;
+  features?:
+    | T
+    | {
+        featureTitle?: T;
+        featureDescription?: T;
+        featureImage?: T;
+        id?: T;
+      };
+  colours?:
+    | T
+    | {
+        colourName?: T;
+        colourNote?: T;
+        colourSwatch?: T;
+        id?: T;
+      };
+  gallery?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  content?:
+    | T
+    | {
+        description?: T;
+        section?: T | {};
+      };
+  meta?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        metaImage?: T;
+      };
+  showInMegaMenu?: T;
+  sortOrder?: T;
+  template?: T;
+  publishedAt?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-variants_select".
+ */
+export interface VehicleVariantsSelect<T extends boolean = true> {
+  name?: T;
+  model?: T;
   price?: T;
   heroImage?: T;
   featureImage?: T;
@@ -3230,7 +3625,6 @@ export interface VehicleModelsSelect<T extends boolean = true> {
     | T
     | {
         description?: T;
-        section?: T | {};
       };
   meta?:
     | T
@@ -3286,6 +3680,17 @@ export interface RedirectsSelect<T extends boolean = true> {
         reference?: T;
         url?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-models_select".
+ */
+export interface AiModelsSelect<T extends boolean = true> {
+  provider?: T;
+  modelId?: T;
+  displayName?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -3636,6 +4041,25 @@ export interface FormsSelect<T extends boolean = true> {
         message?: T;
         id?: T;
       };
+  lmsLeadInjection?:
+    | T
+    | {
+        enabled?: T;
+        dealerRef?: T;
+        dealerFloor?: T;
+        source?: T;
+        defaultUsed?: T;
+        defaultBrand?: T;
+        defaultModel?: T;
+        commentsPrefix?: T;
+        fieldMappings?:
+          | T
+          | {
+              formFieldName?: T;
+              lmsPath?: T;
+              id?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -3669,66 +4093,11 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         value?: T;
         id?: T;
       };
+  motorCityLeadId?: T;
+  motorCityLeadStatus?: T;
+  motorCityLeadError?: T;
   updatedAt?: T;
   createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "exports_select".
- */
-export interface ExportsSelect<T extends boolean = true> {
-  name?: T;
-  format?: T;
-  limit?: T;
-  page?: T;
-  sort?: T;
-  sortOrder?: T;
-  drafts?: T;
-  selectionToUse?: T;
-  fields?: T;
-  collectionSlug?: T;
-  where?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "imports_select".
- */
-export interface ImportsSelect<T extends boolean = true> {
-  collectionSlug?: T;
-  importMode?: T;
-  matchField?: T;
-  status?: T;
-  summary?:
-    | T
-    | {
-        imported?: T;
-        updated?: T;
-        total?: T;
-        issues?: T;
-        issueDetails?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3917,6 +4286,8 @@ export interface Footer {
 export interface Setting {
   id: string;
   contactInfo: ContactInfo1;
+  pricingCalculatorDefaults?: PricingCalculatorDefaults;
+  analytics: AnalyticsSettings;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -3939,6 +4310,69 @@ export interface ContactInfo1 {
     postCode?: string | null;
     mapsLink?: string | null;
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PricingCalculatorDefaults".
+ */
+export interface PricingCalculatorDefaults {
+  /**
+   * Default deposit in Rands for finance calculators.
+   */
+  depositAmount?: number | null;
+  /**
+   * Default annual interest rate (%) for finance calculators.
+   */
+  interestRate?: number | null;
+  /**
+   * Default balloon payment (%) for finance calculators. Maximum 35%.
+   */
+  balloonPayment?: number | null;
+  /**
+   * Default repayment period for finance calculators.
+   */
+  repaymentPeriod?: ('36' | '48' | '54' | '60' | '72') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AnalyticsSettings".
+ */
+export interface AnalyticsSettings {
+  /**
+   * Loads Google Tag Manager only after a visitor has granted cookie consent.
+   */
+  enableGoogleTagManager?: boolean | null;
+  /**
+   * The public GTM container ID in the format GTM-XXXXXXXX.
+   */
+  googleTagManagerId: string;
+}
+/**
+ * Configure AI provider settings for media suggestions
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-provider-settings".
+ */
+export interface AiProviderSetting {
+  id: string;
+  /**
+   * Select the AI vision provider to use for generating media suggestions
+   */
+  provider: 'ollama' | 'ollama-cloud' | 'google-gemini' | 'claude-api';
+  /**
+   * Select from cached models. Use 'Refetch models' if the list is empty or outdated.
+   */
+  model?: (string | null) | AiModel;
+  /**
+   * API endpoint URL - Ollama Local: http://localhost:11434 | Ollama Cloud: https://ollama.com (default)
+   */
+  apiUrl?: string | null;
+  /**
+   * API key - Optional for Ollama Local | Required for Ollama Cloud, Google Gemini, and Claude API (console.anthropic.com)
+   */
+  apiKey?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3970,7 +4404,6 @@ export interface NavLinksSelect<T extends boolean = true> {
   reference?: T;
   url?: T;
   document?: T;
-  displayMode?: T;
   parentLinkType?: T;
   children?:
     | T
@@ -4056,6 +4489,8 @@ export interface FooterSelect<T extends boolean = true> {
  */
 export interface SettingsSelect<T extends boolean = true> {
   contactInfo?: T | ContactInfoSelect<T>;
+  pricingCalculatorDefaults?: T | PricingCalculatorDefaultsSelect<T>;
+  analytics?: T | AnalyticsSettingsSelect<T>;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -4081,6 +4516,37 @@ export interface ContactInfoSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PricingCalculatorDefaults_select".
+ */
+export interface PricingCalculatorDefaultsSelect<T extends boolean = true> {
+  depositAmount?: T;
+  interestRate?: T;
+  balloonPayment?: T;
+  repaymentPeriod?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AnalyticsSettings_select".
+ */
+export interface AnalyticsSettingsSelect<T extends boolean = true> {
+  enableGoogleTagManager?: T;
+  googleTagManagerId?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-provider-settings_select".
+ */
+export interface AiProviderSettingsSelect<T extends boolean = true> {
+  provider?: T;
+  model?: T;
+  apiUrl?: T;
+  apiKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "collections_widget".
  */
 export interface CollectionsWidget {
@@ -4088,71 +4554,6 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TaskCreateCollectionExport".
- */
-export interface TaskCreateCollectionExport {
-  input: {
-    id: string;
-    name: string;
-    batchSize?: number | null;
-    collectionSlug:
-      | 'pages'
-      | 'specials'
-      | 'special-categories'
-      | 'media'
-      | 'vehicle-categories'
-      | 'vehicle-templates'
-      | 'vehicle-model-templates'
-      | 'vehicles'
-      | 'vehicle-models'
-      | 'users'
-      | 'redirects'
-      | 'forms'
-      | 'form-submissions'
-      | 'exports'
-      | 'imports';
-    drafts?: ('yes' | 'no') | null;
-    exportCollection: string;
-    fields?: string[] | null;
-    format: 'csv' | 'json';
-    limit?: number | null;
-    locale?: string | null;
-    maxLimit?: number | null;
-    page?: number | null;
-    sort?: string | null;
-    userCollection?: string | null;
-    userID?: string | null;
-    where?:
-      | {
-          [k: string]: unknown;
-        }
-      | unknown[]
-      | string
-      | number
-      | boolean
-      | null;
-  };
-  output?: unknown;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "TaskCreateCollectionImport".
- */
-export interface TaskCreateCollectionImport {
-  input: {
-    importId: string;
-    importCollection: string;
-    userID?: string | null;
-    userCollection?: string | null;
-    batchSize?: number | null;
-    debug?: boolean | null;
-    defaultVersionStatus?: ('draft' | 'published') | null;
-    maxLimit?: number | null;
-  };
-  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -4178,6 +4579,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'vehicle-models';
           value: string | VehicleModel;
+        } | null)
+      | ({
+          relationTo: 'vehicle-variants';
+          value: string | VehicleVariant;
         } | null);
     global?: string | null;
     user?: (string | null) | User;

@@ -13,6 +13,8 @@ export const FullWidthBanner: React.FC<Hero> = (props) => {
         imgClassName="w-full h-auto block"
         priority
         loading="eager"
+        maxWidth={1920}
+        size="100vw"
       />
     </section>
   )

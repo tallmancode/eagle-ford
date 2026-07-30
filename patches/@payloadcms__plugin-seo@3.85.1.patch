@@ -1,0 +1,178 @@
+diff --git a/dist/fields/MetaDescription/MetaDescriptionComponent.js b/dist/fields/MetaDescription/MetaDescriptionComponent.js
+index 30c4b0396c7a5ba1197285cc53c77b5c43b9d158..37ff2d95bc12554d130f15794386aad065a1ca37 100644
+--- a/dist/fields/MetaDescription/MetaDescriptionComponent.js
++++ b/dist/fields/MetaDescription/MetaDescriptionComponent.js
+@@ -1,7 +1,6 @@
+ 'use client';
+ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+ import { FieldLabel, TextareaInput, useConfig, useDocumentInfo, useDocumentTitle, useField, useForm, useLocale, useTranslation } from '@payloadcms/ui';
+-import { reduceToSerializableFields } from '@payloadcms/ui/shared';
+ import { formatAdminURL } from 'payload/shared';
+ import React, { useCallback } from 'react';
+ import { defaults } from '../../defaults.js';
+@@ -26,17 +25,14 @@ export const MetaDescriptionComponent = (props)=>{
+             apiRoute: api,
+             path: '/plugin-seo/generate-description'
+         });
++        // Avoid serializing docPermissions/initialState — nested RowLabel components
++        // hold circular BasePayload refs (payloadcms/payload#16786).
+         const genDescriptionResponse = await fetch(endpoint, {
+             body: JSON.stringify({
+                 id: docInfo.id,
+                 collectionSlug: docInfo.collectionSlug,
+                 doc: getData(),
+-                docPermissions: docInfo.docPermissions,
+                 globalSlug: docInfo.globalSlug,
+-                hasPublishPermission: docInfo.hasPublishPermission,
+-                hasSavePermission: docInfo.hasSavePermission,
+-                initialData: docInfo.initialData,
+-                initialState: reduceToSerializableFields(docInfo.initialState ?? {}),
+                 locale: typeof locale === 'object' ? locale?.code : locale,
+                 title
+             }),
+@@ -53,12 +49,7 @@ export const MetaDescriptionComponent = (props)=>{
+         api,
+         docInfo.id,
+         docInfo.collectionSlug,
+-        docInfo.docPermissions,
+         docInfo.globalSlug,
+-        docInfo.hasPublishPermission,
+-        docInfo.hasSavePermission,
+-        docInfo.initialData,
+-        docInfo.initialState,
+         getData,
+         locale,
+         setValue,
+diff --git a/dist/fields/MetaImage/MetaImageComponent.js b/dist/fields/MetaImage/MetaImageComponent.js
+index d62b890fab69e3e5fa7643398c87854573277846..325440f75ebe74cf7f5f85935680db4daeb18733 100644
+--- a/dist/fields/MetaImage/MetaImageComponent.js
++++ b/dist/fields/MetaImage/MetaImageComponent.js
+@@ -1,7 +1,6 @@
+ 'use client';
+ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+ import { FieldLabel, RenderCustomComponent, UploadInput, useConfig, useDocumentInfo, useDocumentTitle, useField, useForm, useLocale, useTranslation } from '@payloadcms/ui';
+-import { reduceToSerializableFields } from '@payloadcms/ui/shared';
+ import { formatAdminURL } from 'payload/shared';
+ import React, { useCallback } from 'react';
+ import { Pill } from '../../ui/Pill.js';
+@@ -22,17 +21,14 @@ export const MetaImageComponent = (props)=>{
+             apiRoute: api,
+             path: '/plugin-seo/generate-image'
+         });
++        // Avoid serializing docPermissions/initialState — nested RowLabel components
++        // hold circular BasePayload refs (payloadcms/payload#16786).
+         const genImageResponse = await fetch(endpoint, {
+             body: JSON.stringify({
+                 id: docInfo.id,
+                 collectionSlug: docInfo.collectionSlug,
+                 doc: getData(),
+-                docPermissions: docInfo.docPermissions,
+                 globalSlug: docInfo.globalSlug,
+-                hasPublishPermission: docInfo.hasPublishPermission,
+-                hasSavePermission: docInfo.hasSavePermission,
+-                initialData: docInfo.initialData,
+-                initialState: reduceToSerializableFields(docInfo.initialState ?? {}),
+                 locale: typeof locale === 'object' ? locale?.code : locale,
+                 title
+             }),
+@@ -56,12 +52,7 @@ export const MetaImageComponent = (props)=>{
+         api,
+         docInfo.id,
+         docInfo.collectionSlug,
+-        docInfo.docPermissions,
+         docInfo.globalSlug,
+-        docInfo.hasPublishPermission,
+-        docInfo.hasSavePermission,
+-        docInfo.initialData,
+-        docInfo.initialState,
+         getData,
+         locale,
+         setValue,
+diff --git a/dist/fields/MetaTitle/MetaTitleComponent.js b/dist/fields/MetaTitle/MetaTitleComponent.js
+index a4cc57ab0980bae6f67ddce3ae2bd4fa3ac8bec8..4684b8e61a0e2b04971ddf146fe9532f71434f59 100644
+--- a/dist/fields/MetaTitle/MetaTitleComponent.js
++++ b/dist/fields/MetaTitle/MetaTitleComponent.js
+@@ -1,7 +1,6 @@
+ 'use client';
+ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+ import { FieldLabel, TextInput, useConfig, useDocumentInfo, useDocumentTitle, useField, useForm, useLocale, useTranslation } from '@payloadcms/ui';
+-import { reduceToSerializableFields } from '@payloadcms/ui/shared';
+ import { formatAdminURL } from 'payload/shared';
+ import React, { useCallback } from 'react';
+ import { defaults } from '../../defaults.js';
+@@ -27,17 +26,14 @@ export const MetaTitleComponent = (props)=>{
+             apiRoute: api,
+             path: '/plugin-seo/generate-title'
+         });
++        // Avoid serializing docPermissions/initialState — nested RowLabel components
++        // hold circular BasePayload refs (payloadcms/payload#16786).
+         const genTitleResponse = await fetch(endpoint, {
+             body: JSON.stringify({
+                 id: docInfo.id,
+                 collectionSlug: docInfo.collectionSlug,
+                 doc: getData(),
+-                docPermissions: docInfo.docPermissions,
+                 globalSlug: docInfo.globalSlug,
+-                hasPublishPermission: docInfo.hasPublishPermission,
+-                hasSavePermission: docInfo.hasSavePermission,
+-                initialData: docInfo.initialData,
+-                initialState: reduceToSerializableFields(docInfo.initialState ?? {}),
+                 locale: typeof locale === 'object' ? locale?.code : locale,
+                 title
+             }),
+@@ -54,12 +50,7 @@ export const MetaTitleComponent = (props)=>{
+         api,
+         docInfo.id,
+         docInfo.collectionSlug,
+-        docInfo.docPermissions,
+         docInfo.globalSlug,
+-        docInfo.hasPublishPermission,
+-        docInfo.hasSavePermission,
+-        docInfo.initialData,
+-        docInfo.initialState,
+         getData,
+         locale,
+         setValue,
+diff --git a/dist/fields/Preview/PreviewComponent.js b/dist/fields/Preview/PreviewComponent.js
+index 8234a5433063a9879ae706c454d6f87585cb258b..60672f4d8f28d8f28370072442c23a803c3b401b 100644
+--- a/dist/fields/Preview/PreviewComponent.js
++++ b/dist/fields/Preview/PreviewComponent.js
+@@ -1,7 +1,6 @@
+ 'use client';
+ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+ import { useAllFormFields, useConfig, useDocumentInfo, useDocumentTitle, useForm, useLocale, useTranslation } from '@payloadcms/ui';
+-import { reduceToSerializableFields } from '@payloadcms/ui/shared';
+ import { formatAdminURL } from 'payload/shared';
+ import React, { useEffect, useState } from 'react';
+ export const PreviewComponent = (props)=>{
+@@ -23,17 +22,14 @@ export const PreviewComponent = (props)=>{
+             path: '/plugin-seo/generate-url'
+         });
+         const getHref = async ()=>{
++            // Avoid serializing docPermissions/initialState — nested RowLabel components
++            // hold circular BasePayload refs (payloadcms/payload#16786).
+             const genURLResponse = await fetch(endpoint, {
+                 body: JSON.stringify({
+                     id: docInfo.id,
+                     collectionSlug: docInfo.collectionSlug,
+                     doc: getData(),
+-                    docPermissions: docInfo.docPermissions,
+                     globalSlug: docInfo.globalSlug,
+-                    hasPublishPermission: docInfo.hasPublishPermission,
+-                    hasSavePermission: docInfo.hasSavePermission,
+-                    initialData: docInfo.initialData,
+-                    initialState: reduceToSerializableFields(docInfo.initialState ?? {}),
+                     locale: typeof locale === 'object' ? locale?.code : locale,
+                     title
+                 }),
+@@ -53,7 +49,9 @@ export const PreviewComponent = (props)=>{
+         fields,
+         href,
+         locale,
+-        docInfo,
++        docInfo.id,
++        docInfo.collectionSlug,
++        docInfo.globalSlug,
+         hasGenerateURLFn,
+         getData,
+         api,

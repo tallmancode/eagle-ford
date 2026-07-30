@@ -76,7 +76,8 @@ export const OverlayCarousel: React.FC<Hero> = (props) => {
                     resource={slide.image}
                     priority={isFirstSlide}
                     loading={isFirstSlide ? 'eager' : 'lazy'}
-                    size={isFirstSlide ? '100vw' : undefined}
+                    maxWidth={1920}
+                    size="100vw"
                     quality={isFirstSlide ? 65 : 75}
                   />
 

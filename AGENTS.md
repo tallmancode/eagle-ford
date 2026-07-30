@@ -7,15 +7,55 @@ This app is a **satellite site** that consumes live stock from Eagle Motor City 
 
 **Related project:** [`../eagle-motor-city/AGENTS.md`](../eagle-motor-city/AGENTS.md) — Eagle Motor City mothership that ingests and serves stock data.
 
+**Live reference:** https://www.eagleford.co.za/
+
 ## Stock (satellite — no local persistence)
 
 - Fetches live stock from Motor City via `@/lib/motor-city-stock` (`fetchStock`, `getCachedStock`)
 - For filter UIs, call Motor City's `GET /api/stock/[dealerCode]/filters` endpoint — see [`../eagle-motor-city/AGENTS.md`](../eagle-motor-city/AGENTS.md) for query params and response shape
 - Admin view: **Live Stock** link in the Payload sidebar (below nav groups)
 - Requires env: `MOTOR_CITY_STOCK_API_URL`, `MOTOR_CITY_STOCK_API_KEY`
+- Auth header: `Authorization: stock-api-clients API-Key <key>`
 - Stock requests return all enabled dealer feeds from Motor City (no brand-key scoping on the Ford side)
 - Data is cached in Next.js only — do **not** create stock collections or write to the Ford database
 - Dev server runs on port **3001** (Motor City runs on 3000)
+
+### Motor City API key (required — not inventable)
+
+1. Start Eagle Motor City (`cd ../eagle-motor-city && pnpm dev` → http://localhost:3000)
+2. Admin → **Stock → Stock API Clients** → create client e.g. "Eagle Ford" → generate key
+3. Copy into this project's `.env` as `MOTOR_CITY_STOCK_API_KEY` (same key for stock reads and site-form leads)
+
+## CMS LMS leads (via Motor City)
+
+- Opt-in per form in Payload admin: **Forms → [form] → CMS LMS Lead Injection**
+- Enabled forms POST normalized leads to Motor City `POST /api/leads/site-forms` (same stock API key)
+- Motor City owns CMS LMS credentials and the actual LMS push — this site never calls CMS LMS directly
+- Implementation: `src/lib/motor-city-leads/`
+
+## Branding / theming
+
+Configurable tokens live in:
+
+- `src/styles/base.css` — CSS variables (Ford deep blue primary palette; `--color-primary-*` scale at ~265deg hue)
+- `src/app/(frontend)/globals.css` — `--font-brand` / Tailwind theme wiring
+- `src/app/(frontend)/layout.tsx` — Ford F-1 webfonts (`src/assets/fonts/FordF-1-*.woff2`; `--font-ford-f1`, body class `font-ford`)
+- `src/constants/site.ts` — site name / OG defaults
+- Header/Footer/Settings globals in Payload for logos, nav, contact
+
+## Vehicle Catalog Hierarchy
+
+Three tiers — only vehicles and models have public pages:
+
+| Collection         | Role                                               | Public URL                                     |
+| ------------------ | -------------------------------------------------- | ---------------------------------------------- |
+| `vehicles`         | Range/family (e.g. Next Level Ranger)              | `/vehicles/{vehicleSlug}`                      |
+| `vehicle-models`   | Trim/series (e.g. Ranger Sport, XLT)               | `/vehicles/{vehicleSlug}/{modelSlug}`          |
+| `vehicle-variants` | Configuration (e.g. 2.0 SiT Double Cab XL 4x2 6MT) | **No page** — listed in-page on the model page |
+
+- Variants use slugs unique **per model**, not globally.
+- Specials link to `vehicleVariant`; public href goes to the parent model page (optionally `#variant-{slug}`).
+- Model page templates live in `vehicle-model-templates` and are selected per model via the sidebar **Page Template** field (`template`).
 
 ## Block Creation Rules
 
@@ -28,6 +68,7 @@ This app is a **satellite site** that consumes live stock from Eagle Motor City 
   - optional `components/<Name>.tsx` for extracted UI
 - Keep block schema minimal (`fields: []`) unless editors must configure content manually.
 - In render components, read vehicle data from `meta.vehicle` (`BlockRenderMeta`) and return `null` if absent.
+- Vehicle blocks that list trims should query `vehicle-models` for the active vehicle.
 - Register every new vehicle block in:
   - `src/lib/blocks/index.ts`
   - `src/lib/blocks/RenderBlocks.tsx` (`payload-types` import, `BlockComponentMap`, and `blockComponents`)
@@ -36,12 +77,12 @@ This app is a **satellite site** that consumes live stock from Eagle Motor City 
 
 ### Vehicle Model Template Blocks
 
-- Use this pattern for model detail page sections whose data comes from the active model (and parent vehicle).
+- Use this pattern for model (trim) page sections whose data comes from the active model, parent vehicle, and optionally a variant context.
 - Create files under `src/lib/blocks/vehicle-model-<name>-block/` with the same split as vehicle blocks.
 - Keep block schema minimal (`fields: []`) unless editors must configure content manually.
-- In render components, read from `meta.vehicleModel` and (when needed) `meta.vehicle`; return `null` if required data is absent.
+- In render components, read from `meta.vehicleModel` and (when needed) `meta.vehicle` or `meta.vehicleVariant`; return `null` if required data is absent.
+- Use `vehicle-model-variants` (or similar) to list configurations on the model page — variants have no dedicated routes.
 - Register every new vehicle-model block in the same three places as vehicle blocks (`index.ts`, `RenderBlocks.tsx`, `blockRefs.ts`).
-- Model page templates live in the `vehicle-model-templates` collection and are selected on the parent vehicle via the sidebar **Model Page Template** field (`modelTemplate`). All models under that vehicle share the same layout.
 - Model pages render at `/vehicles/{vehicleSlug}/{modelSlug}`.
 
 ### Normal Blocks

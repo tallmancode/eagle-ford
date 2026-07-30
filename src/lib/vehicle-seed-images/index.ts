@@ -35,6 +35,7 @@ export function toPayloadFile(image: SeedImage, filename?: string): File {
     jpeg: 'image/jpeg',
     png: 'image/png',
     webp: 'image/webp',
+    avif: 'image/avif',
     gif: 'image/gif',
     pdf: 'application/pdf',
   }

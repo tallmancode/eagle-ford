@@ -5,6 +5,7 @@ import {
   type FinanceCalculatorResult,
   type FinanceCalculatorValidationError,
 } from '@/lib/blocks/finance-calculator-block/calculateRepayment'
+import { MAX_BALLOON_PERCENT } from '@/lib/blocks/finance-calculator-block/financeCalculatorOptions'
 
 export type DepositMode = 'amount' | 'percent'
 
@@ -50,6 +51,10 @@ export function validateAffordablePriceInput(
 
   if (!Number.isFinite(input.balloonPercent) || input.balloonPercent < 0) {
     return 'balloonExceedsFinanced'
+  }
+
+  if (input.balloonPercent > MAX_BALLOON_PERCENT) {
+    return 'balloonExceedsMax'
   }
 
   return null

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
-import { formatPageTitle } from '@/constants/site'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
+import { JsonLd } from '@/components/JsonLd/JsonLd'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
@@ -9,10 +9,15 @@ import React, { cache } from 'react'
 
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
-import type { Media, Vehicle, VehicleModel, VehicleModelTemplate } from '@/payload-types'
+import type { Media, VehicleModel, VehicleModelTemplate, VehicleVariant } from '@/payload-types'
 import { DefaultModelLayout } from './DefaultModelLayout'
-import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
+import { getModelStartingPrice, getVehicleModelPath } from '@/lib/utils/vehicleModel'
 import { getVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
+import { buildDocumentMetadata, resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
+import { getVehicleJsonLd } from '@/lib/seo/dealershipJsonLd'
+
+/** ISR: model pages refresh at most every 5 minutes unless revalidated by CMS hooks. */
+export const revalidate = 300
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -30,11 +35,12 @@ export async function generateStaticParams() {
   })
 
   return models.docs.flatMap((model) => {
+    if (!model.slug) return []
+
     const vehicle = model.vehicle
-    if (!vehicle || typeof vehicle === 'string' || !vehicle.slug || !model.slug) {
-      return []
-    }
-    return [{ slug: vehicle.slug, modelSlug: model.slug }]
+    if (!vehicle || typeof vehicle === 'string' || !vehicle.slug) return []
+
+    return [{ slug: vehicle.slug, modelSlug: model.slug! }]
   })
 }
 
@@ -46,7 +52,7 @@ type Args = {
 }
 
 async function resolveModelTemplate(
-  template: Vehicle['modelTemplate'],
+  template: VehicleModel['template'],
 ): Promise<VehicleModelTemplate | null> {
   if (!template) return null
 
@@ -81,12 +87,12 @@ export default async function Page({ params: paramsPromise }: Args) {
   })
   if (!model) return <PayloadRedirects url={url} />
 
-  const template = await resolveModelTemplate(vehicle.modelTemplate)
+  const template = await resolveModelTemplate(model.template)
   const templateSections = template?.section
   const useTemplate = Array.isArray(templateSections) && templateSections.length > 0
 
   const payload = await getPayload({ config: configPromise })
-  const [modelsResult, enquiryForm] = await Promise.all([
+  const [modelsResult, variantsResult, enquiryForm] = await Promise.all([
     payload.find({
       collection: 'vehicle-models',
       draft: false,
@@ -96,9 +102,49 @@ export default async function Page({ params: paramsPromise }: Args) {
       pagination: false,
       where: { vehicle: { equals: vehicle.id } },
     }),
+    payload.find({
+      collection: 'vehicle-variants',
+      draft: false,
+      depth: 1,
+      sort: 'sortOrder',
+      overrideAccess: false,
+      pagination: false,
+      where: { model: { equals: model.id } },
+    }),
     getVehicleQuoteForm(),
   ])
-  const siblingModels = modelsResult.docs
+
+  const variants = variantsResult.docs as VehicleVariant[]
+  const variantsByModelId = new Map<string, VehicleVariant[]>()
+  const allVariantsResult = await payload.find({
+    collection: 'vehicle-variants',
+    where: { 'model.vehicle': { equals: vehicle.id } },
+    sort: 'sortOrder',
+    depth: 0,
+    draft: false,
+    overrideAccess: false,
+    pagination: false,
+    select: {
+      id: true,
+      price: true,
+      model: true,
+    },
+  })
+
+  for (const variant of allVariantsResult.docs) {
+    const modelId =
+      typeof variant.model === 'object' && variant.model !== null
+        ? String(variant.model.id)
+        : String(variant.model)
+    const list = variantsByModelId.get(modelId) ?? []
+    list.push(variant as VehicleVariant)
+    variantsByModelId.set(modelId, list)
+  }
+
+  const siblingModels = modelsResult.docs.map((sibling) => ({
+    ...sibling,
+    startingPrice: getModelStartingPrice(variantsByModelId.get(String(sibling.id)) ?? []),
+  }))
 
   const meta = {
     vehicle,
@@ -113,6 +159,18 @@ export default async function Page({ params: paramsPromise }: Args) {
     <div>
       <PayloadRedirects disableNotFound url={url} />
       {draft && <LivePreviewListener />}
+      <JsonLd
+        data={getVehicleJsonLd({
+          name: `${vehicle.name} ${model.name}`,
+          description: model.meta?.metaDescription ?? vehicle.meta?.metaDescription,
+          path: url,
+          imageUrl: resolveMediaOgUrl(
+            typeof (model.meta?.metaImage ?? vehicle.meta?.metaImage) === 'object'
+              ? ((model.meta?.metaImage ?? vehicle.meta?.metaImage) as Media)
+              : null,
+          ),
+        })}
+      />
 
       {useTemplate ? (
         <RenderBlocks blocks={templateSections} meta={meta} />
@@ -120,6 +178,7 @@ export default async function Page({ params: paramsPromise }: Args) {
         <DefaultModelLayout
           vehicle={vehicle}
           model={model}
+          variants={variants}
           siblingModels={siblingModels}
           enquiryForm={enquiryForm}
         />
@@ -132,38 +191,34 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const { slug = '', modelSlug = '' } = await paramsPromise
   const decodedSlug = decodeURIComponent(slug)
   const decodedModelSlug = decodeURIComponent(modelSlug)
+  const fallbackPath = getVehicleModelPath(decodedSlug, decodedModelSlug)
 
   const vehicle = await queryVehicleBySlug({ slug: decodedSlug })
-  if (!vehicle) return { title: formatPageTitle('Vehicle Model') }
+  if (!vehicle) {
+    return buildDocumentMetadata({ title: 'Vehicle Model', path: fallbackPath })
+  }
 
   const model = await queryModelBySlug({
     slug: decodedModelSlug,
     vehicleId: vehicle.id,
   })
-  if (!model) return { title: formatPageTitle(vehicle.name) }
-
-  const title = model.meta?.metaTitle
-    ? formatPageTitle(model.meta.metaTitle)
-    : formatPageTitle(`${model.name} | ${vehicle.name}`)
-
-  const description = model.meta?.metaDescription ?? vehicle.meta?.metaDescription ?? undefined
-
-  const metaImage = model.meta?.metaImage ?? vehicle.meta?.metaImage
-  const imageUrl =
-    typeof metaImage === 'object' && metaImage && 'url' in metaImage
-      ? ((metaImage as Media).url ?? undefined)
-      : undefined
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      images: imageUrl ? [{ url: imageUrl }] : undefined,
-      url: getVehicleModelPath(vehicle.slug ?? decodedSlug, model.slug ?? decodedModelSlug),
-    },
+  if (!model) {
+    return buildDocumentMetadata({
+      title: vehicle.name,
+      path: `/vehicles/${vehicle.slug ?? decodedSlug}`,
+    })
   }
+
+  const path = getVehicleModelPath(vehicle.slug ?? decodedSlug, model.slug ?? decodedModelSlug)
+  const metaImage = model.meta?.metaImage ?? vehicle.meta?.metaImage
+  const imageUrl = resolveMediaOgUrl(typeof metaImage === 'object' ? (metaImage as Media) : null)
+
+  return buildDocumentMetadata({
+    title: model.meta?.metaTitle || `${model.name} | ${vehicle.name}`,
+    description: model.meta?.metaDescription ?? vehicle.meta?.metaDescription,
+    path,
+    imageUrl,
+  })
 }
 
 const queryVehicleBySlug = cache(async ({ slug }: { slug: string }) => {

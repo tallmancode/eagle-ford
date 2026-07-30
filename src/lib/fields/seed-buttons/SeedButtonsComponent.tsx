@@ -48,7 +48,7 @@ export const SeedButtonsComponent = ({ payload: _payload }: { payload: Payload }
   return (
     <div className={baseClass}>
       <SeedSection title="Forms" actions={formSeedActions} />
-      <SeedSection title="Imports" actions={importSeedActions} />
+      <SeedSection title="Imports & SEO" actions={importSeedActions} />
       <SeedSection title="Diagnostics" actions={diagnosticSeedActions} />
     </div>
   )

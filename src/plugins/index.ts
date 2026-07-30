@@ -7,6 +7,7 @@ import { Plugin } from 'payload'
 import type { Field } from 'payload'
 import { revalidateRedirects } from '@/lib/hooks/revalidateRedirects'
 import { GenerateURL } from '@payloadcms/plugin-seo/types'
+import generateDescription from '@/lib/utils/generateDescription'
 import generateTitle from '@/lib/utils/generateTitle'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 
@@ -19,7 +20,11 @@ import {
 } from '@/plugins/form-builder/formInputBlocks'
 import { SubheadingBlock } from '@/lib/blocks/form-block/SubheadingBlock'
 import { handleMultiStepFormUploads } from '@/lib/blocks/form-block/hooks/handleMultiStepFormUploads'
-import { importExportPlugin } from '@payloadcms/plugin-import-export'
+import { getLmsLeadInjectionFields } from '@/lib/motor-city-leads/formFields'
+import { getMotorCityLeadSubmissionFields } from '@/lib/motor-city-leads/formSubmissionFields'
+import { injectFormSubmissionLead } from '@/lib/motor-city-leads/injectFormSubmissionLead'
+import { aiSeoPlugin } from '@/plugins/ai-seo'
+import { aiMediaSuggestionsPlugin } from '@/plugins/ai-media-suggestions'
 
 const formStepRowLabelPath = '@/lib/blocks/form-block/components/FormStepRowLabel#FormStepRowLabel'
 
@@ -54,8 +59,11 @@ export const plugins: Plugin[] = [
   }),
   seoPlugin({
     generateTitle,
+    generateDescription,
     generateURL,
   }),
+  aiSeoPlugin(),
+  aiMediaSuggestionsPlugin(),
   formBuilderPlugin({
     fields: {
       date: true,
@@ -65,8 +73,10 @@ export const plugins: Plugin[] = [
     uploadCollections: [...FORM_UPLOAD_COLLECTIONS],
     redirectRelationships: ['pages'],
     formSubmissionOverrides: {
+      fields: ({ defaultFields }) => [...defaultFields, ...getMotorCityLeadSubmissionFields()],
       hooks: {
         beforeChange: [handleMultiStepFormUploads],
+        afterChange: [injectFormSubmissionLead],
       },
     },
     formOverrides: {
@@ -180,30 +190,9 @@ export const plugins: Plugin[] = [
           )
         }
 
-        return result
+        return [...result, getLmsLeadInjectionFields()]
       },
     },
-  }),
-  importExportPlugin({
-    overrideExportCollection: ({ collection }) => ({
-      ...collection,
-      admin: {
-        ...collection.admin,
-        group: 'Data Management',
-      },
-      depth: 5,
-    }),
-    overrideImportCollection: ({ collection }) => ({
-      ...collection,
-      admin: {
-        ...collection.admin,
-        group: 'Data Management',
-      },
-    }),
-    collections: [
-      { slug: 'users', export: { disableJobsQueue: true }, import: { disableJobsQueue: true } },
-      { slug: 'pages', export: { disableJobsQueue: true }, import: { disableJobsQueue: true } },
-    ],
   }),
   // Keep enabled so AdminErrorBoundary stays in the import map (generate:importmap
   // runs in non-production). Sentry.init already gates reporting on NODE_ENV.

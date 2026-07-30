@@ -38,6 +38,8 @@ export const ImageBlockComponent: React.FC<ImageBlockType> = ({
           resource={media}
           alt={alt ?? undefined}
           imgClassName="h-auto w-full object-cover object-center"
+          maxWidth={1400}
+          size="(max-width: 1024px) 100vw, 50vw"
         />
       </div>
     )
@@ -50,6 +52,7 @@ export const ImageBlockComponent: React.FC<ImageBlockType> = ({
         alt={alt ?? undefined}
         fill
         imgClassName="object-cover object-center"
+        maxWidth={1400}
         size="(max-width: 1024px) 100vw, 50vw"
       />
     </div>

@@ -20,7 +20,7 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
   },
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'category', 'startingPrice', 'badge', 'updatedAt'],
+    defaultColumns: ['name', 'category', 'startingPrice', 'badge', 'showInMegaMenu', 'updatedAt'],
     group: 'Vehicles',
     livePreview: {
       url: ({ data, req }) =>
@@ -465,6 +465,17 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
       ],
     },
     {
+      name: 'showInMegaMenu',
+      label: 'Show in Mega Menu',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        position: 'sidebar',
+        description:
+          'When enabled, this vehicle family appears in the mega menu alongside any trims that also have Show in Mega Menu enabled.',
+      },
+    },
+    {
       name: 'sortOrder',
       label: 'Sort Order',
       type: 'number',
@@ -482,16 +493,6 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
       admin: {
         position: 'sidebar',
         description: 'Optional. Layout template used to render this vehicle page.',
-      },
-    },
-    {
-      name: 'modelTemplate',
-      label: 'Model Page Template',
-      type: 'relationship',
-      relationTo: 'vehicle-model-templates',
-      admin: {
-        position: 'sidebar',
-        description: 'Optional. Layout used for all model detail pages under this vehicle.',
       },
     },
     {

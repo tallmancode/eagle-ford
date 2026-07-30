@@ -158,24 +158,7 @@ export const NavLinksField = ({
       },
       {
         type: 'row',
-        fields: [
-          ...linkRowFields,
-          {
-            name: 'displayMode',
-            type: 'radio',
-            defaultValue: 'vehicles',
-            admin: {
-              layout: 'horizontal',
-              width: '50%',
-              condition: (_, siblingData) => siblingData?.type === 'vehicleMegaMenu',
-              description: 'Show vehicle families or individual model variants in the mega menu.',
-            },
-            options: [
-              { label: 'Vehicles', value: 'vehicles' },
-              { label: 'Models', value: 'models' },
-            ],
-          },
-        ],
+        fields: linkRowFields,
       },
       {
         name: 'parentLinkType',

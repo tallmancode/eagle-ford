@@ -4,17 +4,14 @@ import { useState } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { VehicleMegaMenuCard } from '@/components/header/VehicleMegaMenuCard'
 import type { VehicleMegaMenuData } from '@/lib/data/vehicleMegaMenuTypes'
-import { getMegaMenuDataForMode } from '@/lib/data/vehicleMegaMenuTypes'
 import { cn } from '@/lib/utils/cn'
 
 type VehicleMegaMenuProps = {
   data: VehicleMegaMenuData
-  displayMode?: 'vehicles' | 'models' | null
 }
 
-export function VehicleMegaMenu({ data, displayMode }: VehicleMegaMenuProps) {
-  const menuData = getMegaMenuDataForMode(data, displayMode)
-  const { categories, items } = menuData
+export function VehicleMegaMenu({ data }: VehicleMegaMenuProps) {
+  const { categories, items } = data
 
   const firstCategorySlug = categories[0]?.slug ?? ''
   const [activeCategory, setActiveCategory] = useState(firstCategorySlug)
@@ -72,7 +69,7 @@ export function VehicleMegaMenu({ data, displayMode }: VehicleMegaMenuProps) {
           aria-labelledby={`mega-menu-tab-${activeCategory}`}
           className="flex-1 px-8"
         >
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6 xl:grid-cols-6">
             {activeItems.map((item) => (
               <VehicleMegaMenuCard key={item.id} item={item} />
             ))}

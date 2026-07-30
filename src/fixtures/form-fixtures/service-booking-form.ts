@@ -2,6 +2,7 @@ import type { RequiredDataFromCollectionSlug } from 'payload'
 
 const FORD_SERVICE_MODELS = [
   'Everest',
+  'Mustang',
   'Mustang Dark Horse',
   'Mustang GT',
   'New Level Territory',

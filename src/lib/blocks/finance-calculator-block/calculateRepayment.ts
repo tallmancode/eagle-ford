@@ -1,3 +1,5 @@
+import { MAX_BALLOON_PERCENT } from '@/lib/blocks/finance-calculator-block/financeCalculatorOptions'
+
 export type FinanceCalculatorInput = {
   purchasePrice: number
   deposit: number
@@ -19,6 +21,7 @@ export type FinanceCalculatorValidationError =
   | 'monthlyInstallmentRequired'
   | 'depositInvalid'
   | 'balloonExceedsFinanced'
+  | 'balloonExceedsMax'
   | 'interestRateInvalid'
   | 'unaffordable'
 
@@ -27,6 +30,7 @@ const ERROR_MESSAGES: Record<FinanceCalculatorValidationError, string> = {
   monthlyInstallmentRequired: 'Please enter a valid monthly installment.',
   depositInvalid: 'Deposit must be zero or greater and less than the vehicle price.',
   balloonExceedsFinanced: 'The balloon payment exceeds the amount being financed.',
+  balloonExceedsMax: `Balloon payment cannot exceed ${MAX_BALLOON_PERCENT}%.`,
   interestRateInvalid: 'Please enter a valid interest rate.',
   unaffordable:
     'These values do not produce an affordable vehicle price. Try adjusting your inputs.',
@@ -71,6 +75,14 @@ export function validateFinanceCalculatorInput(
     input.deposit >= input.purchasePrice
   ) {
     return 'depositInvalid'
+  }
+
+  if (!Number.isFinite(input.balloonPercent) || input.balloonPercent < 0) {
+    return 'balloonExceedsFinanced'
+  }
+
+  if (input.balloonPercent > MAX_BALLOON_PERCENT) {
+    return 'balloonExceedsMax'
   }
 
   const financedAmount = input.purchasePrice - input.deposit

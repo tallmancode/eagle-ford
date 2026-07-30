@@ -16,7 +16,9 @@ export interface Props {
   priority?: boolean // for NextImage only
   ref?: Ref<HTMLImageElement | HTMLVideoElement | null>
   resource?: MediaType | string | number | null // for Payload media
-  size?: string // for NextImage only
+  size?: string // Next.js sizes attribute (layout hint for srcset)
+  /** Max CSS pixel width of the layout slot; picks the matching Payload size. Default 1920. */
+  maxWidth?: number
   src?: StaticImageData // for static media
   videoClassName?: string
 }
