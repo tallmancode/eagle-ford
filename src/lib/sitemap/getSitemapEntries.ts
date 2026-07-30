@@ -14,9 +14,18 @@ const publishedWhere = {
 }
 
 function toSitemapEntry(url: string, lastModified?: string | null): MetadataRoute.Sitemap[number] {
+  let pathname = '/'
+  try {
+    pathname = new URL(url).pathname
+  } catch {
+    pathname = '/'
+  }
+
   return {
     url,
     lastModified: lastModified ?? new Date(),
+    changeFrequency: 'weekly',
+    priority: pathname === '/' ? 1 : 0.7,
   }
 }
 
