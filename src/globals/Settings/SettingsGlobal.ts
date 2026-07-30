@@ -115,6 +115,41 @@ export const SettingsGlobal: GlobalConfig = {
           ],
         },
         {
+          label: 'Analytics',
+          name: 'analytics',
+          interfaceName: 'AnalyticsSettings',
+          fields: [
+            {
+              name: 'enableGoogleTagManager',
+              label: 'Enable Google Tag Manager',
+              type: 'checkbox',
+              defaultValue: false,
+              admin: {
+                description:
+                  'Loads Google Tag Manager only after a visitor has granted cookie consent.',
+              },
+            },
+            {
+              name: 'googleTagManagerId',
+              label: 'Google Tag Manager Container ID',
+              type: 'text',
+              required: true,
+              defaultValue: 'GTM-P2JCNCLC',
+              admin: {
+                description: 'The public GTM container ID in the format GTM-XXXXXXXX.',
+              },
+              validate: (value: string | null | undefined) => {
+                if (!value) return 'Google Tag Manager Container ID is required.'
+
+                return (
+                  /^GTM-[A-Z0-9]+$/.test(value.trim()) ||
+                  'Must be a valid Google Tag Manager container ID (e.g. GTM-ABC12345).'
+                )
+              },
+            },
+          ],
+        },
+        {
           label: 'Data Seeds',
           admin: {
             condition: (_data, _siblingData, { user }) => {
