@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import { CRAWLER_BLOCK_ROBOTS } from '@/constants/crawlerPolicy'
+import { getDefaultRobots } from '@/constants/crawlerPolicy'
 import { formatPageTitle } from '@/constants/site'
 import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
@@ -38,7 +38,7 @@ export function buildDocumentMetadata(input: DocumentMetadataInput): Metadata {
   return {
     title,
     description,
-    robots: input.robots ?? CRAWLER_BLOCK_ROBOTS,
+    robots: input.robots ?? getDefaultRobots(),
     alternates: {
       canonical,
     },

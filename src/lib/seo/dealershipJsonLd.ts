@@ -1,4 +1,4 @@
-import { DEFAULT_OG_DESCRIPTION, SITE_NAME } from '@/constants/site'
+import { DEFAULT_OG_DESCRIPTION, DEFAULT_OG_IMAGE_PATH, SITE_NAME } from '@/constants/site'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
 
 /** AutoDealer / Organization JSON-LD for the dealership sitewide. */
@@ -11,7 +11,7 @@ export function getDealershipJsonLd(): Record<string, unknown> {
     name: SITE_NAME,
     description: DEFAULT_OG_DESCRIPTION,
     url,
-    image: `${url}/eagle-motor-city-og.png`,
+    image: `${url}${DEFAULT_OG_IMAGE_PATH}`,
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Corlett Drive',
@@ -64,5 +64,29 @@ export function getVehicleJsonLd(args: {
         url: base,
       },
     },
+  }
+}
+
+export type BreadcrumbItem = {
+  name: string
+  path: string
+}
+
+/** BreadcrumbList JSON-LD for vehicle / model / showroom detail pages. */
+export function getBreadcrumbJsonLd(items: BreadcrumbItem[]): Record<string, unknown> {
+  const base = getServerSideURL().replace(/\/$/, '')
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => {
+      const path = item.path.startsWith('/') ? item.path : `/${item.path}`
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        name: item.name,
+        item: `${base}${path}`,
+      }
+    }),
   }
 }

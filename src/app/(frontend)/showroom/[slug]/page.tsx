@@ -13,6 +13,8 @@ import { buildStockVehiclePath, getStockVehicleCmsIdFromSlug } from '@/lib/stock
 import { getStockHeroImage } from '@/lib/stock-vehicle/media'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import { buildDocumentMetadata } from '@/lib/seo/buildDocumentMetadata'
+import { getBreadcrumbJsonLd, getVehicleJsonLd } from '@/lib/seo/dealershipJsonLd'
+import { JsonLd } from '@/components/JsonLd/JsonLd'
 import { StockVehicleDetail } from '@/views/StockVehicle/StockVehicleDetail'
 import { getStockVehiclePageTitle } from '@/views/StockVehicle/StockVehicleSpecs'
 import type { Setting } from '@/payload-types'
@@ -90,14 +92,34 @@ export default async function ShowroomVehiclePage({ params: paramsPromise }: Arg
 
   const similarVehicles = await getSimilarVehicles(vehicle)
   const calculatorDefaults = getFinanceCalculatorDefaults(settings)
+  const pageTitle = getStockVehiclePageTitle(vehicle)
+  const heroImage = getStockHeroImage(vehicle.media)
+  const vehiclePath = buildStockVehiclePath(vehicle)
 
   return (
-    <StockVehicleDetail
-      vehicle={vehicle}
-      similarVehicles={similarVehicles}
-      enquiryForm={enquiryForm}
-      calculatorDefaults={calculatorDefaults}
-    />
+    <>
+      <JsonLd
+        data={getVehicleJsonLd({
+          name: pageTitle,
+          description: vehicle.comments,
+          path: vehiclePath,
+          imageUrl: heroImage?.url,
+        })}
+      />
+      <JsonLd
+        data={getBreadcrumbJsonLd([
+          { name: 'Home', path: '/' },
+          { name: 'Showroom', path: '/showroom' },
+          { name: pageTitle, path: vehiclePath },
+        ])}
+      />
+      <StockVehicleDetail
+        vehicle={vehicle}
+        similarVehicles={similarVehicles}
+        enquiryForm={enquiryForm}
+        calculatorDefaults={calculatorDefaults}
+      />
+    </>
   )
 }
 

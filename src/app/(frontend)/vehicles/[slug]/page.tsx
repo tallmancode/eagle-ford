@@ -14,7 +14,7 @@ import { DefaultVehicleLayout } from './DefaultVehicleLayout'
 import { getModelStartingPrice } from '@/lib/utils/vehicleModel'
 import { getVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
 import { buildDocumentMetadata, resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
-import { getVehicleJsonLd } from '@/lib/seo/dealershipJsonLd'
+import { getBreadcrumbJsonLd, getVehicleJsonLd } from '@/lib/seo/dealershipJsonLd'
 
 /** ISR: vehicle pages refresh at most every 5 minutes unless revalidated by CMS hooks. */
 export const revalidate = 300
@@ -128,6 +128,13 @@ export default async function Page({ params: paramsPromise }: Args) {
             typeof vehicle.meta?.metaImage === 'object' ? (vehicle.meta.metaImage as Media) : null,
           ),
         })}
+      />
+      <JsonLd
+        data={getBreadcrumbJsonLd([
+          { name: 'Home', path: '/' },
+          { name: 'Vehicles', path: '/vehicles' },
+          { name: vehicle.name, path: url },
+        ])}
       />
 
       {useTemplate ? (

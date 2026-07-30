@@ -81,16 +81,7 @@ const nextConfig: NextConfig = {
   },
   reactStrictMode: true,
   async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'X-Robots-Tag',
-            value: 'noindex, nofollow, noarchive, nosnippet',
-          },
-        ],
-      },
+    const cacheHeaders = [
       {
         source: '/_next/static/:path*',
         headers: [
@@ -109,6 +100,24 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+    ]
+
+    // Keep staging/local deploys out of the index until ALLOW_SEARCH_INDEXING=true.
+    if (process.env.ALLOW_SEARCH_INDEXING === 'true') {
+      return cacheHeaders
+    }
+
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex, nofollow, noarchive, nosnippet',
+          },
+        ],
+      },
+      ...cacheHeaders,
     ]
   },
   redirects,
