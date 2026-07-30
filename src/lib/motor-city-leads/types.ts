@@ -60,11 +60,24 @@ export type MotorCitySiteFormLeadRequest = {
 export class MotorCityLeadsError extends Error {
   readonly code: string
   readonly status?: number
+  readonly retryable: boolean
+  readonly retryAfterMs?: number
 
-  constructor(message: string, options?: { code?: string; status?: number; cause?: unknown }) {
+  constructor(
+    message: string,
+    options?: {
+      code?: string
+      status?: number
+      retryable?: boolean
+      retryAfterMs?: number
+      cause?: unknown
+    },
+  ) {
     super(message, options?.cause ? { cause: options.cause } : undefined)
     this.name = 'MotorCityLeadsError'
     this.code = options?.code ?? 'MOTOR_CITY_LEADS_ERROR'
     this.status = options?.status
+    this.retryable = options?.retryable ?? false
+    this.retryAfterMs = options?.retryAfterMs
   }
 }

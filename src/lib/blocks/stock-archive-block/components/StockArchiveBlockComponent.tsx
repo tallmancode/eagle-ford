@@ -3,6 +3,7 @@ import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 import { getCachedStock, getCachedStockFilters } from '@/lib/motor-city-stock'
 import type { FetchStockOptions, MotorCityStockVehicle } from '@/lib/motor-city-stock/types'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
+import { captureStockFetchEvent } from '@/lib/motor-city-stock/sentry'
 import {
   compareStockForShowroom,
   paginateSortedStock,
@@ -49,6 +50,16 @@ async function fetchAllFilteredStock(options: FetchStockOptions): Promise<MotorC
   return docs
 }
 
+const EMPTY_FILTER_OPTIONS = {
+  dealerCode: null as string | null,
+  bodyTypes: [],
+  brands: [],
+  fuelTypes: [],
+  transmissions: [],
+  newUsed: [],
+  priceRange: { min: null as number | null, max: null as number | null },
+}
+
 export async function StockArchiveBlockComponent(props: Props) {
   const {
     conditionFilter = 'all',
@@ -78,20 +89,48 @@ export async function StockArchiveBlockComponent(props: Props) {
       limit: STOCK_FETCH_PAGE_SIZE,
     })
 
-    const [filtersResult, allDocs] = await Promise.all([
+    const [filtersSettled, stockSettled] = await Promise.allSettled([
       getCachedStockFilters(),
       fetchAllFilteredStock(fetchOptions),
     ])
 
-    filterOptions = filtersResult
+    if (stockSettled.status === 'rejected') {
+      const error = stockSettled.reason
+      if (error instanceof MotorCityStockError) {
+        errorMessage = error.message
+      } else {
+        errorMessage = 'Unable to load stock at this time.'
+        captureStockFetchEvent(error, {
+          event: 'stock_list_failure',
+          detail: 'Stock archive block failed to load vehicles',
+        })
+      }
+    } else {
+      const allDocs = stockSettled.value
+      const sorted = [...allDocs].sort(compareStockForShowroom)
+      paginated = paginateSortedStock(sorted, activeFilters.page ?? 1, pageLimit)
 
-    const sorted = [...allDocs].sort(compareStockForShowroom)
-    paginated = paginateSortedStock(sorted, activeFilters.page ?? 1, pageLimit)
+      if (filtersSettled.status === 'fulfilled') {
+        filterOptions = filtersSettled.value
+      } else {
+        // Soft-fail filters so listing still renders when filters endpoint blips.
+        filterOptions = EMPTY_FILTER_OPTIONS
+        captureStockFetchEvent(filtersSettled.reason, {
+          event: 'stock_filters_failure',
+          detail: 'Stock archive filters failed; rendering list with empty filter options',
+          retryable: true,
+        })
+      }
+    }
   } catch (error) {
     if (error instanceof MotorCityStockError) {
       errorMessage = error.message
     } else {
       errorMessage = 'Unable to load stock at this time.'
+      captureStockFetchEvent(error, {
+        event: 'stock_list_failure',
+        detail: 'Stock archive block unexpected failure',
+      })
     }
   }
 
