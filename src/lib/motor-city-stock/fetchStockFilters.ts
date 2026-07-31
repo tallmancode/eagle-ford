@@ -4,6 +4,8 @@ import type {
 } from '@/lib/motor-city-stock/types'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
 import { getStockApiConfig } from '@/lib/motor-city-stock/fetchStock'
+import { fetchMotorCityJson } from '@/lib/motor-city-stock/fetchMotorCity'
+import { captureStockFetchEvent, safeApiHost } from '@/lib/motor-city-stock/sentry'
 
 function buildStockFiltersUrl(baseUrl: string, options: FetchStockFiltersOptions = {}): URL {
   const dealerCode = options.dealerCode ?? 'EC167'
@@ -16,28 +18,36 @@ export async function fetchStockFilters(
 ): Promise<MotorCityStockFilterOptions> {
   const { baseUrl, apiKey } = getStockApiConfig()
   const url = buildStockFiltersUrl(baseUrl, options)
+  const dealerCode = options.dealerCode ?? 'EC167'
 
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `stock-api-clients API-Key ${apiKey}`,
-    },
-    next: { revalidate: 300 },
-  })
+  try {
+    return await fetchMotorCityJson<MotorCityStockFilterOptions>({
+      url,
+      apiKey,
+      next: { revalidate: 300 },
+    })
+  } catch (error) {
+    const stockError =
+      error instanceof MotorCityStockError
+        ? error
+        : new MotorCityStockError('Stock filters API request failed', 503, {
+            code: 'NETWORK',
+            retryable: true,
+            cause: error,
+          })
 
-  if (!response.ok) {
-    let message = `Stock filters API request failed with status ${response.status}`
+    captureStockFetchEvent(stockError, {
+      event: 'stock_filters_failure',
+      dealerCode,
+      httpStatus: stockError.status,
+      errorCode: stockError.code,
+      retryable: stockError.retryable,
+      apiHost: safeApiHost(baseUrl),
+      detail: 'Failed to fetch Motor City stock filters after retries',
+    })
 
-    try {
-      const body = (await response.json()) as { error?: string }
-      if (body.error) message = body.error
-    } catch {
-      // ignore JSON parse errors
-    }
-
-    throw new MotorCityStockError(message, response.status)
+    throw stockError
   }
-
-  return (await response.json()) as MotorCityStockFilterOptions
 }
 
 export { buildStockFiltersUrl }

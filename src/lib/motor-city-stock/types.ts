@@ -127,10 +127,18 @@ export type FetchStockVehicleOptions = {
 
 export class MotorCityStockError extends Error {
   status: number
+  readonly code: string
+  readonly retryable: boolean
 
-  constructor(message: string, status: number) {
-    super(message)
+  constructor(
+    message: string,
+    status: number,
+    options?: { code?: string; retryable?: boolean; cause?: unknown },
+  ) {
+    super(message, options?.cause ? { cause: options.cause } : undefined)
     this.name = 'MotorCityStockError'
     this.status = status
+    this.code = options?.code ?? 'STOCK_ERROR'
+    this.retryable = options?.retryable ?? (status >= 500 || status === 408 || status === 429)
   }
 }

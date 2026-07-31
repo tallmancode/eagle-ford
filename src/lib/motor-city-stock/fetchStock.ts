@@ -1,3 +1,5 @@
+import { fetchMotorCityJson } from '@/lib/motor-city-stock/fetchMotorCity'
+import { captureStockFetchEvent, safeApiHost } from '@/lib/motor-city-stock/sentry'
 import type { FetchStockOptions, MotorCityStockResponse } from '@/lib/motor-city-stock/types'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
 
@@ -6,11 +8,17 @@ function getStockApiConfig() {
   const apiKey = process.env.MOTOR_CITY_STOCK_API_KEY
 
   if (!baseUrl) {
-    throw new MotorCityStockError('MOTOR_CITY_STOCK_API_URL is not configured', 500)
+    throw new MotorCityStockError('MOTOR_CITY_STOCK_API_URL is not configured', 500, {
+      code: 'MISSING_URL',
+      retryable: false,
+    })
   }
 
   if (!apiKey) {
-    throw new MotorCityStockError('MOTOR_CITY_STOCK_API_KEY is not configured', 500)
+    throw new MotorCityStockError('MOTOR_CITY_STOCK_API_KEY is not configured', 500, {
+      code: 'MISSING_KEY',
+      retryable: false,
+    })
   }
 
   return { baseUrl, apiKey }
@@ -45,28 +53,36 @@ function buildStockUrl(baseUrl: string, options: FetchStockOptions): URL {
 export async function fetchStock(options: FetchStockOptions = {}): Promise<MotorCityStockResponse> {
   const { baseUrl, apiKey } = getStockApiConfig()
   const url = buildStockUrl(baseUrl, options)
+  const dealerCode = options.dealerCode ?? 'EC167'
 
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `stock-api-clients API-Key ${apiKey}`,
-    },
-    next: { revalidate: 300 },
-  })
+  try {
+    return await fetchMotorCityJson<MotorCityStockResponse>({
+      url,
+      apiKey,
+      next: { revalidate: 300 },
+    })
+  } catch (error) {
+    const stockError =
+      error instanceof MotorCityStockError
+        ? error
+        : new MotorCityStockError('Stock API request failed', 503, {
+            code: 'NETWORK',
+            retryable: true,
+            cause: error,
+          })
 
-  if (!response.ok) {
-    let message = `Stock API request failed with status ${response.status}`
+    captureStockFetchEvent(stockError, {
+      event: 'stock_list_failure',
+      dealerCode,
+      httpStatus: stockError.status,
+      errorCode: stockError.code,
+      retryable: stockError.retryable,
+      apiHost: safeApiHost(baseUrl),
+      detail: 'Failed to fetch Motor City stock list after retries',
+    })
 
-    try {
-      const body = (await response.json()) as { error?: string }
-      if (body.error) message = body.error
-    } catch {
-      // ignore JSON parse errors
-    }
-
-    throw new MotorCityStockError(message, response.status)
+    throw stockError
   }
-
-  return (await response.json()) as MotorCityStockResponse
 }
 
 export { buildStockUrl, getStockApiConfig }

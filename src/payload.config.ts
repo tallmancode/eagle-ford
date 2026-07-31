@@ -13,6 +13,8 @@ import Globals from '@/globals'
 import Blocks from '@/lib/blocks'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { SITE_FAVICON_LINKS } from './constants/siteIcons'
+import { forwardMotorCityLeadHandler } from '@/tasks/forwardMotorCityLead'
+import { sweepMotorCityLeadsHandler } from '@/tasks/sweepMotorCityLeads'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -115,6 +117,43 @@ export default buildConfig({
         return authHeader === `Bearer ${secret}`
       },
     },
-    tasks: [],
+    tasks: [
+      {
+        slug: 'forwardMotorCityLead',
+        label: 'Forward form submission → Motor City site-forms',
+        retries: 2,
+        inputSchema: [
+          {
+            name: 'formSubmissionId',
+            type: 'text',
+            required: true,
+            admin: {
+              description: 'Payload form-submissions document id (also used as extLeadRef)',
+            },
+          },
+        ],
+        outputSchema: [
+          { name: 'outcome', type: 'text', required: true },
+          { name: 'status', type: 'text' },
+        ],
+        handler: forwardMotorCityLeadHandler,
+      },
+      {
+        slug: 'sweepMotorCityLeads',
+        label: 'Sweep pending Motor City lead forwards',
+        retries: 1,
+        schedule: [
+          {
+            cron: '*/5 * * * *',
+            queue: 'motor-city-leads',
+          },
+        ],
+        outputSchema: [
+          { name: 'examined', type: 'number', required: true },
+          { name: 'queued', type: 'number', required: true },
+        ],
+        handler: sweepMotorCityLeadsHandler,
+      },
+    ],
   },
 })
