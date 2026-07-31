@@ -5,6 +5,23 @@ on:
     branches:
       - staging
   workflow_dispatch:
+    inputs:
+      run_go_live_cutover:
+        description: 'Run go-live cutover (backup + env + nginx + rebuild)'
+        type: boolean
+        default: false
+      skip_nginx:
+        description: 'When cutting over, skip nginx/aaPanel vhost changes'
+        type: boolean
+        default: false
+      skip_rebuild:
+        description: 'When cutting over, skip Docker image rebuild'
+        type: boolean
+        default: false
+      run_fix_live_proxy:
+        description: 'Only diagnose/fix nginx proxy for www+apex -> :4411 (no full cutover)'
+        type: boolean
+        default: false
 
 env:
   NODE_ENV: production
@@ -14,7 +31,7 @@ jobs:
   deploy-staging:
     runs-on: ubuntu-latest
     environment: staging
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       - name: Validate required secrets
@@ -43,8 +60,8 @@ jobs:
           fi
           [ "$missing" -eq 0 ] || exit 1
 
+      # webfactory/ssh-agent v0.10.0 — pinned to full commit SHA
       - name: Setup SSH Agent
-        # webfactory/ssh-agent v0.10.0 — pinned to full commit SHA
         uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
@@ -144,6 +161,27 @@ jobs:
 
             cd '$APP_DIR'
 
+            # Go-live: keep public URL + indexing + Motor City stock URL on every deploy
+            # so a stale APP_ENV secret cannot silently revert the site to staging.
+            if [ -f .env ]; then
+              for pair in \
+                'NEXT_PUBLIC_SERVER_URL=https://www.eagleford.co.za' \
+                'ALLOW_SEARCH_INDEXING=true' \
+                'SENTRY_ENVIRONMENT=production' \
+                'NEXT_PUBLIC_SENTRY_ENVIRONMENT=production' \
+                'MOTOR_CITY_STOCK_API_URL=https://www.eaglemotorcity.co.za'
+              do
+                key=\${pair%%=*}
+                val=\${pair#*=}
+                if grep -q \"^\${key}=\" .env; then
+                  sed -i \"s|^\${key}=.*|\${key}=\${val}|\" .env
+                else
+                  printf '\\n%s=%s\\n' \"\$key\" \"\$val\" >> .env
+                fi
+              done
+              echo '✓ Go-live env overrides applied'
+            fi
+
             if ! command -v docker >/dev/null 2>&1; then
               echo 'ERROR: docker not found. Install Docker on the VPS and add the deploy user to the docker group.'
               exit 1
@@ -158,15 +196,42 @@ jobs:
             echo \"Compose version: \$(docker compose version)\"
 
             chmod +x scripts/docker-deploy-prod.sh
+            chmod +x scripts/go-live-cutover.sh 2>/dev/null || true
+            chmod +x scripts/fix-live-proxy.sh 2>/dev/null || true
 
-            echo ''
-            echo '========================================'
-            echo 'Building and starting Docker containers'
-            echo '========================================'
+            if [ '${{ inputs.run_fix_live_proxy }}' = 'true' ]; then
+              echo ''
+              echo '========================================'
+              echo 'Fixing live nginx proxy (www/apex -> :4411)'
+              echo '========================================'
+              ./scripts/fix-live-proxy.sh
+            elif [ '${{ inputs.run_go_live_cutover }}' = 'true' ]; then
+              echo ''
+              echo '========================================'
+              echo 'Running go-live cutover (backup + proxy + rebuild)'
+              echo '========================================'
+              SKIP_NGINX=0
+              SKIP_REBUILD=0
+              if [ '${{ inputs.skip_nginx }}' = 'true' ]; then
+                SKIP_NGINX=1
+              fi
+              if [ '${{ inputs.skip_rebuild }}' = 'true' ]; then
+                SKIP_REBUILD=1
+              fi
+              CANONICAL_URL='https://www.eagleford.co.za' \
+              SKIP_NGINX=\"\$SKIP_NGINX\" \
+              SKIP_REBUILD=\"\$SKIP_REBUILD\" \
+                ./scripts/go-live-cutover.sh
+            else
+              echo ''
+              echo '========================================'
+              echo 'Building and starting Docker containers'
+              echo '========================================'
 
-            if ! ./scripts/docker-deploy-prod.sh; then
-              echo 'ERROR: docker-deploy-prod.sh failed. Check the output above.'
-              exit 1
+              if ! ./scripts/docker-deploy-prod.sh; then
+                echo 'ERROR: docker-deploy-prod.sh failed. Check the output above.'
+                exit 1
+              fi
             fi
 
             echo ''
@@ -188,13 +253,14 @@ jobs:
               exit 1
             fi
 
-            if ! curl -sf http://127.0.0.1:4411 > /dev/null; then
+            # Probe /api/health — \`/\` 404s on an empty CMS and fails curl -f
+            if ! curl -sf http://127.0.0.1:4411/api/health > /dev/null; then
               echo 'App not ready immediately — waiting for startup (Next.js can take up to 2 minutes)...'
               ready=0
               for i in \$(seq 1 30); do
-                if curl -sf http://127.0.0.1:4411 > /dev/null; then
+                if curl -sf http://127.0.0.1:4411/api/health > /dev/null; then
                   ready=1
-                  echo \"✓ App responded on port 4411 (attempt \$i)\"
+                  echo \"✓ App health OK on port 4411 (attempt \$i)\"
                   break
                 fi
                 echo \"  Attempt \$i/30 — not ready yet, waiting 5s...\"
@@ -206,7 +272,7 @@ jobs:
                 exit 1
               fi
             else
-              echo '✓ App responded on port 4411'
+              echo '✓ App health OK on port 4411'
             fi
 
             echo ''

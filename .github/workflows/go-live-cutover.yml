@@ -1,0 +1,148 @@
+name: Go-Live Cutover
+
+# Runs inventory, backup, env patch, nginx proxy ensure, and Docker rebuild on the
+# staging VPS. Does not delete Docker volumes. Requires staging environment secrets.
+
+on:
+  workflow_dispatch:
+    inputs:
+      skip_rebuild:
+        description: 'Skip Docker rebuild (backup + env + nginx only)'
+        type: boolean
+        default: false
+      skip_nginx:
+        description: 'Skip nginx/aaPanel vhost changes'
+        type: boolean
+        default: false
+      canonical_url:
+        description: 'Canonical public URL (no trailing slash)'
+        type: string
+        default: 'https://www.eagleford.co.za'
+
+permissions:
+  contents: read
+
+# Note: GITHUB_TOKEN cannot update environment secrets. deploy-staging.yml applies
+# the same go-live env overrides on every deploy so APP_ENV drift cannot revert the domain.
+
+jobs:
+  cutover:
+    runs-on: ubuntu-latest
+    environment: staging
+    timeout-minutes: 45
+
+    steps:
+      - name: Validate required secrets
+        env:
+          _SSH_KEY: ${{ secrets.SSH_KEY }}
+          _SSH_HOST: ${{ secrets.SSH_HOST }}
+          _SSH_USER: ${{ secrets.SSH_USER }}
+          _APP_ENV: ${{ secrets.APP_ENV }}
+        run: |
+          missing=0
+          for name in SSH_KEY SSH_HOST SSH_USER APP_ENV; do
+            eval "val=\$_$name"
+            if [ -z "$val" ]; then
+              echo "::error::Missing $name on staging environment"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ] || exit 1
+
+      - name: Setup SSH Agent
+        uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Add server to known hosts
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Run cutover on server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          APP_DIR: ${{ secrets.APP_DIR || '/www/wwwroot' }}
+          APP_ENV: ${{ secrets.APP_ENV }}
+          CANONICAL_URL: ${{ inputs.canonical_url }}
+          SKIP_REBUILD: ${{ inputs.skip_rebuild && '1' || '0' }}
+          SKIP_NGINX: ${{ inputs.skip_nginx && '1' || '0' }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          SSH_OPTS="-p $SSH_PORT"
+          SCP_OPTS="-P $SSH_PORT"
+          ENV_FILE="$(mktemp)"
+          trap 'rm -f "$ENV_FILE"' EXIT
+
+          # Keep APP_ENV as baseline, then server script upserts go-live keys.
+          printf '%s\n' "$APP_ENV" > "$ENV_FILE"
+          if grep -q '^PAYLOAD_CONFIG_PATH=' "$ENV_FILE"; then
+            echo "::error::PAYLOAD_CONFIG_PATH must not be set in APP_ENV"
+            exit 1
+          fi
+
+          # Ensure cutover script exists on server (branch may not have been pulled yet)
+          ssh $SSH_OPTS "$SSH_USER@$SSH_HOST" "
+            set -e
+            [ -f ~/.bashrc ] && source ~/.bashrc || true
+            cd '$APP_DIR'
+            git config --global --add safe.directory '$APP_DIR'
+            git fetch origin
+            git reset --hard origin/staging
+          "
+
+          scp $SCP_OPTS "$ENV_FILE" "$SSH_USER@$SSH_HOST:$APP_DIR/.env"
+
+          ssh $SSH_OPTS "$SSH_USER@$SSH_HOST" "
+            set -e
+            [ -f ~/.bashrc ] && source ~/.bashrc || true
+            [ -f ~/.bash_profile ] && source ~/.bash_profile || true
+            [ -f ~/.profile ] && source ~/.profile || true
+            cd '$APP_DIR'
+            chmod +x scripts/go-live-cutover.sh
+            CANONICAL_URL='$CANONICAL_URL' \
+            SKIP_REBUILD='$SKIP_REBUILD' \
+            SKIP_NGINX='$SKIP_NGINX' \
+              ./scripts/go-live-cutover.sh
+          "
+
+      - name: Confirm go-live env keys on server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          APP_DIR: ${{ secrets.APP_DIR || '/www/wwwroot' }}
+        run: |
+          set -euo pipefail
+          ssh -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" "
+            set -e
+            cd '$APP_DIR'
+            grep -E '^(NEXT_PUBLIC_SERVER_URL|ALLOW_SEARCH_INDEXING)=' .env \
+              | sed -E 's/(SECRET|TOKEN|KEY|PASSWORD)=.*/\1=*** /' \
+              || true
+            grep -q '^NEXT_PUBLIC_SERVER_URL=https://www.eagleford.co.za\$' .env \
+              || grep -q '^NEXT_PUBLIC_SERVER_URL=https://eagleford.co.za\$' .env \
+              || { echo 'NEXT_PUBLIC_SERVER_URL not set to live domain'; exit 1; }
+            grep -q '^ALLOW_SEARCH_INDEXING=true\$' .env \
+              || { echo 'ALLOW_SEARCH_INDEXING not true'; exit 1; }
+            echo '✓ Go-live env keys confirmed on server'
+          "
+
+      - name: External smoke (best-effort)
+        run: |
+          set +e
+          for url in \
+            'https://www.eagleford.co.za/api/health' \
+            'https://eagleford.co.za/api/health' \
+            'https://eagle-ford-dev.tallmancode.co.za/api/health'
+          do
+            echo "GET $url"
+            curl -skI --max-time 20 "$url" | head -n 5
+            echo "---"
+          done
