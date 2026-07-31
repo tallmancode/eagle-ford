@@ -1,0 +1,48 @@
+---
+description: Eagle projects diverge independently except for shared runtime contracts; block standards, CMS usability, and staging/live styling references
+alwaysApply: true
+---
+
+# Project Divergence
+
+The five Eagle sites were seeded from a common template but now **evolve independently**. This applies whether you are working from the workspace root or inside a single project.
+
+## Divergence is allowed
+
+- When a task requires it, freely change collections, fields, data structures, styling, and blocks in the project you are working on.
+- Do **not** keep these in sync with sibling projects, and do not mirror changes across projects unless explicitly asked.
+
+## Shared contracts stay untouched
+
+The one exception is the cross-project runtime contract. These must remain compatible, and changes require coordinating both sides (Motor City + satellites):
+
+- Motor City stock API (`/api/stock/[dealerCode]`, `/api/stock/[dealerCode]/filters`)
+- Site-form leads flow (`POST /api/leads/site-forms`)
+- `Authorization: stock-api-clients API-Key <key>` auth header
+
+See the root `AGENTS.md` for the full contract details.
+
+## Blocks: standardized first, specialty when needed
+
+- Prefer self-contained, conventionally structured blocks (config + component colocated, no hidden cross-file coupling) so a block can be copied to a sibling project.
+- When a task needs a one-off or speciality component, create a dedicated block for it rather than contorting an existing one.
+
+## CMS built for non-developers
+
+Page building happens in the Payload admin by non-developers. Make it easy and intuitive:
+
+- Clear field labels and `admin.description` text
+- Sensible defaults; selects/toggles over free-text config
+- No fields that require developer knowledge to fill in
+
+## Styling references
+
+Match the existing look of each site (Tailwind is used in places). Check the staging site first, then live:
+
+| Project | Staging | Live |
+|---------|---------|------|
+| Eagle Motor City | https://eagle-motors-dev.tallmancode.co.za/ | https://www.eaglemotorcity.co.za/ |
+| Eagle Ford | https://eagle-ford-dev.tallmancode.co.za/ | https://www.eagleford.co.za/ |
+| Eagle Mazda | https://eagle-mazda-dev.tallmancode.co.za/ | https://www.eaglemazda.co.za/ |
+| Eagle Suzuki | https://eagle-suzuki-dev.tallmancode.co.za/ | https://eaglesuzuki.co.za/ |
+| Eagle Mahindra | https://eagle-mahindra-dev.tallmancode.co.za/ | https://www.eaglemahindra.co.za/ |
