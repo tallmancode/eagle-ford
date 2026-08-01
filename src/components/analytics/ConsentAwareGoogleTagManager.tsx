@@ -2,28 +2,24 @@
 
 import { GoogleTagManager } from '@next/third-parties/google'
 
-import { usePrivacy } from '@/lib/providers/privacy'
+import { normalizeGoogleTagManagerId } from '@/components/analytics/googleTagManager'
 
 type ConsentAwareGoogleTagManagerProps = {
   enabled?: boolean | null
   containerId?: string | null
 }
 
-const GOOGLE_TAG_MANAGER_ID_PATTERN = /^GTM-[A-Z0-9]+$/
-
+/**
+ * Loads GTM whenever CMS analytics is enabled and the container ID is valid.
+ * Consent Mode (not mount gating) controls whether tags may use storage.
+ */
 export function ConsentAwareGoogleTagManager({
   enabled,
   containerId,
 }: ConsentAwareGoogleTagManagerProps) {
-  const { cookieConsent } = usePrivacy()
-  const normalizedContainerId = containerId?.trim()
+  const normalizedContainerId = normalizeGoogleTagManagerId(containerId)
 
-  if (
-    !enabled ||
-    cookieConsent !== true ||
-    !normalizedContainerId ||
-    !GOOGLE_TAG_MANAGER_ID_PATTERN.test(normalizedContainerId)
-  ) {
+  if (!enabled || !normalizedContainerId) {
     return null
   }
 

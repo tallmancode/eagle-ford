@@ -4,14 +4,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { ConsentAwareGoogleTagManager } from '@/components/analytics/ConsentAwareGoogleTagManager'
 
-const privacyState = vi.hoisted<{ cookieConsent: boolean | undefined }>(() => ({
-  cookieConsent: undefined,
-}))
-
-vi.mock('@/lib/providers/privacy', () => ({
-  usePrivacy: () => privacyState,
-}))
-
 vi.mock('@next/third-parties/google', () => ({
   GoogleTagManager: ({ gtmId }: { gtmId: string }) =>
     createElement('div', {
@@ -22,13 +14,10 @@ vi.mock('@next/third-parties/google', () => ({
 
 afterEach(() => {
   cleanup()
-  privacyState.cookieConsent = undefined
 })
 
 describe('ConsentAwareGoogleTagManager', () => {
   it('does not render when Google Tag Manager is disabled', () => {
-    privacyState.cookieConsent = true
-
     render(
       createElement(ConsentAwareGoogleTagManager, {
         enabled: false,
@@ -39,9 +28,7 @@ describe('ConsentAwareGoogleTagManager', () => {
     expect(screen.queryByTestId('google-tag-manager')).toBeNull()
   })
 
-  it('does not render before cookie consent is granted', () => {
-    privacyState.cookieConsent = false
-
+  it('renders when enabled even before cookie consent is granted', () => {
     render(
       createElement(ConsentAwareGoogleTagManager, {
         enabled: true,
@@ -49,12 +36,12 @@ describe('ConsentAwareGoogleTagManager', () => {
       }),
     )
 
-    expect(screen.queryByTestId('google-tag-manager')).toBeNull()
+    expect(screen.getByTestId('google-tag-manager').getAttribute('data-gtm-id')).toBe(
+      'GTM-P2JCNCLC',
+    )
   })
 
   it('does not render for an invalid container ID', () => {
-    privacyState.cookieConsent = true
-
     render(
       createElement(ConsentAwareGoogleTagManager, {
         enabled: true,
@@ -65,9 +52,7 @@ describe('ConsentAwareGoogleTagManager', () => {
     expect(screen.queryByTestId('google-tag-manager')).toBeNull()
   })
 
-  it('renders the configured container after consent is granted', () => {
-    privacyState.cookieConsent = true
-
+  it('renders the configured container when enabled', () => {
     render(
       createElement(ConsentAwareGoogleTagManager, {
         enabled: true,
