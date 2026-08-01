@@ -8,7 +8,7 @@ import { getFinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-bl
 import { getCachedStock } from '@/lib/motor-city-stock/getCachedStock'
 import { getCachedStockVehicle } from '@/lib/motor-city-stock/getCachedStockVehicle'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
-import { getVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
+import { getShowroomQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
 import { buildStockVehiclePath, getStockVehicleCmsIdFromSlug } from '@/lib/stock-vehicle/paths'
 import { getStockHeroImage } from '@/lib/stock-vehicle/media'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
@@ -61,13 +61,13 @@ export default async function ShowroomVehiclePage({ params: paramsPromise }: Arg
   }
 
   let vehicle: Awaited<ReturnType<typeof getCachedStockVehicle>>
-  let enquiryForm: Awaited<ReturnType<typeof getVehicleQuoteForm>>
+  let enquiryForm: Awaited<ReturnType<typeof getShowroomQuoteForm>>
   let settings: Setting
 
   try {
     ;[vehicle, enquiryForm, settings] = await Promise.all([
       getCachedStockVehicle(cmsId),
-      getVehicleQuoteForm(),
+      getShowroomQuoteForm(),
       getCachedGlobal('settings', 1) as Promise<Setting>,
     ])
   } catch (error) {
