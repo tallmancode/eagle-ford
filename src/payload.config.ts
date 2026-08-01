@@ -84,12 +84,15 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   email: nodemailerAdapter({
-    defaultFromAddress: 'no-reply@tallmancode.co.za',
-    defaultFromName: 'TallmanCode',
-    // Nodemailer transportOptions
+    defaultFromAddress: 'noreply@eaglemc.co.za',
+    defaultFromName: 'Eagle Ford',
     transportOptions: {
       host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
+      port: Number(process.env.SMTP_PORT ?? 587),
+      // Port 587 = STARTTLS (secure: false + requireTLS: true)
+      // Port 465 = implicit SSL (secure: true)
+      secure: Number(process.env.SMTP_PORT ?? 587) === 465,
+      requireTLS: Number(process.env.SMTP_PORT ?? 587) !== 465,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,

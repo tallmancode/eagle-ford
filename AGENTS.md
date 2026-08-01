@@ -111,6 +111,100 @@ Three tiers — only vehicles and models have public pages:
 - Regenerate Payload types if schema changed
 - Verify rendering on frontend and visibility in Payload admin block picker
 
+## Deployment
+
+### Overview
+
+Merging a PR to `main` automatically deploys to production. There is no separate staging environment.
+
+```
+develop → PR → main (merge) → GitHub Actions deploy.yml → VPS (Docker) → eagleford.co.za
+```
+
+### VPS layout
+
+| Resource | Value |
+|---|---|
+| App port | `127.0.0.1:4411` (nginx proxies to this) |
+| Mongo port | `127.0.0.1:4422` |
+| Docker compose file | `docker-compose.prod.yml` |
+| Deploy script | `scripts/docker-deploy-prod.sh` |
+| Live site | `https://www.eagleford.co.za` |
+
+Nginx (aaPanel) serves two vhosts from the same VPS:
+- `www.eagleford.co.za` + apex → proxy to `:4411`
+- `eagle-ford-dev.tallmancode.co.za` → 301 redirect to `https://www.eagleford.co.za` (config: `deploy/nginx/eagle-ford-dev.redirect.conf`)
+
+### GitHub Actions — `deploy.yml`
+
+Triggered by: **push to `main`** (i.e. any merged PR) and `workflow_dispatch`.
+
+The workflow:
+1. SSH into the VPS
+2. `git reset --hard origin/main` in the app directory
+3. Uploads `.env` from the `APP_ENV` secret
+4. Force-applies production env overrides (URL, indexing, Sentry env, Motor City URL)
+5. Runs `scripts/docker-deploy-prod.sh` → builds Docker image → starts `app` + `mongo`
+6. Health-checks `http://127.0.0.1:4411/api/health`
+
+**Manual re-deploy** (no code change): Actions → Deploy Production → Run workflow → optionally tick `skip_rebuild`.
+
+### GitHub Environment — `production`
+
+All deploy secrets live in the **`production`** environment (branch-scoped to `main`).
+
+| Secret | Description |
+|---|---|
+| `SSH_KEY` | Private key for VPS SSH access |
+| `SSH_HOST` | VPS IP or hostname |
+| `SSH_USER` | SSH user (must be in `docker` group) |
+| `APP_ENV` | Full `.env` content uploaded to VPS on each deploy |
+| `SSH_PORT` | Optional — defaults to `22` |
+| `APP_DIR` | Optional — defaults to `/www/wwwroot` |
+
+### `APP_ENV` secret (required contents)
+
+```env
+NEXT_PUBLIC_SERVER_URL=https://www.eagleford.co.za
+
+DATABASE_URL=mongodb://mongo:27017/eagle-ford-dev
+BUILD_DATABASE_URL=mongodb://127.0.0.1:4422/eagle-ford-dev
+
+PAYLOAD_SECRET=<secret>
+CRON_SECRET=<secret>
+PREVIEW_SECRET=<secret>
+NEXT_SERVER_ACTIONS_ENCRYPTION_KEY=<secret>
+
+MOTOR_CITY_STOCK_API_URL=https://www.eaglemotorcity.co.za
+MOTOR_CITY_STOCK_API_KEY=<key from Motor City live admin>
+
+SMTP_HOST=za-smtp-outbound-1.mimecast.co.za
+SMTP_PORT=587
+SMTP_USER=noreply@eaglemc.co.za
+SMTP_PASS=<password>
+
+SENTRY_DSN=<dsn>
+NEXT_PUBLIC_SENTRY_DSN=<dsn>
+SENTRY_AUTH_TOKEN=<token>
+SENTRY_ENVIRONMENT=production
+NEXT_PUBLIC_SENTRY_ENVIRONMENT=production
+
+ALLOW_SEARCH_INDEXING=true
+```
+
+Key points:
+- `MOTOR_CITY_STOCK_API_KEY` must come from the **live** Motor City admin (`www.eaglemotorcity.co.za/admin → Stock → Stock API Clients`). Dev keys from the staging Motor City instance will not work.
+- `SMTP_PORT=587` uses STARTTLS — the Nodemailer adapter is configured to enforce TLS upgrade automatically.
+- The workflow force-overwrites `NEXT_PUBLIC_SERVER_URL`, `ALLOW_SEARCH_INDEXING`, `SENTRY_ENVIRONMENT`, `NEXT_PUBLIC_SENTRY_ENVIRONMENT`, and `MOTOR_CITY_STOCK_API_URL` on every deploy as a safety net.
+
+### Lead jobs sidecar
+
+The `lead-jobs` service in `docker-compose.prod.yml` polls `/api/payload-jobs/run?queue=motor-city-leads` every 60 seconds to retry pending Motor City lead forwards. It requires `CRON_SECRET` in the env and will exit on startup if the secret is missing.
+
+### Docker build notes
+
+The image is built with `--secret id=env,src=.env --network=host` so `BUILD_DATABASE_URL` (pointing at the host-published Mongo port `4422`) is reachable during the Next.js build phase.
+
 ## Cursor Cloud specific instructions
 
 Standard commands live in `README.md` / `package.json` (`pnpm dev`, `pnpm lint`, `pnpm test:int`, `pnpm build`). Notes below are only the non-obvious startup caveats for this cloud environment.

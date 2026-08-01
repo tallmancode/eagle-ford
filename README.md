@@ -13,8 +13,8 @@ Website for Eagle Ford dealership, powered by [Payload CMS](https://payloadcms.c
 1. Copy environment variables: `cp .env.example .env`
 2. Install dependencies: `pnpm install`
 3. Start the dev server: `pnpm dev`
-4. Open [http://localhost:3000](http://localhost:3000) for the website
-5. Open [http://localhost:3000/admin](http://localhost:3000/admin) for the CMS
+4. Open [http://localhost:3001](http://localhost:3001) for the website
+5. Open [http://localhost:3001/admin](http://localhost:3001/admin) for the CMS
 
 Changes in `./src` are reflected automatically during development.
 
@@ -54,14 +54,37 @@ Site branding is centralized in `src/constants/site.ts`:
 - `formatPageTitle()` — consistent page title format (`Page Title | Eagle Ford`)
 - `DEFAULT_OG_DESCRIPTION` — default Open Graph description
 
-## Production
+## Production deployment
 
-```bash
-pnpm build
-pnpm start
+Merging a PR to `main` automatically triggers the **Deploy Production** GitHub Actions workflow, which SSH-deploys to the VPS and rebuilds the Docker image.
+
+| What | Where |
+|---|---|
+| Live site | https://www.eagleford.co.za |
+| VPS app port | `127.0.0.1:4411` |
+| Docker stack | `docker-compose.prod.yml` |
+| Workflow file | `.github/workflows/deploy.yml` |
+
+### Deploy flow
+
+```
+develop branch → PR → merge to main → Actions deploy.yml → VPS Docker build → live
 ```
 
-See the [Payload deployment docs](https://payloadcms.com/docs/production/deployment) for hosting guidance.
+### Manual re-deploy
+
+Actions → **Deploy Production** → **Run workflow** → optionally tick **Skip rebuild** (for config-only changes that don't need a full image rebuild).
+
+### Secrets
+
+All secrets live in the **`production`** GitHub Environment (branch-scoped to `main`). See [AGENTS.md](AGENTS.md#deployment) for the full secret reference and `APP_ENV` contents.
+
+### Local Docker build (VPS script reference)
+
+```bash
+# Start Mongo first, then build and run:
+./scripts/docker-deploy-prod.sh
+```
 
 ## Payload CMS
 

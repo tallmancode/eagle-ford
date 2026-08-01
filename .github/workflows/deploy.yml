@@ -1,25 +1,13 @@
-name: Deploy Staging
+name: Deploy Production
 
 on:
   push:
     branches:
-      - staging
+      - main
   workflow_dispatch:
     inputs:
-      run_go_live_cutover:
-        description: 'Run go-live cutover (backup + env + nginx + rebuild)'
-        type: boolean
-        default: false
-      skip_nginx:
-        description: 'When cutting over, skip nginx/aaPanel vhost changes'
-        type: boolean
-        default: false
       skip_rebuild:
-        description: 'When cutting over, skip Docker image rebuild'
-        type: boolean
-        default: false
-      run_fix_live_proxy:
-        description: 'Only diagnose/fix nginx proxy for www+apex -> :4411 (no full cutover)'
+        description: 'Skip Docker image rebuild (restart containers only — use after config-only changes)'
         type: boolean
         default: false
 
@@ -28,9 +16,9 @@ env:
   NEXT_TELEMETRY_DISABLED: 1
 
 jobs:
-  deploy-staging:
+  deploy:
     runs-on: ubuntu-latest
-    environment: staging
+    environment: production
     timeout-minutes: 45
 
     steps:
@@ -43,19 +31,19 @@ jobs:
         run: |
           missing=0
           if [ -z "$_SSH_KEY" ]; then
-            echo "::error::Missing SSH_KEY (set on the staging environment or repository secrets)"
+            echo "::error::Missing SSH_KEY (set on the production environment or repository secrets)"
             missing=1
           fi
           if [ -z "$_SSH_HOST" ]; then
-            echo "::error::Missing SSH_HOST (set on the staging environment or repository secrets)"
+            echo "::error::Missing SSH_HOST (set on the production environment or repository secrets)"
             missing=1
           fi
           if [ -z "$_SSH_USER" ]; then
-            echo "::error::Missing SSH_USER (set on the staging environment or repository secrets)"
+            echo "::error::Missing SSH_USER (set on the production environment or repository secrets)"
             missing=1
           fi
           if [ -z "$_APP_ENV" ]; then
-            echo "::error::Missing APP_ENV (set on the staging environment or repository secrets)"
+            echo "::error::Missing APP_ENV (set on the production environment or repository secrets)"
             missing=1
           fi
           [ "$missing" -eq 0 ] || exit 1
@@ -87,7 +75,7 @@ jobs:
 
           SSH_OPTS="-p $SSH_PORT"
           SCP_OPTS="-P $SSH_PORT"
-          DEPLOY_BRANCH="staging"
+          DEPLOY_BRANCH="main"
           ENV_FILE="$(mktemp)"
           trap 'rm -f "$ENV_FILE"' EXIT
 
@@ -98,7 +86,7 @@ jobs:
           fi
           if grep -q '^PAYLOAD_CONFIG_PATH=' "$ENV_FILE"; then
             echo "::error::PAYLOAD_CONFIG_PATH must not be set in APP_ENV for Docker deploy."
-            echo "::error::Remove it from the staging environment secret — the container resolves config via @payload-config at /app."
+            echo "::error::Remove it from the production environment secret — the container resolves config via @payload-config at /app."
             exit 1
           fi
 
@@ -161,8 +149,7 @@ jobs:
 
             cd '$APP_DIR'
 
-            # Go-live: keep public URL + indexing + Motor City stock URL on every deploy
-            # so a stale APP_ENV secret cannot silently revert the site to staging.
+            # Safety net: ensure production env values are always correct regardless of secret content.
             if [ -f .env ]; then
               for pair in \
                 'NEXT_PUBLIC_SERVER_URL=https://www.eagleford.co.za' \
@@ -179,7 +166,7 @@ jobs:
                   printf '\\n%s=%s\\n' \"\$key\" \"\$val\" >> .env
                 fi
               done
-              echo '✓ Go-live env overrides applied'
+              echo '✓ Production env overrides applied'
             fi
 
             if ! command -v docker >/dev/null 2>&1; then
@@ -196,42 +183,15 @@ jobs:
             echo \"Compose version: \$(docker compose version)\"
 
             chmod +x scripts/docker-deploy-prod.sh
-            chmod +x scripts/go-live-cutover.sh 2>/dev/null || true
-            chmod +x scripts/fix-live-proxy.sh 2>/dev/null || true
 
-            if [ '${{ inputs.run_fix_live_proxy }}' = 'true' ]; then
-              echo ''
-              echo '========================================'
-              echo 'Fixing live nginx proxy (www/apex -> :4411)'
-              echo '========================================'
-              ./scripts/fix-live-proxy.sh
-            elif [ '${{ inputs.run_go_live_cutover }}' = 'true' ]; then
-              echo ''
-              echo '========================================'
-              echo 'Running go-live cutover (backup + proxy + rebuild)'
-              echo '========================================'
-              SKIP_NGINX=0
-              SKIP_REBUILD=0
-              if [ '${{ inputs.skip_nginx }}' = 'true' ]; then
-                SKIP_NGINX=1
-              fi
-              if [ '${{ inputs.skip_rebuild }}' = 'true' ]; then
-                SKIP_REBUILD=1
-              fi
-              CANONICAL_URL='https://www.eagleford.co.za' \
-              SKIP_NGINX=\"\$SKIP_NGINX\" \
-              SKIP_REBUILD=\"\$SKIP_REBUILD\" \
-                ./scripts/go-live-cutover.sh
-            else
-              echo ''
-              echo '========================================'
-              echo 'Building and starting Docker containers'
-              echo '========================================'
+            echo ''
+            echo '========================================'
+            echo 'Building and starting Docker containers'
+            echo '========================================'
 
-              if ! ./scripts/docker-deploy-prod.sh; then
-                echo 'ERROR: docker-deploy-prod.sh failed. Check the output above.'
-                exit 1
-              fi
+            if ! ./scripts/docker-deploy-prod.sh; then
+              echo 'ERROR: docker-deploy-prod.sh failed. Check the output above.'
+              exit 1
             fi
 
             echo ''
@@ -277,7 +237,7 @@ jobs:
 
             echo ''
             echo '========================================'
-            echo '✓ Staging deployment completed successfully!'
-            echo '✓ App and mongo containers are running'
+            echo '✓ Production deployment completed successfully!'
+            echo '✓ Live site: https://www.eagleford.co.za'
             echo '========================================'
           "
