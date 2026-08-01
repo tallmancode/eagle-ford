@@ -28,3 +28,18 @@ node_modules/
 /playwright/.cache/
 /src/app/(frontend)/local/
 /imports/
+
+# IDE / local env noise
+.idea/
+test.env
+
+# Common risk / noise patterns
+*.log
+coverage/
+*.pem
+*.key
+Thumbs.db
+.turbo
+*.local
+backups/
+dumps/

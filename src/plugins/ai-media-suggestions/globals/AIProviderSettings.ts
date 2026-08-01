@@ -1,10 +1,10 @@
 import type { GlobalConfig, Where } from 'payload'
-import { isAdmin, isAnyone } from '@/lib/utils/accessUtil'
+import { isAdmin, isAdminField } from '@/lib/utils/accessUtil'
 
 export const AIProviderSettings: GlobalConfig = {
   slug: 'ai-provider-settings',
   access: {
-    read: isAnyone,
+    read: isAdmin,
     update: isAdmin,
   },
   admin: {
@@ -118,6 +118,9 @@ export const AIProviderSettings: GlobalConfig = {
     {
       name: 'apiKey',
       type: 'text',
+      access: {
+        read: isAdminField,
+      },
       admin: {
         description:
           'API key - Optional for Ollama Local | Required for Ollama Cloud, Google Gemini, and Claude API (console.anthropic.com)',

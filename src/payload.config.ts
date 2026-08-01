@@ -75,6 +75,8 @@ export default buildConfig({
   }),
   collections: [...Collections, UsersCollection],
   cors: [getServerSideURL()].filter(Boolean),
+  csrf: [getServerSideURL()].filter(Boolean),
+  maxDepth: 5,
   globals: Globals,
   blocks: [...Blocks],
   plugins,

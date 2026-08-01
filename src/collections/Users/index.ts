@@ -1,20 +1,33 @@
 import type { CollectionConfig } from 'payload'
-import { isAuthenticated } from '@/lib/utils/accessUtil'
+import {
+  isAdminOrDeveloper,
+  isAdminOrDeveloperField,
+  isAdminOrSelf,
+  isAuthenticated,
+} from '@/lib/utils/accessUtil'
+import { isHttpsDeployment } from '@/lib/utils/getServerSideURL'
 
 export const UsersCollection: CollectionConfig = {
   slug: 'users',
   access: {
-    create: isAuthenticated,
-    delete: isAuthenticated,
+    create: isAdminOrDeveloper,
+    delete: isAdminOrDeveloper,
     read: isAuthenticated,
-    update: isAuthenticated,
+    update: isAdminOrSelf,
   },
   admin: {
     defaultColumns: ['firstName', 'lastName', 'username', 'email', 'roles'],
     useAsTitle: 'username',
     group: 'Settings',
   },
-  auth: true,
+  auth: {
+    maxLoginAttempts: 5,
+    lockTime: 600 * 1000, // 10 minutes
+    cookies: {
+      secure: isHttpsDeployment(),
+      sameSite: 'Lax',
+    },
+  },
   fields: [
     {
       type: 'row',
@@ -68,6 +81,10 @@ export const UsersCollection: CollectionConfig = {
           value: 'staff',
         },
       ],
+      access: {
+        create: isAdminOrDeveloperField,
+        update: isAdminOrDeveloperField,
+      },
       filterOptions: ({ options, req }) =>
         req.user?.roles?.includes('developer') || req.user?.roles?.includes('admin')
           ? options
