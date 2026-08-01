@@ -4317,6 +4317,14 @@ export interface Setting {
   contactInfo: ContactInfo1;
   pricingCalculatorDefaults?: PricingCalculatorDefaults;
   analytics: AnalyticsSettings;
+  /**
+   * Used on live stock / showroom vehicle detail pages. Leave empty to hide the enquiry form.
+   */
+  showroomQuoteForm?: (string | null) | Form;
+  /**
+   * Used on new vehicle and model pages under /vehicles. Leave empty to hide the enquiry form.
+   */
+  newVehicleQuoteForm?: (string | null) | Form;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -4538,6 +4546,8 @@ export interface SettingsSelect<T extends boolean = true> {
   contactInfo?: T | ContactInfoSelect<T>;
   pricingCalculatorDefaults?: T | PricingCalculatorDefaultsSelect<T>;
   analytics?: T | AnalyticsSettingsSelect<T>;
+  showroomQuoteForm?: T;
+  newVehicleQuoteForm?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

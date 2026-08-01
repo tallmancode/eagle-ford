@@ -150,6 +150,31 @@ export const SettingsGlobal: GlobalConfig = {
           ],
         },
         {
+          label: 'Forms',
+          fields: [
+            {
+              name: 'showroomQuoteForm',
+              type: 'relationship',
+              relationTo: 'forms',
+              label: 'Showroom quote form',
+              admin: {
+                description:
+                  'Used on live stock / showroom vehicle detail pages. Leave empty to hide the enquiry form.',
+              },
+            },
+            {
+              name: 'newVehicleQuoteForm',
+              type: 'relationship',
+              relationTo: 'forms',
+              label: 'New vehicle quote form',
+              admin: {
+                description:
+                  'Used on new vehicle and model pages under /vehicles. Leave empty to hide the enquiry form.',
+              },
+            },
+          ],
+        },
+        {
           label: 'Data Seeds',
           admin: {
             condition: (_data, _siblingData, { user }) => {

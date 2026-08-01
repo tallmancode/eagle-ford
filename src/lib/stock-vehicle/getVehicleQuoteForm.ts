@@ -1,8 +1,50 @@
-import type { Form } from '@/payload-types'
-import { getFormByTitle } from '@/lib/forms/getFormByTitle'
+import { cache } from 'react'
+import configPromise from '@payload-config'
+import { getPayload } from 'payload'
 
-const VEHICLE_QUOTE_FORM_TITLE = 'Vehicle Quote'
+import type { Form, Setting } from '@/payload-types'
+import { getCachedGlobal } from '@/lib/utils/getGlobals'
 
-export async function getVehicleQuoteForm(): Promise<Form | null> {
-  return getFormByTitle(VEHICLE_QUOTE_FORM_TITLE)
+type QuoteFormSettingKey = 'showroomQuoteForm' | 'newVehicleQuoteForm'
+
+function getFormId(form: Setting[QuoteFormSettingKey]): string | null {
+  if (!form) return null
+  if (typeof form === 'object') return form.id
+  return form
 }
+
+async function resolveFormFromSetting(key: QuoteFormSettingKey): Promise<Form | null> {
+  const settings = (await getCachedGlobal('settings', 1)) as Setting
+  const formRef = settings[key]
+  const formId = getFormId(formRef)
+
+  if (!formId) return null
+
+  if (
+    typeof formRef === 'object' &&
+    formRef !== null &&
+    formRef.id &&
+    (formRef.fields || formRef.steps)
+  ) {
+    return formRef
+  }
+
+  const payload = await getPayload({ config: configPromise })
+  const result = await payload.findByID({
+    collection: 'forms',
+    id: formId,
+    depth: 2,
+    disableErrors: true,
+    overrideAccess: false,
+  })
+
+  return result ?? null
+}
+
+export const getShowroomQuoteForm = cache(async (): Promise<Form | null> => {
+  return resolveFormFromSetting('showroomQuoteForm')
+})
+
+export const getNewVehicleQuoteForm = cache(async (): Promise<Form | null> => {
+  return resolveFormFromSetting('newVehicleQuoteForm')
+})

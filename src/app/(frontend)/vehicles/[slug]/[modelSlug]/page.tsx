@@ -12,7 +12,7 @@ import { LivePreviewListener } from '@/components/LivePreviewListener'
 import type { Media, VehicleModel, VehicleModelTemplate, VehicleVariant } from '@/payload-types'
 import { DefaultModelLayout } from './DefaultModelLayout'
 import { getModelStartingPrice, getVehicleModelPath } from '@/lib/utils/vehicleModel'
-import { getVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
+import { getNewVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
 import { buildDocumentMetadata, resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
 import { getBreadcrumbJsonLd, getVehicleJsonLd } from '@/lib/seo/dealershipJsonLd'
 
@@ -111,7 +111,7 @@ export default async function Page({ params: paramsPromise }: Args) {
       pagination: false,
       where: { model: { equals: model.id } },
     }),
-    getVehicleQuoteForm(),
+    getNewVehicleQuoteForm(),
   ])
 
   const variants = variantsResult.docs as VehicleVariant[]
