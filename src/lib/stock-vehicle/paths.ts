@@ -15,6 +15,12 @@ export function buildStockVehiclePath(
   return `${SHOWROOM_BASE_PATH}/${stockNo}-${vehicle.cmsId}`
 }
 
+export function buildStockVehicleEnquirePath(
+  vehicle: Pick<MotorCityStockVehicle, 'stockNo' | 'stockNoDisplay' | 'cmsId'>,
+): string {
+  return `${buildStockVehiclePath(vehicle)}#enquire`
+}
+
 export function parseStockVehicleSlug(slug: string): { stockNo: string; cmsId: string } | null {
   const dashIndex = slug.indexOf('-')
   if (dashIndex <= 0 || dashIndex === slug.length - 1) {

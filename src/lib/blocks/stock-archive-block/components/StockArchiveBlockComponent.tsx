@@ -65,7 +65,6 @@ export async function StockArchiveBlockComponent(props: Props) {
     conditionFilter = 'all',
     limit = 12,
     showPagination = true,
-    enquireUrl = '/contact',
     meta,
   } = props
 
@@ -153,7 +152,6 @@ export async function StockArchiveBlockComponent(props: Props) {
       activeFilters={activeFilters}
       limit={pageLimit}
       showPagination={showPagination ?? true}
-      enquireUrl={enquireUrl ?? '/contact'}
       pagination={{
         page: paginated.page,
         totalPages: paginated.totalPages,

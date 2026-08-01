@@ -3,10 +3,9 @@ import type { MotorCityStockVehicle } from '@/lib/motor-city-stock/types'
 
 type Props = {
   vehicles: MotorCityStockVehicle[]
-  enquireUrl?: string
 }
 
-export function StockVehicleSimilar({ vehicles, enquireUrl = '/contact' }: Props) {
+export function StockVehicleSimilar({ vehicles }: Props) {
   if (vehicles.length === 0) return null
 
   return (
@@ -17,7 +16,7 @@ export function StockVehicleSimilar({ vehicles, enquireUrl = '/contact' }: Props
         </h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {vehicles.map((vehicle) => (
-            <StockCard key={vehicle.id} vehicle={vehicle} enquireUrl={enquireUrl} />
+            <StockCard key={vehicle.id} vehicle={vehicle} />
           ))}
         </div>
       </div>

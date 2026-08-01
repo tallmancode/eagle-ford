@@ -350,12 +350,3 @@ export function buildPriceHistogram(
 
   return buckets
 }
-
-export function buildEnquireUrl(baseUrl: string, vehicleTitle: string): string {
-  if (baseUrl.startsWith('tel:') || baseUrl.startsWith('mailto:')) {
-    return baseUrl
-  }
-
-  const separator = baseUrl.includes('?') ? '&' : '?'
-  return `${baseUrl}${separator}vehicle=${encodeURIComponent(vehicleTitle)}`
-}

@@ -39,14 +39,5 @@ export const StockArchiveBlock: Block = {
       label: 'Show Pagination',
       defaultValue: true,
     },
-    {
-      type: 'text',
-      name: 'enquireUrl',
-      label: 'Enquire URL',
-      defaultValue: '/contact',
-      admin: {
-        description: 'Internal path (e.g. /contact), tel:, or mailto: link for card CTA buttons.',
-      },
-    },
   ],
 }

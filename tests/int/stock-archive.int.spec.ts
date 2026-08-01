@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { StockArchiveVehicle } from '@/lib/blocks/stock-archive-block/utils'
 import {
-  buildEnquireUrl,
   countActiveFilters,
   formatBodyTypeLabel,
   formatMileageCompact,
@@ -18,7 +17,7 @@ import {
   stockArchiveFiltersToSearchParams,
 } from '@/lib/blocks/stock-archive-block/utils'
 import { buildStockUrl } from '@/lib/motor-city-stock/fetchStock'
-import { buildStockVehiclePath } from '@/lib/stock-vehicle/paths'
+import { buildStockVehicleEnquirePath, buildStockVehiclePath } from '@/lib/stock-vehicle/paths'
 
 function makeVehicle(overrides: Partial<StockArchiveVehicle> = {}): StockArchiveVehicle {
   return {
@@ -132,12 +131,14 @@ describe('stock-archive utils', () => {
     expect(formatBodyTypeLabel({ label: 'unknown', name: 'X/Y' })).toBe('X/Y')
   })
 
-  it('buildEnquireUrl appends vehicle query for internal paths', () => {
-    expect(buildEnquireUrl('/contact', 'Ford Ranger')).toBe('/contact?vehicle=Ford%20Ranger')
-  })
-
-  it('buildEnquireUrl leaves tel links unchanged', () => {
-    expect(buildEnquireUrl('tel:0104400510', 'Ford Ranger')).toBe('tel:0104400510')
+  it('buildStockVehicleEnquirePath appends #enquire to the showroom path', () => {
+    expect(
+      buildStockVehicleEnquirePath({
+        stockNo: '10USE14953',
+        stockNoDisplay: null,
+        cmsId: '642162',
+      }),
+    ).toBe('/showroom/10USE14953-642162#enquire')
   })
 
   it('getStockImageUrl prefers full-size pic over thumb', () => {

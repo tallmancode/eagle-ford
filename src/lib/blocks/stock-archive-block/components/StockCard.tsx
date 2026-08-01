@@ -2,9 +2,8 @@ import { Cog, Fuel, Gauge, MapPin } from 'lucide-react'
 import Link from 'next/link'
 import { MediaImage } from '@/components/ui/media-image'
 import { Button } from '@/components/ui/button'
-import { buildStockVehiclePath } from '@/lib/stock-vehicle/paths'
+import { buildStockVehicleEnquirePath, buildStockVehiclePath } from '@/lib/stock-vehicle/paths'
 import {
-  buildEnquireUrl,
   formatMileageCompact,
   formatPrice,
   formatTransmissionShort,
@@ -18,7 +17,6 @@ import {
 
 type Props = {
   vehicle: StockArchiveVehicle
-  enquireUrl: string
 }
 
 function SpecItem({ icon: Icon, label }: { icon: typeof Gauge; label: string }) {
@@ -30,12 +28,12 @@ function SpecItem({ icon: Icon, label }: { icon: typeof Gauge; label: string }) 
   )
 }
 
-export function StockCard({ vehicle, enquireUrl }: Props) {
+export function StockCard({ vehicle }: Props) {
   const image = getStockImageUrl(vehicle.media)
   const title = getVehicleDisplayName(vehicle)
   const price = getVehiclePrice(vehicle)
-  const enquireHref = buildEnquireUrl(enquireUrl, title)
   const detailsHref = buildStockVehiclePath(vehicle)
+  const enquireHref = buildStockVehicleEnquirePath(vehicle)
 
   const fuelTypeLabel = getTaxonomyLabel(vehicle.fuelType)
   const fuelLabel = FUEL_TYPE_LABELS[fuelTypeLabel?.toLowerCase() ?? ''] ?? fuelTypeLabel ?? '—'
