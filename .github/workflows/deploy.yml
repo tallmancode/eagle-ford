@@ -1,20 +1,25 @@
-name: Deploy Staging
+name: Deploy Production
 
 on:
   push:
     branches:
-      - staging
+      - main
   workflow_dispatch:
+    inputs:
+      skip_rebuild:
+        description: 'Skip Docker image rebuild (restart containers only — use after config-only changes)'
+        type: boolean
+        default: false
 
 env:
   NODE_ENV: production
   NEXT_TELEMETRY_DISABLED: 1
 
 jobs:
-  deploy-staging:
+  deploy:
     runs-on: ubuntu-latest
-    environment: staging
-    timeout-minutes: 30
+    environment: production
+    timeout-minutes: 45
 
     steps:
       - name: Validate required secrets
@@ -26,25 +31,25 @@ jobs:
         run: |
           missing=0
           if [ -z "$_SSH_KEY" ]; then
-            echo "::error::Missing SSH_KEY (set on the staging environment or repository secrets)"
+            echo "::error::Missing SSH_KEY (set on the production environment or repository secrets)"
             missing=1
           fi
           if [ -z "$_SSH_HOST" ]; then
-            echo "::error::Missing SSH_HOST (set on the staging environment or repository secrets)"
+            echo "::error::Missing SSH_HOST (set on the production environment or repository secrets)"
             missing=1
           fi
           if [ -z "$_SSH_USER" ]; then
-            echo "::error::Missing SSH_USER (set on the staging environment or repository secrets)"
+            echo "::error::Missing SSH_USER (set on the production environment or repository secrets)"
             missing=1
           fi
           if [ -z "$_APP_ENV" ]; then
-            echo "::error::Missing APP_ENV (set on the staging environment or repository secrets)"
+            echo "::error::Missing APP_ENV (set on the production environment or repository secrets)"
             missing=1
           fi
           [ "$missing" -eq 0 ] || exit 1
 
+      # webfactory/ssh-agent v0.10.0 — pinned to full commit SHA
       - name: Setup SSH Agent
-        # webfactory/ssh-agent v0.10.0 — pinned to full commit SHA
         uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
@@ -70,7 +75,7 @@ jobs:
 
           SSH_OPTS="-p $SSH_PORT"
           SCP_OPTS="-P $SSH_PORT"
-          DEPLOY_BRANCH="staging"
+          DEPLOY_BRANCH="main"
           ENV_FILE="$(mktemp)"
           trap 'rm -f "$ENV_FILE"' EXIT
 
@@ -81,7 +86,7 @@ jobs:
           fi
           if grep -q '^PAYLOAD_CONFIG_PATH=' "$ENV_FILE"; then
             echo "::error::PAYLOAD_CONFIG_PATH must not be set in APP_ENV for Docker deploy."
-            echo "::error::Remove it from the staging environment secret — the container resolves config via @payload-config at /app."
+            echo "::error::Remove it from the production environment secret — the container resolves config via @payload-config at /app."
             exit 1
           fi
 
@@ -144,6 +149,26 @@ jobs:
 
             cd '$APP_DIR'
 
+            # Safety net: ensure production env values are always correct regardless of secret content.
+            if [ -f .env ]; then
+              for pair in \
+                'NEXT_PUBLIC_SERVER_URL=https://www.eagleford.co.za' \
+                'ALLOW_SEARCH_INDEXING=true' \
+                'SENTRY_ENVIRONMENT=production' \
+                'NEXT_PUBLIC_SENTRY_ENVIRONMENT=production' \
+                'MOTOR_CITY_STOCK_API_URL=https://www.eaglemotorcity.co.za'
+              do
+                key=\${pair%%=*}
+                val=\${pair#*=}
+                if grep -q \"^\${key}=\" .env; then
+                  sed -i \"s|^\${key}=.*|\${key}=\${val}|\" .env
+                else
+                  printf '\\n%s=%s\\n' \"\$key\" \"\$val\" >> .env
+                fi
+              done
+              echo '✓ Production env overrides applied'
+            fi
+
             if ! command -v docker >/dev/null 2>&1; then
               echo 'ERROR: docker not found. Install Docker on the VPS and add the deploy user to the docker group.'
               exit 1
@@ -188,13 +213,14 @@ jobs:
               exit 1
             fi
 
-            if ! curl -sf http://127.0.0.1:4411 > /dev/null; then
+            # Probe /api/health — \`/\` 404s on an empty CMS and fails curl -f
+            if ! curl -sf http://127.0.0.1:4411/api/health > /dev/null; then
               echo 'App not ready immediately — waiting for startup (Next.js can take up to 2 minutes)...'
               ready=0
               for i in \$(seq 1 30); do
-                if curl -sf http://127.0.0.1:4411 > /dev/null; then
+                if curl -sf http://127.0.0.1:4411/api/health > /dev/null; then
                   ready=1
-                  echo \"✓ App responded on port 4411 (attempt \$i)\"
+                  echo \"✓ App health OK on port 4411 (attempt \$i)\"
                   break
                 fi
                 echo \"  Attempt \$i/30 — not ready yet, waiting 5s...\"
@@ -206,12 +232,12 @@ jobs:
                 exit 1
               fi
             else
-              echo '✓ App responded on port 4411'
+              echo '✓ App health OK on port 4411'
             fi
 
             echo ''
             echo '========================================'
-            echo '✓ Staging deployment completed successfully!'
-            echo '✓ App and mongo containers are running'
+            echo '✓ Production deployment completed successfully!'
+            echo '✓ Live site: https://www.eagleford.co.za'
             echo '========================================'
           "
