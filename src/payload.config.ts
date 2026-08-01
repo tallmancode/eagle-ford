@@ -11,8 +11,8 @@ import { defaultLexical } from '@/lib/fields/defaultLexical'
 import { getServerSideURL } from './lib/utils/getServerSideURL'
 import Globals from '@/globals'
 import Blocks from '@/lib/blocks'
-import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { SITE_FAVICON_LINKS } from './constants/siteIcons'
+import { createInstrumentedEmailAdapter } from '@/lib/email/createInstrumentedEmailAdapter'
 import { forwardMotorCityLeadHandler } from '@/tasks/forwardMotorCityLead'
 import { sweepMotorCityLeadsHandler } from '@/tasks/sweepMotorCityLeads'
 
@@ -85,22 +85,7 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  email: nodemailerAdapter({
-    defaultFromAddress: 'noreply@eaglemc.co.za',
-    defaultFromName: 'Eagle Ford',
-    transportOptions: {
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT ?? 587),
-      // Port 587 = STARTTLS (secure: false + requireTLS: true)
-      // Port 465 = implicit SSL (secure: true)
-      secure: Number(process.env.SMTP_PORT ?? 587) === 465,
-      requireTLS: Number(process.env.SMTP_PORT ?? 587) !== 465,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    },
-  }),
+  email: createInstrumentedEmailAdapter(),
   upload: {
     limits: {
       fileSize: 15000000,
