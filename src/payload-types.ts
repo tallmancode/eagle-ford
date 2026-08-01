@@ -2730,10 +2730,6 @@ export interface StockArchive {
   conditionFilter?: ('all' | 'new' | 'pre-owned') | null;
   limit?: number | null;
   showPagination?: boolean | null;
-  /**
-   * Internal path (e.g. /contact), tel:, or mailto: link for card CTA buttons.
-   */
-  enquireUrl?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'stock-archive';

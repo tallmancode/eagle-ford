@@ -18,7 +18,6 @@ type Props = {
   activeFilters: StockArchiveFilters
   limit: number
   showPagination: boolean
-  enquireUrl: string
   pagination: {
     page: number
     totalPages: number
@@ -32,7 +31,6 @@ export function StockArchiveClient({
   activeFilters,
   limit,
   showPagination,
-  enquireUrl,
   pagination,
 }: Props) {
   const pathname = usePathname()
@@ -78,7 +76,7 @@ export function StockArchiveClient({
         onApplyFilters={applyFilters}
       />
 
-      <StockArchiveGrid vehicles={vehicles} enquireUrl={enquireUrl} />
+      <StockArchiveGrid vehicles={vehicles} />
 
       <StockArchivePagination
         className="mt-8"

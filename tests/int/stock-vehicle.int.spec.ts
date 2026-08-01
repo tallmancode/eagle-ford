@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { buildStockVehicleUrl, fetchStockVehicle } from '@/lib/motor-city-stock/fetchStockVehicle'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
 import {
+  buildStockVehicleEnquirePath,
   buildStockVehiclePath,
   getStockNumberForPath,
   getStockVehicleCmsIdFromSlug,
@@ -18,6 +19,16 @@ describe('stock vehicle paths', () => {
         cmsId: 'ec170df60use14458',
       }),
     ).toBe('/showroom/752-ec170df60use14458')
+  })
+
+  it('builds enquire path with #enquire hash', () => {
+    expect(
+      buildStockVehicleEnquirePath({
+        stockNo: '752',
+        stockNoDisplay: null,
+        cmsId: 'ec170df60use14458',
+      }),
+    ).toBe('/showroom/752-ec170df60use14458#enquire')
   })
 
   it('prefers stockNoDisplay over stockNo', () => {
