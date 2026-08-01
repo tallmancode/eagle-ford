@@ -4,7 +4,7 @@ import Script from 'next/script'
 import { cn } from '@/lib/utils/cn'
 import { GeistMono } from 'geist/font/mono'
 import localFont from 'next/font/local'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { AdminBar } from '@/components/AdminBar'
 import { JsonLd } from '@/components/JsonLd/JsonLd'
 import { Providers } from '@/providers'
@@ -30,6 +30,8 @@ import { PrivacyBanner } from '@/lib/components/privacy-banner/PrivacyBanner'
 import { BackToTopButton } from '@/lib/components/back-to-top/BackToTopButton'
 import { ConsentAwareGoogleTagManager } from '@/components/analytics/ConsentAwareGoogleTagManager'
 import { shouldLoadGoogleTagManager } from '@/components/analytics/googleTagManager'
+import { GTMPageView } from '@/components/analytics/GTMPageView'
+import { GTMCtaClickTracker } from '@/components/analytics/GTMCtaClickTracker'
 
 const fordF1 = localFont({
   src: [
@@ -98,6 +100,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             containerId={globalSettings.analytics?.googleTagManagerId}
             enabled={globalSettings.analytics?.enableGoogleTagManager}
           />
+          <Suspense fallback={null}>
+            <GTMPageView gtmId={gtmId} />
+          </Suspense>
+          <GTMCtaClickTracker gtmId={gtmId} />
           <JsonLd data={getDealershipJsonLd()} />
           <Providers>
             {/* preview is resolved client-side via admin-bar auth; avoid draftMode() here so pages can cache */}

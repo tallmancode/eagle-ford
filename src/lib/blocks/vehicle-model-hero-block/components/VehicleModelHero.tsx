@@ -46,12 +46,20 @@ export function VehicleModelHero({ vehicle, model, startingPrice }: VehicleModel
           </div>
         )}
         <div className="flex flex-wrap gap-4">
-          <a href="#enquire">
+          <a
+            href="#enquire"
+            data-gtm-cta="vehicle-model-enquire"
+            data-gtm-cta-location="vehicle-model-hero"
+          >
             <Button className="rounded-full bg-white text-black hover:bg-white/90 font-semibold">
               Enquire Now
             </Button>
           </a>
-          <Link href={`/vehicles/${vehicle.slug}`}>
+          <Link
+            href={`/vehicles/${vehicle.slug}`}
+            data-gtm-cta="vehicle-model-view-parent"
+            data-gtm-cta-location="vehicle-model-hero"
+          >
             <Button
               variant="outline"
               className="rounded-full border-white text-white bg-transparent hover:bg-white/10"

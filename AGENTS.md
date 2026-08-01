@@ -50,6 +50,19 @@ Configurable tokens live in:
 - Header/Footer/Settings globals in Payload for logos, nav, contact
 - Search indexing is gated by `ALLOW_SEARCH_INDEXING=true` (staging stays noindex). See `src/constants/crawlerPolicy.ts`.
 
+## Analytics / Google Tag Manager
+
+Configured in Payload **Settings → Analytics** (`enableGoogleTagManager` + `googleTagManagerId`). No `NEXT_PUBLIC_GTM_ID` env var — the container ID lives in CMS.
+
+- When enabled, GTM **always loads** via `ConsentAwareGoogleTagManager`. Consent Mode (not mount gating) controls ads/analytics storage.
+- Consent defaults are set `denied` in a `beforeInteractive` script in `src/app/(frontend)/layout.tsx`. `PrivacyProvider` / `updateGoogleConsent` grant or keep denied after the banner (or auto-grant for non-EU visitors).
+- Client-side SPA events (App Router does not fire GTM History Change reliably):
+  - `page_view` — `{ event, page_path }` on route changes (`GTMPageView`)
+  - `form_submit` — `{ event, form_id, form_name }` on successful form submit (`FormBlockClient`)
+  - `cta_click` — `{ event, cta_name, cta_location, cta_href }` via delegated clicks on `[data-gtm-cta]` / `data-gtm-cta-location` (`GTMCtaClickTracker`)
+- Components: `src/components/analytics/ConsentAwareGoogleTagManager.tsx`, `GTMPageView.tsx`, `GTMCtaClickTracker.tsx`
+- **GTM UI:** add Custom Event triggers for `page_view`, `form_submit`, and `cta_click` (do not rely on History Change alone). Skill: `.cursor/skills/adding-gtm/`.
+
 ## Vehicle Catalog Hierarchy
 
 Three tiers — only vehicles and models have public pages:

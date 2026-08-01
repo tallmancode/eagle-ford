@@ -89,13 +89,25 @@ export function StockCard({ vehicle }: Props) {
             variant="outline"
             className="flex-1 rounded-lg border-primary text-primary hover:bg-primary/5"
           >
-            <Link href={enquireHref}>Enquire Now</Link>
+            <Link
+              href={enquireHref}
+              data-gtm-cta="stock-enquire"
+              data-gtm-cta-location="stock-archive-card"
+            >
+              Enquire Now
+            </Link>
           </Button>
           <Button
             asChild
             className="flex-1 rounded-lg bg-primary text-light-50 hover:bg-primary/90"
           >
-            <Link href={detailsHref}>View Details</Link>
+            <Link
+              href={detailsHref}
+              data-gtm-cta="stock-view-details"
+              data-gtm-cta-location="stock-archive-card"
+            >
+              View Details
+            </Link>
           </Button>
         </div>
 

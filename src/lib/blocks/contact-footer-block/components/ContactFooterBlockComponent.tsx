@@ -45,7 +45,12 @@ export async function ContactFooterBlockComponent({
             <div className="flex items-center gap-2">{addressContent}</div>
           ))}
         {phone && (
-          <a href={`tel:${phone.replace(/\D/g, '')}`} className="flex items-center gap-2">
+          <a
+            href={`tel:${phone.replace(/\D/g, '')}`}
+            className="flex items-center gap-2"
+            data-gtm-cta="call-now"
+            data-gtm-cta-location="contact-footer"
+          >
             <Phone className="size-4 text-primary shrink-0" />
             <span>{formatPhoneNumber(phone)}</span>
           </a>

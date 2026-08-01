@@ -118,14 +118,26 @@ export function StockVehicleHero({ vehicle }: Props) {
                 asChild
                 className="flex-1 rounded-lg bg-primary text-light-50 hover:bg-primary/90"
               >
-                <Link href="#enquire">Enquire Now</Link>
+                <Link
+                  href="#enquire"
+                  data-gtm-cta="stock-enquire"
+                  data-gtm-cta-location="stock-vehicle-hero"
+                >
+                  Enquire Now
+                </Link>
               </Button>
               <Button
                 asChild
                 variant="outline"
                 className="flex-1 rounded-lg border-primary text-primary"
               >
-                <Link href="#finance">Finance Calculator</Link>
+                <Link
+                  href="#finance"
+                  data-gtm-cta="stock-finance-calculator"
+                  data-gtm-cta-location="stock-vehicle-hero"
+                >
+                  Finance Calculator
+                </Link>
               </Button>
             </div>
           </div>

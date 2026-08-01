@@ -36,6 +36,8 @@ export const ContactInfoBlockComponent: React.FC<ContactInfo> = ({
           <a
             href={`tel:${phone.replace(/\s/g, '')}`}
             className="text-lg font-semibold hover:text-primary transition-colors"
+            data-gtm-cta="call-now"
+            data-gtm-cta-location="contact-info-block"
           >
             {phone}
           </a>
@@ -49,6 +51,8 @@ export const ContactInfoBlockComponent: React.FC<ContactInfo> = ({
           <a
             href={`mailto:${email}`}
             className="text-base font-medium hover:text-primary transition-colors"
+            data-gtm-cta="email-now"
+            data-gtm-cta-location="contact-info-block"
           >
             {email}
           </a>
@@ -95,7 +99,12 @@ export const ContactInfoBlockComponent: React.FC<ContactInfo> = ({
                 className="w-full rounded-full"
                 asChild
               >
-                <Link href={resolved.href} {...newTabProps}>
+                <Link
+                  href={resolved.href}
+                  {...newTabProps}
+                  data-gtm-cta="contact-info-cta"
+                  data-gtm-cta-location="contact-info-block"
+                >
                   {btn.link?.label}
                 </Link>
               </Button>
