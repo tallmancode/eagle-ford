@@ -1,6 +1,11 @@
 import type { ErrorEvent, EventHint, Log } from '@sentry/nextjs'
 
 import { isRscProbeNoise, isRscProbeNoiseEvent, isRscProbeNoiseMessage } from './rscProbeNoise'
+import {
+  isTransformStreamNoise,
+  isTransformStreamNoiseEvent,
+  isTransformStreamNoiseMessage,
+} from './transformStreamNoise'
 
 /**
  * Next.js / React replace Server Component error messages with this string in
@@ -65,6 +70,10 @@ export function filterRedactedRscEvent(event: ErrorEvent, hint: EventHint): Erro
     return null
   }
 
+  if (isTransformStreamNoise(original) || isTransformStreamNoiseEvent(event)) {
+    return null
+  }
+
   const digest = getErrorDigest(original)
   if (digest) {
     event.tags = { ...event.tags, digest }
@@ -76,5 +85,6 @@ export function filterRedactedRscEvent(event: ErrorEvent, hint: EventHint): Erro
 export function filterRedactedRscLog(log: Log): Log | null {
   if (isRedactedRscError(log.message)) return null
   if (isRscProbeNoiseMessage(log.message)) return null
+  if (isTransformStreamNoiseMessage(log.message)) return null
   return log
 }

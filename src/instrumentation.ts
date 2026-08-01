@@ -7,6 +7,7 @@ import {
   unwrapRedactedRscError,
 } from '@/lib/sentry/redactedRsc'
 import { isRscProbeNoise } from '@/lib/sentry/rscProbeNoise'
+import { isTransformStreamNoise } from '@/lib/sentry/transformStreamNoise'
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
@@ -35,6 +36,11 @@ export const onRequestError: Instrumentation.onRequestError = (error, request, e
 
   // Automated scanners probing RSC / Server Actions (e.g. next-action: x) — not app failures.
   if (isRscProbeNoise(resolved) || isRscProbeNoise(error)) {
+    return
+  }
+
+  // Node TransformStream cancel/write race (nodejs/node#62036); fixed in Node 24.15+.
+  if (isTransformStreamNoise(resolved) || isTransformStreamNoise(error)) {
     return
   }
 
