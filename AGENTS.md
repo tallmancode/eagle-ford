@@ -195,6 +195,7 @@ ALLOW_SEARCH_INDEXING=true
 Key points:
 - `MOTOR_CITY_STOCK_API_KEY` must come from the **live** Motor City admin (`www.eaglemotorcity.co.za/admin → Stock → Stock API Clients`). Dev keys from the staging Motor City instance will not work.
 - `SMTP_PORT=587` uses STARTTLS — the Nodemailer adapter is configured to enforce TLS upgrade automatically.
+- Form/SMTP send failures (e.g. Mimecast `535` / `EAUTH`) report to Sentry via `captureEmailSendEvent` (scrubbed; no `SMTP_PASS`, recipient addresses, or message bodies).
 - The workflow force-overwrites `NEXT_PUBLIC_SERVER_URL`, `ALLOW_SEARCH_INDEXING`, `SENTRY_ENVIRONMENT`, `NEXT_PUBLIC_SENTRY_ENVIRONMENT`, and `MOTOR_CITY_STOCK_API_URL` on every deploy as a safety net.
 
 ### Lead jobs sidecar
