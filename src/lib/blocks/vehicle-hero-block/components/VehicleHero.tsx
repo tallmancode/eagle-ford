@@ -39,7 +39,14 @@ function HeroCtaButton({
 
   if (isBrochure && brochureUrl) {
     return (
-      <a href={brochureUrl} target="_blank" rel="noopener noreferrer" download>
+      <a
+        href={brochureUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        download
+        data-gtm-cta="vehicle-hero-cta"
+        data-gtm-cta-location="vehicle-hero"
+      >
         {button}
       </a>
     )
@@ -47,13 +54,23 @@ function HeroCtaButton({
 
   if (external) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer">
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-gtm-cta="vehicle-hero-cta"
+        data-gtm-cta-location="vehicle-hero"
+      >
         {button}
       </a>
     )
   }
 
-  return <a href={href}>{button}</a>
+  return (
+    <a href={href} data-gtm-cta="vehicle-hero-cta" data-gtm-cta-location="vehicle-hero">
+      {button}
+    </a>
+  )
 }
 
 type VehicleHeroProps = {
@@ -119,12 +136,16 @@ export function VehicleHero({ vehicle }: VehicleHeroProps) {
             ))
           ) : (
             <>
-              <a href="#enquire">
+              <a
+                href="#enquire"
+                data-gtm-cta="vehicle-hero-cta"
+                data-gtm-cta-location="vehicle-hero"
+              >
                 <Button className="rounded-full font-semibold" variant="secondary">
                   Enquire Now
                 </Button>
               </a>
-              <a href="#models">
+              <a href="#models" data-gtm-cta="vehicle-hero-cta" data-gtm-cta-location="vehicle-hero">
                 <Button
                   variant="outline"
                   className="rounded-full border-white text-white bg-transparent hover:bg-white/20 hover:text-white/80"
@@ -133,7 +154,14 @@ export function VehicleHero({ vehicle }: VehicleHeroProps) {
                 </Button>
               </a>
               {brochureUrl && (
-                <a href={brochureUrl} target="_blank" rel="noopener noreferrer" download>
+                <a
+                  href={brochureUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  data-gtm-cta="vehicle-hero-cta"
+                  data-gtm-cta-location="vehicle-hero"
+                >
                   <Button className="rounded-full ">
                     <Download className="mr-2 size-4" />
                     Download Brochure

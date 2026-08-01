@@ -44,7 +44,10 @@ Use the **Seed** button in the admin dashboard to populate the database with sam
 - `src/collections/` — CMS collections (pages, vehicles, etc.)
 - `src/globals/` — CMS globals (header, footer, settings)
 - `src/lib/blocks/` — Layout builder blocks
+- `src/components/analytics/` — GTM loaders and SPA event trackers (`page_view`, `form_submit`, `cta_click`)
 - `src/constants/site.ts` — Site name and metadata constants
+
+Google Tag Manager is enabled in CMS **Settings → Analytics**. See [AGENTS.md](AGENTS.md#analytics--google-tag-manager) for Consent Mode, dataLayer events, and GTM Custom Event trigger setup.
 
 ## Branding
 

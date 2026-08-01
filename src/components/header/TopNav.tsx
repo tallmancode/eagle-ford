@@ -75,6 +75,8 @@ export const TopNav = ({
                   navLinkFocusResetClass,
                   'flex space-x-2 items-center hover:text-light-400 transition-colors',
                 )}
+                data-gtm-cta="call-now"
+                data-gtm-cta-location="header-top-nav"
               >
                 <PhoneCall /> <span>{formatPhoneNumber(settings.contactInfo.phone)}</span>
               </a>

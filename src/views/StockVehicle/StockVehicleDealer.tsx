@@ -48,6 +48,8 @@ export function StockVehicleDealer({ vehicle }: Props) {
                 <a
                   href={`tel:${phone.replace(/\s/g, '')}`}
                   className="text-primary hover:underline"
+                  data-gtm-cta="call-dealer"
+                  data-gtm-cta-location="stock-vehicle-dealer"
                 >
                   {phone}
                 </a>
