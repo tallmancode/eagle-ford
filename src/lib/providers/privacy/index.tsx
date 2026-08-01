@@ -1,6 +1,7 @@
 'use client'
 
 import canUseDOM from '@/lib/utils/canUseDOM'
+import { updateGoogleConsent } from '@/lib/privacy/updateGoogleConsent'
 import React, { createContext, use, useCallback, useEffect, useState } from 'react'
 
 type Privacy = {
@@ -40,13 +41,11 @@ const PrivacyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const [cookieConsent, setCookieConsent] = useState<boolean | undefined>()
   const [country, setCountry] = useState<string | undefined>()
 
-  const updateCookieConsent = useCallback(
-    (accepted: boolean) => {
-      setCookieConsent(accepted)
-      setLocaleStorage(accepted, country || '')
-    },
-    [country],
-  )
+  const updateCookieConsent = useCallback((accepted: boolean) => {
+    setCookieConsent(accepted)
+    setLocaleStorage(accepted, country || '')
+    updateGoogleConsent(accepted)
+  }, [country])
 
   useEffect(() => {
     ;(async () => {
@@ -54,6 +53,7 @@ const PrivacyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
       if (consent) {
         setCountry(consent.country)
         setCookieConsent(consent.accepted || false)
+        updateGoogleConsent(consent.accepted || false)
         return
       }
       const gdpr = await fetch('/next/locate').then((res) => res.json())
@@ -61,11 +61,12 @@ const PrivacyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
       setCountry(gdpr.country || '')
       if (!gdpr.isGDPR) {
         setCookieConsent(true)
-        updateCookieConsent(true)
+        setLocaleStorage(true, gdpr.country || '')
+        updateGoogleConsent(true)
       }
       setShowConsent(gdpr.isGDPR || false)
     })().catch(console.error)
-  }, [updateCookieConsent])
+  }, [])
 
   useEffect(() => {
     import('react-facebook-pixel')

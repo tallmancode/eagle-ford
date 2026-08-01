@@ -4376,7 +4376,7 @@ export interface PricingCalculatorDefaults {
  */
 export interface AnalyticsSettings {
   /**
-   * Loads Google Tag Manager only after a visitor has granted cookie consent.
+   * Always loads the GTM container when enabled. Consent Mode still gates ads/analytics storage until the visitor accepts cookies (EU) or is auto-granted (non-EU).
    */
   enableGoogleTagManager?: boolean | null;
   /**
