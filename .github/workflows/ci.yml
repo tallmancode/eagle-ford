@@ -61,7 +61,13 @@ jobs:
         run: pnpm lint
 
       - name: Generate Next.js types
-        run: pnpm exec next typegen
+        run: |
+          set -euo pipefail
+          pnpm exec next typegen
+          if [ ! -f .next/types/routes.d.ts ] && [ ! -f .next/dev/types/routes.d.ts ]; then
+            echo "::error::next typegen did not produce route types under .next/"
+            exit 1
+          fi
 
       - name: Typecheck
         run: pnpm exec tsc --noEmit
