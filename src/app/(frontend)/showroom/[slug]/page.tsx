@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import * as Sentry from '@sentry/nextjs'
 
 import { StockArchiveError } from '@/lib/blocks/stock-archive-block/components/StockArchiveError'
-import { getTaxonomySlug } from '@/lib/blocks/stock-archive-block/utils'
+import { getTaxonomyLabel, getTaxonomySlug } from '@/lib/blocks/stock-archive-block/utils'
 import { getFinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-block/getFinanceCalculatorDefaults'
 import { getCachedStock } from '@/lib/motor-city-stock/getCachedStock'
 import { getCachedStockVehicle } from '@/lib/motor-city-stock/getCachedStockVehicle'
@@ -13,7 +13,12 @@ import { buildStockVehiclePath, getStockVehicleCmsIdFromSlug } from '@/lib/stock
 import { getStockHeroImage } from '@/lib/stock-vehicle/media'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import { buildDocumentMetadata } from '@/lib/seo/buildDocumentMetadata'
-import { getBreadcrumbJsonLd, getVehicleJsonLd } from '@/lib/seo/dealershipJsonLd'
+import {
+  buildJsonLdGraph,
+  getBreadcrumbJsonLd,
+  getStockVehicleJsonLd,
+  getWebPageJsonLd,
+} from '@/lib/seo/dealershipJsonLd'
 import { JsonLd } from '@/components/JsonLd/JsonLd'
 import { StockVehicleDetail } from '@/views/StockVehicle/StockVehicleDetail'
 import { getStockVehiclePageTitle } from '@/views/StockVehicle/StockVehicleSpecs'
@@ -95,23 +100,46 @@ export default async function ShowroomVehiclePage({ params: paramsPromise }: Arg
   const pageTitle = getStockVehiclePageTitle(vehicle)
   const heroImage = getStockHeroImage(vehicle.media)
   const vehiclePath = buildStockVehiclePath(vehicle)
+  const year = vehicle.year ? `${vehicle.year} ` : ''
+  const description =
+    vehicle.comments?.trim() ||
+    `${year}${pageTitle} available at Eagle Ford in Sandton. View specs, photos and enquire online.`
+  const offerPrice =
+    typeof vehicle.specialPrice === 'number' && Number.isFinite(vehicle.specialPrice)
+      ? vehicle.specialPrice
+      : typeof vehicle.price === 'number' && Number.isFinite(vehicle.price)
+        ? vehicle.price
+        : null
 
   return (
     <>
       <JsonLd
-        data={getVehicleJsonLd({
-          name: pageTitle,
-          description: vehicle.comments,
-          path: vehiclePath,
-          imageUrl: heroImage?.url,
-        })}
-      />
-      <JsonLd
-        data={getBreadcrumbJsonLd([
-          { name: 'Home', path: '/' },
-          { name: 'Showroom', path: '/showroom' },
-          { name: pageTitle, path: vehiclePath },
-        ])}
+        data={buildJsonLdGraph(
+          getWebPageJsonLd({
+            name: pageTitle,
+            description,
+            path: vehiclePath,
+            imageUrl: heroImage?.url,
+          }),
+          getStockVehicleJsonLd({
+            name: pageTitle,
+            description,
+            path: vehiclePath,
+            imageUrl: heroImage?.url,
+            price: offerPrice,
+            brandName: getTaxonomyLabel(vehicle.brand),
+            model: vehicle.model,
+            vehicleModelDate: vehicle.year,
+            mileage: vehicle.mileage,
+            sku: vehicle.stockNoDisplay ?? vehicle.stockNo ?? vehicle.cmsId,
+            color: vehicle.colour,
+          }),
+          getBreadcrumbJsonLd([
+            { name: 'Home', path: '/' },
+            { name: 'Showroom', path: '/showroom' },
+            { name: pageTitle, path: vehiclePath },
+          ]),
+        )}
       />
       <StockVehicleDetail
         vehicle={vehicle}
