@@ -36,6 +36,8 @@ jobs:
       PREVIEW_SECRET: ci-preview-secret
       MOTOR_CITY_STOCK_API_URL: http://localhost:3000
       MOTOR_CITY_STOCK_API_KEY: ci-test-key
+      # Required by next.config.ts when Next loads config (typegen / tsc tooling).
+      NEXT_SERVER_ACTIONS_ENCRYPTION_KEY: ci-only-server-actions-encryption-key
 
     steps:
       - name: Checkout
