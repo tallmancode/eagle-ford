@@ -1,8 +1,9 @@
 name: Deploy Production
 
 on:
-  # Auto-deploy disabled on staging — manual runs only.
-  # Production still deploys from main (push trigger lives on main's copy of this file).
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       skip_rebuild:
