@@ -61,7 +61,8 @@ Configured in Payload **Settings → Analytics** (`enableGoogleTagManager` + `go
   - `form_submit` — `{ event, form_id, form_name }` on successful form submit (`FormBlockClient`)
   - `cta_click` — `{ event, cta_name, cta_location, cta_href }` via delegated clicks on `[data-gtm-cta]` / `data-gtm-cta-location` (`GTMCtaClickTracker`)
 - Components: `src/components/analytics/ConsentAwareGoogleTagManager.tsx`, `GTMPageView.tsx`, `GTMCtaClickTracker.tsx`
-- **GTM UI:** add Custom Event triggers for `page_view`, `form_submit`, and `cta_click` (do not rely on History Change alone). Skill: `.cursor/skills/adding-gtm/`.
+- **GTM UI:** add Custom Event triggers for `page_view`, `form_submit`, and `cta_click` (do not rely on History Change alone).
+- **Skill:** `.cursor/skills/adding-gtm/` is the rollout playbook for sibling Eagle satellites (Mazda/Suzuki/Mahindra) — copy this Ford reference implementation, do not invent a divergent pattern.
 
 ## Vehicle Catalog Hierarchy
 
@@ -128,11 +129,19 @@ Three tiers — only vehicles and models have public pages:
 
 ### Overview
 
-Merging a PR to `main` automatically deploys to production. There is no separate staging environment.
+Promotion path (always prefer this):
 
 ```
-develop → PR → main (merge) → GitHub Actions deploy.yml → VPS (Docker) → eagleford.co.za
+feature/fix branch → PR → develop → PR → staging → PR → main → GitHub Actions deploy.yml → VPS (Docker) → eagleford.co.za
 ```
+
+- **`develop`** — integration branch; all feature/fix PRs target this.
+- **`staging`** — Git promotion gate only (no separate staging deploy environment).
+- **`main`** — production; merging here triggers deploy.
+
+Hotfixes should still prefer the full path; skip steps only for production emergencies.
+
+`eagle-ford-dev.tallmancode.co.za` is a 301 redirect to production (not a live staging stack).
 
 ### VPS layout
 
@@ -148,11 +157,13 @@ Nginx (aaPanel) serves two vhosts from the same VPS:
 - `www.eagleford.co.za` + apex → proxy to `:4411`
 - `eagle-ford-dev.tallmancode.co.za` → 301 redirect to `https://www.eagleford.co.za` (config: `deploy/nginx/eagle-ford-dev.redirect.conf`)
 
-### GitHub Actions — `deploy.yml`
+### GitHub Actions — `ci.yml` + `deploy.yml`
 
-Triggered by: **push to `main`** (i.e. any merged PR) and `workflow_dispatch`.
+**CI** (`.github/workflows/ci.yml`): runs on pull requests targeting `develop`, `staging`, or `main` — lint, TypeScript check, and integration tests.
 
-The workflow:
+**Deploy** (`.github/workflows/deploy.yml`): triggered by **push to `main`** (i.e. promotion merge) and `workflow_dispatch`.
+
+The deploy workflow:
 1. SSH into the VPS
 2. `git reset --hard origin/main` in the app directory
 3. Uploads `.env` from the `APP_ENV` secret
