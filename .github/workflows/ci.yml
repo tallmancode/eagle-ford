@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - staging
+      - main
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: mongodb://127.0.0.1:27017/eagle-ford-ci
+      PAYLOAD_SECRET: ci-payload-secret-not-for-production
+      NEXT_PUBLIC_SERVER_URL: http://localhost:3001
+      CRON_SECRET: ci-cron-secret
+      PREVIEW_SECRET: ci-preview-secret
+      MOTOR_CITY_STOCK_API_URL: http://localhost:3000
+      MOTOR_CITY_STOCK_API_KEY: ci-test-key
+      # Required by next.config.ts when Next loads config (typegen / tsc tooling).
+      NEXT_SERVER_ACTIONS_ENCRYPTION_KEY: ci-only-server-actions-encryption-key
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.8.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Generate Next.js types
+        run: |
+          set -euo pipefail
+          pnpm exec next typegen
+          if [ ! -f .next/types/routes.d.ts ] && [ ! -f .next/dev/types/routes.d.ts ]; then
+            echo "::error::next typegen did not produce route types under .next/"
+            exit 1
+          fi
+
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit
+
+      - name: Integration tests
+        run: pnpm test:int
