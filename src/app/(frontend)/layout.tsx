@@ -19,7 +19,11 @@ import { SiteFooter } from '@/components/footer/SiteFooter'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import { navNeedsVehicleMegaMenu } from '@/lib/data/vehicleMegaMenuTypes'
 import { getVehicleMegaMenuData } from '@/lib/data/getVehicleMegaMenuData'
-import { getDealershipJsonLd } from '@/lib/seo/dealershipJsonLd'
+import {
+  buildJsonLdGraph,
+  getDealershipJsonLd,
+  getWebSiteJsonLd,
+} from '@/lib/seo/dealershipJsonLd'
 import type {
   Footer as GlobalFooter,
   Header as GlobalHeader,
@@ -104,7 +108,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <GTMPageView gtmId={gtmId} />
           </Suspense>
           <GTMCtaClickTracker gtmId={gtmId} />
-          <JsonLd data={getDealershipJsonLd()} />
+          <JsonLd
+            data={buildJsonLdGraph(
+              getDealershipJsonLd(globalSettings.contactInfo),
+              getWebSiteJsonLd(),
+            )}
+          />
           <Providers>
             {/* preview is resolved client-side via admin-bar auth; avoid draftMode() here so pages can cache */}
             <AdminBar adminBarProps={{ preview: true }} />
