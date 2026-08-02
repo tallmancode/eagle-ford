@@ -12,17 +12,21 @@ Package work into a pull request that's easy to review and merge.
 
 ### 1. Prepare the Branch
 
+Feature and fix work targets **`develop`**. Promotion PRs only go `develop` → `staging` → `main` (see `.cursor/rules/git-promotion-flow.mdc`).
+
 Before creating the PR:
 
 ```bash
-# Ensure branch is up to date with base
+# Ensure branch is up to date with base (feature/fix → develop)
 git fetch origin
-git rebase origin/main  # or merge, depending on project convention
+git rebase origin/develop
 
 # Check what will be in the PR
-git log origin/main..HEAD --oneline
-git diff origin/main --stat
+git log origin/develop..HEAD --oneline
+git diff origin/develop --stat
 ```
+
+For promotion PRs, rebase/compare against the promotion target (`origin/staging` or `origin/main`) instead.
 
 Squash fixup commits if the project prefers clean history. Keep logical commits separate if the project prefers granular history.
 
@@ -81,9 +85,11 @@ Before requesting review:
 
 ### 5. Create the PR
 
+Base branch defaults to **`develop`** for feature/fix work. Use `--base staging` or `--base main` only for promotion PRs.
+
 ```bash
 git push -u origin HEAD
-gh pr create --title "<title>" --body "$(cat <<'EOF'
+gh pr create --base develop --title "<title>" --body "$(cat <<'EOF'
 ## Summary
 ...
 

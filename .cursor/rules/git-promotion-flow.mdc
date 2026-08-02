@@ -1,0 +1,39 @@
+---
+description: Enforce develop → staging → main Git promotion flow for all work
+alwaysApply: true
+---
+
+# Git Promotion Flow
+
+Always follow this promotion path:
+
+```
+feature/fix branch → PR → develop → PR → staging → PR → main → deploy
+```
+
+## Default working branch
+
+- Branch off **`develop`**, not `main` or `staging`.
+- Open feature and fix PRs **into `develop`**.
+- Rebase/compare against `origin/develop` when preparing PRs.
+
+## Promotion (release) PRs only
+
+- Promote with PRs: **`develop` → `staging`**, then **`staging` → `main`**.
+- Do not open feature/fix PRs targeting `staging` or `main`.
+- Do not push or commit directly to `staging` or `main`.
+
+## Production deploy
+
+- Merging to **`main`** triggers `.github/workflows/deploy.yml` and deploys to production.
+- Treat `staging` → `main` merges as releases.
+
+## Staging role
+
+- `staging` is a **Git promotion gate only** — there is no separate staging deploy environment.
+- `eagle-ford-dev.tallmancode.co.za` redirects to production; do not revive a staging stack unless explicitly asked.
+
+## Hotfixes
+
+- Prefer the full path: `fix/*` → `develop` → `staging` → `main`.
+- Skip steps only for production emergencies, and say so explicitly in the PR/commit notes.
