@@ -1,4 +1,5 @@
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { sentryPlugin } from '@payloadcms/plugin-sentry'
@@ -193,6 +194,26 @@ export const plugins: Plugin[] = [
         return [...result, getLmsLeadInjectionFields()]
       },
     },
+  }),
+  importExportPlugin({
+    overrideExportCollection: ({ collection }) => ({
+      ...collection,
+      admin: {
+        ...collection.admin,
+        group: 'Data Management',
+      },
+      depth: 5,
+    }),
+    overrideImportCollection: ({ collection }) => ({
+      ...collection,
+      admin: {
+        ...collection.admin,
+        group: 'Data Management',
+      },
+    }),
+    collections: [
+      { slug: 'form-submissions', export: { disableJobsQueue: true }, import: false },
+    ],
   }),
   // Keep enabled so AdminErrorBoundary stays in the import map (generate:importmap
   // runs in non-production). Sentry.init already gates reporting on NODE_ENV.

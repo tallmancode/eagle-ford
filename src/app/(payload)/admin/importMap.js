@@ -21,6 +21,19 @@ import { FormFieldNameInput as FormFieldNameInput_5007207a7f34924ed7587506bd56b2
 import { FormFieldRowLabel as FormFieldRowLabel_a109948c17002fcd236dfd1580ad32fc } from '@/lib/blocks/form-block/components/FormFieldRowLabel'
 import { FormStepRowLabel as FormStepRowLabel_4877ce19d078fdaae63ddc21b2694074 } from '@/lib/blocks/form-block/components/FormStepRowLabel'
 import { HeadingFeatureClient as HeadingFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { ExportListMenuItem as ExportListMenuItem_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { FormatField as FormatField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { LimitField as LimitField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { Page as Page_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { SortBy as SortBy_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { SortOrder as SortOrder_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { SelectionToUseField as SelectionToUseField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { FieldsToExport as FieldsToExport_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { CollectionField as CollectionField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { ExportPreview as ExportPreview_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { ExportSaveButton as ExportSaveButton_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { ImportPreview as ImportPreview_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
+import { ImportSaveButton as ImportSaveButton_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { default as default_86286278ce5a0b2c8f2e1898d6246a28 } from '../../../lib/fields/navigation/Components/NavLinkRowLabel'
 import { SocialIconPicker as SocialIconPicker_25c02dffa7af99e062dc453e0db76697 } from '@/lib/fields/social-icons/components/SocialIconPicker'
 import { ColorField as ColorField_31c0780c96066ad2689556a239466438 } from '@/lib/fields/social-icons/components/ColorField'
@@ -82,6 +95,7 @@ import { default as default_c4459d653230b67c2c4fe8ec95131ba0 } from '../../../li
 import { default as default_a7653596fe6e03539b30d7c2a5614de8 } from '../../../lib/blocks/vehicle-catalog-block/components/VehicleCatalogBlockLabel'
 import { LiveStockNavLink as LiveStockNavLink_e8acb1be7b2f6864021d27929c086ced } from '@/components/admin/sidebar/LiveStockNavLink'
 import { default as default_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/components/BeforeLogin'
+import { ImportExportProvider as ImportExportProvider_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { AdminErrorBoundary as AdminErrorBoundary_e5a9e14bdbe97e70ba60697217fe7688 } from '@payloadcms/plugin-sentry/client'
 import { default as default_410252c7292359409637c465dfeb7f50 } from '@/views/Login'
 import { default as default_b23ca64b4ee2a01df1b2fef4bbd2bd1a } from '@/views/LiveStock'
@@ -112,6 +126,19 @@ export const importMap = {
   "@/lib/blocks/form-block/components/FormFieldRowLabel#FormFieldRowLabel": FormFieldRowLabel_a109948c17002fcd236dfd1580ad32fc,
   "@/lib/blocks/form-block/components/FormStepRowLabel#FormStepRowLabel": FormStepRowLabel_4877ce19d078fdaae63ddc21b2694074,
   "@payloadcms/richtext-lexical/client#HeadingFeatureClient": HeadingFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/plugin-import-export/rsc#ExportListMenuItem": ExportListMenuItem_cdf7e044479f899a31f804427d568b36,
+  "@payloadcms/plugin-import-export/rsc#FormatField": FormatField_cdf7e044479f899a31f804427d568b36,
+  "@payloadcms/plugin-import-export/rsc#LimitField": LimitField_cdf7e044479f899a31f804427d568b36,
+  "@payloadcms/plugin-import-export/rsc#Page": Page_cdf7e044479f899a31f804427d568b36,
+  "@payloadcms/plugin-import-export/rsc#SortBy": SortBy_cdf7e044479f899a31f804427d568b36,
+  "@payloadcms/plugin-import-export/rsc#SortOrder": SortOrder_cdf7e044479f899a31f804427d568b36,
+  "@payloadcms/plugin-import-export/rsc#SelectionToUseField": SelectionToUseField_cdf7e044479f899a31f804427d568b36,
+  "@payloadcms/plugin-import-export/rsc#FieldsToExport": FieldsToExport_cdf7e044479f899a31f804427d568b36,
+  "@payloadcms/plugin-import-export/rsc#CollectionField": CollectionField_cdf7e044479f899a31f804427d568b36,
+  "@payloadcms/plugin-import-export/rsc#ExportPreview": ExportPreview_cdf7e044479f899a31f804427d568b36,
+  "@payloadcms/plugin-import-export/rsc#ExportSaveButton": ExportSaveButton_cdf7e044479f899a31f804427d568b36,
+  "@payloadcms/plugin-import-export/rsc#ImportPreview": ImportPreview_cdf7e044479f899a31f804427d568b36,
+  "@payloadcms/plugin-import-export/rsc#ImportSaveButton": ImportSaveButton_cdf7e044479f899a31f804427d568b36,
   "/lib/fields/navigation/Components/NavLinkRowLabel#default": default_86286278ce5a0b2c8f2e1898d6246a28,
   "@/lib/fields/social-icons/components/SocialIconPicker#SocialIconPicker": SocialIconPicker_25c02dffa7af99e062dc453e0db76697,
   "@/lib/fields/social-icons/components/ColorField#ColorField": ColorField_31c0780c96066ad2689556a239466438,
@@ -173,6 +200,7 @@ export const importMap = {
   "/lib/blocks/vehicle-catalog-block/components/VehicleCatalogBlockLabel#default": default_a7653596fe6e03539b30d7c2a5614de8,
   "@/components/admin/sidebar/LiveStockNavLink#LiveStockNavLink": LiveStockNavLink_e8acb1be7b2f6864021d27929c086ced,
   "@/components/BeforeLogin#default": default_8a7ab0eb7ab5c511aba12e68480bfe5e,
+  "@payloadcms/plugin-import-export/rsc#ImportExportProvider": ImportExportProvider_cdf7e044479f899a31f804427d568b36,
   "@payloadcms/plugin-sentry/client#AdminErrorBoundary": AdminErrorBoundary_e5a9e14bdbe97e70ba60697217fe7688,
   "@/views/Login#default": default_410252c7292359409637c465dfeb7f50,
   "@/views/LiveStock#default": default_b23ca64b4ee2a01df1b2fef4bbd2bd1a,
