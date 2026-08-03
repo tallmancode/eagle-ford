@@ -230,6 +230,12 @@ The `lead-jobs` service in `docker-compose.prod.yml` polls `/api/payload-jobs/ru
 
 The image is built with `--secret id=env,src=.env --network=host` so `BUILD_DATABASE_URL` (pointing at the host-published Mongo port `4422`) is reachable during the Next.js build phase.
 
+### Debugging production (Docker MCP)
+
+A read-only Docker MCP server named **`docker-prod-motor-city`** (Cursor may show it as `user-docker-prod-motor-city`) connects to the **Motor City** production VPS Docker daemon over SSH. Use it when stock/leads issues need live container or runtime checks on the mothership (compose/ps, logs, health) instead of guessing from code alone.
+
+Full details: [`../eagle-motor-city/AGENTS.md`](../eagle-motor-city/AGENTS.md) → **Debugging production (Docker MCP)**. Config lives in the developer’s global Cursor MCP (`~/.cursor/mcp.json`), not in this repo.
+
 ## Cursor Cloud specific instructions
 
 Standard commands live in `README.md` / `package.json` (`pnpm dev`, `pnpm lint`, `pnpm test:int`, `pnpm build`). Notes below are only the non-obvious startup caveats for this cloud environment.

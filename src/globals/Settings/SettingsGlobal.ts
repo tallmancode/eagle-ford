@@ -175,6 +175,116 @@ export const SettingsGlobal: GlobalConfig = {
           ],
         },
         {
+          label: 'Email',
+          name: 'email',
+          interfaceName: 'EmailSettings',
+          admin: {
+            condition: (_data, _siblingData, { user }) => {
+              return Boolean(user?.roles?.includes('admin') || user?.roles?.includes('developer'))
+            },
+            description:
+              'Test Mimecast SMTP connectivity. Host, port, user, and password stay in server env (SMTP_*), not in the CMS.',
+          },
+          fields: [
+            {
+              name: 'testRecipient',
+              label: 'Test recipient',
+              type: 'email',
+              admin: {
+                description:
+                  'Address that receives the SMTP test message. SMTP credentials are configured via SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASS in the server environment.',
+              },
+            },
+            {
+              type: 'ui',
+              label: 'SMTP test',
+              name: 'emailSmtpTest',
+              admin: {
+                components: {
+                  Field: '@/lib/fields/email-test-send/EmailTestSendField#EmailTestSendField',
+                },
+              },
+            },
+            {
+              name: 'lastTestAt',
+              label: 'Last test at',
+              type: 'date',
+              admin: {
+                readOnly: true,
+                description: 'Updated when an admin runs Send test email',
+                date: { pickerAppearance: 'dayAndTime' },
+              },
+            },
+            {
+              name: 'lastTestOk',
+              label: 'Last test succeeded',
+              type: 'checkbox',
+              admin: {
+                readOnly: true,
+              },
+            },
+            {
+              name: 'lastTestSummary',
+              label: 'Last test summary',
+              type: 'textarea',
+              admin: {
+                readOnly: true,
+              },
+            },
+          ],
+        },
+        {
+          label: 'Motor City',
+          name: 'motorCity',
+          interfaceName: 'MotorCitySettings',
+          admin: {
+            condition: (_data, _siblingData, { user }) => {
+              return Boolean(user?.roles?.includes('admin') || user?.roles?.includes('developer'))
+            },
+            description:
+              'Test Eagle Motor City stock API connectivity. URL and API key stay in server env (MOTOR_CITY_STOCK_API_*), not in the CMS.',
+          },
+          fields: [
+            {
+              type: 'ui',
+              label: 'Stock API test',
+              name: 'motorCityStockTest',
+              admin: {
+                components: {
+                  Field:
+                    '@/lib/fields/motor-city-stock-test/MotorCityStockTestField#MotorCityStockTestField',
+                },
+              },
+            },
+            {
+              name: 'lastTestAt',
+              label: 'Last test at',
+              type: 'date',
+              admin: {
+                readOnly: true,
+                description: 'Updated when an admin runs Test Motor City stock API',
+                date: { pickerAppearance: 'dayAndTime' },
+              },
+            },
+            {
+              name: 'lastTestOk',
+              label: 'Last test succeeded',
+              type: 'checkbox',
+              admin: {
+                readOnly: true,
+              },
+            },
+            {
+              name: 'lastTestSummary',
+              label: 'Last test summary',
+              type: 'textarea',
+              admin: {
+                readOnly: true,
+              },
+            },
+          ],
+        },
+        {
           label: 'Data Seeds',
           admin: {
             condition: (_data, _siblingData, { user }) => {

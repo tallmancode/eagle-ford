@@ -4321,6 +4321,8 @@ export interface Setting {
    * Used on new vehicle and model pages under /vehicles. Leave empty to hide the enquiry form.
    */
   newVehicleQuoteForm?: (string | null) | Form;
+  email?: EmailSettings;
+  motorCity?: MotorCitySettings;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -4379,6 +4381,38 @@ export interface AnalyticsSettings {
    * The public GTM container ID in the format GTM-XXXXXXXX.
    */
   googleTagManagerId: string;
+}
+/**
+ * Test Mimecast SMTP connectivity. Host, port, user, and password stay in server env (SMTP_*), not in the CMS.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EmailSettings".
+ */
+export interface EmailSettings {
+  /**
+   * Address that receives the SMTP test message. SMTP credentials are configured via SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASS in the server environment.
+   */
+  testRecipient?: string | null;
+  /**
+   * Updated when an admin runs Send test email
+   */
+  lastTestAt?: string | null;
+  lastTestOk?: boolean | null;
+  lastTestSummary?: string | null;
+}
+/**
+ * Test Eagle Motor City stock API connectivity. URL and API key stay in server env (MOTOR_CITY_STOCK_API_*), not in the CMS.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MotorCitySettings".
+ */
+export interface MotorCitySettings {
+  /**
+   * Updated when an admin runs Test Motor City stock API
+   */
+  lastTestAt?: string | null;
+  lastTestOk?: boolean | null;
+  lastTestSummary?: string | null;
 }
 /**
  * Configure AI provider settings for media suggestions
@@ -4544,6 +4578,8 @@ export interface SettingsSelect<T extends boolean = true> {
   analytics?: T | AnalyticsSettingsSelect<T>;
   showroomQuoteForm?: T;
   newVehicleQuoteForm?: T;
+  email?: T | EmailSettingsSelect<T>;
+  motorCity?: T | MotorCitySettingsSelect<T>;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -4584,6 +4620,25 @@ export interface PricingCalculatorDefaultsSelect<T extends boolean = true> {
 export interface AnalyticsSettingsSelect<T extends boolean = true> {
   enableGoogleTagManager?: T;
   googleTagManagerId?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EmailSettings_select".
+ */
+export interface EmailSettingsSelect<T extends boolean = true> {
+  testRecipient?: T;
+  lastTestAt?: T;
+  lastTestOk?: T;
+  lastTestSummary?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MotorCitySettings_select".
+ */
+export interface MotorCitySettingsSelect<T extends boolean = true> {
+  lastTestAt?: T;
+  lastTestOk?: T;
+  lastTestSummary?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
