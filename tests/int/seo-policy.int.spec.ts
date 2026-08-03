@@ -20,7 +20,8 @@ describe('getBreadcrumbJsonLd', () => {
       { name: 'Home', path: '/' },
       { name: 'Vehicles', path: '/vehicles' },
     ])
-    expect(json['@type']).toBe('BreadcrumbList')
-    expect(json.itemListElement).toHaveLength(2)
+    expect(json).not.toBeNull()
+    expect(json!['@type']).toBe('BreadcrumbList')
+    expect(json!.itemListElement).toHaveLength(2)
   })
 })

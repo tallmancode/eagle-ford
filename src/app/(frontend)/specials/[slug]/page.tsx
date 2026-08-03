@@ -7,6 +7,7 @@ import { draftMode } from 'next/headers'
 import React, { cache } from 'react'
 
 import { SpecialsTabs } from '@/components/specials/SpecialsTabs'
+import { JsonLd } from '@/components/JsonLd/JsonLd'
 import { DEFAULT_OG_IMAGE_PATH } from '@/constants/site'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { getFinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-block/getFinanceCalculatorDefaults'
@@ -15,6 +16,13 @@ import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getSpecialCategoryPath } from '@/lib/specials/paths'
 import { getSpecialCategorySeoDescription } from '@/lib/seo-seed/seo-seed-data'
 import { buildDocumentMetadata, resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
+import {
+  buildJsonLdGraph,
+  getBreadcrumbJsonLd,
+  getItemListJsonLd,
+  getSpecialOfferJsonLd,
+  getWebPageJsonLd,
+} from '@/lib/seo/dealershipJsonLd'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import { getPagePath } from '@/lib/utils/getPagePath'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
@@ -259,6 +267,25 @@ export default async function SpecialCategoryPage({
   const calculatorDefaults = getFinanceCalculatorDefaults(settings)
 
   const selectedDisplayTitle = selectedSpecial ? getSpecialDisplayTitle(selectedSpecial) : ''
+  const selectedSpecialPath = selectedSpecial
+    ? getSpecialCategoryPath(decodedSlug, selectedSpecial.slug ?? undefined)
+    : url
+  const selectedImageUrl = selectedSpecial
+    ? resolveMediaOgUrl(
+        typeof selectedSpecial.cardImage === 'object' ? (selectedSpecial.cardImage as Media) : null,
+      )
+    : null
+  const categoryDescription =
+    getSpecialCategorySeoDescription(category.slug) ||
+    `${category.title} — current Ford offers at Eagle Ford in Sandton, Johannesburg.`
+
+  const specialListItems = specialsWithForms.slice(0, 20).map((special) => ({
+    name: getSpecialDisplayTitle(special),
+    path: getSpecialCategoryPath(decodedSlug, special.slug ?? undefined),
+    imageUrl: resolveMediaOgUrl(
+      typeof special.cardImage === 'object' ? (special.cardImage as Media) : null,
+    ),
+  }))
 
   const blockMeta = selectedSpecial
     ? {
@@ -277,6 +304,40 @@ export default async function SpecialCategoryPage({
   return (
     <div>
       <PayloadRedirects disableNotFound url={url} />
+
+      <JsonLd
+        data={buildJsonLdGraph(
+          getWebPageJsonLd({
+            name: category.title,
+            description: categoryDescription,
+            path: url,
+            dateModified: category.updatedAt,
+            types: ['CollectionPage'],
+          }),
+          getItemListJsonLd({
+            name: category.title,
+            path: url,
+            items: specialListItems,
+          }),
+          selectedSpecial
+            ? getSpecialOfferJsonLd({
+                name: selectedDisplayTitle,
+                description:
+                  selectedSpecial.subTitle ||
+                  `${selectedDisplayTitle} — current offer at Eagle Ford.`,
+                path: selectedSpecialPath,
+                price: selectedSpecial.specialOffer,
+                imageUrl: selectedImageUrl,
+                dateModified: category.updatedAt,
+              })
+            : null,
+          getBreadcrumbJsonLd([
+            { name: 'Home', path: '/' },
+            { name: 'Specials', path: '/specials' },
+            { name: category.title, path: url },
+          ]),
+        )}
+      />
 
       <section className="py-14 px-4">
         <div className="container mx-auto">

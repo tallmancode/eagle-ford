@@ -14,7 +14,14 @@ import { DefaultVehicleLayout } from './DefaultVehicleLayout'
 import { getModelStartingPrice } from '@/lib/utils/vehicleModel'
 import { getNewVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
 import { buildDocumentMetadata, resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
-import { getBreadcrumbJsonLd, getVehicleJsonLd } from '@/lib/seo/dealershipJsonLd'
+import {
+  buildJsonLdGraph,
+  getBreadcrumbJsonLd,
+  getFaqPageJsonLd,
+  getVariantPriceStats,
+  getVehicleJsonLd,
+  getWebPageJsonLd,
+} from '@/lib/seo/dealershipJsonLd'
 
 /** ISR: vehicle pages refresh at most every 5 minutes unless revalidated by CMS hooks. */
 export const revalidate = 300
@@ -115,26 +122,42 @@ export default async function Page({ params: paramsPromise }: Args) {
     startingPrice: getModelStartingPrice(variantsByModelId.get(String(model.id)) ?? []),
   }))
 
+  const priceStats = getVariantPriceStats(variantsResult.docs)
+  const imageUrl = resolveMediaOgUrl(
+    typeof vehicle.meta?.metaImage === 'object' ? (vehicle.meta.metaImage as Media) : null,
+  )
+  const description = vehicle.meta?.metaDescription
+
   return (
     <div>
       <PayloadRedirects disableNotFound url={url} />
       {draft && <LivePreviewListener />}
       <JsonLd
-        data={getVehicleJsonLd({
-          name: vehicle.name,
-          description: vehicle.meta?.metaDescription,
-          path: url,
-          imageUrl: resolveMediaOgUrl(
-            typeof vehicle.meta?.metaImage === 'object' ? (vehicle.meta.metaImage as Media) : null,
-          ),
-        })}
-      />
-      <JsonLd
-        data={getBreadcrumbJsonLd([
-          { name: 'Home', path: '/' },
-          { name: 'Vehicles', path: '/vehicles' },
-          { name: vehicle.name, path: url },
-        ])}
+        data={buildJsonLdGraph(
+          getWebPageJsonLd({
+            name: vehicle.name,
+            description,
+            path: url,
+            dateModified: vehicle.updatedAt,
+            imageUrl,
+          }),
+          getVehicleJsonLd({
+            name: vehicle.name,
+            description,
+            path: url,
+            imageUrl,
+            dateModified: vehicle.updatedAt,
+            lowPrice: priceStats?.lowPrice,
+            highPrice: priceStats?.highPrice,
+            offerCount: priceStats?.offerCount,
+          }),
+          getFaqPageJsonLd(vehicle.faqs),
+          getBreadcrumbJsonLd([
+            { name: 'Home', path: '/' },
+            { name: 'Vehicles', path: '/vehicles' },
+            { name: vehicle.name, path: url },
+          ]),
+        )}
       />
 
       {useTemplate ? (
