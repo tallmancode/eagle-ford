@@ -13,6 +13,7 @@ import Globals from '@/globals'
 import Blocks from '@/lib/blocks'
 import { SITE_FAVICON_LINKS } from './constants/siteIcons'
 import { createInstrumentedEmailAdapter } from '@/lib/email/createInstrumentedEmailAdapter'
+import { invalidQueryJsonAfterError } from '@/lib/payload/invalidQueryJsonError'
 import { forwardMotorCityLeadHandler } from '@/tasks/forwardMotorCityLead'
 import { sweepMotorCityLeadsHandler } from '@/tasks/sweepMotorCityLeads'
 
@@ -79,6 +80,10 @@ export default buildConfig({
   maxDepth: 5,
   globals: Globals,
   blocks: [...Blocks],
+  // Declared before plugins so sentryPlugin appends its afterError after ours.
+  hooks: {
+    afterError: [invalidQueryJsonAfterError],
+  },
   plugins,
   secret: process.env.PAYLOAD_SECRET,
   sharp,

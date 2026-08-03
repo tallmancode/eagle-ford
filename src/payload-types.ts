@@ -120,7 +120,7 @@ export interface Config {
     'feature-list': FeatureList;
     'feature-rows': FeatureRows;
     formBlock: FormBlockType;
-    'contact-info': ContactInfo;
+    'contact-info': ContactInfoBlock;
     'icon-text': IconText;
     'cta-button': CtaButton;
     'why-cards': WhyCards;
@@ -280,7 +280,7 @@ export interface Section {
         | FeatureList
         | FeatureRows
         | FormBlockType
-        | ContactInfo
+        | ContactInfoBlock
         | IconText
         | CtaButton
         | BackButton
@@ -423,7 +423,7 @@ export interface SectionInner {
         | FeatureList
         | FeatureRows
         | FormBlockType
-        | ContactInfo
+        | ContactInfoBlock
         | IconText
         | CtaButton
         | BackButton
@@ -563,7 +563,7 @@ export interface Row {
         | FeatureList
         | FeatureRows
         | FormBlockType
-        | ContactInfo
+        | ContactInfoBlock
         | IconText
         | CtaButton
         | BackButton
@@ -1562,6 +1562,9 @@ export interface Form {
             | 'seeks.year'
             | 'seeks.kms'
             | 'seeks.stockNr'
+            | 'seeks.mmCode'
+            | 'seeks.colour'
+            | 'seeks.price'
             | 'seeks.comments'
             | 'seeks.vin'
             | 'seeks.regno';
@@ -2197,9 +2200,9 @@ export interface FormBlockType {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "contact-info".
+ * via the `definition` "ContactInfoBlock".
  */
-export interface ContactInfo {
+export interface ContactInfoBlock {
   heading?: string | null;
   phone: string;
   email: string;
@@ -2379,7 +2382,7 @@ export interface FixedBackgroundBlockType {
         | FeatureList
         | FeatureRows
         | FormBlockType
-        | ContactInfo
+        | ContactInfoBlock
         | IconText
         | CtaButton
         | BackButton
@@ -4463,7 +4466,7 @@ export interface Footer {
  */
 export interface Setting {
   id: string;
-  contactInfo: ContactInfo1;
+  contactInfo: SettingsContactInfo;
   pricingCalculatorDefaults?: PricingCalculatorDefaults;
   analytics: AnalyticsSettings;
   /**
@@ -4481,9 +4484,9 @@ export interface Setting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContactInfo".
+ * via the `definition` "SettingsContactInfo".
  */
-export interface ContactInfo1 {
+export interface SettingsContactInfo {
   email?: string | null;
   phone?: string | null;
   /**
@@ -4726,7 +4729,7 @@ export interface FooterSelect<T extends boolean = true> {
  * via the `definition` "settings_select".
  */
 export interface SettingsSelect<T extends boolean = true> {
-  contactInfo?: T | ContactInfoSelect<T>;
+  contactInfo?: T | SettingsContactInfoSelect<T>;
   pricingCalculatorDefaults?: T | PricingCalculatorDefaultsSelect<T>;
   analytics?: T | AnalyticsSettingsSelect<T>;
   showroomQuoteForm?: T;
@@ -4739,9 +4742,9 @@ export interface SettingsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContactInfo_select".
+ * via the `definition` "SettingsContactInfo_select".
  */
-export interface ContactInfoSelect<T extends boolean = true> {
+export interface SettingsContactInfoSelect<T extends boolean = true> {
   email?: T;
   phone?: T;
   operationHours?: T;

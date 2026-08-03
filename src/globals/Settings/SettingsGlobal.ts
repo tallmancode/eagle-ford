@@ -26,7 +26,7 @@ export const SettingsGlobal: GlobalConfig = {
         {
           label: 'Contact Information',
           name: 'contactInfo',
-          interfaceName: 'ContactInfo',
+          interfaceName: 'SettingsContactInfo',
           fields: [
             {
               name: 'email',

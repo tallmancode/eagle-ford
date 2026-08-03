@@ -1,6 +1,6 @@
 import { DEFAULT_OG_DESCRIPTION, DEFAULT_OG_IMAGE_PATH, SITE_NAME } from '@/constants/site'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
-import type { ContactInfo1 } from '@/payload-types'
+import type { SettingsContactInfo } from '@/payload-types'
 
 export const PRICE_CURRENCY = 'ZAR'
 
@@ -30,7 +30,7 @@ export type ItemListEntry = {
   imageUrl?: string | null
 }
 
-export type DealershipContactInput = Partial<ContactInfo1> | null | undefined
+export type DealershipContactInput = Partial<SettingsContactInfo> | null | undefined
 
 function absoluteUrl(pathOrUrl: string, base = getServerSideURL().replace(/\/$/, '')): string {
   if (pathOrUrl.startsWith('http://') || pathOrUrl.startsWith('https://')) return pathOrUrl

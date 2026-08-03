@@ -8,7 +8,7 @@ import type {
   FeatureList,
   FeatureRows,
   FormBlockType,
-  ContactInfo,
+  ContactInfoBlock,
   IconText,
   CtaButton,
   WhyCards,
@@ -107,7 +107,7 @@ type BlockComponentMap = {
   'feature-list': FeatureList
   'feature-rows': FeatureRows
   formBlock: FormBlockType
-  'contact-info': ContactInfo
+  'contact-info': ContactInfoBlock
   'icon-text': IconText
   'cta-button': CtaButton
   'back-button': BackButton
@@ -162,7 +162,7 @@ const blockComponents: {
   'feature-rows': FeatureRowsBlockComponent,
   formBlock: FormBlockComponent as unknown as React.ComponentType<WithMeta<FormBlockType>>,
   'contact-info': ContactInfoBlockComponent as unknown as React.ComponentType<
-    WithMeta<ContactInfo>
+    WithMeta<ContactInfoBlock>
   >,
   'icon-text': IconTextBlockComponent as unknown as React.ComponentType<WithMeta<IconText>>,
   'cta-button': CtaButtonBlockComponent,
