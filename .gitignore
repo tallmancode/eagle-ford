@@ -34,6 +34,7 @@ node_modules/
 test.env
 
 # Common risk / noise patterns
+*.tsbuildinfo
 *.log
 coverage/
 *.pem
