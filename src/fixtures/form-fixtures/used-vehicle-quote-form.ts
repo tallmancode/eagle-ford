@@ -4,10 +4,13 @@ import { buildVehicleQuoteForm } from '@/fixtures/form-fixtures/buildVehicleQuot
 export const usedVehicleQuoteForm: RequiredDataFromCollectionSlug<'forms'> =
   buildVehicleQuoteForm({
     title: 'Used Vehicle Quote',
-    salesIntro: 'A used vehicle quote enquiry has been submitted.',
+    salesEmailHeading: 'New Used Vehicle Quote',
+    salesEmailIntro: 'A new used vehicle quote was submitted on the Eagle Ford website.',
+    salesSubject: 'Eagle Ford Used Vehicle Quote: {{vehicleName}} — {{firstName}} {{lastName}}',
     lms: {
       dealerFloor: 'USED',
       defaultUsed: '1',
       source: 'EAGLE-DEALERWEBSITE',
+      commentsPrefix: 'Used vehicle quote',
     },
   })

@@ -6,7 +6,7 @@ type RichTextParagraph = {
   children: Array<{
     type: 'text'
     detail: 0
-    format: 0
+    format: 0 | 1
     mode: 'normal'
     style: ''
     text: string
@@ -15,18 +15,19 @@ type RichTextParagraph = {
   direction: 'ltr'
   format: ''
   indent: 0
-  textFormat: 0
+  textFormat: 0 | 1
   version: 1
 }
 
-function paragraph(text: string): RichTextParagraph {
+function paragraph(text: string, bold = false): RichTextParagraph {
+  const format = bold ? 1 : 0
   return {
     type: 'paragraph',
     children: [
       {
         type: 'text',
         detail: 0,
-        format: 0,
+        format,
         mode: 'normal',
         style: '',
         text,
@@ -36,10 +37,26 @@ function paragraph(text: string): RichTextParagraph {
     direction: 'ltr',
     format: '',
     indent: 0,
-    textFormat: 0,
+    textFormat: format,
     version: 1,
   }
 }
+
+/** Explicit LMS mappings from the live Used Vehicle Quote form. */
+const vehicleQuoteLmsFieldMappings = [
+  { formFieldName: 'brand', lmsPath: 'seeks.brand' as const },
+  { formFieldName: 'model', lmsPath: 'seeks.model' as const },
+  { formFieldName: 'modelRange', lmsPath: 'seeks.modelrange' as const },
+  { formFieldName: 'year', lmsPath: 'seeks.year' as const },
+  { formFieldName: 'mileage', lmsPath: 'seeks.kms' as const },
+  { formFieldName: 'stockNumber', lmsPath: 'seeks.stockNr' as const },
+  { formFieldName: 'mmCode', lmsPath: 'seeks.mmCode' as const },
+  { formFieldName: 'colour', lmsPath: 'seeks.colour' as const },
+  { formFieldName: 'price', lmsPath: 'seeks.price' as const },
+  { formFieldName: 'vin', lmsPath: 'seeks.vin' as const },
+  { formFieldName: 'regNo', lmsPath: 'seeks.regno' as const },
+  { formFieldName: 'message', lmsPath: 'seeks.comments' as const },
+]
 
 const enquiryReceivedMessage = {
   root: {
@@ -128,22 +145,29 @@ const contactAndConsentFields = [
 
 export type VehicleQuoteFormOptions = {
   title: string
-  salesIntro: string
+  /** Bold heading in the sales notification email. */
+  salesEmailHeading: string
+  /** Intro line under the sales email heading. */
+  salesEmailIntro: string
+  salesSubject: string
   lms: {
     dealerFloor: string
     defaultUsed: '0' | '1'
     source?: string
+    commentsPrefix: string
   }
 }
 
 /**
- * Shared seed shape for Used / New vehicle quote forms, including LMS vehicle fields.
- * Email from/to/reply-to and LMS defaults match live CMS New Vehicle Quote.
+ * Shared seed shape for Used / New vehicle quote forms.
+ * Pattern matches the live Used Vehicle Quote form (emails + LMS mappings);
+ * wrappers supply used vs new floor / copy.
  */
 export function buildVehicleQuoteForm(
   options: VehicleQuoteFormOptions,
 ): RequiredDataFromCollectionSlug<'forms'> {
   const source = options.lms.source ?? 'EAGLE-DEALERWEBSITE'
+  const emailFrom = '"Eagle Ford" <noreply@eaglemc.co.za>'
 
   return {
     title: options.title,
@@ -159,13 +183,13 @@ export function buildVehicleQuoteForm(
       defaultUsed: options.lms.defaultUsed,
       defaultBrand: 'Ford',
       defaultModel: 'General Enquiry',
-      fieldMappings: [],
+      commentsPrefix: options.lms.commentsPrefix,
+      fieldMappings: vehicleQuoteLmsFieldMappings,
     },
     emails: [
       {
-        emailFrom: 'noreply@eaglemc.co.za',
+        emailFrom,
         emailTo: '{{email}}',
-        replyTo: 'sales@eagleford.co.za',
         subject: 'Your vehicle quote request - Eagle Ford',
         message: {
           root: {
@@ -194,20 +218,19 @@ export function buildVehicleQuoteForm(
         },
       },
       {
-        emailFrom: 'noreply@eaglemc.co.za',
+        emailFrom,
         emailTo: 'sales@eagleford.co.za',
         replyTo: '{{email}}',
-        subject: 'Vehicle quote enquiry: {{vehicleName}}',
+        subject: options.salesSubject,
         message: {
           root: {
             type: 'root',
             children: [
-              paragraph(options.salesIntro),
-              paragraph('Vehicle: {{vehicleName}}'),
-              paragraph('Name: {{firstName}} {{lastName}}'),
-              paragraph('Phone: {{phone}}'),
-              paragraph('Email: {{email}}'),
-              paragraph('Message: {{message}}'),
+              paragraph(options.salesEmailHeading, true),
+              paragraph(options.salesEmailIntro),
+              paragraph('Submission details:'),
+              paragraph('{{*:table}}'),
+              paragraph('Reply to the customer using the email/phone in the table above.'),
             ],
             direction: 'ltr',
             format: '',
