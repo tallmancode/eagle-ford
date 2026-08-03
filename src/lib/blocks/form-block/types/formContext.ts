@@ -14,16 +14,21 @@ export type BlockRenderMeta = FormBlockMeta & {
   searchParams?: Record<string, string | string[] | undefined>
 }
 
-export function getHiddenFieldNames(contextValues?: FormBlockContextValues): Set<string> {
-  if (!contextValues) {
-    return new Set()
+export function getHiddenFieldNames(
+  contextValues?: FormBlockContextValues,
+  forceHiddenFieldNames?: Iterable<string>,
+): Set<string> {
+  const hidden = new Set<string>(forceHiddenFieldNames)
+
+  if (contextValues) {
+    for (const [key, value] of Object.entries(contextValues)) {
+      if (value.trim() !== '') {
+        hidden.add(key)
+      }
+    }
   }
 
-  return new Set(
-    Object.entries(contextValues)
-      .filter(([, value]) => value.trim() !== '')
-      .map(([key]) => key),
-  )
+  return hidden
 }
 
 export function mergeFormDefaultValues(

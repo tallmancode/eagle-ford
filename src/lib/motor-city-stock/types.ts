@@ -32,6 +32,7 @@ export type MotorCityStockVehicle = {
   brand?: string | MotorCityStockTaxonomy | null
   model?: string | null
   modelRange?: string | null
+  mmCode?: string | null
   year?: number | null
   mileage?: number | null
   price?: number | null
@@ -40,6 +41,7 @@ export type MotorCityStockVehicle = {
   stockNo?: string | null
   stockNoDisplay?: string | null
   vin?: string | null
+  regNo?: string | null
   fuelType?: string | MotorCityStockTaxonomy | null
   bodyType?: string | MotorCityStockTaxonomy | null
   transmission?: string | MotorCityStockTaxonomy | null

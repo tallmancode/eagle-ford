@@ -40,6 +40,7 @@ export type FormBlockLayout = 'default' | 'hero'
 export type FormBlockClientProps = {
   contextValues?: FormBlockContextValues
   enableIntro?: boolean | null
+  forceHiddenFieldNames?: Iterable<string>
   form: Form
   introContent?: SerializedEditorState | null
   layout?: FormBlockLayout
@@ -245,6 +246,7 @@ function FormActions({
 export function FormBlockClient({
   contextValues,
   enableIntro,
+  forceHiddenFieldNames,
   form,
   introContent,
   layout = 'default',
@@ -253,7 +255,7 @@ export function FormBlockClient({
   const steps = getFormSteps(form)
   const isMultiStep = isMultiStepForm(form)
   const useHeroLayout = layout === 'hero' && !isMultiStep
-  const hiddenFieldNames = getHiddenFieldNames(contextValues)
+  const hiddenFieldNames = getHiddenFieldNames(contextValues, forceHiddenFieldNames)
 
   const formMethods = useForm<FormData>({
     defaultValues: mergeFormDefaultValues(buildInitialFormState(form), contextValues),
