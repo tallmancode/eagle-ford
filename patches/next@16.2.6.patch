@@ -1,0 +1,74 @@
+diff --git a/dist/server/image-optimizer.js b/dist/server/image-optimizer.js
+index 5961d5c104fedb0eab72a89c723e60a454c9ce18..a75eca528187170a61269e64ba1b9ab09d07fbf3 100644
+--- a/dist/server/image-optimizer.js
++++ b/dist/server/image-optimizer.js
+@@ -182,6 +182,14 @@ async function initCacheEntries(cacheDir) {
+     for (const cacheKey of cacheKeys){
+         try {
+             const { expireAt, buffer } = await readFromCacheDir(cacheDir, cacheKey);
++            // A 0-byte entry would throw in LRUCache.set (size must be > 0),
++            // rejecting the module-level disk-LRU init promise and poisoning the image cache
++            // for the lifetime of the process. Self-heal: delete and skip.
++            // See https://github.com/vercel/next.js/issues/93757
++            if (buffer.byteLength === 0) {
++                await deleteFromCacheDir(cacheDir, cacheKey);
++                continue;
++            }
+             entries.push({
+                 key: cacheKey,
+                 size: buffer.byteLength,
+@@ -250,6 +258,11 @@ function getImageEtag(image) {
+ async function writeToCacheDir(cacheDir, cacheKey, extension, maxAge, expireAt, buffer, etag, upstreamEtag) {
+     const dir = (0, _path.join)(/* turbopackIgnore: true */ cacheDir, cacheKey);
+     const filename = (0, _path.join)(/* turbopackIgnore: true */ dir, `${maxAge}.${expireAt}.${etag}.${upstreamEtag}.${extension}`);
++    // Write atomically (temp file in the cache root, then rename) so a write interrupted by
++    // process termination cannot leave a truncated 0-byte file inside the cache dir.
++    // Temp lives as a sibling of the cacheKey dir so readFromCacheDir never picks it up.
++    // See https://github.com/vercel/next.js/issues/93757
++    const tmpFilename = (0, _path.join)(/* turbopackIgnore: true */ cacheDir, `.${cacheKey}.${process.pid}.tmp`);
+     await _fs.promises.rm(dir, {
+         recursive: true,
+         force: true
+@@ -257,7 +270,13 @@ async function writeToCacheDir(cacheDir, cacheKey, extension, maxAge, expireAt,
+     await _fs.promises.mkdir(dir, {
+         recursive: true
+     });
+-    await _fs.promises.writeFile(filename, buffer);
++    await _fs.promises.writeFile(tmpFilename, buffer);
++    await _fs.promises.rename(tmpFilename, filename).catch(async (err)=>{
++        await _fs.promises.rm(tmpFilename, {
++            force: true
++        }).catch(()=>{});
++        throw err;
++    });
+ }
+ async function readFromCacheDir(cacheDir, cacheKey) {
+     const dir = (0, _path.join)(/* turbopackIgnore: true */ cacheDir, cacheKey);
+@@ -797,6 +816,11 @@ class ImageOptimizerCache {
+         if (!this.isDiskCacheEnabled) {
+             return;
+         }
++        // Never cache a 0-byte image. LRUCache.set throws on size 0 and a 0-byte
++        // file on disk poisons LRU init on the next start. See vercel/next.js#93757.
++        if (!value.buffer || value.buffer.byteLength === 0) {
++            return;
++        }
+         // Fall back to filesystem cache
+         const expireAt = Math.max(revalidate, this.nextConfig.images.minimumCacheTTL) * 1000 + Date.now();
+         try {
+diff --git a/dist/server/lib/disk-lru-cache.external.js b/dist/server/lib/disk-lru-cache.external.js
+index fde1ef96d9d51a2a2489155db9e4d73df562d24a..957480727da55f2b4ae81df4ada0352c499b3892 100644
+--- a/dist/server/lib/disk-lru-cache.external.js
++++ b/dist/server/lib/disk-lru-cache.external.js
+@@ -43,6 +43,11 @@ async function getOrInitDiskLRU(cacheDir, maxDiskSize, readEntries, evictEntry)
+             const lru = new _lrucache.LRUCache(maxSize, (size)=>size, (cacheKey)=>evictEntry(cacheDir, cacheKey));
+             const entries = await readEntries(cacheDir);
+             for (const entry of entries){
++                // Skip non-positive sizes — LRUCache.set throws for size <= 0 and would
++                // reject this singleton forever. See https://github.com/vercel/next.js/issues/93757
++                if (entry.size <= 0) {
++                    continue;
++                }
+                 lru.set(entry.key, entry.size);
+             }
+             return lru;

@@ -7,3 +7,4 @@ allowBuilds:
 patchedDependencies:
   '@payloadcms/plugin-seo@3.85.1': patches/@payloadcms__plugin-seo@3.85.1.patch
   '@payloadcms/ui@3.85.1': patches/@payloadcms__ui@3.85.1.patch
+  next@16.2.6: patches/next@16.2.6.patch
