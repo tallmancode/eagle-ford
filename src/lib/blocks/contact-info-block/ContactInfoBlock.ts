@@ -4,6 +4,7 @@ import { LinkField } from '@/lib/fields/link/LinkField'
 
 export const ContactInfoBlock: Block = {
   slug: 'contact-info',
+  interfaceName: 'ContactInfoBlock',
   labels: {
     singular: 'Contact Info',
     plural: 'Contact Info',

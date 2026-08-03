@@ -1,4 +1,4 @@
-import type { ContactInfo } from '@/payload-types'
+import type { ContactInfoBlock } from '@/payload-types'
 import { Phone, Mail, MapPin, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { backgroundColorToClass } from '@/lib/fields/background-color/backgroundColorUtils'
@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils/cn'
 import Link from 'next/link'
 import React from 'react'
 
-export const ContactInfoBlockComponent: React.FC<ContactInfo> = ({
+export const ContactInfoBlockComponent: React.FC<ContactInfoBlock> = ({
   heading,
   phone,
   email,

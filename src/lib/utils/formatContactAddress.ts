@@ -1,6 +1,6 @@
-import type { ContactInfo1 } from '@/payload-types'
+import type { SettingsContactInfo } from '@/payload-types'
 
-type ContactAddress = ContactInfo1['address']
+type ContactAddress = SettingsContactInfo['address']
 
 export function formatContactAddress(address: ContactAddress | null | undefined): string | null {
   if (!address) return null
