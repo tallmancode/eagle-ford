@@ -129,18 +129,16 @@ const contactAndConsentFields = [
 export type VehicleQuoteFormOptions = {
   title: string
   salesIntro: string
-  customerSubject: string
-  salesSubject: string
   lms: {
     dealerFloor: string
     defaultUsed: '0' | '1'
     source?: string
-    commentsPrefix?: string
   }
 }
 
 /**
  * Shared seed shape for Used / New vehicle quote forms, including LMS vehicle fields.
+ * Email from/to/reply-to and LMS defaults match live CMS New Vehicle Quote.
  */
 export function buildVehicleQuoteForm(
   options: VehicleQuoteFormOptions,
@@ -161,22 +159,26 @@ export function buildVehicleQuoteForm(
       defaultUsed: options.lms.defaultUsed,
       defaultBrand: 'Ford',
       defaultModel: 'General Enquiry',
-      commentsPrefix: options.lms.commentsPrefix,
       fieldMappings: [],
     },
     emails: [
       {
-        emailFrom: '"Eagle Ford" <noreply@eagleford.co.za>',
+        emailFrom: 'noreply@eaglemc.co.za',
         emailTo: '{{email}}',
-        subject: options.customerSubject,
+        replyTo: 'sales@eagleford.co.za',
+        subject: 'Your vehicle quote request - Eagle Ford',
         message: {
           root: {
             type: 'root',
             children: [
               paragraph('Eagle Ford'),
               paragraph('Hi {{firstName}},'),
+              paragraph('Thanks for requesting a quote from Eagle Ford.'),
               paragraph(
-                'Thanks for your vehicle quote request with Eagle Ford. Our sales team has received your enquiry and will contact you shortly.',
+                'Our sales team has received your details and will follow up with pricing, stock availability, and finance options where relevant.',
+              ),
+              paragraph(
+                'If you have a preferred model or trade-in in mind, mention it when we call — it helps us prepare a clearer offer.',
               ),
               paragraph(
                 'Questions? Call us on 010 440 0510. We are at 229 Corlett Dr, Bramley, Johannesburg, Gauteng, 2090. Hours: Mon-Fri 08h00-17h00, Sat 08h00-12h30.',
@@ -192,10 +194,10 @@ export function buildVehicleQuoteForm(
         },
       },
       {
-        emailFrom: '"Eagle Ford" <noreply@eagleford.co.za>',
+        emailFrom: 'noreply@eaglemc.co.za',
         emailTo: 'sales@eagleford.co.za',
         replyTo: '{{email}}',
-        subject: options.salesSubject,
+        subject: 'Vehicle quote enquiry: {{vehicleName}}',
         message: {
           root: {
             type: 'root',
