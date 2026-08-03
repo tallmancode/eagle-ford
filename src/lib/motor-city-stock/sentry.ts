@@ -14,6 +14,11 @@ export type StockFetchSentryContext = {
   detail?: string
 }
 
+/** Process-local window for retryable stock failures (single Docker app container). */
+export const RETRYABLE_STOCK_SENTRY_WINDOW_MS = 5 * 60 * 1000
+
+const lastRetryableCaptureAt = new Map<string, number>()
+
 export function safeApiHost(baseUrl: string | undefined): string | undefined {
   if (!baseUrl) return undefined
   try {
@@ -23,12 +28,59 @@ export function safeApiHost(baseUrl: string | undefined): string | undefined {
   }
 }
 
+function rateLimitKey(context: StockFetchSentryContext): string {
+  return `${context.event}:${context.errorCode ?? 'unknown'}`
+}
+
+/**
+ * Whether a retryable stock failure should emit a full Sentry event.
+ * Exported for tests; process-local only (fingerprinting still groups across restarts).
+ */
+export function shouldCaptureRetryableStockEvent(
+  context: StockFetchSentryContext,
+  nowMs: number = Date.now(),
+): boolean {
+  if (!context.retryable) return true
+
+  const key = rateLimitKey(context)
+  const lastAt = lastRetryableCaptureAt.get(key)
+  if (typeof lastAt === 'number' && nowMs - lastAt < RETRYABLE_STOCK_SENTRY_WINDOW_MS) {
+    return false
+  }
+
+  lastRetryableCaptureAt.set(key, nowMs)
+  return true
+}
+
+/** Test helper — clears the in-memory rate-limit map. */
+export function resetStockSentryRateLimitState(): void {
+  lastRetryableCaptureAt.clear()
+}
+
 /**
  * Sentry for Motor City stock HTTP failures. Never attach API keys or full request URLs with auth.
+ * Retryable failures are rate-limited to one capture per event+errorCode every 5 minutes;
+ * suppressed failures are recorded as breadcrumbs only.
  */
 export function captureStockFetchEvent(error: unknown, context: StockFetchSentryContext): void {
   const level: SeverityLevel = context.retryable ? 'warning' : 'error'
   const fingerprint = ['motor-city-stock', context.event, context.errorCode ?? 'unknown']
+
+  if (context.retryable && !shouldCaptureRetryableStockEvent(context)) {
+    Sentry.addBreadcrumb({
+      category: 'motor-city-stock',
+      level: 'warning',
+      message: context.detail || `Suppressed retryable stock failure: ${context.event}`,
+      data: scrubForSentry({
+        dealerCode: context.dealerCode,
+        httpStatus: context.httpStatus,
+        errorCode: context.errorCode,
+        retryable: context.retryable,
+        apiHost: context.apiHost,
+      }) as Record<string, unknown>,
+    })
+    return
+  }
 
   Sentry.withScope((scope) => {
     scope.setLevel(level)

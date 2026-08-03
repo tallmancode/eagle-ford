@@ -1,5 +1,16 @@
 import type { Access, FieldAccess } from 'payload'
 
+import type { User } from '@/payload-types'
+
+export function isPayloadUser(user: unknown): user is User {
+  return (
+    typeof user === 'object' &&
+    user !== null &&
+    'collection' in user &&
+    (user as { collection?: string | null }).collection === 'users'
+  )
+}
+
 export const isAdmin: Access = ({ req: { user } }) => {
   if (!user) return false
   return user.roles?.includes('admin') as boolean

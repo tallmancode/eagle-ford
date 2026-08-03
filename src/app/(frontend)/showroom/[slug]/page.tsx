@@ -48,10 +48,12 @@ async function getSimilarVehicles(
 
     return response.docs.filter((item) => item.cmsId !== vehicle.cmsId).slice(0, 4)
   } catch (error) {
-    Sentry.captureException(error, {
-      tags: { area: 'showroom', phase: 'similar-vehicles' },
-      extra: { bodyType, cmsId: vehicle.cmsId },
-    })
+    if (!(error instanceof MotorCityStockError)) {
+      Sentry.captureException(error, {
+        tags: { area: 'showroom', phase: 'similar-vehicles' },
+        extra: { bodyType, cmsId: vehicle.cmsId },
+      })
+    }
     return []
   }
 }
@@ -77,11 +79,7 @@ export default async function ShowroomVehiclePage({ params: paramsPromise }: Arg
     ])
   } catch (error) {
     if (error instanceof MotorCityStockError) {
-      Sentry.captureException(error, {
-        tags: { area: 'showroom', phase: 'load-vehicle' },
-        extra: { cmsId, slug: decodedSlug },
-        level: 'warning',
-      })
+      // Fetch layer already reported via captureStockFetchEvent — avoid double capture.
       return <StockArchiveError />
     }
     Sentry.captureException(error, {
@@ -181,11 +179,7 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
     })
   } catch (error) {
     if (error instanceof MotorCityStockError) {
-      Sentry.captureException(error, {
-        tags: { area: 'showroom', phase: 'generateMetadata' },
-        extra: { cmsId, slug: decodedSlug },
-        level: 'warning',
-      })
+      // Fetch layer already reported via captureStockFetchEvent — avoid double capture.
       return buildDocumentMetadata({ title: 'Vehicle', path: fallbackPath })
     }
     Sentry.captureException(error, {
