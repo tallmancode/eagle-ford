@@ -8,9 +8,16 @@ type FormSeedRouteOptions = {
   formName: string
   getFormData: () => RequiredDataFromCollectionSlug<'forms'>
   errorMessage: string
+  /** When set, prefer redirect confirmation to this page slug if it exists. */
+  thankYouPageSlug?: string
 }
 
-export function createFormSeedRoute({ formName, getFormData, errorMessage }: FormSeedRouteOptions) {
+export function createFormSeedRoute({
+  formName,
+  getFormData,
+  errorMessage,
+  thankYouPageSlug,
+}: FormSeedRouteOptions) {
   return async function POST(): Promise<Response> {
     const payload = await getPayload({ config })
     const requestHeaders = await headers()
@@ -24,10 +31,42 @@ export function createFormSeedRoute({ formName, getFormData, errorMessage }: For
       log.info(`Creating ${formName}...`)
 
       try {
+        const data: RequiredDataFromCollectionSlug<'forms'> = { ...getFormData() }
+
+        if (thankYouPageSlug) {
+          const thankYouPages = await payload.find({
+            collection: 'pages',
+            depth: 0,
+            limit: 1,
+            where: {
+              slug: {
+                equals: thankYouPageSlug,
+              },
+            },
+          })
+
+          const thankYouPage = thankYouPages.docs[0]
+          if (thankYouPage) {
+            data.confirmationType = 'redirect'
+            data.redirect = {
+              type: 'reference',
+              reference: {
+                relationTo: 'pages',
+                value: thankYouPage.id,
+              },
+            }
+            log.info(`Using thank-you redirect to /${thankYouPageSlug}`)
+          } else {
+            log.info(
+              `Thank-you page /${thankYouPageSlug} not found — keeping on-page confirmation message`,
+            )
+          }
+        }
+
         const form = await payload.create({
           collection: 'forms',
           depth: 0,
-          data: getFormData(),
+          data,
         })
 
         log.info(`${formName} created successfully`)

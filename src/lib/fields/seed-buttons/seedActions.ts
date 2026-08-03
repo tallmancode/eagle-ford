@@ -68,7 +68,24 @@ export const formSeedActions: SeedAction[] = [
     endpoint: '/next/create-vehicle-quote-form',
     label: 'Create Vehicle Quote Form',
     successText: 'Vehicle Quote Form created!',
-    description: 'Add the vehicle quote form to your Forms collection.',
+    description:
+      'Add the generic vehicle quote form (LMS fields included). Prefer Used / New quote forms for showroom and catalog.',
+    adminLink: { collection: 'forms' },
+  },
+  {
+    endpoint: '/next/create-used-vehicle-quote-form',
+    label: 'Create Used Vehicle Quote Form',
+    successText: 'Used Vehicle Quote Form created!',
+    description:
+      'Showroom / used stock enquire form with hidden LMS vehicle fields. Wire it in Settings → Showroom quote form.',
+    adminLink: { collection: 'forms' },
+  },
+  {
+    endpoint: '/next/create-new-vehicle-quote-form',
+    label: 'Create New Vehicle Quote Form',
+    successText: 'New Vehicle Quote Form created!',
+    description:
+      'New vehicle / model enquire form with hidden LMS vehicle fields. Wire it in Settings → New vehicle quote form.',
     adminLink: { collection: 'forms' },
   },
 ]
