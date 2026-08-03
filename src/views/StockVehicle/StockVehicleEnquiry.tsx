@@ -2,8 +2,12 @@
 
 import type { Form } from '@/payload-types'
 import { FormBlockClient } from '@/lib/blocks/form-block/components/FormBlockClient'
-import { getVehicleDisplayName } from '@/lib/blocks/stock-archive-block/utils'
 import type { MotorCityStockVehicle } from '@/lib/motor-city-stock/types'
+import {
+  buildVehicleFormContext,
+  getVehicleLmsHiddenFieldNames,
+  pickFormContextValues,
+} from '@/lib/stock-vehicle/buildVehicleFormContext'
 
 type Props = {
   vehicle: MotorCityStockVehicle
@@ -11,8 +15,6 @@ type Props = {
 }
 
 export function StockVehicleEnquiry({ vehicle, form }: Props) {
-  const vehicleName = getVehicleDisplayName(vehicle)
-
   return (
     <section id="enquire" className="scroll-mt-24 py-10 px-4">
       <div className="container mx-auto max-w-3xl">
@@ -21,9 +23,8 @@ export function StockVehicleEnquiry({ vehicle, form }: Props) {
         </h2>
         <FormBlockClient
           form={form}
-          contextValues={{
-            vehicleName,
-          }}
+          contextValues={pickFormContextValues(form, buildVehicleFormContext(vehicle))}
+          forceHiddenFieldNames={getVehicleLmsHiddenFieldNames(form)}
         />
       </div>
     </section>

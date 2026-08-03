@@ -1,4 +1,5 @@
 import type { RequiredDataFromCollectionSlug } from 'payload'
+import { vehicleLmsSeedFields } from '@/fixtures/form-fixtures/vehicleLmsSeedFields'
 
 export const vehicleQuoteForm: RequiredDataFromCollectionSlug<'forms'> = {
   title: 'Vehicle Quote',
@@ -221,22 +222,7 @@ export const vehicleQuoteForm: RequiredDataFromCollectionSlug<'forms'> = {
   ],
   submitButtonLabel: 'Submit Enquiry',
   fields: [
-    {
-      blockType: 'text',
-      blockName: 'vehicleName',
-      name: 'vehicleName',
-      label: 'Vehicle',
-      required: false,
-      width: 100,
-    },
-    {
-      blockType: 'text',
-      blockName: 'modelName',
-      name: 'modelName',
-      label: 'Model',
-      required: false,
-      width: 100,
-    },
+    ...vehicleLmsSeedFields,
     {
       blockType: 'text',
       blockName: 'firstName',
