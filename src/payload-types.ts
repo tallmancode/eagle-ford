@@ -1517,7 +1517,7 @@ export interface Form {
    */
   lmsLeadInjection?: {
     /**
-     * Off by default. Enable only for forms that should create LMS leads.
+     * Send submissions to CMS LMS via Motor City. Off by default — enable only for forms that should create LMS leads.
      */
     enabled?: boolean | null;
     /**

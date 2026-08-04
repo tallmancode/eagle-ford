@@ -81,6 +81,9 @@ export const plugins: Plugin[] = [
       },
     },
     formOverrides: {
+      admin: {
+        defaultColumns: ['title', 'lmsLeadInjection.enabled', 'updatedAt'],
+      },
       fields: ({ defaultFields }) => {
         const formInputBlocks = getFormInputBlocks(FORM_UPLOAD_COLLECTIONS)
         const allFormBlocks = [...formInputBlocks, withFormFieldBlockLabel(SubheadingBlock)]

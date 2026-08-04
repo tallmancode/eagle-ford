@@ -1,128 +1,44 @@
 import type { RequiredDataFromCollectionSlug } from 'payload'
+import {
+  DEPARTMENT_EMAILS,
+  confirmationMessage,
+  contactNamePhoneEmailFields,
+  customerConfirmationEmail,
+  departmentNotificationEmail,
+  privacyPolicyField,
+} from '@/fixtures/form-fixtures/formEmailHelpers'
 
 export const partsEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = {
   title: 'Parts Enquiry Form',
+  formLayout: 'singlePage',
   confirmationType: 'message',
-  confirmationMessage: {
-    root: {
-      type: 'root',
-      children: [
-        {
-          type: 'heading',
-          tag: 'h2',
-          children: [
-            {
-              type: 'text',
-              detail: 0,
-              format: 0,
-              mode: 'normal',
-              style: '',
-              text: 'Enquiry Submitted',
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          version: 1,
-        },
-        {
-          type: 'paragraph',
-          children: [
-            {
-              type: 'text',
-              detail: 0,
-              format: 0,
-              mode: 'normal',
-              style: '',
-              text: 'Thank you for your enquiry. Our parts team will be in touch with you shortly.',
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          textFormat: 0,
-          version: 1,
-        },
-      ],
-      direction: 'ltr',
-      format: '',
-      indent: 0,
-      version: 1,
-    },
+  confirmationMessage: confirmationMessage(
+    'Enquiry Submitted',
+    'Thank you for your enquiry. Our parts team will be in touch with you shortly.',
+  ),
+  submitButtonLabel: 'Submit',
+  lmsLeadInjection: {
+    enabled: false,
   },
   emails: [
-    {
-      emailFrom: '"Eagle Ford" <noreply@eagleford.co.za>',
-      emailTo: '{{email}}',
+    customerConfirmationEmail({
       subject: 'Your parts enquiry has been received — Eagle Ford',
-      message: {
-        root: {
-          type: 'root',
-          children: [
-            {
-              type: 'paragraph',
-              children: [
-                {
-                  type: 'text',
-                  detail: 0,
-                  format: 0,
-                  mode: 'normal',
-                  style: '',
-                  text: 'Thank you for your enquiry. Our parts team will be in touch with you shortly.',
-                  version: 1,
-                },
-              ],
-              direction: 'ltr',
-              format: '',
-              indent: 0,
-              textFormat: 0,
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          version: 1,
-        },
-      },
-    },
+      bodyLines: [
+        'Hi {{firstName}},',
+        'Thank you for your parts enquiry. Our parts team will be in touch with you shortly.',
+        'Kind regards,',
+        'The Eagle Ford team',
+      ],
+    }),
+    departmentNotificationEmail({
+      emailTo: DEPARTMENT_EMAILS.parts,
+      subject: 'Eagle Ford Parts Enquiry: {{firstName}} {{lastName}}',
+      heading: 'Parts Enquiry',
+      intro: 'A parts enquiry was submitted on the Eagle Ford website.',
+    }),
   ],
-  submitButtonLabel: 'Submit',
   fields: [
-    {
-      blockType: 'text',
-      blockName: 'firstName',
-      name: 'firstName',
-      label: 'First Name',
-      required: true,
-      width: 50,
-    },
-    {
-      blockType: 'text',
-      blockName: 'lastName',
-      name: 'lastName',
-      label: 'Last Name',
-      required: true,
-      width: 50,
-    },
-    {
-      blockType: 'text',
-      blockName: 'phone',
-      name: 'phone',
-      label: 'Phone Number',
-      required: true,
-      width: 50,
-    },
-    {
-      blockType: 'email',
-      blockName: 'email',
-      name: 'email',
-      label: 'Email Address',
-      required: true,
-      width: 50,
-    },
+    ...contactNamePhoneEmailFields,
     {
       blockType: 'text',
       blockName: 'vin',
@@ -139,13 +55,6 @@ export const partsEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = {
       required: false,
       width: 100,
     },
-    {
-      blockType: 'checkbox',
-      blockName: 'privacyPolicy',
-      name: 'privacyPolicy',
-      label: 'I have read and agree to the Eagle Ford (Pty) Ltd Privacy Policy',
-      required: true,
-      width: 100,
-    },
+    privacyPolicyField,
   ],
 }

@@ -7,6 +7,6 @@ export const maxDuration = 60
 export const POST = createFormSeedRoute({
   formName: 'Vehicle Quote Form',
   getFormData: () => vehicleQuoteForm,
-  errorMessage: 'Error creating vehicle quote form.',
+  errorMessage: 'Error upserting vehicle quote form.',
   thankYouPageSlug: VEHICLE_QUOTE_THANK_YOU_SLUG,
 })

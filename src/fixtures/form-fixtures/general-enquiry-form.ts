@@ -1,128 +1,54 @@
 import type { RequiredDataFromCollectionSlug } from 'payload'
+import {
+  DEPARTMENT_EMAILS,
+  confirmationMessage,
+  contactNamePhoneEmailFields,
+  customerConfirmationEmail,
+  departmentNotificationEmail,
+  privacyPolicyField,
+} from '@/fixtures/form-fixtures/formEmailHelpers'
 
+/** Matches live General Enquiry Form LMS settings (CALLCENTRE). */
 export const generalEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = {
   title: 'General Enquiry Form',
+  formLayout: 'singlePage',
   confirmationType: 'message',
-  confirmationMessage: {
-    root: {
-      type: 'root',
-      children: [
-        {
-          type: 'heading',
-          tag: 'h2',
-          children: [
-            {
-              type: 'text',
-              detail: 0,
-              format: 0,
-              mode: 'normal',
-              style: '',
-              text: 'Enquiry Received',
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          version: 1,
-        },
-        {
-          type: 'paragraph',
-          children: [
-            {
-              type: 'text',
-              detail: 0,
-              format: 0,
-              mode: 'normal',
-              style: '',
-              text: 'Thank you for reaching out. A member of our team will be in touch with you shortly.',
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          textFormat: 0,
-          version: 1,
-        },
-      ],
-      direction: 'ltr',
-      format: '',
-      indent: 0,
-      version: 1,
-    },
+  confirmationMessage: confirmationMessage(
+    'Enquiry Received',
+    'Thank you for reaching out. A member of our team will be in touch with you shortly.',
+  ),
+  submitButtonLabel: 'Submit',
+  lmsLeadInjection: {
+    enabled: true,
+    dealerRef: 'EC167',
+    dealerFloor: 'CALLCENTRE',
+    source: 'EAGLE-DEALERWEBSITE',
+    defaultUsed: '0',
+    defaultBrand: 'Ford',
+    defaultModel: 'General Enquiry',
+    commentsPrefix: 'General enquiry',
+    fieldMappings: [{ formFieldName: 'message', lmsPath: 'seeks.comments' }],
   },
   emails: [
-    {
-      emailFrom: '"Eagle Ford" <noreply@eagleford.co.za>',
-      emailTo: '{{email}}',
+    customerConfirmationEmail({
       subject: 'Your enquiry has been received — Eagle Ford',
-      message: {
-        root: {
-          type: 'root',
-          children: [
-            {
-              type: 'paragraph',
-              children: [
-                {
-                  type: 'text',
-                  detail: 0,
-                  format: 0,
-                  mode: 'normal',
-                  style: '',
-                  text: 'Thank you for reaching out. A member of our team will be in touch with you shortly.',
-                  version: 1,
-                },
-              ],
-              direction: 'ltr',
-              format: '',
-              indent: 0,
-              textFormat: 0,
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          version: 1,
-        },
-      },
-    },
+      bodyLines: [
+        'Hi {{firstName}},',
+        'Thank you for reaching out to Eagle Ford. We have received your enquiry and a member of our team will be in touch shortly.',
+        'Questions? Call us on 010 440 0510.',
+        'Kind regards,',
+        'The Eagle Ford team',
+      ],
+    }),
+    departmentNotificationEmail({
+      emailTo: DEPARTMENT_EMAILS.sales,
+      subject: 'Eagle Ford General Enquiry: {{firstName}} {{lastName}}',
+      heading: 'General Enquiry',
+      intro: 'A general enquiry was submitted on the Eagle Ford website.',
+    }),
   ],
-  submitButtonLabel: 'Submit',
   fields: [
-    {
-      blockType: 'text',
-      blockName: 'firstName',
-      name: 'firstName',
-      label: 'First Name',
-      required: true,
-      width: 50,
-    },
-    {
-      blockType: 'text',
-      blockName: 'lastName',
-      name: 'lastName',
-      label: 'Last Name',
-      required: true,
-      width: 50,
-    },
-    {
-      blockType: 'text',
-      blockName: 'phone',
-      name: 'phone',
-      label: 'Phone Number',
-      required: true,
-      width: 50,
-    },
-    {
-      blockType: 'email',
-      blockName: 'email',
-      name: 'email',
-      label: 'Email Address',
-      required: true,
-      width: 50,
-    },
+    ...contactNamePhoneEmailFields,
     {
       blockType: 'textarea',
       blockName: 'message',
@@ -131,13 +57,6 @@ export const generalEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = {
       required: false,
       width: 100,
     },
-    {
-      blockType: 'checkbox',
-      blockName: 'privacyPolicy',
-      name: 'privacyPolicy',
-      label: 'I have read and agree to the Eagle Ford (Pty) Ltd Privacy Policy',
-      required: true,
-      width: 100,
-    },
+    privacyPolicyField,
   ],
 }

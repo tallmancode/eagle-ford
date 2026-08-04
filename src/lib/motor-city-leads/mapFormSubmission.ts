@@ -36,6 +36,7 @@ const DEFAULT_FORM_FIELD_MAP: Record<string, string> = {
   vehicle_make: 'seeks.brand',
   model: 'seeks.model',
   model_name: 'seeks.model',
+  modelname: 'seeks.model',
   vehicle_model: 'seeks.model',
   modelrange: 'seeks.modelrange',
   model_range: 'seeks.modelrange',

@@ -1,4 +1,11 @@
 import type { RequiredDataFromCollectionSlug } from 'payload'
+import {
+  DEPARTMENT_EMAILS,
+  confirmationMessage,
+  customerConfirmationEmail,
+  departmentNotificationEmail,
+  privacyPolicyField,
+} from '@/fixtures/form-fixtures/formEmailHelpers'
 
 const YEAR_MODELS = Array.from({ length: 2026 - 2016 + 1 }, (_, i) => ({
   label: String(2026 - i),
@@ -7,95 +14,33 @@ const YEAR_MODELS = Array.from({ length: 2026 - 2016 + 1 }, (_, i) => ({
 
 export const sellEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = {
   title: 'Sell Enquiry Form',
+  formLayout: 'multiStep',
   confirmationType: 'message',
-  confirmationMessage: {
-    root: {
-      type: 'root',
-      children: [
-        {
-          type: 'heading',
-          tag: 'h2',
-          children: [
-            {
-              type: 'text',
-              detail: 0,
-              format: 0,
-              mode: 'normal',
-              style: '',
-              text: 'Enquiry Received!',
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          version: 1,
-        },
-        {
-          type: 'paragraph',
-          children: [
-            {
-              type: 'text',
-              detail: 0,
-              format: 0,
-              mode: 'normal',
-              style: '',
-              text: "Thank you! We've received your vehicle details and will be in touch within one business day with an offer.",
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          textFormat: 0,
-          version: 1,
-        },
-      ],
-      direction: 'ltr',
-      format: '',
-      indent: 0,
-      version: 1,
-    },
+  confirmationMessage: confirmationMessage(
+    'Enquiry Received!',
+    "Thank you! We've received your vehicle details and will be in touch within one business day with an offer.",
+  ),
+  submitButtonLabel: 'Submit Enquiry',
+  lmsLeadInjection: {
+    enabled: false,
   },
   emails: [
-    {
-      emailFrom: '"Eagle Ford" <noreply@eagleford.co.za>',
-      emailTo: '{{email}}',
+    customerConfirmationEmail({
       subject: 'Your sell enquiry has been received — Eagle Ford',
-      message: {
-        root: {
-          type: 'root',
-          children: [
-            {
-              type: 'paragraph',
-              children: [
-                {
-                  type: 'text',
-                  detail: 0,
-                  format: 0,
-                  mode: 'normal',
-                  style: '',
-                  text: "Thank you for submitting your vehicle details. We'll review your enquiry and be in touch within one business day with an offer.",
-                  version: 1,
-                },
-              ],
-              direction: 'ltr',
-              format: '',
-              indent: 0,
-              textFormat: 0,
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          version: 1,
-        },
-      },
-    },
+      bodyLines: [
+        'Hi {{firstName}},',
+        "Thank you for submitting your vehicle details. We'll review your enquiry and be in touch within one business day with an offer.",
+        'Kind regards,',
+        'The Eagle Ford team',
+      ],
+    }),
+    departmentNotificationEmail({
+      emailTo: DEPARTMENT_EMAILS.sales,
+      subject: 'Eagle Ford Sell Enquiry: {{vehicleMake}} {{vehicleModel}} — {{firstName}} {{lastName}}',
+      heading: 'Sell Enquiry',
+      intro: 'A sell / trade-in enquiry was submitted on the Eagle Ford website.',
+    }),
   ],
-  submitButtonLabel: 'Submit Enquiry',
-  formLayout: 'multiStep',
   steps: [
     {
       title: 'Tell us about your car.',
@@ -247,14 +192,7 @@ export const sellEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = {
           required: true,
           width: 50,
         },
-        {
-          blockType: 'checkbox',
-          blockName: 'privacyPolicy',
-          name: 'privacyPolicy',
-          label: 'I have read and agree to the Eagle Ford (Pty) Ltd Privacy Policy',
-          required: true,
-          width: 100,
-        },
+        privacyPolicyField,
       ],
     },
   ],

@@ -12,6 +12,10 @@ type FormSeedRouteOptions = {
   thankYouPageSlug?: string
 }
 
+/**
+ * Upserts a form by stable `title` so re-seeding overwrites the existing document
+ * and preserves IDs referenced by pages, specials, and Settings.
+ */
 export function createFormSeedRoute({
   formName,
   getFormData,
@@ -28,10 +32,11 @@ export function createFormSeedRoute({
     }
 
     return createSeedStreamResponse(async (log) => {
-      log.info(`Creating ${formName}...`)
+      log.info(`Upserting ${formName}...`)
 
       try {
         const data: RequiredDataFromCollectionSlug<'forms'> = { ...getFormData() }
+        const title = data.title
 
         if (thankYouPageSlug) {
           const thankYouPages = await payload.find({
@@ -63,15 +68,38 @@ export function createFormSeedRoute({
           }
         }
 
+        const existing = await payload.find({
+          collection: 'forms',
+          depth: 0,
+          limit: 1,
+          where: {
+            title: {
+              equals: title,
+            },
+          },
+        })
+
+        const existingForm = existing.docs[0]
+        if (existingForm) {
+          const form = await payload.update({
+            collection: 'forms',
+            id: existingForm.id,
+            depth: 0,
+            data,
+          })
+          log.info(`${formName} updated (id ${form.id})`)
+          return { success: true, id: form.id, title: form.title, upserted: 'updated' }
+        }
+
         const form = await payload.create({
           collection: 'forms',
           depth: 0,
           data,
         })
 
-        log.info(`${formName} created successfully`)
+        log.info(`${formName} created (id ${form.id})`)
 
-        return { success: true, id: form.id, title: form.title }
+        return { success: true, id: form.id, title: form.title, upserted: 'created' }
       } catch (error) {
         payload.logger.error({ err: error, message: errorMessage })
         throw new Error(errorMessage)

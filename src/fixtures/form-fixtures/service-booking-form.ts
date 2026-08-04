@@ -1,4 +1,12 @@
 import type { RequiredDataFromCollectionSlug } from 'payload'
+import {
+  DEPARTMENT_EMAILS,
+  confirmationMessage,
+  contactNamePhoneEmailFields,
+  customerConfirmationEmail,
+  departmentNotificationEmail,
+  privacyPolicyField,
+} from '@/fixtures/form-fixtures/formEmailHelpers'
 
 const FORD_SERVICE_MODELS = [
   'Everest',
@@ -27,127 +35,35 @@ const FORD_SERVICE_MODELS = [
 
 export const serviceBookingForm: RequiredDataFromCollectionSlug<'forms'> = {
   title: 'Service Booking Form',
+  formLayout: 'singlePage',
   confirmationType: 'message',
-  confirmationMessage: {
-    root: {
-      type: 'root',
-      children: [
-        {
-          type: 'heading',
-          tag: 'h2',
-          children: [
-            {
-              type: 'text',
-              detail: 0,
-              format: 0,
-              mode: 'normal',
-              style: '',
-              text: 'Booking Request Received',
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          version: 1,
-        },
-        {
-          type: 'paragraph',
-          children: [
-            {
-              type: 'text',
-              detail: 0,
-              format: 0,
-              mode: 'normal',
-              style: '',
-              text: 'Thank you! A member of our service team will be in touch shortly to confirm your appointment.',
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          textFormat: 0,
-          version: 1,
-        },
-      ],
-      direction: 'ltr',
-      format: '',
-      indent: 0,
-      version: 1,
-    },
+  confirmationMessage: confirmationMessage(
+    'Booking Request Received',
+    'Thank you! A member of our service team will be in touch shortly to confirm your appointment.',
+  ),
+  submitButtonLabel: 'Submit',
+  lmsLeadInjection: {
+    enabled: false,
   },
   emails: [
-    {
-      emailFrom: '"Eagle Ford" <noreply@eagleford.co.za>',
-      emailTo: '{{email}}',
+    customerConfirmationEmail({
       subject: 'Your service booking request has been received — Eagle Ford',
-      message: {
-        root: {
-          type: 'root',
-          children: [
-            {
-              type: 'paragraph',
-              children: [
-                {
-                  type: 'text',
-                  detail: 0,
-                  format: 0,
-                  mode: 'normal',
-                  style: '',
-                  text: 'Thank you! A member of our service team will be in touch shortly to confirm your appointment.',
-                  version: 1,
-                },
-              ],
-              direction: 'ltr',
-              format: '',
-              indent: 0,
-              textFormat: 0,
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          version: 1,
-        },
-      },
-    },
+      bodyLines: [
+        'Hi {{firstName}},',
+        'Thank you! A member of our service team will be in touch shortly to confirm your appointment.',
+        'Kind regards,',
+        'The Eagle Ford team',
+      ],
+    }),
+    departmentNotificationEmail({
+      emailTo: DEPARTMENT_EMAILS.service,
+      subject: 'Eagle Ford Service Booking: {{firstName}} {{lastName}} — {{model}}',
+      heading: 'Service Booking',
+      intro: 'A service booking request was submitted on the Eagle Ford website.',
+    }),
   ],
-  submitButtonLabel: 'Submit',
   fields: [
-    {
-      blockType: 'text',
-      blockName: 'firstName',
-      name: 'firstName',
-      label: 'First Name',
-      required: true,
-      width: 50,
-    },
-    {
-      blockType: 'text',
-      blockName: 'lastName',
-      name: 'lastName',
-      label: 'Last Name',
-      required: true,
-      width: 50,
-    },
-    {
-      blockType: 'text',
-      blockName: 'phone',
-      name: 'phone',
-      label: 'Phone Number',
-      required: true,
-      width: 50,
-    },
-    {
-      blockType: 'email',
-      blockName: 'email',
-      name: 'email',
-      label: 'Email Address',
-      required: true,
-      width: 50,
-    },
+    ...contactNamePhoneEmailFields,
     {
       blockType: 'text',
       blockName: 'registration',
@@ -190,13 +106,6 @@ export const serviceBookingForm: RequiredDataFromCollectionSlug<'forms'> = {
       width: 100,
       options: FORD_SERVICE_MODELS,
     },
-    {
-      blockType: 'checkbox',
-      blockName: 'privacyPolicy',
-      name: 'privacyPolicy',
-      label: 'I have read and agree to the Eagle Ford (Pty) Ltd Privacy Policy',
-      required: true,
-      width: 100,
-    },
+    privacyPolicyField,
   ],
 }
