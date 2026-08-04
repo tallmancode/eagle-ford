@@ -27,9 +27,10 @@ export function getLmsLeadInjectionFields(): Field {
         name: 'enabled',
         type: 'checkbox',
         defaultValue: false,
-        label: 'Send submissions to CMS LMS (via Motor City)',
+        label: 'LMS Push',
         admin: {
-          description: 'Off by default. Enable only for forms that should create LMS leads.',
+          description:
+            'Send submissions to CMS LMS via Motor City. Off by default — enable only for forms that should create LMS leads.',
         },
       },
       {

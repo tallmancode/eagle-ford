@@ -1,4 +1,12 @@
 import type { RequiredDataFromCollectionSlug } from 'payload'
+import {
+  DEPARTMENT_EMAILS,
+  confirmationMessage,
+  contactNamePhoneEmailFields,
+  customerConfirmationEmail,
+  departmentNotificationEmail,
+  privacyPolicyField,
+} from '@/fixtures/form-fixtures/formEmailHelpers'
 
 const FORD_TEST_DRIVE_MODELS = [
   'Everest',
@@ -24,129 +32,49 @@ const FORD_TEST_DRIVE_MODELS = [
   'Transit Van',
 ].map((model) => ({ label: model, value: model }))
 
+/** Matches live Test Drive Booking Form LMS settings (NEWFORD). */
 export const testDriveForm: RequiredDataFromCollectionSlug<'forms'> = {
   title: 'Test Drive Booking Form',
+  formLayout: 'singlePage',
   confirmationType: 'message',
-  confirmationMessage: {
-    root: {
-      type: 'root',
-      children: [
-        {
-          type: 'heading',
-          tag: 'h2',
-          children: [
-            {
-              type: 'text',
-              detail: 0,
-              format: 0,
-              mode: 'normal',
-              style: '',
-              text: 'Test Drive Request Received',
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          version: 1,
-        },
-        {
-          type: 'paragraph',
-          children: [
-            {
-              type: 'text',
-              detail: 0,
-              format: 0,
-              mode: 'normal',
-              style: '',
-              text: 'Thank you! A member of our sales team will be in touch shortly to confirm your test drive appointment.',
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          textFormat: 0,
-          version: 1,
-        },
-      ],
-      direction: 'ltr',
-      format: '',
-      indent: 0,
-      version: 1,
-    },
+  confirmationMessage: confirmationMessage(
+    'Test Drive Request Received',
+    'Thank you! A member of our sales team will be in touch shortly to confirm your test drive appointment.',
+  ),
+  submitButtonLabel: 'Submit',
+  lmsLeadInjection: {
+    enabled: true,
+    dealerRef: 'EC167',
+    dealerFloor: 'NEWFORD',
+    source: 'EAGLE-DEALERWEBSITE',
+    defaultUsed: '0',
+    defaultBrand: 'Ford',
+    defaultModel: 'General Enquiry',
+    commentsPrefix: 'Test drive booking',
+    fieldMappings: [
+      { formFieldName: 'model', lmsPath: 'seeks.model' },
+      { formFieldName: 'message', lmsPath: 'seeks.comments' },
+    ],
   },
   emails: [
-    {
-      emailFrom: '"Eagle Ford" <noreply@eagleford.co.za>',
-      emailTo: '{{email}}',
+    customerConfirmationEmail({
       subject: 'Your test drive request has been received — Eagle Ford',
-      message: {
-        root: {
-          type: 'root',
-          children: [
-            {
-              type: 'paragraph',
-              children: [
-                {
-                  type: 'text',
-                  detail: 0,
-                  format: 0,
-                  mode: 'normal',
-                  style: '',
-                  text: 'Thank you! A member of our sales team will be in touch shortly to confirm your test drive appointment.',
-                  version: 1,
-                },
-              ],
-              direction: 'ltr',
-              format: '',
-              indent: 0,
-              textFormat: 0,
-              version: 1,
-            },
-          ],
-          direction: 'ltr',
-          format: '',
-          indent: 0,
-          version: 1,
-        },
-      },
-    },
+      bodyLines: [
+        'Hi {{firstName}},',
+        'Thank you! A member of our sales team will be in touch shortly to confirm your test drive appointment.',
+        'Kind regards,',
+        'The Eagle Ford team',
+      ],
+    }),
+    departmentNotificationEmail({
+      emailTo: DEPARTMENT_EMAILS.sales,
+      subject: 'Eagle Ford Test Drive: {{model}} — {{firstName}} {{lastName}}',
+      heading: 'Test Drive Booking',
+      intro: 'A test drive booking was submitted on the Eagle Ford website.',
+    }),
   ],
-  submitButtonLabel: 'Submit',
   fields: [
-    {
-      blockType: 'text',
-      blockName: 'firstName',
-      name: 'firstName',
-      label: 'First Name',
-      required: true,
-      width: 50,
-    },
-    {
-      blockType: 'text',
-      blockName: 'lastName',
-      name: 'lastName',
-      label: 'Last Name',
-      required: true,
-      width: 50,
-    },
-    {
-      blockType: 'text',
-      blockName: 'phone',
-      name: 'phone',
-      label: 'Phone Number',
-      required: true,
-      width: 50,
-    },
-    {
-      blockType: 'email',
-      blockName: 'email',
-      name: 'email',
-      label: 'Email Address',
-      required: true,
-      width: 50,
-    },
+    ...contactNamePhoneEmailFields,
     {
       blockType: 'date',
       blockName: 'preferredDate',
@@ -173,13 +101,6 @@ export const testDriveForm: RequiredDataFromCollectionSlug<'forms'> = {
       required: false,
       width: 100,
     },
-    {
-      blockType: 'checkbox',
-      blockName: 'privacyPolicy',
-      name: 'privacyPolicy',
-      label: 'I have read and agree to the Eagle Ford (Pty) Ltd Privacy Policy',
-      required: true,
-      width: 100,
-    },
+    privacyPolicyField,
   ],
 }
