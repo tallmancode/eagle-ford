@@ -12,6 +12,7 @@ import { LivePreviewListener } from '@/components/LivePreviewListener'
 import type { Media, VehicleModel, VehicleModelTemplate, VehicleVariant } from '@/payload-types'
 import { DefaultModelLayout } from './DefaultModelLayout'
 import { getModelStartingPrice, getVehicleModelPath } from '@/lib/utils/vehicleModel'
+import { buildCatalogVehicleFormContext } from '@/lib/stock-vehicle/buildCatalogVehicleFormContext'
 import { getNewVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
 import { buildDocumentMetadata, resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
 import {
@@ -156,10 +157,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   const meta = {
     vehicle,
     vehicleModel: model,
-    contextValues: {
-      vehicleName: vehicle.name,
-      modelName: model.name,
-    },
+    contextValues: buildCatalogVehicleFormContext({ vehicle, model }),
   }
 
   const priceStats = getVariantPriceStats(variants)

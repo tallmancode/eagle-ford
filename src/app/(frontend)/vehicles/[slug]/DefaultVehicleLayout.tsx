@@ -8,6 +8,7 @@ import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical
 import { richTextConverters } from '@/components/rich-text/richTextConverters'
 import type { Form, Vehicle, VehicleModel } from '@/payload-types'
 import { VehicleEnquireSection } from '@/lib/vehicles/components/VehicleEnquireSection'
+import { buildCatalogVehicleFormContext } from '@/lib/stock-vehicle/buildCatalogVehicleFormContext'
 import { getBrochureUrl } from '@/lib/utils/vehicleCta'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { VehicleHero } from '@/lib/blocks/vehicle-hero-block/components/VehicleHero'
@@ -170,7 +171,10 @@ export function DefaultVehicleLayout({ vehicle, models, enquiryForm }: DefaultVe
       {/* ── CMS Blocks ── */}
       <RenderBlocks
         blocks={vehicle.content?.section ?? null}
-        meta={{ vehicle, contextValues: { vehicleName: vehicle.name } }}
+        meta={{
+          vehicle,
+          contextValues: buildCatalogVehicleFormContext({ vehicle }),
+        }}
       />
     </>
   )

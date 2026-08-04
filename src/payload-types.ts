@@ -1108,6 +1108,10 @@ export interface Form {
             width?: number | null;
             required?: boolean | null;
             defaultValue?: boolean | null;
+            /**
+             * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+             */
+            hidden?: boolean | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'checkbox';
@@ -1117,6 +1121,10 @@ export interface Form {
             label?: string | null;
             width?: number | null;
             required?: boolean | null;
+            /**
+             * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+             */
+            hidden?: boolean | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'country';
@@ -1126,6 +1134,10 @@ export interface Form {
             label?: string | null;
             width?: number | null;
             required?: boolean | null;
+            /**
+             * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+             */
+            hidden?: boolean | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'email';
@@ -1158,6 +1170,10 @@ export interface Form {
             required?: boolean | null;
             min?: number | null;
             max?: number | null;
+            /**
+             * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+             */
+            hidden?: boolean | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'number';
@@ -1176,6 +1192,10 @@ export interface Form {
                 }[]
               | null;
             required?: boolean | null;
+            /**
+             * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+             */
+            hidden?: boolean | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'select';
@@ -1185,6 +1205,10 @@ export interface Form {
             label?: string | null;
             width?: number | null;
             required?: boolean | null;
+            /**
+             * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+             */
+            hidden?: boolean | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'state';
@@ -1195,6 +1219,10 @@ export interface Form {
             width?: number | null;
             defaultValue?: string | null;
             required?: boolean | null;
+            /**
+             * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+             */
+            hidden?: boolean | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'text';
@@ -1205,6 +1233,10 @@ export interface Form {
             width?: number | null;
             defaultValue?: string | null;
             required?: boolean | null;
+            /**
+             * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+             */
+            hidden?: boolean | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'textarea';
@@ -1232,6 +1264,10 @@ export interface Form {
             maxFileSize?: number | null;
             required?: boolean | null;
             multiple?: boolean | null;
+            /**
+             * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+             */
+            hidden?: boolean | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'upload';
@@ -1242,6 +1278,10 @@ export interface Form {
             width?: number | null;
             required?: boolean | null;
             defaultValue?: string | null;
+            /**
+             * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+             */
+            hidden?: boolean | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'date';
@@ -1259,6 +1299,10 @@ export interface Form {
                 }[]
               | null;
             required?: boolean | null;
+            /**
+             * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+             */
+            hidden?: boolean | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'radio';
@@ -1292,6 +1336,10 @@ export interface Form {
               width?: number | null;
               required?: boolean | null;
               defaultValue?: boolean | null;
+              /**
+               * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+               */
+              hidden?: boolean | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'checkbox';
@@ -1301,6 +1349,10 @@ export interface Form {
               label?: string | null;
               width?: number | null;
               required?: boolean | null;
+              /**
+               * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+               */
+              hidden?: boolean | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'country';
@@ -1311,6 +1363,10 @@ export interface Form {
               width?: number | null;
               required?: boolean | null;
               defaultValue?: string | null;
+              /**
+               * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+               */
+              hidden?: boolean | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'date';
@@ -1320,6 +1376,10 @@ export interface Form {
               label?: string | null;
               width?: number | null;
               required?: boolean | null;
+              /**
+               * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+               */
+              hidden?: boolean | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'email';
@@ -1352,6 +1412,10 @@ export interface Form {
               required?: boolean | null;
               min?: number | null;
               max?: number | null;
+              /**
+               * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+               */
+              hidden?: boolean | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'number';
@@ -1369,6 +1433,10 @@ export interface Form {
                   }[]
                 | null;
               required?: boolean | null;
+              /**
+               * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+               */
+              hidden?: boolean | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'radio';
@@ -1387,6 +1455,10 @@ export interface Form {
                   }[]
                 | null;
               required?: boolean | null;
+              /**
+               * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+               */
+              hidden?: boolean | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'select';
@@ -1396,6 +1468,10 @@ export interface Form {
               label?: string | null;
               width?: number | null;
               required?: boolean | null;
+              /**
+               * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+               */
+              hidden?: boolean | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'state';
@@ -1406,6 +1482,10 @@ export interface Form {
               width?: number | null;
               defaultValue?: string | null;
               required?: boolean | null;
+              /**
+               * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+               */
+              hidden?: boolean | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'text';
@@ -1416,6 +1496,10 @@ export interface Form {
               width?: number | null;
               defaultValue?: string | null;
               required?: boolean | null;
+              /**
+               * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+               */
+              hidden?: boolean | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'textarea';
@@ -1443,6 +1527,10 @@ export interface Form {
               maxFileSize?: number | null;
               required?: boolean | null;
               multiple?: boolean | null;
+              /**
+               * Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.
+               */
+              hidden?: boolean | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'upload';
@@ -3831,6 +3919,7 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               required?: T;
               defaultValue?: T;
+              hidden?: T;
               id?: T;
               blockName?: T;
             };
@@ -3841,6 +3930,7 @@ export interface FormsSelect<T extends boolean = true> {
               label?: T;
               width?: T;
               required?: T;
+              hidden?: T;
               id?: T;
               blockName?: T;
             };
@@ -3851,6 +3941,7 @@ export interface FormsSelect<T extends boolean = true> {
               label?: T;
               width?: T;
               required?: T;
+              hidden?: T;
               id?: T;
               blockName?: T;
             };
@@ -3871,6 +3962,7 @@ export interface FormsSelect<T extends boolean = true> {
               required?: T;
               min?: T;
               max?: T;
+              hidden?: T;
               id?: T;
               blockName?: T;
             };
@@ -3890,6 +3982,7 @@ export interface FormsSelect<T extends boolean = true> {
                     id?: T;
                   };
               required?: T;
+              hidden?: T;
               id?: T;
               blockName?: T;
             };
@@ -3900,6 +3993,7 @@ export interface FormsSelect<T extends boolean = true> {
               label?: T;
               width?: T;
               required?: T;
+              hidden?: T;
               id?: T;
               blockName?: T;
             };
@@ -3911,6 +4005,7 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               defaultValue?: T;
               required?: T;
+              hidden?: T;
               id?: T;
               blockName?: T;
             };
@@ -3922,6 +4017,7 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               defaultValue?: T;
               required?: T;
+              hidden?: T;
               id?: T;
               blockName?: T;
             };
@@ -3941,6 +4037,7 @@ export interface FormsSelect<T extends boolean = true> {
               maxFileSize?: T;
               required?: T;
               multiple?: T;
+              hidden?: T;
               id?: T;
               blockName?: T;
             };
@@ -3952,6 +4049,7 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               required?: T;
               defaultValue?: T;
+              hidden?: T;
               id?: T;
               blockName?: T;
             };
@@ -3970,6 +4068,7 @@ export interface FormsSelect<T extends boolean = true> {
                     id?: T;
                   };
               required?: T;
+              hidden?: T;
               id?: T;
               blockName?: T;
             };
@@ -3992,6 +4091,7 @@ export interface FormsSelect<T extends boolean = true> {
                     width?: T;
                     required?: T;
                     defaultValue?: T;
+                    hidden?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -4002,6 +4102,7 @@ export interface FormsSelect<T extends boolean = true> {
                     label?: T;
                     width?: T;
                     required?: T;
+                    hidden?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -4013,6 +4114,7 @@ export interface FormsSelect<T extends boolean = true> {
                     width?: T;
                     required?: T;
                     defaultValue?: T;
+                    hidden?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -4023,6 +4125,7 @@ export interface FormsSelect<T extends boolean = true> {
                     label?: T;
                     width?: T;
                     required?: T;
+                    hidden?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -4043,6 +4146,7 @@ export interface FormsSelect<T extends boolean = true> {
                     required?: T;
                     min?: T;
                     max?: T;
+                    hidden?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -4061,6 +4165,7 @@ export interface FormsSelect<T extends boolean = true> {
                           id?: T;
                         };
                     required?: T;
+                    hidden?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -4080,6 +4185,7 @@ export interface FormsSelect<T extends boolean = true> {
                           id?: T;
                         };
                     required?: T;
+                    hidden?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -4090,6 +4196,7 @@ export interface FormsSelect<T extends boolean = true> {
                     label?: T;
                     width?: T;
                     required?: T;
+                    hidden?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -4101,6 +4208,7 @@ export interface FormsSelect<T extends boolean = true> {
                     width?: T;
                     defaultValue?: T;
                     required?: T;
+                    hidden?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -4112,6 +4220,7 @@ export interface FormsSelect<T extends boolean = true> {
                     width?: T;
                     defaultValue?: T;
                     required?: T;
+                    hidden?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -4131,6 +4240,7 @@ export interface FormsSelect<T extends boolean = true> {
                     maxFileSize?: T;
                     required?: T;
                     multiple?: T;
+                    hidden?: T;
                     id?: T;
                     blockName?: T;
                   };

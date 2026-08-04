@@ -12,6 +12,7 @@ import { LivePreviewListener } from '@/components/LivePreviewListener'
 import type { Media, Vehicle, VehicleTemplate } from '@/payload-types'
 import { DefaultVehicleLayout } from './DefaultVehicleLayout'
 import { getModelStartingPrice } from '@/lib/utils/vehicleModel'
+import { buildCatalogVehicleFormContext } from '@/lib/stock-vehicle/buildCatalogVehicleFormContext'
 import { getNewVehicleQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
 import { buildDocumentMetadata, resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
 import {
@@ -163,7 +164,10 @@ export default async function Page({ params: paramsPromise }: Args) {
       {useTemplate ? (
         <RenderBlocks
           blocks={templateSections}
-          meta={{ vehicle, contextValues: { vehicleName: vehicle.name } }}
+          meta={{
+            vehicle,
+            contextValues: buildCatalogVehicleFormContext({ vehicle }),
+          }}
         />
       ) : (
         <DefaultVehicleLayout vehicle={vehicle} models={models} enquiryForm={enquiryForm} />

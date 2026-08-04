@@ -138,6 +138,40 @@ function withNumberMinMax(block: Block): Block {
   }
 }
 
+const blocksWithoutHiddenCheckbox = new Set(['message', 'payment'])
+
+/**
+ * Adds a Hidden checkbox so editors can hide a field on the frontend while still
+ * submitting context/default values with the form.
+ */
+function withHiddenFieldCheckbox(block: Block): Block {
+  if (blocksWithoutHiddenCheckbox.has(block.slug)) {
+    return block
+  }
+
+  const existingFields = block.fields ?? []
+  if (existingFields.some((field) => 'name' in field && field.name === 'hidden')) {
+    return block
+  }
+
+  return {
+    ...block,
+    fields: [
+      ...existingFields,
+      {
+        name: 'hidden',
+        type: 'checkbox',
+        label: 'Hidden',
+        defaultValue: false,
+        admin: {
+          description:
+            'Hide this field on the frontend. Values can still be set via page context / defaults and will submit with the form.',
+        },
+      },
+    ],
+  }
+}
+
 export function getFormInputBlocks(
   uploadCollections: readonly UploadCollectionSlug[] = FORM_UPLOAD_COLLECTIONS,
 ): Block[] {
@@ -147,6 +181,7 @@ export function getFormInputBlocks(
     )
     .filter((block): block is Block => block !== null)
     .map(withNumberMinMax)
+    .map(withHiddenFieldCheckbox)
     .map(withFormFieldBlockLabel)
     .map(withFormFieldNameInput)
 }

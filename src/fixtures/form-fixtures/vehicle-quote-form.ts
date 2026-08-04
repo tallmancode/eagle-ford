@@ -1,4 +1,8 @@
 import type { RequiredDataFromCollectionSlug } from 'payload'
+import {
+  DEPARTMENT_EMAILS,
+  EAGLE_FORD_EMAIL_FROM,
+} from '@/fixtures/form-fixtures/formEmailHelpers'
 import { vehicleLmsSeedFields } from '@/fixtures/form-fixtures/vehicleLmsSeedFields'
 
 export const vehicleQuoteForm: RequiredDataFromCollectionSlug<'forms'> = {
@@ -55,7 +59,7 @@ export const vehicleQuoteForm: RequiredDataFromCollectionSlug<'forms'> = {
   },
   emails: [
     {
-      emailFrom: '"Eagle Ford" <noreply@eagleford.co.za>',
+      emailFrom: EAGLE_FORD_EMAIL_FROM,
       emailTo: '{{email}}',
       subject: 'Your vehicle quote enquiry has been received — Eagle Ford',
       message: {
@@ -90,8 +94,8 @@ export const vehicleQuoteForm: RequiredDataFromCollectionSlug<'forms'> = {
       },
     },
     {
-      emailFrom: '"Eagle Ford" <noreply@eagleford.co.za>',
-      emailTo: 'sales@eagleford.co.za',
+      emailFrom: EAGLE_FORD_EMAIL_FROM,
+      emailTo: DEPARTMENT_EMAILS.sales,
       subject: 'Vehicle quote enquiry: {{vehicleName}}',
       message: {
         root: {

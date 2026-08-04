@@ -11,7 +11,7 @@ describe('mapFormSubmissionToLeadRequest', () => {
         enabled: true,
         dealerRef: 'EC167',
         dealerFloor: 'NEWFORD',
-        source: 'EAGLE-FORD-WEB',
+        source: 'EAGLE-DEALERWEBSITE',
         defaultUsed: '0',
         defaultBrand: 'Ford',
         defaultModel: 'General Enquiry',

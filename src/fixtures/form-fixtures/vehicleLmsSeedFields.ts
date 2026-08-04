@@ -1,5 +1,5 @@
-/** Shared VDP vehicle attribute fields (hidden via form context on the vehicle page). */
-export const vehicleLmsSeedFields = [
+/** Catalog / new-vehicle LMS fields (hidden + auto-filled from vehicle/model page). */
+export const catalogVehicleLmsSeedFields = [
   {
     blockType: 'text' as const,
     blockName: 'vehicleName',
@@ -7,6 +7,7 @@ export const vehicleLmsSeedFields = [
     label: 'Vehicle',
     required: false,
     width: 100,
+    hidden: true,
   },
   {
     blockType: 'text' as const,
@@ -15,6 +16,7 @@ export const vehicleLmsSeedFields = [
     label: 'Brand',
     required: false,
     width: 50,
+    hidden: true,
   },
   {
     blockType: 'text' as const,
@@ -23,6 +25,7 @@ export const vehicleLmsSeedFields = [
     label: 'Model',
     required: false,
     width: 50,
+    hidden: true,
   },
   {
     blockType: 'text' as const,
@@ -31,7 +34,12 @@ export const vehicleLmsSeedFields = [
     label: 'Model Range',
     required: false,
     width: 50,
+    hidden: true,
   },
+]
+
+/** Stock / showroom-only attribute fields (not used on catalog new-vehicle forms). */
+export const stockVehicleLmsSeedFields = [
   {
     blockType: 'text' as const,
     blockName: 'mmCode',
@@ -39,6 +47,7 @@ export const vehicleLmsSeedFields = [
     label: 'MM Code',
     required: false,
     width: 50,
+    hidden: true,
   },
   {
     blockType: 'text' as const,
@@ -47,6 +56,7 @@ export const vehicleLmsSeedFields = [
     label: 'Year',
     required: false,
     width: 50,
+    hidden: true,
   },
   {
     blockType: 'text' as const,
@@ -55,6 +65,7 @@ export const vehicleLmsSeedFields = [
     label: 'Mileage',
     required: false,
     width: 50,
+    hidden: true,
   },
   {
     blockType: 'text' as const,
@@ -63,6 +74,7 @@ export const vehicleLmsSeedFields = [
     label: 'Price',
     required: false,
     width: 50,
+    hidden: true,
   },
   {
     blockType: 'text' as const,
@@ -71,6 +83,7 @@ export const vehicleLmsSeedFields = [
     label: 'Stock Number',
     required: false,
     width: 50,
+    hidden: true,
   },
   {
     blockType: 'text' as const,
@@ -79,6 +92,7 @@ export const vehicleLmsSeedFields = [
     label: 'VIN',
     required: false,
     width: 50,
+    hidden: true,
   },
   {
     blockType: 'text' as const,
@@ -87,6 +101,7 @@ export const vehicleLmsSeedFields = [
     label: 'Dealership Name',
     required: false,
     width: 50,
+    hidden: true,
   },
   {
     blockType: 'text' as const,
@@ -95,6 +110,7 @@ export const vehicleLmsSeedFields = [
     label: 'Type',
     required: false,
     width: 50,
+    hidden: true,
   },
   {
     blockType: 'text' as const,
@@ -103,6 +119,7 @@ export const vehicleLmsSeedFields = [
     label: 'Colour',
     required: false,
     width: 50,
+    hidden: true,
   },
   {
     blockType: 'text' as const,
@@ -111,5 +128,17 @@ export const vehicleLmsSeedFields = [
     label: 'Reg No',
     required: false,
     width: 50,
+    hidden: true,
   },
 ]
+
+/** Full VDP vehicle attribute fields (catalog + stock). */
+export const vehicleLmsSeedFields = [...catalogVehicleLmsSeedFields, ...stockVehicleLmsSeedFields]
+
+export const STOCK_VEHICLE_LMS_FIELD_NAMES = stockVehicleLmsSeedFields.map(
+  (field) => field.name,
+) as readonly string[]
+
+export const CATALOG_VEHICLE_LMS_FIELD_NAMES = catalogVehicleLmsSeedFields.map(
+  (field) => field.name,
+) as readonly string[]

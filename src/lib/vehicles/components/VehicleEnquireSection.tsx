@@ -2,6 +2,8 @@
 
 import type { Form } from '@/payload-types'
 import { FormBlockClient } from '@/lib/blocks/form-block/components/FormBlockClient'
+import type { FormBlockContextValues } from '@/lib/blocks/form-block/types/formContext'
+import { buildCatalogVehicleFormContext } from '@/lib/stock-vehicle/buildCatalogVehicleFormContext'
 
 type VehicleEnquireSectionProps = {
   form: Form
@@ -15,6 +17,10 @@ export function VehicleEnquireSection({
   modelName,
 }: VehicleEnquireSectionProps) {
   const subject = modelName ? `${modelName}` : vehicleName
+  const contextValues: FormBlockContextValues = buildCatalogVehicleFormContext({
+    vehicle: { name: vehicleName },
+    model: modelName ? { name: modelName } : null,
+  })
 
   return (
     <section id="enquire" className="scroll-mt-24 border-t bg-muted/40 py-14 px-4">
@@ -25,13 +31,7 @@ export function VehicleEnquireSection({
             Interested in the {subject}? Fill in your details and our team will be in touch.
           </p>
         </div>
-        <FormBlockClient
-          form={form}
-          contextValues={{
-            vehicleName,
-            ...(modelName ? { modelName } : {}),
-          }}
-        />
+        <FormBlockClient form={form} contextValues={contextValues} />
       </div>
     </section>
   )

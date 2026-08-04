@@ -5,10 +5,13 @@ import {
   customerConfirmationEmail,
   departmentNotificationEmail,
 } from '@/fixtures/form-fixtures/formEmailHelpers'
-import { vehicleLmsSeedFields } from '@/fixtures/form-fixtures/vehicleLmsSeedFields'
+import {
+  catalogVehicleLmsSeedFields,
+  vehicleLmsSeedFields,
+} from '@/fixtures/form-fixtures/vehicleLmsSeedFields'
 
 /** Explicit LMS mappings from the live Used Vehicle Quote form. */
-const vehicleQuoteLmsFieldMappings = [
+const stockVehicleQuoteLmsFieldMappings = [
   { formFieldName: 'brand', lmsPath: 'seeks.brand' as const },
   { formFieldName: 'model', lmsPath: 'seeks.model' as const },
   { formFieldName: 'modelRange', lmsPath: 'seeks.modelrange' as const },
@@ -20,6 +23,14 @@ const vehicleQuoteLmsFieldMappings = [
   { formFieldName: 'price', lmsPath: 'seeks.price' as const },
   { formFieldName: 'vin', lmsPath: 'seeks.vin' as const },
   { formFieldName: 'regNo', lmsPath: 'seeks.regno' as const },
+  { formFieldName: 'message', lmsPath: 'seeks.comments' as const },
+]
+
+/** Catalog new-vehicle mappings — no stock attributes (MM code, VIN, etc.). */
+const catalogVehicleQuoteLmsFieldMappings = [
+  { formFieldName: 'brand', lmsPath: 'seeks.brand' as const },
+  { formFieldName: 'model', lmsPath: 'seeks.model' as const },
+  { formFieldName: 'modelRange', lmsPath: 'seeks.modelrange' as const },
   { formFieldName: 'message', lmsPath: 'seeks.comments' as const },
 ]
 
@@ -86,6 +97,11 @@ export type VehicleQuoteFormOptions = {
   /** Intro line under the sales email heading. */
   salesEmailIntro: string
   salesSubject: string
+  /**
+   * When false, only catalog LMS fields (vehicleName/brand/model/modelRange) are included.
+   * Defaults to true (full stock VDP field set).
+   */
+  includeStockFields?: boolean
   lms: {
     dealerFloor: string
     defaultUsed: '0' | '1'
@@ -103,6 +119,11 @@ export function buildVehicleQuoteForm(
   options: VehicleQuoteFormOptions,
 ): RequiredDataFromCollectionSlug<'forms'> {
   const source = options.lms.source ?? 'EAGLE-DEALERWEBSITE'
+  const includeStockFields = options.includeStockFields !== false
+  const vehicleFields = includeStockFields ? vehicleLmsSeedFields : catalogVehicleLmsSeedFields
+  const fieldMappings = includeStockFields
+    ? stockVehicleQuoteLmsFieldMappings
+    : catalogVehicleQuoteLmsFieldMappings
 
   return {
     title: options.title,
@@ -119,7 +140,7 @@ export function buildVehicleQuoteForm(
       defaultBrand: 'Ford',
       defaultModel: 'General Enquiry',
       commentsPrefix: options.lms.commentsPrefix,
-      fieldMappings: vehicleQuoteLmsFieldMappings,
+      fieldMappings,
     },
     emails: [
       customerConfirmationEmail({
@@ -142,7 +163,7 @@ export function buildVehicleQuoteForm(
         intro: options.salesEmailIntro,
       }),
     ],
-    fields: [...vehicleLmsSeedFields, ...contactAndConsentFields],
+    fields: [...vehicleFields, ...contactAndConsentFields],
   }
 }
 
