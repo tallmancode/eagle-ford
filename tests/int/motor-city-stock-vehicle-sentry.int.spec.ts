@@ -77,6 +77,23 @@ describe('fetchStockVehicle sentry reporting', () => {
     )
   })
 
+  it('isolates vehicle fetches from the shared upstream circuit', async () => {
+    const { fetchMotorCityJson } = await import('@/lib/motor-city-stock/fetchMotorCity')
+    vi.mocked(fetchMotorCityJson).mockResolvedValue({
+      dealerCode: 'EC167',
+      vehicle: { id: '1', cmsId: 'cms-1', sourceDealerCode: 'EC167', media: [] },
+    })
+
+    await fetchStockVehicle({ cmsId: 'cms-1' })
+
+    expect(fetchMotorCityJson).toHaveBeenCalledWith(
+      expect.objectContaining({
+        bypassCircuit: true,
+        openCircuitOnFailure: false,
+      }),
+    )
+  })
+
   it('does not capture Sentry for expected 404', async () => {
     const { fetchMotorCityJson } = await import('@/lib/motor-city-stock/fetchMotorCity')
     vi.mocked(fetchMotorCityJson).mockRejectedValue(

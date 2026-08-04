@@ -182,6 +182,32 @@ describe('motor-city-stock upstream circuit', () => {
     expect(result.ok).toBe(true)
     expect(fetchImpl).toHaveBeenCalledTimes(1)
   })
+
+  it('does not open the shared circuit when openCircuitOnFailure is false', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 502,
+      headers: { get: () => null },
+      json: async () => ({ error: 'Bad Gateway' }),
+    })
+    const sleep = vi.fn().mockResolvedValue(undefined)
+    const now = vi.fn().mockReturnValue(2_000_000)
+
+    await expect(
+      fetchMotorCityJson({
+        url: new URL('http://localhost:3000/api/stock/EC167/vehicles/cms-1'),
+        apiKey: 'test-api-key',
+        fetchImpl: fetchImpl as unknown as typeof fetch,
+        sleep,
+        random: () => 0,
+        now,
+        maxAttempts: 1,
+        openCircuitOnFailure: false,
+      }),
+    ).rejects.toMatchObject({ status: 502, retryable: true })
+
+    expect(isStockUpstreamCircuitOpen(2_000_000)).toBe(false)
+  })
 })
 
 describe('motor-city-stock last-good vehicle cache', () => {
@@ -277,5 +303,41 @@ describe('loadStockVehicleWithFallback', () => {
       status: 502,
       retryable: true,
     })
+  })
+})
+
+describe('fetchStock warms last-good from list docs', () => {
+  const originalEnv = { ...process.env }
+
+  beforeEach(() => {
+    process.env.MOTOR_CITY_STOCK_API_URL = 'http://localhost:3000'
+    process.env.MOTOR_CITY_STOCK_API_KEY = 'test-api-key'
+    resetLastGoodVehicleCacheState()
+    resetStockUpstreamCircuitState()
+  })
+
+  afterEach(() => {
+    process.env = { ...originalEnv }
+    resetLastGoodVehicleCacheState()
+    resetStockUpstreamCircuitState()
+    vi.restoreAllMocks()
+  })
+
+  it('remembers vehicles from a successful list response', async () => {
+    const vehicle = sampleVehicle('cms-from-list')
+    const fetchImpl = vi.fn().mockResolvedValue({
+      ok: true,
+      headers: { get: () => null },
+      json: async () => ({
+        dealerCode: 'EC167',
+        docs: [vehicle],
+      }),
+    })
+    vi.stubGlobal('fetch', fetchImpl)
+
+    const { fetchStock } = await import('@/lib/motor-city-stock/fetchStock')
+    await fetchStock({ dealerCode: 'EC167' })
+
+    expect(getLastGoodVehicle('EC167', 'cms-from-list')).toEqual(vehicle)
   })
 })

@@ -24,8 +24,14 @@ export type MotorCityFetchOptions = {
   next?: { revalidate?: number | false; tags?: string[] }
   timeoutMs?: number
   maxAttempts?: number
-  /** Skip circuit short-circuit (admin connectivity tests). */
+  /** Skip circuit short-circuit (admin connectivity tests / vehicle detail). */
   bypassCircuit?: boolean
+  /**
+   * When false, exhausted retryable failures do not open the shared upstream circuit.
+   * Use for single-vehicle lookups so one 502 cannot black-hole list/filters/showroom.
+   * Default true.
+   */
+  openCircuitOnFailure?: boolean
   fetchImpl?: typeof fetch
   sleep?: (ms: number) => Promise<void>
   random?: () => number
@@ -49,11 +55,16 @@ export async function fetchMotorCityJson<T>(options: MotorCityFetchOptions): Pro
     timeoutMs = STOCK_FETCH_TIMEOUT_MS,
     maxAttempts = STOCK_FETCH_MAX_ATTEMPTS,
     bypassCircuit = false,
+    openCircuitOnFailure = true,
     fetchImpl = fetch,
     sleep = defaultSleep,
     random = Math.random,
     now = Date.now,
   } = options
+
+  const tripCircuit = (atMs: number) => {
+    if (openCircuitOnFailure) openStockUpstreamCircuit(undefined, atMs)
+  }
 
   if (!bypassCircuit && isStockUpstreamCircuitOpen(now())) {
     throw new MotorCityStockError('Stock API temporarily unavailable (circuit open)', 503, {
@@ -91,7 +102,7 @@ export async function fetchMotorCityJson<T>(options: MotorCityFetchOptions): Pro
         })
 
         if (!retryable || attempt >= maxAttempts) {
-          if (retryable) openStockUpstreamCircuit(undefined, now())
+          if (retryable) tripCircuit(now())
           throw error
         }
 
@@ -122,14 +133,14 @@ export async function fetchMotorCityJson<T>(options: MotorCityFetchOptions): Pro
         attempt >= maxAttempts
       ) {
         if (error.code !== CIRCUIT_OPEN_CODE) {
-          openStockUpstreamCircuit(undefined, now())
+          tripCircuit(now())
         }
         throw error
       }
 
       lastError = error
       if (attempt >= maxAttempts) {
-        openStockUpstreamCircuit(undefined, now())
+        tripCircuit(now())
         if (error instanceof MotorCityStockError) throw error
         const timedOut = isAbortTimeoutError(error)
         throw new MotorCityStockError(
@@ -154,7 +165,7 @@ export async function fetchMotorCityJson<T>(options: MotorCityFetchOptions): Pro
     }
   }
 
-  openStockUpstreamCircuit(undefined, now())
+  tripCircuit(now())
   throw lastError instanceof MotorCityStockError
     ? lastError
     : new MotorCityStockError('Stock API request failed', 503, {
