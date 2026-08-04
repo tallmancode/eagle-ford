@@ -21,9 +21,15 @@ import {
 } from '@/plugins/form-builder/formInputBlocks'
 import { SubheadingBlock } from '@/lib/blocks/form-block/SubheadingBlock'
 import { handleMultiStepFormUploads } from '@/lib/blocks/form-block/hooks/handleMultiStepFormUploads'
+import {
+  denormalizeSubmissionContactFields,
+  getFormSubmissionContactFields,
+} from '@/lib/form-submissions/contactFields'
+import { flattenFormSubmissionExportBatch } from '@/lib/form-submissions/flattenSubmissionExport'
 import { getLmsLeadInjectionFields } from '@/lib/motor-city-leads/formFields'
 import { getMotorCityLeadSubmissionFields } from '@/lib/motor-city-leads/formSubmissionFields'
 import { injectFormSubmissionLead } from '@/lib/motor-city-leads/injectFormSubmissionLead'
+import { patchExportCollectionFields } from '@/components/admin/export/patchExportCollectionFields'
 import { aiSeoPlugin } from '@/plugins/ai-seo'
 import { aiMediaSuggestionsPlugin } from '@/plugins/ai-media-suggestions'
 
@@ -74,9 +80,32 @@ export const plugins: Plugin[] = [
     uploadCollections: [...FORM_UPLOAD_COLLECTIONS],
     redirectRelationships: ['pages'],
     formSubmissionOverrides: {
-      fields: ({ defaultFields }) => [...defaultFields, ...getMotorCityLeadSubmissionFields()],
+      admin: {
+        defaultColumns: ['form', 'firstName', 'lastName', 'phone', 'email', 'createdAt'],
+      },
+      fields: ({ defaultFields }) => {
+        const withExportTweaks = defaultFields.map((field) => {
+          if (!('name' in field) || field.name !== 'submissionData') return field
+          return {
+            ...field,
+            custom: {
+              ...('custom' in field && field.custom && typeof field.custom === 'object'
+                ? field.custom
+                : {}),
+              'plugin-import-export': {
+                disabled: true,
+              },
+            },
+          }
+        })
+        return [
+          ...withExportTweaks,
+          ...getFormSubmissionContactFields(),
+          ...getMotorCityLeadSubmissionFields(),
+        ]
+      },
       hooks: {
-        beforeChange: [handleMultiStepFormUploads],
+        beforeChange: [handleMultiStepFormUploads, denormalizeSubmissionContactFields],
         afterChange: [injectFormSubmissionLead],
       },
     },
@@ -206,6 +235,7 @@ export const plugins: Plugin[] = [
         group: 'Data Management',
       },
       depth: 5,
+      fields: patchExportCollectionFields(collection.fields ?? []),
     }),
     overrideImportCollection: ({ collection }) => ({
       ...collection,
@@ -215,7 +245,16 @@ export const plugins: Plugin[] = [
       },
     }),
     collections: [
-      { slug: 'form-submissions', export: { disableJobsQueue: true }, import: false },
+      {
+        slug: 'form-submissions',
+        export: {
+          disableJobsQueue: true,
+          hooks: {
+            before: flattenFormSubmissionExportBatch,
+          },
+        },
+        import: false,
+      },
     ],
   }),
   // Keep enabled so AdminErrorBoundary stays in the import map (generate:importmap

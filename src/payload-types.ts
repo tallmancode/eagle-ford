@@ -3080,6 +3080,22 @@ export interface FormSubmission {
       }[]
     | null;
   /**
+   * Copied from the form answer named firstName
+   */
+  firstName?: string | null;
+  /**
+   * Copied from the form answer named lastName
+   */
+  lastName?: string | null;
+  /**
+   * Copied from the form answer named phone
+   */
+  phone?: string | null;
+  /**
+   * Copied from the form answer named email
+   */
+  email?: string | null;
+  /**
    * Eagle Motor City site-form-leads document id
    */
   motorCityLeadId?: string | null;
@@ -4322,6 +4338,10 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         value?: T;
         id?: T;
       };
+  firstName?: T;
+  lastName?: T;
+  phone?: T;
+  email?: T;
   motorCityLeadId?: T;
   motorCityLeadStatus?: T;
   motorCityLeadError?: T;
