@@ -139,6 +139,7 @@ export async function runStockConnectivityTest(args: {
       apiKey,
       next: { revalidate: false },
       maxAttempts: 2,
+      bypassCircuit: true,
     })
 
     sample.totalDocs = list.totalDocs
@@ -167,6 +168,7 @@ export async function runStockConnectivityTest(args: {
       apiKey,
       next: { revalidate: false },
       maxAttempts: 2,
+      bypassCircuit: true,
     })
 
     sample.filtersOk = true

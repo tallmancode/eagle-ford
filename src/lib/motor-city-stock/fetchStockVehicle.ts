@@ -6,6 +6,7 @@ import { MotorCityStockError } from '@/lib/motor-city-stock/types'
 import { getStockApiConfig } from '@/lib/motor-city-stock/fetchStock'
 import { fetchMotorCityJson } from '@/lib/motor-city-stock/fetchMotorCity'
 import { captureStockFetchEvent, safeApiHost } from '@/lib/motor-city-stock/sentry'
+import { CIRCUIT_OPEN_CODE } from '@/lib/motor-city-stock/upstreamCircuit'
 
 function buildStockVehicleUrl(baseUrl: string, options: FetchStockVehicleOptions): URL {
   const dealerCode = options.dealerCode ?? 'EC167'
@@ -36,7 +37,8 @@ export async function fetchStockVehicle(
           })
 
     // 404 is expected for removed stock — do not alert.
-    if (stockError.status !== 404) {
+    // Circuit-open fail-fast follows a prior captured failure — breadcrumb only via skip.
+    if (stockError.status !== 404 && stockError.code !== CIRCUIT_OPEN_CODE) {
       captureStockFetchEvent(stockError, {
         event: 'stock_vehicle_failure',
         dealerCode,

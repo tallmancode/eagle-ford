@@ -2,6 +2,7 @@ import { fetchMotorCityJson } from '@/lib/motor-city-stock/fetchMotorCity'
 import { captureStockFetchEvent, safeApiHost } from '@/lib/motor-city-stock/sentry'
 import type { FetchStockOptions, MotorCityStockResponse } from '@/lib/motor-city-stock/types'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
+import { CIRCUIT_OPEN_CODE } from '@/lib/motor-city-stock/upstreamCircuit'
 
 function getStockApiConfig() {
   const baseUrl = process.env.MOTOR_CITY_STOCK_API_URL
@@ -71,15 +72,17 @@ export async function fetchStock(options: FetchStockOptions = {}): Promise<Motor
             cause: error,
           })
 
-    captureStockFetchEvent(stockError, {
-      event: 'stock_list_failure',
-      dealerCode,
-      httpStatus: stockError.status,
-      errorCode: stockError.code,
-      retryable: stockError.retryable,
-      apiHost: safeApiHost(baseUrl),
-      detail: 'Failed to fetch Motor City stock list after retries',
-    })
+    if (stockError.code !== CIRCUIT_OPEN_CODE) {
+      captureStockFetchEvent(stockError, {
+        event: 'stock_list_failure',
+        dealerCode,
+        httpStatus: stockError.status,
+        errorCode: stockError.code,
+        retryable: stockError.retryable,
+        apiHost: safeApiHost(baseUrl),
+        detail: 'Failed to fetch Motor City stock list after retries',
+      })
+    }
 
     throw stockError
   }
