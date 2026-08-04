@@ -8,6 +8,7 @@ import { VehicleColors } from '@/lib/blocks/vehicle-colors-block/components/Vehi
 import { VehicleModelSiblings } from '@/lib/blocks/vehicle-model-siblings-block/components/VehicleModelSiblings'
 import { VehicleModelVariants } from '@/lib/blocks/vehicle-model-variants-block/components/VehicleModelVariants'
 import { VehicleEnquireSection } from '@/lib/vehicles/components/VehicleEnquireSection'
+import { buildCatalogVehicleFormContext } from '@/lib/stock-vehicle/buildCatalogVehicleFormContext'
 import { getModelColours, getModelStartingPrice } from '@/lib/utils/vehicleModel'
 
 type ModelWithPricing = VehicleModel & {
@@ -51,7 +52,7 @@ export function DefaultModelLayout({
         meta={{
           vehicle,
           vehicleModel: model,
-          contextValues: { vehicleName: vehicle.name, modelName: model.name },
+          contextValues: buildCatalogVehicleFormContext({ vehicle, model }),
         }}
       />
     </>

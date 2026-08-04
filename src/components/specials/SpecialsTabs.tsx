@@ -85,13 +85,23 @@ function getModelName(special: SpecialTabItem): string {
   return model?.name ?? ''
 }
 
+function getVehicleName(special: SpecialTabItem): string {
+  const vehicle =
+    special.vehicle && typeof special.vehicle === 'object' ? (special.vehicle as Vehicle) : null
+  return vehicle?.name ?? ''
+}
+
 function buildSpecialContextValues(
   special: SpecialTabItem,
   categoryTitle: string,
 ): FormBlockContextValues {
+  const vehicleName = getVehicleName(special)
+  const modelName = getModelName(special)
+
   return {
+    ...(vehicleName ? { vehicleName } : {}),
     specialCategory: categoryTitle,
-    modelName: getModelName(special),
+    ...(modelName ? { modelName } : {}),
     specialType: getOfferTypeLabel(special.offerType),
     specialTitle: getSpecialDisplayTitle(special),
   }

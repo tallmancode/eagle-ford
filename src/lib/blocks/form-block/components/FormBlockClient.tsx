@@ -31,6 +31,7 @@ import {
 } from '@/lib/blocks/form-block/utils/getFormSteps'
 import type { FormBlockContextValues } from '@/lib/blocks/form-block/types/formContext'
 import {
+  getConfiguredHiddenFieldNames,
   getHiddenFieldNames,
   mergeFormDefaultValues,
 } from '@/lib/blocks/form-block/types/formContext'
@@ -255,7 +256,11 @@ export function FormBlockClient({
   const steps = getFormSteps(form)
   const isMultiStep = isMultiStepForm(form)
   const useHeroLayout = layout === 'hero' && !isMultiStep
-  const hiddenFieldNames = getHiddenFieldNames(contextValues, forceHiddenFieldNames)
+  const hiddenFieldNames = getHiddenFieldNames(
+    contextValues,
+    forceHiddenFieldNames,
+    getConfiguredHiddenFieldNames(form),
+  )
 
   const formMethods = useForm<FormData>({
     defaultValues: mergeFormDefaultValues(buildInitialFormState(form), contextValues),

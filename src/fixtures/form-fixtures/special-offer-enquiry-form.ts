@@ -61,6 +61,7 @@ export const specialOfferEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = 
       label: 'Vehicle',
       required: false,
       width: 50,
+      hidden: true,
     },
     {
       blockType: 'text',
@@ -69,6 +70,7 @@ export const specialOfferEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = 
       label: 'Special Category',
       required: false,
       width: 50,
+      hidden: true,
     },
     {
       blockType: 'text',
@@ -77,6 +79,7 @@ export const specialOfferEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = 
       label: 'Model',
       required: false,
       width: 50,
+      hidden: true,
     },
     {
       blockType: 'text',
@@ -85,6 +88,7 @@ export const specialOfferEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = 
       label: 'Special Type',
       required: false,
       width: 50,
+      hidden: true,
     },
     {
       blockType: 'text',
@@ -93,6 +97,7 @@ export const specialOfferEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = 
       label: 'Special Offer',
       required: false,
       width: 50,
+      hidden: true,
     },
     ...contactNamePhoneEmailFields,
     {

@@ -35,7 +35,7 @@ export const sellEnquiryForm: RequiredDataFromCollectionSlug<'forms'> = {
       ],
     }),
     departmentNotificationEmail({
-      emailTo: DEPARTMENT_EMAILS.sales,
+      emailTo: DEPARTMENT_EMAILS.priceYourCar,
       subject: 'Eagle Ford Sell Enquiry: {{vehicleMake}} {{vehicleModel}} — {{firstName}} {{lastName}}',
       heading: 'Sell Enquiry',
       intro: 'A sell / trade-in enquiry was submitted on the Eagle Ford website.',

@@ -34,6 +34,7 @@ This app is a **satellite site** that consumes live stock from Eagle Motor City 
 - Enabled forms POST normalized leads to Motor City `POST /api/leads/site-forms` (same stock API key)
 - Motor City owns CMS LMS credentials and the actual LMS push — this site never calls CMS LMS directly
 - Implementation: `src/lib/motor-city-leads/`
+- **Skill:** `.cursor/skills/porting-forms-to-satellite/` is the rollout playbook for sibling Eagle satellites (Mazda/Suzuki/Mahindra) — copy Ford form fixtures / upsert seeds / LMS+email patterns; do not invent a divergent approach.
 - **Lead paths audited:** Payload form-submissions (form block + multi-step uploads) are the only LMS opt-in source. There are no webhook-originated LMS lead routes on this satellite.
 - **Durability:** form-submission documents are the durable store. On transient Motor City failures the submission is marked `pending_retry` with `motorCityLeadNextRetryAt` / attempt count. `extLeadRef` is the form-submission id (idempotent on Motor City).
 - **Retries:** short in-request backoff (up to 3 attempts), then Payload jobs (`forwardMotorCityLead` + `sweepMotorCityLeads` every 5 minutes on queue `motor-city-leads`). Production needs `CRON_SECRET` and the `lead-jobs` sidecar in `docker-compose.prod.yml` polling `/api/payload-jobs/run?queue=motor-city-leads`.

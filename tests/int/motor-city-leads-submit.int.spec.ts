@@ -8,7 +8,7 @@ const leadBody = {
   siteKey: 'eagle-ford',
   dealerRef: 'EC167',
   dealerFloor: 'NEWFORD',
-  source: 'EAGLE-FORD-WEB',
+  source: 'EAGLE-DEALERWEBSITE',
   contact: { firstName: 'Jane', surname: 'Doe', cellPhone: '0821234567' },
   seeks: { used: '0', brand: 'Ford', model: 'Ranger' },
 }

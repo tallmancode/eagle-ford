@@ -3,11 +3,12 @@ export const EAGLE_FORD_EMAIL_FROM = '"Eagle Ford" <noreply@eaglemc.co.za>'
 
 export const DEPARTMENT_EMAILS = {
   sales: '"Sales" <sales@eagleford.co.za>',
-  service: '"Service" <service@eagleford.co.za>',
-  /** No public parts@ inbox — parts enquiries route with Service (workshop). */
-  parts: '"Parts" <service@eagleford.co.za>',
-  paintAndPanel: '"Paint and Panel" <paintandpanel@eaglemc.co.za>',
-  wheelAndTyre: '"Wheel and Tyre" <wheelandtyre@eaglemc.co.za>',
+  service: '"Service" <Serviceford@eaglemc.co.za>',
+  parts: '"Parts" <FordParts@eagleford.co.za>',
+  paintAndPanel: '"Paint and Panel" <Paintandpanel@eaglemc.co.za>',
+  wheelAndTyre: '"Wheel and Tyre" <Wheelandtyre@eaglemc.co.za>',
+  /** Sell / Price Your Car — shared mailbox across Eagle brands. */
+  priceYourCar: '"Price Your Car" <PriceYourCar@eagleford.co.za>',
 } as const
 
 type RichTextParagraph = {

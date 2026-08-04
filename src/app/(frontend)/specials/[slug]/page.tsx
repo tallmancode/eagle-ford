@@ -292,8 +292,8 @@ export default async function SpecialCategoryPage({
         ...(vehicle ? { vehicle } : {}),
         ...(vehicleModel ? { vehicleModel } : {}),
         contextValues: {
-          vehicleName: vehicle?.name ?? '',
-          modelName: vehicleModel?.name ?? '',
+          ...(vehicle?.name ? { vehicleName: vehicle.name } : {}),
+          ...(vehicleModel?.name ? { modelName: vehicleModel.name } : {}),
           specialCategory: category.title,
           specialType: getOfferTypeLabel(selectedSpecial.offerType),
           specialTitle: selectedDisplayTitle,

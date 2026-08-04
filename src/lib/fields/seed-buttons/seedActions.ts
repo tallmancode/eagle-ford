@@ -5,6 +5,11 @@ export type SeedAction = {
   description: string
   adminLink?: { collection: 'forms' }
   allowRetry?: boolean
+  /**
+   * When false, the admin card is shown but the action button is disabled.
+   * Flip to true in this file to re-enable. Defaults to true.
+   */
+  enabled?: boolean
 }
 
 export const formSeedActions: SeedAction[] = [
@@ -16,6 +21,7 @@ export const formSeedActions: SeedAction[] = [
       'Create or overwrite the sell enquiry form by title (preserves existing form id/references).',
     adminLink: { collection: 'forms' },
     allowRetry: true,
+    enabled: false,
   },
   {
     endpoint: '/next/create-enquiry-form',
@@ -25,6 +31,7 @@ export const formSeedActions: SeedAction[] = [
       'Create or overwrite the general enquiry form by title (LMS CALLCENTRE + Mimecast emails).',
     adminLink: { collection: 'forms' },
     allowRetry: true,
+    enabled: false,
   },
   {
     endpoint: '/next/create-paint-panel-form',
@@ -33,6 +40,7 @@ export const formSeedActions: SeedAction[] = [
     description: 'Create or overwrite the paint & panel enquiry form by title.',
     adminLink: { collection: 'forms' },
     allowRetry: true,
+    enabled: false,
   },
   {
     endpoint: '/next/create-parts-form',
@@ -41,6 +49,7 @@ export const formSeedActions: SeedAction[] = [
     description: 'Create or overwrite the parts enquiry form by title.',
     adminLink: { collection: 'forms' },
     allowRetry: true,
+    enabled: false,
   },
   {
     endpoint: '/next/create-wheel-tyre-form',
@@ -49,6 +58,7 @@ export const formSeedActions: SeedAction[] = [
     description: 'Create or overwrite the wheel & tyre enquiry form by title.',
     adminLink: { collection: 'forms' },
     allowRetry: true,
+    enabled: false,
   },
   {
     endpoint: '/next/create-service-form',
@@ -57,6 +67,7 @@ export const formSeedActions: SeedAction[] = [
     description: 'Create or overwrite the service booking form by title.',
     adminLink: { collection: 'forms' },
     allowRetry: true,
+    enabled: false,
   },
   {
     endpoint: '/next/create-test-drive-form',
@@ -66,6 +77,7 @@ export const formSeedActions: SeedAction[] = [
       'Create or overwrite the test drive form by title (LMS NEWFORD + model mapping).',
     adminLink: { collection: 'forms' },
     allowRetry: true,
+    enabled: false,
   },
   {
     endpoint: '/next/create-special-offer-form',
@@ -75,6 +87,7 @@ export const formSeedActions: SeedAction[] = [
       'Create or overwrite the special offer form by title (LMS NEWFORD + vehicle context fields).',
     adminLink: { collection: 'forms' },
     allowRetry: true,
+    enabled: false,
   },
   {
     endpoint: '/next/create-vehicle-quote-form',
@@ -84,6 +97,7 @@ export const formSeedActions: SeedAction[] = [
       'Create or overwrite the generic vehicle quote form. Prefer Used / New quote forms for showroom and catalog.',
     adminLink: { collection: 'forms' },
     allowRetry: true,
+    enabled: false,
   },
   {
     endpoint: '/next/create-used-vehicle-quote-form',
@@ -93,6 +107,7 @@ export const formSeedActions: SeedAction[] = [
       'Create or overwrite the used quote form by title. Wire it in Settings → Showroom quote form.',
     adminLink: { collection: 'forms' },
     allowRetry: true,
+    enabled: false,
   },
   {
     endpoint: '/next/create-new-vehicle-quote-form',
@@ -102,6 +117,21 @@ export const formSeedActions: SeedAction[] = [
       'Create or overwrite the new quote form by title. Wire it in Settings → New vehicle quote form.',
     adminLink: { collection: 'forms' },
     allowRetry: true,
+    enabled: false,
+  },
+]
+
+/** Surgical patches that do not replace emails / LMS / other form settings. */
+export const formMaintenanceSeedActions: SeedAction[] = [
+  {
+    endpoint: '/next/hide-vehicle-context-fields',
+    label: 'Hide Vehicle Context Fields',
+    successText: 'Vehicle context fields updated!',
+    description:
+      'Hides catalog/specials context fields; removes stock-only fields (MM code, VIN, etc.) from New Vehicle Quote. Does not change emails, LMS floors, or contact fields.',
+    adminLink: { collection: 'forms' },
+    allowRetry: true,
+    enabled: true,
   },
 ]
 
