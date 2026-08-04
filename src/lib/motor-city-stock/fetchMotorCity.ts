@@ -7,6 +7,12 @@ import {
   parseRetryAfterMs,
 } from '@/lib/http/retryPolicy'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
+import {
+  CIRCUIT_OPEN_CODE,
+  closeStockUpstreamCircuit,
+  isStockUpstreamCircuitOpen,
+  openStockUpstreamCircuit,
+} from '@/lib/motor-city-stock/upstreamCircuit'
 
 export const STOCK_FETCH_TIMEOUT_MS = 15_000
 export const STOCK_FETCH_MAX_ATTEMPTS = 3
@@ -18,9 +24,12 @@ export type MotorCityFetchOptions = {
   next?: { revalidate?: number | false; tags?: string[] }
   timeoutMs?: number
   maxAttempts?: number
+  /** Skip circuit short-circuit (admin connectivity tests). */
+  bypassCircuit?: boolean
   fetchImpl?: typeof fetch
   sleep?: (ms: number) => Promise<void>
   random?: () => number
+  now?: () => number
 }
 
 async function defaultSleep(ms: number): Promise<void> {
@@ -30,6 +39,7 @@ async function defaultSleep(ms: number): Promise<void> {
 /**
  * Authenticated GET to Motor City with timeout, Retry-After respect, and bounded retries.
  * Callers attach `next: { revalidate }` so successful responses still participate in Next caching.
+ * After exhausted retryable failures, opens a short process-local circuit to avoid stampedes.
  */
 export async function fetchMotorCityJson<T>(options: MotorCityFetchOptions): Promise<T> {
   const {
@@ -38,10 +48,19 @@ export async function fetchMotorCityJson<T>(options: MotorCityFetchOptions): Pro
     next,
     timeoutMs = STOCK_FETCH_TIMEOUT_MS,
     maxAttempts = STOCK_FETCH_MAX_ATTEMPTS,
+    bypassCircuit = false,
     fetchImpl = fetch,
     sleep = defaultSleep,
     random = Math.random,
+    now = Date.now,
   } = options
+
+  if (!bypassCircuit && isStockUpstreamCircuitOpen(now())) {
+    throw new MotorCityStockError('Stock API temporarily unavailable (circuit open)', 503, {
+      code: CIRCUIT_OPEN_CODE,
+      retryable: true,
+    })
+  }
 
   let lastError: unknown
 
@@ -72,6 +91,7 @@ export async function fetchMotorCityJson<T>(options: MotorCityFetchOptions): Pro
         })
 
         if (!retryable || attempt >= maxAttempts) {
+          if (retryable) openStockUpstreamCircuit(undefined, now())
           throw error
         }
 
@@ -89,14 +109,27 @@ export async function fetchMotorCityJson<T>(options: MotorCityFetchOptions): Pro
         continue
       }
 
+      closeStockUpstreamCircuit()
       return (await response.json()) as T
     } catch (error) {
       if (error instanceof MotorCityStockError && !error.retryable) {
         throw error
       }
 
+      if (
+        error instanceof MotorCityStockError &&
+        error.retryable &&
+        attempt >= maxAttempts
+      ) {
+        if (error.code !== CIRCUIT_OPEN_CODE) {
+          openStockUpstreamCircuit(undefined, now())
+        }
+        throw error
+      }
+
       lastError = error
       if (attempt >= maxAttempts) {
+        openStockUpstreamCircuit(undefined, now())
         if (error instanceof MotorCityStockError) throw error
         const timedOut = isAbortTimeoutError(error)
         throw new MotorCityStockError(
@@ -121,6 +154,7 @@ export async function fetchMotorCityJson<T>(options: MotorCityFetchOptions): Pro
     }
   }
 
+  openStockUpstreamCircuit(undefined, now())
   throw lastError instanceof MotorCityStockError
     ? lastError
     : new MotorCityStockError('Stock API request failed', 503, {

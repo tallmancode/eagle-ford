@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { buildStockUrl, fetchStock, getStockApiConfig } from '@/lib/motor-city-stock/fetchStock'
 import { fetchMotorCityJson } from '@/lib/motor-city-stock/fetchMotorCity'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
+import { resetStockUpstreamCircuitState } from '@/lib/motor-city-stock/upstreamCircuit'
 
 describe('motor-city-stock fetch utility', () => {
   const originalEnv = { ...process.env }
@@ -10,10 +11,12 @@ describe('motor-city-stock fetch utility', () => {
   beforeEach(() => {
     process.env.MOTOR_CITY_STOCK_API_URL = 'http://localhost:3000'
     process.env.MOTOR_CITY_STOCK_API_KEY = 'test-api-key'
+    resetStockUpstreamCircuitState()
   })
 
   afterEach(() => {
     process.env = { ...originalEnv }
+    resetStockUpstreamCircuitState()
     vi.restoreAllMocks()
   })
 
