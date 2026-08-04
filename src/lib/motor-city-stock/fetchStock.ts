@@ -1,4 +1,5 @@
 import { fetchMotorCityJson } from '@/lib/motor-city-stock/fetchMotorCity'
+import { rememberLastGoodVehicle } from '@/lib/motor-city-stock/lastGoodVehicleCache'
 import { captureStockFetchEvent, safeApiHost } from '@/lib/motor-city-stock/sentry'
 import type { FetchStockOptions, MotorCityStockResponse } from '@/lib/motor-city-stock/types'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
@@ -57,11 +58,21 @@ export async function fetchStock(options: FetchStockOptions = {}): Promise<Motor
   const dealerCode = options.dealerCode ?? 'EC167'
 
   try {
-    return await fetchMotorCityJson<MotorCityStockResponse>({
+    const response = await fetchMotorCityJson<MotorCityStockResponse>({
       url,
       apiKey,
       next: { revalidate: 300 },
     })
+
+    // Warm process-local last-good so showroom detail can soft-serve after a vehicle 502
+    // without requiring a prior successful detail fetch for that cmsId.
+    for (const vehicle of response.docs) {
+      if (vehicle?.cmsId) {
+        rememberLastGoodVehicle(dealerCode, vehicle.cmsId, vehicle)
+      }
+    }
+
+    return response
   } catch (error) {
     const stockError =
       error instanceof MotorCityStockError

@@ -25,6 +25,9 @@ export async function fetchStockVehicle(
       url,
       apiKey,
       next: { revalidate: 300 },
+      // Single-vehicle lookups must not trip (or be blocked by) the shared list circuit.
+      bypassCircuit: true,
+      openCircuitOnFailure: false,
     })
   } catch (error) {
     const stockError =
