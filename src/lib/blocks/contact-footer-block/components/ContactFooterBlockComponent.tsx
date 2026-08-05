@@ -5,6 +5,15 @@ import { formatPhoneNumber } from '@/lib/utils/formatPhoneNumber'
 import { Clock, MapPin, Phone } from 'lucide-react'
 import React from 'react'
 
+const itemClassName =
+  'flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left max-w-sm sm:max-w-none'
+
+const linkClassName = `${itemClassName} hover:text-primary transition-colors`
+
+function googleMapsSearchUrl(address: string): string {
+  return `https://maps.google.com/?q=${encodeURIComponent(address)}`
+}
+
 export async function ContactFooterBlockComponent({
   addressOverride,
   hoursOverride,
@@ -19,45 +28,38 @@ export async function ContactFooterBlockComponent({
 
   if (!addressLine && !hours && !phone) return null
 
-  const addressContent = (
-    <>
-      <MapPin className="size-4 text-primary shrink-0" />
-      <span>{addressLine}</span>
-    </>
-  )
-
-  const showMapsLink = !hasAddressOverride && Boolean(settingsAddress?.mapsLink)
+  const mapsHref =
+    (!hasAddressOverride && settingsAddress?.mapsLink?.trim()) ||
+    (addressLine ? googleMapsSearchUrl(addressLine) : null)
 
   return (
     <section className="border-t py-8 px-4">
-      <div className="container mx-auto flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 text-sm text-muted-foreground">
-        {addressLine &&
-          (showMapsLink ? (
-            <a
-              href={settingsAddress!.mapsLink!}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2"
-            >
-              {addressContent}
-            </a>
-          ) : (
-            <div className="flex items-center gap-2">{addressContent}</div>
-          ))}
+      <div className="container mx-auto flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 text-base text-muted-foreground">
+        {addressLine && mapsHref && (
+          <a
+            href={mapsHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={linkClassName}
+          >
+            <MapPin className="size-5 text-primary shrink-0" />
+            <span>{addressLine}</span>
+          </a>
+        )}
         {phone && (
           <a
             href={`tel:${phone.replace(/\D/g, '')}`}
-            className="flex items-center gap-2"
+            className={linkClassName}
             data-gtm-cta="call-now"
             data-gtm-cta-location="contact-footer"
           >
-            <Phone className="size-4 text-primary shrink-0" />
+            <Phone className="size-5 text-primary shrink-0" />
             <span>{formatPhoneNumber(phone)}</span>
           </a>
         )}
         {hours && (
-          <div className="flex items-center gap-2">
-            <Clock className="size-4 text-primary shrink-0" />
+          <div className={itemClassName}>
+            <Clock className="size-5 text-primary shrink-0" />
             <span>{hours}</span>
           </div>
         )}

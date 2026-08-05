@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense, useEffect, useTransition } from 'react'
+import React, { Suspense, useEffect, useRef, useTransition } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Download } from 'lucide-react'
@@ -216,10 +216,40 @@ function scrollToSpecialDetails(specialId: string) {
   visible?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
-function SpecialCardImage({ special, priority }: { special: SpecialTabItem; priority?: boolean }) {
+/** Scroll the mobile accordion trigger to the top of the viewport (honours scroll-margin). */
+function scrollAccordionTriggerIntoView(
+  specialId: string,
+  behavior: ScrollBehavior = 'smooth',
+): boolean {
+  const trigger = document.querySelector<HTMLElement>(
+    `[data-special-accordion-trigger="${CSS.escape(specialId)}"]`,
+  )
+  if (!trigger || trigger.getClientRects().length === 0) return false
+  trigger.scrollIntoView({ behavior, block: 'start' })
+  return true
+}
+
+function getOpenAccordionTrigger(specialId: string): HTMLElement | null {
+  const trigger = document.querySelector<HTMLElement>(
+    `[data-special-accordion-trigger="${CSS.escape(specialId)}"][data-state="open"]`,
+  )
+  if (!trigger || trigger.getClientRects().length === 0) return null
+  return trigger
+}
+
+function SpecialCardImage({
+  special,
+  priority,
+  showPricingOverlay = true,
+}: {
+  special: SpecialTabItem
+  priority?: boolean
+  /** Desktop grid only — mobile accordion shows pricing in SpecialDetailInfo instead. */
+  showPricingOverlay?: boolean
+}) {
   if (!special.cardImage) return null
 
-  const hasPricing = hasSpecialDetailPricing(special)
+  const hasPricing = showPricingOverlay && hasSpecialDetailPricing(special)
   const detailsHref = `#special-${special.id}-details`
 
   return (
@@ -454,6 +484,15 @@ function SpecialsTabsInner({
   const router = useRouter()
   const searchParams = useSearchParams()
   const [, startTransition] = useTransition()
+  /** Snapshot first paint so URL sync adding `?special=` does not count as a deep link. */
+  const arrivedWithSpecialQueryRef = useRef<boolean | null>(null)
+  const didInitialMobileScrollRef = useRef(false)
+
+  if (arrivedWithSpecialQueryRef.current === null) {
+    arrivedWithSpecialQueryRef.current = Boolean(
+      searchParams.get('special') ?? initialSpecialSlug,
+    )
+  }
 
   const specialFromQuery = searchParams.get('special') ?? initialSpecialSlug
   const selectedIndex = findSpecialIndex(specials, specialFromQuery)
@@ -470,6 +509,68 @@ function SpecialsTabsInner({
       router.replace(getSpecialCategoryPath(categorySlug, selectedSpecial.slug), { scroll: false })
     })
   }, [categorySlug, router, searchParams, selectedSpecial?.slug, specials.length])
+
+  // Mobile only: on deep-link load (`?special=`), scroll the open accordion trigger into view.
+  // Retries until the open trigger exists, then reinforces briefly — one-shot rAF fails under
+  // React Strict Mode (cleanup cancels the frame after the "done" ref is set) and can lose to
+  // Next.js / browser scroll restoration or accordion open animation.
+  useEffect(() => {
+    if (didInitialMobileScrollRef.current) return
+    if (!arrivedWithSpecialQueryRef.current || !selectedSpecial?.id) return
+    if (window.matchMedia('(min-width: 1024px)').matches) return
+
+    const specialId = String(selectedSpecial.id)
+    let cancelled = false
+    let attempts = 0
+    const maxFindAttempts = 40
+    /** After the open trigger is found, re-apply scroll a few times to beat scroll restoration. */
+    const reinforceAfterFound = 8
+    let foundAtAttempt: number | null = null
+    let timeoutId: ReturnType<typeof setTimeout> | undefined
+    let rafId = 0
+
+    const scheduleRetry = () => {
+      timeoutId = setTimeout(() => {
+        rafId = requestAnimationFrame(tryScroll)
+      }, 50)
+    }
+
+    const tryScroll = () => {
+      if (cancelled || didInitialMobileScrollRef.current) return
+
+      const openTrigger = getOpenAccordionTrigger(specialId)
+      if (openTrigger) {
+        // Instant avoids smooth-scroll races with retries / restoration.
+        openTrigger.scrollIntoView({ behavior: 'instant', block: 'start' })
+        if (foundAtAttempt === null) foundAtAttempt = attempts
+        if (attempts - foundAtAttempt >= reinforceAfterFound) {
+          didInitialMobileScrollRef.current = true
+          return
+        }
+      }
+
+      attempts += 1
+      if (attempts >= maxFindAttempts) {
+        if (foundAtAttempt === null) {
+          scrollAccordionTriggerIntoView(specialId, 'instant')
+        }
+        didInitialMobileScrollRef.current = true
+        return
+      }
+
+      scheduleRetry()
+    }
+
+    rafId = requestAnimationFrame(() => {
+      rafId = requestAnimationFrame(tryScroll)
+    })
+
+    return () => {
+      cancelled = true
+      if (timeoutId !== undefined) clearTimeout(timeoutId)
+      cancelAnimationFrame(rafId)
+    }
+  }, [selectedSpecial?.id])
 
   const selectSpecial = (index: number) => {
     const special = specials[index]
@@ -502,13 +603,21 @@ function SpecialsTabsInner({
             onValueChange={(value) => {
               const index = specials.findIndex((special) => String(special.id) === value)
               if (index >= 0) selectSpecial(index)
+              if (!value) return
+              // Defer until Radix applies the open state so layout/scroll-margin are correct.
+              requestAnimationFrame(() => {
+                scrollAccordionTriggerIntoView(value)
+              })
             }}
           >
             {specials.map((special, index) => {
               const isSelected = index === selectedIndex
               return (
-                <AccordionItem key={special.id} value={String(special.id)} className="border-b-0">
-                  <AccordionTrigger className="group hover:no-underline w-full px-4 py-4 text-left transition-colors border-l-4 border-l-transparent data-[state=open]:bg-primary/5 data-[state=open]:border-l-primary hover:bg-muted/50 [&>svg]:text-muted-foreground group-data-[state=open]:[&>svg]:text-primary">
+                <AccordionItem key={special.id} value={String(special.id)} className="border-b border-border">
+                  <AccordionTrigger
+                    data-special-accordion-trigger={String(special.id)}
+                    className="group scroll-mt-24 hover:no-underline w-full px-4 py-4 text-left transition-colors border-l-4 border-l-transparent bg-muted/50 data-[state=open]:bg-primary/5 data-[state=open]:border-l-primary hover:bg-muted [&>svg]:text-muted-foreground group-data-[state=open]:[&>svg]:text-primary"
+                  >
                     <span className="flex flex-1 flex-col gap-2 text-left">
                       <span className="font-semibold text-sm group-data-[state=open]:text-primary">
                         {getSpecialDisplayTitle(special)}
@@ -518,7 +627,11 @@ function SpecialsTabsInner({
                   </AccordionTrigger>
                   <AccordionContent className="px-4 pt-2 pb-6">
                     <div className="flex flex-col gap-6">
-                      <SpecialCardImage special={special} priority={isSelected} />
+                      <SpecialCardImage
+                        special={special}
+                        priority={isSelected}
+                        showPricingOverlay={false}
+                      />
                       <SpecialDetailInfo
                         special={special}
                         fordPromiseHref={fordPromiseHref}

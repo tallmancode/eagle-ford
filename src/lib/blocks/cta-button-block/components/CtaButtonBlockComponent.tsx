@@ -7,9 +7,15 @@ import Link from 'next/link'
 import React from 'react'
 
 const alignClass: Record<string, string> = {
-  left: 'justify-start',
+  left: 'justify-center md:justify-start',
   center: 'justify-center',
-  right: 'justify-end',
+  right: 'justify-center md:justify-end',
+}
+
+const mobileTapClass: Record<string, string> = {
+  sm: 'h-11 px-4 text-base sm:h-9 sm:px-3 sm:text-sm',
+  default: 'h-11 px-5 text-base sm:h-10 sm:px-4 sm:text-sm',
+  lg: 'h-12 px-8 text-base sm:h-11 sm:text-sm',
 }
 
 export const CtaButtonBlockComponent: React.FC<CtaButton & { meta?: unknown }> = ({
@@ -26,8 +32,10 @@ export const CtaButtonBlockComponent: React.FC<CtaButton & { meta?: unknown }> =
   meta,
 }) => {
   const inRow = (meta as { inRow?: boolean } | undefined)?.inRow === true
+  const resolvedSize = size ?? 'default'
   const wrapperClass = inRow ? undefined : cn('flex w-full', alignClass[align ?? 'left'])
   const Icon = icon ? lucideIconMap[icon] : undefined
+  const tapClass = mobileTapClass[resolvedSize] ?? mobileTapClass.default
 
   const buttonContent = (
     <>
@@ -41,7 +49,7 @@ export const CtaButtonBlockComponent: React.FC<CtaButton & { meta?: unknown }> =
 
   if (linkType === 'anchor') {
     return wrap(
-      <Button asChild variant={variant ?? 'default'} size={size ?? 'default'}>
+      <Button asChild variant={variant ?? 'default'} size={resolvedSize} className={tapClass}>
         <a href={`#${anchorId}`}>{buttonContent}</a>
       </Button>,
     )
@@ -62,7 +70,7 @@ export const CtaButtonBlockComponent: React.FC<CtaButton & { meta?: unknown }> =
   const newTabProps = newTab ? { rel: 'noopener noreferrer', target: '_blank' } : {}
 
   return wrap(
-    <Button asChild variant={variant ?? 'default'} size={size ?? 'default'}>
+    <Button asChild variant={variant ?? 'default'} size={resolvedSize} className={tapClass}>
       <Link href={href} {...newTabProps}>
         {buttonContent}
       </Link>

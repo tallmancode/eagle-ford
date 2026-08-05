@@ -48,7 +48,7 @@ export function CheckboxField({
               aria-invalid={Boolean(error)}
             />
             {label && (
-              <Label htmlFor={name} className="font-normal">
+              <Label htmlFor={name} className="min-h-11 py-2 font-normal sm:min-h-0 sm:py-0">
                 {label}
                 {required ? ' *' : ''}
               </Label>

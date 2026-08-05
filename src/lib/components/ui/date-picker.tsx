@@ -48,7 +48,7 @@ function DatePicker({
           aria-invalid={ariaInvalid}
           className={cn(
             formControlClassName,
-            'w-full justify-start gap-2 text-left font-normal',
+            'h-11 w-full justify-start gap-2 text-left font-normal sm:h-10',
             !value && 'text-muted-foreground',
             className,
           )}

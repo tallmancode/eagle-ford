@@ -17,7 +17,11 @@ export const HoursTabsBlockComponent: React.FC<HoursTabs> = ({ departments }) =>
           if (!dept.id) return null
 
           return (
-            <TabsTrigger key={dept.id} value={dept.id} className="text-xs sm:text-sm">
+            <TabsTrigger
+              key={dept.id}
+              value={dept.id}
+              className="min-h-11 px-3 py-2.5 text-sm sm:min-h-0 sm:py-1.5"
+            >
               {dept.label}
             </TabsTrigger>
           )

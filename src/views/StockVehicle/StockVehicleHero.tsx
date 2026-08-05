@@ -57,23 +57,23 @@ export function StockVehicleHero({ vehicle }: Props) {
               <>
                 <button
                   type="button"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 shadow"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white/90 p-3 shadow hover:bg-white sm:p-2"
                   onClick={() =>
                     setActiveIndex((index) => (index > 0 ? index - 1 : images.length - 1))
                   }
                   aria-label="Previous image"
                 >
-                  <ChevronLeft className="size-5" />
+                  <ChevronLeft className="size-6 sm:size-5" />
                 </button>
                 <button
                   type="button"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 p-2 shadow"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white/90 p-3 shadow hover:bg-white sm:p-2"
                   onClick={() =>
                     setActiveIndex((index) => (index < images.length - 1 ? index + 1 : 0))
                   }
                   aria-label="Next image"
                 >
-                  <ChevronRight className="size-5" />
+                  <ChevronRight className="size-6 sm:size-5" />
                 </button>
               </>
             )}
@@ -116,7 +116,7 @@ export function StockVehicleHero({ vehicle }: Props) {
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button
                 asChild
-                className="flex-1 rounded-lg bg-primary text-light-50 hover:bg-primary/90"
+                className="h-12 flex-1 rounded-lg bg-primary px-6 text-base text-light-50 hover:bg-primary/90"
               >
                 <Link
                   href="#enquire"
@@ -129,7 +129,7 @@ export function StockVehicleHero({ vehicle }: Props) {
               <Button
                 asChild
                 variant="outline"
-                className="flex-1 rounded-lg border-primary text-primary"
+                className="h-12 flex-1 rounded-lg border-primary px-6 text-base text-primary"
               >
                 <Link
                   href="#finance"

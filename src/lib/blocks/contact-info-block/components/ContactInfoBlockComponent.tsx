@@ -96,7 +96,7 @@ export const ContactInfoBlockComponent: React.FC<ContactInfoBlock> = ({
               <Button
                 key={btn.id ?? index}
                 variant="outline"
-                className="w-full rounded-full"
+                className="h-12 w-full rounded-full px-6 text-base"
                 asChild
               >
                 <Link

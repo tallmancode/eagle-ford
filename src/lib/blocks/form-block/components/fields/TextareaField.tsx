@@ -39,7 +39,7 @@ export function TextareaField({
       <Textarea
         id={name}
         rows={4}
-        className={cn(formControlClassName, 'min-h-24 h-auto py-2.5')}
+        className={cn(formControlClassName, 'min-h-28 h-auto py-3 sm:min-h-24 sm:py-2.5')}
         aria-invalid={Boolean(error)}
         {...register(name, {
           required: required ? `${label || name} is required` : false,

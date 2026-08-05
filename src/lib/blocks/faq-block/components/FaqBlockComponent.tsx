@@ -16,7 +16,7 @@ export const FaqBlockComponent: React.FC<Faq> = ({ items }) => {
 
         return (
           <details key={item.id ?? index} className="group">
-            <summary className="flex items-center justify-between gap-4 px-6 py-4 cursor-pointer list-none bg-card hover:bg-muted/50 transition-colors group-open:bg-primary group-open:text-primary-foreground">
+            <summary className="flex items-center justify-between gap-4 px-6 py-4 cursor-pointer list-none bg-card hover:bg-primary/10 transition-colors group-open:bg-primary group-open:text-primary-foreground">
               <span className="font-medium">{item.question}</span>
               <ChevronDown className="size-5 shrink-0 transition-transform duration-300 group-open:rotate-180" />
             </summary>

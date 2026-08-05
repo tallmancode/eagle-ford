@@ -38,6 +38,12 @@ export function StockCard({ vehicle }: Props) {
   const fuelTypeLabel = getTaxonomyLabel(vehicle.fuelType)
   const fuelLabel = FUEL_TYPE_LABELS[fuelTypeLabel?.toLowerCase() ?? ''] ?? fuelTypeLabel ?? '—'
 
+  const dealershipName =
+    typeof vehicle.dealership === 'object' && vehicle.dealership !== null
+      ? vehicle.dealership.name?.trim()
+      : undefined
+  const locationLabel = dealershipName || vehicle.region?.trim() || null
+
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm transition-shadow hover:shadow-md">
       <Link
@@ -111,10 +117,10 @@ export function StockCard({ vehicle }: Props) {
           </Button>
         </div>
 
-        {vehicle.region && (
+        {locationLabel && (
           <div className="flex items-center justify-center gap-1.5 border-t border-neutral-200 px-4 py-3">
             <MapPin className="size-3.5 shrink-0 text-neutral-500" strokeWidth={1.5} />
-            <span className="text-xs text-neutral-500">{vehicle.region}</span>
+            <span className="text-xs text-neutral-500">{locationLabel}</span>
           </div>
         )}
       </div>
