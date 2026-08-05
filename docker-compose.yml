@@ -22,6 +22,7 @@ services:
       - --storageEngine=wiredTiger
     volumes:
       - data:/data/db
+      - configdb:/data/configdb
     healthcheck:
       test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping')"]
       interval: 10s
@@ -33,4 +34,5 @@ services:
 
 volumes:
   data:
+  configdb:
   node_modules:

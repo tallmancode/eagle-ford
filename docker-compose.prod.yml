@@ -70,6 +70,7 @@ services:
       - --quiet
     volumes:
       - data:/data/db
+      - configdb:/data/configdb
     networks:
       - internal
     healthcheck:
@@ -87,4 +88,5 @@ services:
 
 volumes:
   data:
+  configdb:
   media_uploads:

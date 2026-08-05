@@ -213,6 +213,12 @@ jobs:
               exit 1
             fi
 
+            if ! docker compose -f docker-compose.prod.yml ps --status running | grep -q lead-jobs; then
+              echo 'ERROR: lead-jobs sidecar is not running'
+              docker compose -f docker-compose.prod.yml logs lead-jobs --tail 50
+              exit 1
+            fi
+
             # Probe /api/health — \`/\` 404s on an empty CMS and fails curl -f
             if ! curl -sf http://127.0.0.1:4411/api/health > /dev/null; then
               echo 'App not ready immediately — waiting for startup (Next.js can take up to 2 minutes)...'
