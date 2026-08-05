@@ -39,3 +39,5 @@ docker build \
 
 # 3. Start app from pre-built image
 APP_IMAGE="$IMAGE" $COMPOSE up -d app --no-build --wait --wait-timeout 300
+# lead-jobs (if defined) — recreate when present without failing older stacks
+APP_IMAGE="$IMAGE" $COMPOSE up -d lead-jobs --no-build 2>/dev/null || true
