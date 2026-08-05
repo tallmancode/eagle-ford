@@ -27,7 +27,18 @@ export const overlayCarouselConfig: GroupField = {
           required: true,
           label: 'Background Image',
           admin: {
-            description: 'Recommended: 1920×1080px, WebP or JPEG.',
+            description: 'Desktop / large screens. Recommended: 1920×1080px, WebP or JPEG.',
+          },
+        },
+        {
+          name: 'mobileImage',
+          type: 'upload',
+          relationTo: 'media',
+          required: false,
+          label: 'Mobile Image',
+          admin: {
+            description:
+              'Optional. Used instead of the Background Image when the page loads on a mobile-sized screen (under 768px). If empty, the Background Image is used. Recommended: portrait or square crop, WebP or JPEG.',
           },
         },
         {

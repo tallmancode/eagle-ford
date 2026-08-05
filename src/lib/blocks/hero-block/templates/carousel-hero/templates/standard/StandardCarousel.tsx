@@ -98,9 +98,11 @@ export const StandardCarousel: React.FC<Hero> = (props) => {
               <MediaImage
                 imgClassName="w-full h-auto"
                 resource={slide.image}
+                mobileResource={slide.mobileImage}
                 priority={isFirstSlide}
                 loading={isFirstSlide ? 'eager' : 'lazy'}
                 maxWidth={1920}
+                mobileMaxWidth={768}
                 size="100vw"
                 quality={isFirstSlide ? 65 : 75}
               />
