@@ -33,6 +33,7 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
   },
   defaultSort: '_order',
   defaultPopulate: {
+    slug: true,
     offerType: true,
     category: true,
     vehicle: true,
