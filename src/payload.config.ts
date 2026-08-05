@@ -8,7 +8,7 @@ import { UsersCollection } from './collections/Users'
 import Collections from '@/collections'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/lib/fields/defaultLexical'
-import { getServerSideURL } from './lib/utils/getServerSideURL'
+import { getTrustedOrigins } from './lib/utils/getServerSideURL'
 import Globals from '@/globals'
 import Blocks from '@/lib/blocks'
 import { SITE_FAVICON_LINKS } from './constants/siteIcons'
@@ -75,9 +75,9 @@ export default buildConfig({
     url: process.env.DATABASE_URL || '',
   }),
   collections: [...Collections, UsersCollection],
-  cors: [getServerSideURL()].filter(Boolean),
-  csrf: [getServerSideURL()].filter(Boolean),
-  maxDepth: 5,
+  cors: getTrustedOrigins(),
+  csrf: getTrustedOrigins(),
+  maxDepth: 3,
   globals: Globals,
   blocks: [...Blocks],
   // Declared before plugins so sentryPlugin appends its afterError after ours.
