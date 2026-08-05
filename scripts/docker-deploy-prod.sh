@@ -42,9 +42,8 @@ APP_IMAGE="$IMAGE" $COMPOSE up -d app --no-build --wait --wait-timeout 300
 # lead-jobs (if defined) — recreate when present without failing older stacks
 APP_IMAGE="$IMAGE" $COMPOSE up -d lead-jobs --no-build 2>/dev/null || true
 
-# 4. Reclaim disk from dangling images + BuildKit cache (named volumes untouched).
-# Quiet + best-effort: verbose prune listings can break long SSH deploy sessions.
-echo "Pruning unused Docker images and build cache..."
+# 4. Light disk reclaim only — dangling images from :latest retags.
+# Do NOT run `docker builder prune` in-deploy: it can thrash disk/IO and take the VPS down.
+echo "Pruning dangling Docker images..."
 docker image prune -f >/dev/null || true
-docker builder prune -f --keep-storage 2GB >/dev/null || true
-echo "Docker prune finished"
+echo "Docker image prune finished"
