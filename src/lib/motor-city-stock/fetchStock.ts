@@ -83,7 +83,8 @@ export async function fetchStock(options: FetchStockOptions = {}): Promise<Motor
             cause: error,
           })
 
-    if (stockError.code !== CIRCUIT_OPEN_CODE) {
+    const reportToSentry = options.reportToSentry !== false
+    if (reportToSentry && stockError.code !== CIRCUIT_OPEN_CODE) {
       captureStockFetchEvent(stockError, {
         event: 'stock_list_failure',
         dealerCode,

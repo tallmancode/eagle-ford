@@ -8,6 +8,7 @@ import { getFinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-bl
 import { getCachedStock } from '@/lib/motor-city-stock/getCachedStock'
 import { getCachedStockVehicle } from '@/lib/motor-city-stock/getCachedStockVehicle'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
+import { isStockUpstreamCircuitOpen } from '@/lib/motor-city-stock/upstreamCircuit'
 import { getShowroomQuoteForm } from '@/lib/stock-vehicle/getVehicleQuoteForm'
 import { buildStockVehiclePath, getStockVehicleCmsIdFromSlug } from '@/lib/stock-vehicle/paths'
 import { getStockHeroImage } from '@/lib/stock-vehicle/media'
@@ -39,11 +40,16 @@ async function getSimilarVehicles(
   const bodyType = getTaxonomySlug(vehicle.bodyType)
   if (!bodyType) return []
 
+  // Soft-optional section: skip while Motor City circuit is open, and never
+  // report list 502s to Sentry (page already soft-fails to an empty strip).
+  if (isStockUpstreamCircuitOpen()) return []
+
   try {
     const response = await getCachedStock({
       bodyType,
       limit: 5,
       page: 1,
+      reportToSentry: false,
     })
 
     return response.docs.filter((item) => item.cmsId !== vehicle.cmsId).slice(0, 4)

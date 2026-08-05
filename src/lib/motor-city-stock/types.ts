@@ -92,6 +92,12 @@ export type FetchStockOptions = {
   maxPrice?: number
   page?: number
   limit?: number
+  /**
+   * When false, retryable/upstream list failures still throw but are not sent to Sentry.
+   * Use for optional UI (e.g. showroom similar vehicles) that already soft-fails locally.
+   * Default true. Not part of the Next.js data-cache key.
+   */
+  reportToSentry?: boolean
 }
 
 export type TaxonomyFilterOption = {
