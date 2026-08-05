@@ -4,6 +4,9 @@ import { getErrorMessage } from './redactedRsc'
 
 const ROUTER_STATE_PARSE_ERROR = 'The router state header was sent but could not be parsed'
 const RSC_RESPONSE_INVARIANT = 'Expected RSC response, got text/plain'
+/** Stale client after deploy — Next surfaces this when the action id is missing from the new build. */
+const SERVER_ACTION_DEPLOY_CHURN =
+  'This request might be from an older or newer deployment'
 const SERVER_ACTION_PROBE_RE = /Failed to find Server Action ["']([^"']+)["']/
 
 /** Valid server action IDs are long encrypted hex strings; bot probes send short garbage like "x". */
@@ -20,6 +23,7 @@ export function isRscProbeNoiseMessage(message: string | undefined | null): bool
 
   if (message.includes(ROUTER_STATE_PARSE_ERROR)) return true
   if (message.includes(RSC_RESPONSE_INVARIANT)) return true
+  if (message.includes(SERVER_ACTION_DEPLOY_CHURN)) return true
 
   const match = message.match(SERVER_ACTION_PROBE_RE)
   if (match?.[1] && isGarbageServerActionId(match[1])) {

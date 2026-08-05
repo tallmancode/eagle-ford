@@ -1,5 +1,9 @@
 import type { ErrorEvent, EventHint, Log } from '@sentry/nextjs'
 
+import {
+  isExpectedPayloadAuthError,
+  isExpectedPayloadAuthErrorEvent,
+} from './payloadAuthNoise'
 import { isRscProbeNoise, isRscProbeNoiseEvent, isRscProbeNoiseMessage } from './rscProbeNoise'
 import {
   isTransformStreamNoise,
@@ -67,6 +71,10 @@ export function filterRedactedRscEvent(event: ErrorEvent, hint: EventHint): Erro
   }
 
   if (isRscProbeNoise(original) || isRscProbeNoiseEvent(event)) {
+    return null
+  }
+
+  if (isExpectedPayloadAuthError(original) || isExpectedPayloadAuthErrorEvent(event)) {
     return null
   }
 

@@ -6,6 +6,7 @@ import {
   isRedactedRscError,
   unwrapRedactedRscError,
 } from '@/lib/sentry/redactedRsc'
+import { isExpectedPayloadAuthError } from '@/lib/sentry/payloadAuthNoise'
 import { isRscProbeNoise } from '@/lib/sentry/rscProbeNoise'
 import { isTransformStreamNoise } from '@/lib/sentry/transformStreamNoise'
 
@@ -36,6 +37,11 @@ export const onRequestError: Instrumentation.onRequestError = (error, request, e
 
   // Automated scanners probing RSC / Server Actions (e.g. next-action: x) — not app failures.
   if (isRscProbeNoise(resolved) || isRscProbeNoise(error)) {
+    return
+  }
+
+  // Expired / logged-out Payload admin session — expected 401, not an app bug.
+  if (isExpectedPayloadAuthError(resolved) || isExpectedPayloadAuthError(error)) {
     return
   }
 
