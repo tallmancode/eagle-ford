@@ -235,7 +235,7 @@ function FormActions({
         className={cn(
           isHero
             ? 'h-12 w-full cursor-pointer bg-primary-500 px-6 text-base font-semibold uppercase tracking-wide text-white hover:bg-primary-600 sm:ml-auto sm:w-auto lg:px-8'
-            : 'w-full rounded-full',
+            : 'h-11 w-full rounded-full text-base sm:h-10 sm:text-sm',
         )}
       >
         {isLastStep ? submitButtonLabel || 'Submit' : nextLabel}

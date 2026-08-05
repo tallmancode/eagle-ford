@@ -3,6 +3,7 @@
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -26,9 +27,11 @@ export function StockArchivePagination({
 }: Props) {
   if (!showPagination || totalPages <= 1) return null
 
+  const pages = buildPageList(currentPage, totalPages)
+
   return (
     <Pagination className={className}>
-      <PaginationContent className="flex-wrap justify-center">
+      <PaginationContent className="flex-nowrap justify-center">
         <PaginationItem>
           <PaginationPrevious
             onClick={() => {
@@ -38,13 +41,19 @@ export function StockArchivePagination({
           />
         </PaginationItem>
 
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <PaginationItem key={page}>
-            <PaginationLink isActive={page === currentPage} onClick={() => onPageChange(page)}>
-              {page}
-            </PaginationLink>
-          </PaginationItem>
-        ))}
+        {pages.map((p, i) =>
+          p === '...' ? (
+            <PaginationItem key={`ellipsis-${i}`}>
+              <PaginationEllipsis />
+            </PaginationItem>
+          ) : (
+            <PaginationItem key={p}>
+              <PaginationLink isActive={p === currentPage} onClick={() => onPageChange(p)}>
+                {p}
+              </PaginationLink>
+            </PaginationItem>
+          ),
+        )}
 
         <PaginationItem>
           <PaginationNext
@@ -57,4 +66,23 @@ export function StockArchivePagination({
       </PaginationContent>
     </Pagination>
   )
+}
+
+/** First, last, current ±1, with ellipses — keeps Previous/pages/Next on one row at ~412px. */
+function buildPageList(current: number, total: number): (number | '...')[] {
+  if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1)
+
+  const pages: (number | '...')[] = [1]
+
+  if (current > 3) pages.push('...')
+
+  for (let p = Math.max(2, current - 1); p <= Math.min(total - 1, current + 1); p++) {
+    pages.push(p)
+  }
+
+  if (current < total - 2) pages.push('...')
+
+  pages.push(total)
+
+  return pages
 }

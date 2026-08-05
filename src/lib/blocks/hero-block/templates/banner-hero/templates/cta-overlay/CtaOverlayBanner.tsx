@@ -44,7 +44,7 @@ export const CtaOverlayBanner: React.FC<Hero> = (props) => {
 
       <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/20" />
 
-      <div className="relative z-10 container mx-auto flex flex-col justify-center py-20 px-4 h-full min-h-[380px] md:min-h-[480px]">
+      <div className="relative z-10 container mx-auto flex flex-col items-center text-center justify-center py-20 px-4 h-full min-h-[380px] md:min-h-[480px] md:items-start md:text-left">
         {eyebrow && (
           <p className="text-white/70 uppercase tracking-widest text-sm font-medium mb-3">
             {eyebrow}
@@ -60,7 +60,7 @@ export const CtaOverlayBanner: React.FC<Hero> = (props) => {
         {subheading && <p className="text-white/80 text-lg max-w-xl mb-8">{subheading}</p>}
 
         {(primaryButton?.label || secondaryButton?.label) && (
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:flex-wrap md:justify-start">
             {primaryButton?.label && primaryButton.href && (
               <a href={primaryButton.href}>
                 <Button className="rounded-full gap-2" variant="secondary">

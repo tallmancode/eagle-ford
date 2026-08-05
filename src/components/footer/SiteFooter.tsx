@@ -134,7 +134,7 @@ export const SiteFooter = ({ footer }: { footer: Footer }) => {
                   : null
 
               return (
-                <div key={col.id} className="flex flex-col items-start gap-4">
+                <div key={col.id} className="flex flex-col items-center md:items-start gap-4">
                   {logoMedia && (
                     <Image
                       src={getMediaUrl(logoMedia.url)}
