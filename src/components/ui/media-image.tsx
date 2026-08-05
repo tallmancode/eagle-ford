@@ -16,10 +16,16 @@ interface Props {
   loading?: 'lazy' | 'eager' // for NextImage only
   priority?: boolean // for NextImage only
   resource?: Media | string | null // for Payload media
+  /** Optional art-direction crop; used via <picture> when set. */
+  mobileResource?: Media | string | null
+  /** Media query for mobileResource. Default: max-width 767px (below Tailwind md). */
+  mobileMediaQuery?: string
   alt?: string
   size?: string // Next.js sizes attribute (layout hint for srcset)
   /** Max CSS pixel width of the layout slot; picks the matching Payload size. Default 1920. */
   maxWidth?: number
+  /** Max CSS pixel width when resolving mobileResource. Default 768. */
+  mobileMaxWidth?: number
   videoClassName?: string
   width?: number
   height?: number
@@ -27,6 +33,7 @@ interface Props {
 }
 
 const { breakpoints } = cssVariables
+const DEFAULT_MOBILE_MEDIA_QUERY = '(max-width: 767px)'
 
 function getDefaultSizes(): string {
   const sorted = Object.entries(breakpoints)
@@ -37,29 +44,22 @@ function getDefaultSizes(): string {
   return [...mediaQueries, '100vw'].join(', ')
 }
 
-export const MediaImage: React.FC<Props> = (props) => {
-  const {
-    resource,
-    alt: altFromProps,
-    fill,
-    size: sizeFromProps,
-    maxWidth = 1920,
-    className,
-    imgClassName,
-    priority,
-    loading,
-    quality: qualityFromProps,
-  } = props
-
+function resolveMediaSource(
+  resource: Media | string | null | undefined,
+  maxWidth: number,
+  altFromProps: string | undefined,
+  widthFromProps: number | undefined,
+  heightFromProps: number | undefined,
+): { src: string; width?: number; height?: number; alt: string } {
   let width: number | undefined
   let height: number | undefined
-
   let src = ''
+
   if (resource) {
     if (typeof resource === 'string') {
       src = resource
-      width = props.width
-      height = props.height
+      width = widthFromProps
+      height = heightFromProps
     }
     if (typeof resource === 'object') {
       const optimal = getOptimalMediaSize(resource, maxWidth)
@@ -82,18 +82,52 @@ export const MediaImage: React.FC<Props> = (props) => {
     alt = resource?.alt
   }
 
+  return { src, width, height, alt }
+}
+
+export const MediaImage: React.FC<Props> = (props) => {
+  const {
+    resource,
+    mobileResource,
+    mobileMediaQuery = DEFAULT_MOBILE_MEDIA_QUERY,
+    alt: altFromProps,
+    fill,
+    size: sizeFromProps,
+    maxWidth = 1920,
+    mobileMaxWidth = 768,
+    className,
+    pictureClassName,
+    imgClassName,
+    priority,
+    loading,
+    quality: qualityFromProps,
+  } = props
+
+  const desktop = resolveMediaSource(
+    resource,
+    maxWidth,
+    altFromProps,
+    props.width,
+    props.height,
+  )
+  const mobile = mobileResource
+    ? resolveMediaSource(mobileResource, mobileMaxWidth, altFromProps, undefined, undefined)
+    : null
+
+  if (!desktop.src) return null
+
   const sizes = sizeFromProps ? sizeFromProps : getDefaultSizes()
   const isPriority = Boolean(priority)
 
   const image = (
     <Image
-      src={src}
-      alt={alt || ''}
+      src={desktop.src}
+      alt={desktop.alt || ''}
       fill={fill}
       className={imgClassName}
       sizes={sizes}
-      height={!fill ? height : undefined}
-      width={!fill ? width : undefined}
+      height={!fill ? desktop.height : undefined}
+      width={!fill ? desktop.width : undefined}
       priority={isPriority}
       fetchPriority={isPriority ? 'high' : undefined}
       quality={qualityFromProps ?? 75}
@@ -101,9 +135,19 @@ export const MediaImage: React.FC<Props> = (props) => {
     />
   )
 
+  const content =
+    mobile?.src ? (
+      <picture className={pictureClassName}>
+        <source media={mobileMediaQuery} srcSet={mobile.src} />
+        {image}
+      </picture>
+    ) : (
+      image
+    )
+
   if (className) {
-    return <span className={cn(fill && 'relative block size-full', className)}>{image}</span>
+    return <span className={cn(fill && 'relative block size-full', className)}>{content}</span>
   }
 
-  return image
+  return content
 }

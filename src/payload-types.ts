@@ -826,9 +826,16 @@ export interface CarouselHero {
 export interface StandardCarousel {
   slides: {
     /**
-     * Recommended: 1920×1080px, WebP or JPEG.
+     * Desktop / large screens. Recommended: 1920×1080px, WebP or JPEG.
      */
     image: string | Media;
+    /**
+     * Optional. Used instead of the Background Image when the page loads on a mobile-sized screen (under 768px). If empty, the Background Image is used. Recommended: portrait or square crop, WebP or JPEG.
+     */
+    mobileImage?: (string | null) | Media;
+    /**
+     * Optional. Makes the slide clickable. Choose a page, a special, or a special category.
+     */
     reference?:
       | ({
           relationTo: 'pages';
@@ -2120,9 +2127,13 @@ export interface VehicleVariant {
 export interface OverlayCarousel {
   slides: {
     /**
-     * Recommended: 1920×1080px, WebP or JPEG.
+     * Desktop / large screens. Recommended: 1920×1080px, WebP or JPEG.
      */
     image: string | Media;
+    /**
+     * Optional. Used instead of the Background Image when the page loads on a mobile-sized screen (under 768px). If empty, the Background Image is used. Recommended: portrait or square crop, WebP or JPEG.
+     */
+    mobileImage?: (string | null) | Media;
     heading?: string | null;
     subheading?: string | null;
     alignment?: ('left' | 'center' | 'right') | null;
