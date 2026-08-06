@@ -33,9 +33,9 @@ Changes in `./src` are reflected automatically during development.
 | `pnpm test:int`       | Run Vitest integration tests        |
 | `pnpm test:e2e`       | Run Playwright e2e tests            |
 
-## Seeding
+## Diagnostics
 
-Use the **Seed** button in the admin dashboard to populate the database with sample content, forms, and vehicle data. Seeded content uses Eagle Ford branding.
+Developer role: **Settings → Diagnostics → Force Sentry Test Error** to confirm Sentry receives events in production (`SENTRY_DSN` required).
 
 ## Project structure
 

@@ -1,16 +1,17 @@
 ---
 name: porting-forms-to-satellite
 description: >-
-  Rebuild or upsert Payload CMS enquiry forms on Eagle satellites (Mazda,
-  Suzuki, Mahindra) using Eagle Ford as the reference: form fixtures, upsert-by-title
-  seed routes, department emails, LMS opt-in/mappings, and hidden vehicle context
-  fields. Use when porting forms to a sibling brand, reseeding forms without
-  duplicating docs, or aligning LMS/email patterns with Ford.
+  Historical reference for how Eagle Ford enquiry forms / LMS / email patterns
+  were rolled out to satellites. CMS form fixtures and upsert seed routes were
+  removed — edit live forms in Payload admin. Still useful for LMS field wiring
+  and email/department conventions.
 ---
 
 # Porting Forms to an Eagle Satellite
 
-Eagle Ford is the **reference implementation**. Copy this skill into the sibling’s `.cursor/skills/`, then adapt fixtures — do not invent a divergent seed/LMS pattern.
+**Note (2026-08):** CMS Data Seeds / form fixtures / upsert seed routes were removed from Eagle Ford and siblings. Do not recreate seed buttons. Edit forms in admin; use this skill only for LMS/email architecture notes.
+
+Eagle Ford remains the **reference implementation** for LMS injection and department email patterns.
 
 Detailed tables (emails, dealers, form inventory): [reference.md](reference.md).
 

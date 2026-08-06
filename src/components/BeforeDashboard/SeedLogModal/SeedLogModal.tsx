@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from 'react'
 import { Button, Modal, useModal } from '@payloadcms/ui'
 
-import type { SeedLogEntry, SeedLogStatus } from '@/lib/seed/types'
+import type { SeedLogEntry, SeedLogStatus } from '@/lib/admin-action-stream/types'
 
 import './SeedLogModal.scss'
 

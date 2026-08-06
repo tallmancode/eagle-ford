@@ -285,7 +285,7 @@ export const SettingsGlobal: GlobalConfig = {
           ],
         },
         {
-          label: 'Data Seeds',
+          label: 'Diagnostics',
           admin: {
             condition: (_data, _siblingData, { user }) => {
               return Boolean(user?.roles?.includes('developer'))
@@ -294,11 +294,12 @@ export const SettingsGlobal: GlobalConfig = {
           fields: [
             {
               type: 'ui',
-              label: 'Seeds',
-              name: 'seedsDisplay',
+              label: 'Diagnostics',
+              name: 'diagnosticsDisplay',
               admin: {
                 components: {
-                  Field: '@/lib/fields/seed-buttons/SeedButtonsComponent#SeedButtonsComponent',
+                  Field:
+                    '@/lib/fields/diagnostics/DiagnosticsButtonsComponent#DiagnosticsButtonsComponent',
                 },
               },
             },

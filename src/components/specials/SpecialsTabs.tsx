@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense, useEffect, useRef, useTransition } from 'react'
+import React, { Suspense, useEffect, useRef, useState, useTransition } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Download } from 'lucide-react'
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/accordion'
 import { MediaImage } from '@/components/ui/media-image'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { FormBlockClient } from '@/lib/blocks/form-block/components/FormBlockClient'
 import type { FormBlockContextValues } from '@/lib/blocks/form-block/types/formContext'
@@ -282,6 +283,44 @@ function SpecialCardImage({
   )
 }
 
+/** Mobile accordion placeholder while RSC offer-details for the selected special load. */
+function SpecialAccordionContentSkeleton() {
+  return (
+    <div
+      className="flex flex-col gap-6"
+      aria-busy="true"
+      aria-label="Loading special details"
+    >
+      <Skeleton className="aspect-[3/2] max-h-[500px] w-full rounded-2xl" />
+      <div className="space-y-3">
+        <Skeleton className="h-8 w-3/4 max-w-md" />
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Skeleton className="h-10 w-full rounded-full sm:w-40" />
+          <Skeleton className="h-10 w-full rounded-full sm:w-36" />
+          <Skeleton className="h-10 w-full rounded-full sm:w-36" />
+        </div>
+      </div>
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+        <div className="shrink-0 space-y-2">
+          <Skeleton className="h-3 w-24" />
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-3 w-20" />
+          <Skeleton className="h-8 w-28" />
+        </div>
+        <div className="min-w-0 flex-1 space-y-3">
+          <Skeleton className="h-9 w-full max-w-sm" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-[92%]" />
+          <Skeleton className="h-4 w-[85%]" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-[70%]" />
+          <Skeleton className="h-4 w-[88%]" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function SpecialDetailInfo({
   special,
   fordPromiseHref,
@@ -483,7 +522,9 @@ function SpecialsTabsInner({
 }: SpecialsTabsProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition()
+  /** Set only by user selection — not by URL sync — so skeleton/re-scroll skip silent `?special=` fills. */
+  const [loadingSpecialId, setLoadingSpecialId] = useState<string | null>(null)
   /** Snapshot first paint so URL sync adding `?special=` does not count as a deep link. */
   const arrivedWithSpecialQueryRef = useRef<boolean | null>(null)
   const didInitialMobileScrollRef = useRef(false)
@@ -500,6 +541,8 @@ function SpecialsTabsInner({
   const enquiryForm = selectedSpecial
     ? resolveEnquiryForm(selectedSpecial, categoryEnquiryForm)
     : null
+  const isLoadingSelectedDetails =
+    isPending && loadingSpecialId !== null && String(selectedSpecial?.id) === loadingSpecialId
 
   useEffect(() => {
     if (specials.length === 0 || !selectedSpecial?.slug) return
@@ -572,9 +615,45 @@ function SpecialsTabsInner({
     }
   }, [selectedSpecial?.id])
 
+  // Mobile only: after user-driven special change finishes loading RSC offer details, pin trigger to top.
+  useEffect(() => {
+    if (isPending || !loadingSpecialId) return
+
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+      setLoadingSpecialId(null)
+      return
+    }
+
+    const specialId = loadingSpecialId
+    let cancelled = false
+    let raf1 = 0
+    let raf2 = 0
+
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        if (cancelled) return
+        scrollAccordionTriggerIntoView(specialId, 'instant')
+        setLoadingSpecialId(null)
+      })
+    })
+
+    return () => {
+      cancelled = true
+      cancelAnimationFrame(raf1)
+      cancelAnimationFrame(raf2)
+    }
+  }, [isPending, loadingSpecialId])
+
   const selectSpecial = (index: number) => {
     const special = specials[index]
     if (!special?.slug) return
+    if (
+      special.slug === selectedSpecial?.slug &&
+      searchParams.get('special') === special.slug
+    ) {
+      return
+    }
+    setLoadingSpecialId(String(special.id))
     startTransition(() => {
       router.replace(getSpecialCategoryPath(categorySlug, special.slug), { scroll: false })
     })
@@ -626,19 +705,23 @@ function SpecialsTabsInner({
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="px-4 pt-2 pb-6">
-                    <div className="flex flex-col gap-6">
-                      <SpecialCardImage
-                        special={special}
-                        priority={isSelected}
-                        showPricingOverlay={false}
-                      />
-                      <SpecialDetailInfo
-                        special={special}
-                        fordPromiseHref={fordPromiseHref}
-                        offerDetails={isSelected ? offerDetails : undefined}
-                        calculatorDefaults={calculatorDefaults}
-                      />
-                    </div>
+                    {isSelected && isLoadingSelectedDetails ? (
+                      <SpecialAccordionContentSkeleton />
+                    ) : (
+                      <div className="flex flex-col gap-6">
+                        <SpecialCardImage
+                          special={special}
+                          priority={isSelected}
+                          showPricingOverlay={false}
+                        />
+                        <SpecialDetailInfo
+                          special={special}
+                          fordPromiseHref={fordPromiseHref}
+                          offerDetails={isSelected ? offerDetails : undefined}
+                          calculatorDefaults={calculatorDefaults}
+                        />
+                      </div>
+                    )}
                   </AccordionContent>
                 </AccordionItem>
               )

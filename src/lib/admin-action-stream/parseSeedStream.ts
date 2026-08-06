@@ -42,7 +42,7 @@ export async function parseSeedStream(
       try {
         event = JSON.parse(line) as SeedStreamEvent
       } catch {
-        onError('Failed to parse seed log stream.')
+        onError('Failed to parse admin action log stream.')
         return
       }
 
@@ -82,7 +82,7 @@ export async function parseSeedStream(
         onError(event.message)
       }
     } catch {
-      onError('Failed to parse seed log stream.')
+      onError('Failed to parse admin action log stream.')
     }
   }
 }
