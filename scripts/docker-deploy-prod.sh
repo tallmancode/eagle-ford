@@ -1,16 +1,28 @@
 #!/bin/bash
 set -e
 
+# Loads COMPOSE_PROJECT_NAME, APP_HOST_PORT, MONGO_HOST_PORT, APP_IMAGE from .env when present.
+if [ -f .env ]; then
+  set -a
+  # shellcheck disable=SC1091
+  . ./.env
+  set +a
+fi
+
 COMPOSE="docker compose -f docker-compose.prod.yml"
-IMAGE="eagle-ford-app:latest"
+APP_PORT="${APP_HOST_PORT:-4411}"
+MONGO_PORT="${MONGO_HOST_PORT:-4422}"
+IMAGE="${APP_IMAGE:-eagle-ford-app:latest}"
 
 if [ -f .env ] && grep -q '^PAYLOAD_CONFIG_PATH=' .env; then
-  echo "ERROR: PAYLOAD_CONFIG_PATH must not be set for Docker production."
+  echo "ERROR: PAYLOAD_CONFIG_PATH must not be set for Docker deploy."
   echo "Remove it from .env — the container uses /app and resolves config via @payload-config."
   exit 1
 fi
 
-# 1. Start mongo, wait for compose health + host port (build uses 127.0.0.1:4422)
+echo "Compose project: ${COMPOSE_PROJECT_NAME:-(directory default)}"
+echo "App port: $APP_PORT  Mongo port: $MONGO_PORT  Image: $IMAGE"
+
 if ! $COMPOSE up mongo -d --wait --wait-timeout 120; then
   echo ""
   echo "=== MongoDB container logs ==="
@@ -19,31 +31,30 @@ if ! $COMPOSE up mongo -d --wait --wait-timeout 120; then
   exit 1
 fi
 
-echo "Waiting for Mongo on 127.0.0.1:4422..."
+echo "Waiting for Mongo on 127.0.0.1:$MONGO_PORT..."
 for i in $(seq 1 60); do
-  if timeout 1 bash -c 'echo > /dev/tcp/127.0.0.1/4422' 2>/dev/null; then
+  if timeout 1 bash -c "echo > /dev/tcp/127.0.0.1/$MONGO_PORT" 2>/dev/null; then
     echo "Mongo ready"
     break
   fi
   sleep 1
 done
-timeout 1 bash -c 'echo > /dev/tcp/127.0.0.1/4422' 2>/dev/null \
-  || { echo "Mongo not reachable on 4422"; exit 1; }
+timeout 1 bash -c "echo > /dev/tcp/127.0.0.1/$MONGO_PORT" 2>/dev/null \
+  || { echo "Mongo not reachable on $MONGO_PORT"; exit 1; }
 
-# 2. Build (host network so BUILD_DATABASE_URL can reach published mongo)
+BUILD_ARGS=(--secret id=env,src=.env --network=host -t "$IMAGE")
+if [ "${NO_CACHE:-0}" = "1" ]; then
+  BUILD_ARGS=(--no-cache "${BUILD_ARGS[@]}")
+  echo "Building with --no-cache"
+fi
 docker build \
-  --secret id=env,src=.env \
-  --network=host \
-  -t "$IMAGE" \
+  "${BUILD_ARGS[@]}" \
   .
 
 # 3. Start app from pre-built image
 APP_IMAGE="$IMAGE" $COMPOSE up -d app --no-build --wait --wait-timeout 300
-# lead-jobs (if defined) — recreate when present without failing older stacks
 APP_IMAGE="$IMAGE" $COMPOSE up -d lead-jobs --no-build 2>/dev/null || true
 
-# 4. Light disk reclaim only — dangling images from :latest retags.
-# Do NOT run `docker builder prune` in-deploy: it can thrash disk/IO and take the VPS down.
 echo "Pruning dangling Docker images..."
 docker image prune -f >/dev/null || true
 echo "Docker image prune finished"

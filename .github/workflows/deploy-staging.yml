@@ -1,13 +1,13 @@
-name: Deploy Production
+name: Deploy Staging
 
 on:
   push:
     branches:
-      - main
+      - staging
   workflow_dispatch:
     inputs:
       skip_rebuild:
-        description: 'Skip Docker image rebuild (restart containers only — use after config-only changes)'
+        description: 'Skip Docker image rebuild (restart containers only)'
         type: boolean
         default: false
 
@@ -16,9 +16,9 @@ env:
   NEXT_TELEMETRY_DISABLED: 1
 
 jobs:
-  deploy:
+  deploy-staging:
     runs-on: ubuntu-latest
-    environment: production
+    environment: staging
     timeout-minutes: 45
 
     steps:
@@ -31,24 +31,23 @@ jobs:
         run: |
           missing=0
           if [ -z "$_SSH_KEY" ]; then
-            echo "::error::Missing SSH_KEY (set on the production environment or repository secrets)"
+            echo "::error::Missing SSH_KEY (set on the staging environment)"
             missing=1
           fi
           if [ -z "$_SSH_HOST" ]; then
-            echo "::error::Missing SSH_HOST (set on the production environment or repository secrets)"
+            echo "::error::Missing SSH_HOST (set on the staging environment)"
             missing=1
           fi
           if [ -z "$_SSH_USER" ]; then
-            echo "::error::Missing SSH_USER (set on the production environment or repository secrets)"
+            echo "::error::Missing SSH_USER (set on the staging environment)"
             missing=1
           fi
           if [ -z "$_APP_ENV" ]; then
-            echo "::error::Missing APP_ENV (set on the production environment or repository secrets)"
+            echo "::error::Missing APP_ENV (set on the staging environment)"
             missing=1
           fi
           [ "$missing" -eq 0 ] || exit 1
 
-      # webfactory/ssh-agent v0.10.0 — pinned to full commit SHA
       - name: Setup SSH Agent
         uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555
         with:
@@ -68,14 +67,14 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
           APP_ENV: ${{ secrets.APP_ENV }}
-          APP_DIR: ${{ secrets.APP_DIR || '/www/wwwroot/eagle/ford/production' }}
+          APP_DIR: ${{ secrets.APP_DIR || '/www/wwwroot/eagle/ford/staging' }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           set -e
 
           SSH_OPTS="-p $SSH_PORT"
           SCP_OPTS="-P $SSH_PORT"
-          DEPLOY_BRANCH="main"
+          DEPLOY_BRANCH="staging"
           ENV_FILE="$(mktemp)"
           trap 'rm -f "$ENV_FILE"' EXIT
 
@@ -86,7 +85,6 @@ jobs:
           fi
           if grep -q '^PAYLOAD_CONFIG_PATH=' "$ENV_FILE"; then
             echo "::error::PAYLOAD_CONFIG_PATH must not be set in APP_ENV for Docker deploy."
-            echo "::error::Remove it from the production environment secret — the container resolves config via @payload-config at /app."
             exit 1
           fi
 
@@ -97,7 +95,6 @@ jobs:
           ssh $SSH_OPTS "$SSH_USER@$SSH_HOST" "
             set -e
 
-            # Source shell profile to ensure PATH includes docker
             [ -f ~/.bashrc ] && source ~/.bashrc || true
             [ -f ~/.bash_profile ] && source ~/.bash_profile || true
             [ -f ~/.profile ] && source ~/.profile || true
@@ -105,27 +102,13 @@ jobs:
             SERVER_PATH='$APP_DIR'
 
             git config --global --add safe.directory \"\$SERVER_PATH\"
+            mkdir -p \"\$SERVER_PATH\"
 
             if [ ! -d \"\$SERVER_PATH/.git\" ]; then
               echo 'Cloning repository...'
-              if [ -d \"\$SERVER_PATH\" ] && [ -w \"\$SERVER_PATH\" ]; then
-                rm -rf \"\$SERVER_PATH\"
-              elif [ -d \"\$SERVER_PATH\" ]; then
-                echo 'Warning: Cannot remove existing directory, will attempt to clone into it'
-                if [ -d \"\$SERVER_PATH/.git\" ]; then
-                  echo 'Git directory already exists, skipping clone'
-                  cd \"\$SERVER_PATH\"
-                else
-                  echo 'ERROR: Directory exists but is not a git repository and cannot be removed'
-                  exit 1
-                fi
-              fi
-              if [ ! -d \"\$SERVER_PATH/.git\" ]; then
-                mkdir -p \"\$SERVER_PATH\"
-                git clone git@github.com:$GITHUB_REPOSITORY.git \"\$SERVER_PATH\"
-                cd \"\$SERVER_PATH\"
-                git checkout '$DEPLOY_BRANCH' || git checkout -b '$DEPLOY_BRANCH' origin/'$DEPLOY_BRANCH'
-              fi
+              git clone git@github.com:$GITHUB_REPOSITORY.git \"\$SERVER_PATH\"
+              cd \"\$SERVER_PATH\"
+              git checkout '$DEPLOY_BRANCH' || git checkout -b '$DEPLOY_BRANCH' origin/'$DEPLOY_BRANCH'
             else
               echo 'Pulling latest changes...'
               cd \"\$SERVER_PATH\"
@@ -149,14 +132,17 @@ jobs:
 
             cd '$APP_DIR'
 
-            # Safety net: ensure production env values are always correct regardless of secret content.
             if [ -f .env ]; then
               for pair in \
-                'NEXT_PUBLIC_SERVER_URL=https://www.eagleford.co.za' \
-                'ALLOW_SEARCH_INDEXING=true' \
-                'SENTRY_ENVIRONMENT=production' \
-                'NEXT_PUBLIC_SENTRY_ENVIRONMENT=production' \
-                'MOTOR_CITY_STOCK_API_URL=https://www.eaglemotorcity.co.za'
+                'NEXT_PUBLIC_SERVER_URL=https://ford-stg.tallmancode.co.za' \
+                'SENTRY_ENVIRONMENT=staging' \
+                'NEXT_PUBLIC_SENTRY_ENVIRONMENT=staging' \
+                'APP_HOST_PORT=5411' \
+                'MONGO_HOST_PORT=5422' \
+                'APP_IMAGE=eagle-ford-app:staging' \
+                'COMPOSE_PROJECT_NAME=eagle-ford-staging' \
+                'ALLOW_SEARCH_INDEXING=false' \
+                'MOTOR_CITY_STOCK_API_URL=http://127.0.0.1:5511'
               do
                 key=\${pair%%=*}
                 val=\${pair#*=}
@@ -166,31 +152,28 @@ jobs:
                   printf '\\n%s=%s\\n' \"\$key\" \"\$val\" >> .env
                 fi
               done
-              echo '✓ Production env overrides applied'
+              echo '✓ Staging env overrides applied'
             fi
 
             if ! command -v docker >/dev/null 2>&1; then
-              echo 'ERROR: docker not found. Install Docker on the VPS and add the deploy user to the docker group.'
+              echo 'ERROR: docker not found.'
               exit 1
             fi
 
             if ! docker compose version >/dev/null 2>&1; then
-              echo 'ERROR: docker compose not found. Install the Docker Compose plugin.'
+              echo 'ERROR: docker compose not found.'
               exit 1
             fi
-
-            echo \"Docker version: \$(docker --version)\"
-            echo \"Compose version: \$(docker compose version)\"
 
             chmod +x scripts/docker-deploy-prod.sh
 
             echo ''
             echo '========================================'
-            echo 'Building and starting Docker containers'
+            echo 'Building and starting Docker containers (staging)'
             echo '========================================'
 
             if ! ./scripts/docker-deploy-prod.sh; then
-              echo 'ERROR: docker-deploy-prod.sh failed. Check the output above.'
+              echo 'ERROR: docker-deploy-prod.sh failed.'
               exit 1
             fi
 
@@ -219,31 +202,30 @@ jobs:
               exit 1
             fi
 
-            # Probe /api/health — \`/\` 404s on an empty CMS and fails curl -f
-            if ! curl -sf http://127.0.0.1:4411/api/health > /dev/null; then
-              echo 'App not ready immediately — waiting for startup (Next.js can take up to 2 minutes)...'
+            if ! curl -sf http://127.0.0.1:5411/api/health > /dev/null; then
+              echo 'App not ready immediately — waiting...'
               ready=0
               for i in \$(seq 1 30); do
-                if curl -sf http://127.0.0.1:4411/api/health > /dev/null; then
+                if curl -sf http://127.0.0.1:5411/api/health > /dev/null; then
                   ready=1
-                  echo \"✓ App health OK on port 4411 (attempt \$i)\"
+                  echo \"✓ App health OK on port 5411 (attempt \$i)\"
                   break
                 fi
                 echo \"  Attempt \$i/30 — not ready yet, waiting 5s...\"
                 sleep 5
               done
               if [ \"\$ready\" -ne 1 ]; then
-                echo 'ERROR: app is not responding on port 4411 after 150s'
+                echo 'ERROR: app is not responding on port 5411 after 150s'
                 docker compose -f docker-compose.prod.yml logs app --tail 100
                 exit 1
               fi
             else
-              echo '✓ App health OK on port 4411'
+              echo '✓ App health OK on port 5411'
             fi
 
             echo ''
             echo '========================================'
-            echo '✓ Production deployment completed successfully!'
-            echo '✓ Live site: https://www.eagleford.co.za'
+            echo '✓ Staging deployment completed successfully!'
+            echo '✓ Staging site: https://ford-stg.tallmancode.co.za (Basic Auth required)'
             echo '========================================'
           "

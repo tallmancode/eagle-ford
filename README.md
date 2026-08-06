@@ -74,7 +74,7 @@ Merging a PR to `main` automatically triggers the **Deploy Production** GitHub A
 feature/fix → PR → develop → PR → staging → PR → main → Actions deploy.yml → VPS Docker build → live
 ```
 
-`staging` is a Git promotion gate only (no separate staging deploy). Feature/fix PRs always target `develop`.
+Staging deploys to https://ford-stg.tallmancode.co.za (Basic Auth). Feature/fix PRs target `develop`. See workspace AGENTS.md.
 
 ### Manual re-deploy
 

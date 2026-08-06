@@ -1,7 +1,6 @@
 # Agents
 
-This project uses the Payload CMS skill at `.agents/skills/payload/`.
-Start with `.agents/skills/payload/SKILL.md` for a quick reference, then see `.agents/skills/payload/reference/` for detailed docs.
+**Payload CMS skill (canonical — workspace root only):** [`../.agents/skills/payload/SKILL.md`](../.agents/skills/payload/SKILL.md) — open `eagle-motor-company.code-workspace` so shared `.agents` is visible. Reference: [`../.agents/skills/payload/reference/`](../.agents/skills/payload/reference/). Brand `.agents/skills/payload/` is a pointer/legacy folder only — do not treat a local `SKILL.md` as canonical. Single-folder open: still use `../.agents/skills/payload/` on disk (sibling of this repo under Eagle Motor Company).
 
 This app is a **satellite site** that consumes live stock from Eagle Motor City over HTTP — no local stock persistence. See the workspace root [`../AGENTS.md`](../AGENTS.md) for the full cross-project architecture, authentication setup, and local dev workflow.
 
@@ -34,7 +33,7 @@ This app is a **satellite site** that consumes live stock from Eagle Motor City 
 - Enabled forms POST normalized leads to Motor City `POST /api/leads/site-forms` (same stock API key)
 - Motor City owns CMS LMS credentials and the actual LMS push — this site never calls CMS LMS directly
 - Implementation: `src/lib/motor-city-leads/`
-- **Skill:** `.cursor/skills/porting-forms-to-satellite/` documents how Ford forms / LMS / email patterns were rolled out to sibling satellites. CMS seed upserts were removed; edit forms in admin going forward.
+- **Skill:** workspace `.cursor/skills/eagle-forms-lms-email/` — edit forms in admin; LMS floors / Mimecast / Motor City `POST /api/leads/site-forms` contract.
 - **Lead paths audited:** Payload form-submissions (form block + multi-step uploads) are the only LMS opt-in source. There are no webhook-originated LMS lead routes on this satellite.
 - **Durability:** form-submission documents are the durable store. On transient Motor City failures the submission is marked `pending_retry` with `motorCityLeadNextRetryAt` / attempt count. `extLeadRef` is the form-submission id (idempotent on Motor City).
 - **Retries:** short in-request backoff (up to 3 attempts), then Payload jobs (`forwardMotorCityLead` + `sweepMotorCityLeads` every 5 minutes on queue `motor-city-leads`). Production needs `CRON_SECRET` and the `lead-jobs` sidecar in `docker-compose.prod.yml` polling `/api/payload-jobs/run?queue=motor-city-leads`.
@@ -130,112 +129,38 @@ Three tiers — only vehicles and models have public pages:
 
 ### Overview
 
-Promotion path (always prefer this):
+Ship path (workspace `.cursor/rules/git-promotion-flow.mdc` + root `AGENTS.md` infrastructure map):
 
 ```
-feature/fix branch → PR → develop → PR → staging → PR → main → GitHub Actions deploy.yml → VPS (Docker) → eagleford.co.za
+feature/fix → PR → develop → PR → staging → PR → main → deploy
 ```
 
-- **`develop`** — integration branch; all feature/fix PRs target this.
-- **`staging`** — Git promotion gate only (no separate staging deploy environment).
-- **`main`** — production; merging here triggers deploy.
+- Merge to **`staging`** → `.github/workflows/deploy-staging.yml` → `https://ford-stg.tallmancode.co.za` (Basic Auth)
+- Merge to **`main`** → `.github/workflows/deploy.yml` → live site
+- Full VPS layout, compose names, and access control: workspace root [`../AGENTS.md`](../AGENTS.md)
 
-Hotfixes should still prefer the full path; skip steps only for production emergencies.
+### VPS layout (this brand)
 
-`eagle-ford-dev.tallmancode.co.za` is a 301 redirect to production (not a live staging stack).
+| Resource | Production | Staging |
+|---|---|---|
+| APP_DIR | `/www/wwwroot/eagle/ford/production` | `/www/wwwroot/eagle/ford/staging` |
+| App port | `127.0.0.1:4411` | `127.0.0.1:5411` |
+| Mongo port | `127.0.0.1:4422` | `127.0.0.1:5422` |
+| Compose project | `eagle-ford-production` | `eagle-ford-staging` |
+| Hostname | live domain | `ford-stg.tallmancode.co.za` |
+| Docker compose | `docker-compose.prod.yml` | same file + env ports |
+| Migrate runbook | [`docs/vps-migrate-production.md`](docs/vps-migrate-production.md) | — |
+| Nginx conf | — | [`deploy/nginx/ford-stg.tallmancode.co.za.conf`](deploy/nginx/ford-stg.tallmancode.co.za.conf) |
 
-### VPS layout
+Staging is Basic Auth protected. Satellite staging uses `MOTOR_CITY_STOCK_API_URL=http://127.0.0.1:5511`.
 
-| Resource | Value |
-|---|---|
-| App port | `127.0.0.1:4411` (nginx proxies to this) |
-| Mongo port | `127.0.0.1:4422` |
-| Docker compose file | `docker-compose.prod.yml` |
-| Deploy script | `scripts/docker-deploy-prod.sh` |
-| Live site | `https://www.eagleford.co.za` |
 
-Nginx (aaPanel) serves two vhosts from the same VPS:
-- `www.eagleford.co.za` + apex → proxy to `:4411`
-- `eagle-ford-dev.tallmancode.co.za` → 301 redirect to `https://www.eagleford.co.za` (config: `deploy/nginx/eagle-ford-dev.redirect.conf`)
+### GitHub Actions / secrets
 
-### GitHub Actions — `ci.yml` + `deploy.yml`
-
-**CI** (`.github/workflows/ci.yml`): runs on pull requests targeting `develop`, `staging`, or `main` — lint, TypeScript check, and integration tests.
-
-**Deploy** (`.github/workflows/deploy.yml`): triggered by **push to `main`** (i.e. promotion merge) and `workflow_dispatch`.
-
-The deploy workflow:
-1. SSH into the VPS
-2. `git reset --hard origin/main` in the app directory
-3. Uploads `.env` from the `APP_ENV` secret
-4. Force-applies production env overrides (URL, indexing, Sentry env, Motor City URL)
-5. Runs `scripts/docker-deploy-prod.sh` → builds Docker image → starts `app` + `mongo`
-6. Health-checks `http://127.0.0.1:4411/api/health`
-
-**Manual re-deploy** (no code change): Actions → Deploy Production → Run workflow → optionally tick `skip_rebuild`.
-
-### GitHub Environment — `production`
-
-All deploy secrets live in the **`production`** environment (branch-scoped to `main`).
-
-| Secret | Description |
-|---|---|
-| `SSH_KEY` | Private key for VPS SSH access |
-| `SSH_HOST` | VPS IP or hostname |
-| `SSH_USER` | SSH user (must be in `docker` group) |
-| `APP_ENV` | Full `.env` content uploaded to VPS on each deploy |
-| `SSH_PORT` | Optional — defaults to `22` |
-| `APP_DIR` | Optional — defaults to `/www/wwwroot` |
-
-### `APP_ENV` secret (required contents)
-
-```env
-NEXT_PUBLIC_SERVER_URL=https://www.eagleford.co.za
-
-DATABASE_URL=mongodb://mongo:27017/eagle-ford-dev
-BUILD_DATABASE_URL=mongodb://127.0.0.1:4422/eagle-ford-dev
-
-PAYLOAD_SECRET=<secret>
-CRON_SECRET=<secret>
-PREVIEW_SECRET=<secret>
-NEXT_SERVER_ACTIONS_ENCRYPTION_KEY=<secret>
-
-MOTOR_CITY_STOCK_API_URL=https://www.eaglemotorcity.co.za
-MOTOR_CITY_STOCK_API_KEY=<key from Motor City live admin>
-
-SMTP_HOST=za-smtp-outbound-1.mimecast.co.za
-SMTP_PORT=587
-SMTP_USER=noreply@eaglemc.co.za
-SMTP_PASS=<password>
-
-SENTRY_DSN=<dsn>
-NEXT_PUBLIC_SENTRY_DSN=<dsn>
-SENTRY_AUTH_TOKEN=<token>
-SENTRY_ENVIRONMENT=production
-NEXT_PUBLIC_SENTRY_ENVIRONMENT=production
-
-ALLOW_SEARCH_INDEXING=true
-```
-
-Key points:
-- `MOTOR_CITY_STOCK_API_KEY` must come from the **live** Motor City admin (`www.eaglemotorcity.co.za/admin → Stock → Stock API Clients`). Dev keys from the staging Motor City instance will not work.
-- `SMTP_PORT=587` uses STARTTLS — the Nodemailer adapter is configured to enforce TLS upgrade automatically.
-- Form/SMTP send failures (e.g. Mimecast `535` / `EAUTH`) report to Sentry via `captureEmailSendEvent` (scrubbed; no `SMTP_PASS`, recipient addresses, or message bodies).
-- The workflow force-overwrites `NEXT_PUBLIC_SERVER_URL`, `ALLOW_SEARCH_INDEXING`, `SENTRY_ENVIRONMENT`, `NEXT_PUBLIC_SENTRY_ENVIRONMENT`, and `MOTOR_CITY_STOCK_API_URL` on every deploy as a safety net.
-
-### Lead jobs sidecar
-
-The `lead-jobs` service in `docker-compose.prod.yml` polls `/api/payload-jobs/run?queue=motor-city-leads` every 60 seconds to retry pending Motor City lead forwards. It requires `CRON_SECRET` in the env and will exit on startup if the secret is missing.
-
-### Docker build notes
-
-The image is built with `--secret id=env,src=.env --network=host` so `BUILD_DATABASE_URL` (pointing at the host-published Mongo port `4422`) is reachable during the Next.js build phase.
-
-### Debugging production (Docker MCP)
-
-A read-only Docker MCP server named **`docker-prod-motor-city`** (Cursor may show it as `user-docker-prod-motor-city`) connects to the **Motor City** production VPS Docker daemon over SSH. Use it when stock/leads issues need live container or runtime checks on the mothership (compose/ps, logs, health) instead of guessing from code alone.
-
-Full details: [`../eagle-motor-city/AGENTS.md`](../eagle-motor-city/AGENTS.md) → **Debugging production (Docker MCP)**. Config lives in the developer’s global Cursor MCP (`~/.cursor/mcp.json`), not in this repo.
+- **CI** — `pull_request` to `develop` / `staging` / `main`
+- Environments **staging** / **production**: `SSH_*`, `APP_DIR`, `APP_ENV`
+- Staging overrides force `https://ford-stg.tallmancode.co.za`, ports `5411`/`5422`, `MOTOR_CITY_STOCK_API_URL=http://127.0.0.1:5511`
+- Health: `http://127.0.0.1:4411/api/health` (prod) / `5411` (staging); `lead-jobs` sidecar required
 
 ## Cursor Cloud specific instructions
 
