@@ -14,7 +14,7 @@ import { getFinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-bl
 import { getOfferTypeLabel } from '@/lib/specials/constants'
 import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getSpecialCategoryPath } from '@/lib/specials/paths'
-import { getSpecialCategorySeoDescription } from '@/lib/seo-seed/seo-seed-data'
+import { getSpecialCategorySeoDescription } from '@/lib/specials/specialCategorySeo'
 import { buildDocumentMetadata, resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
 import {
   buildJsonLdGraph,

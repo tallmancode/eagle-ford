@@ -4,8 +4,8 @@ import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { Button, toast, useModal } from '@payloadcms/ui'
 
 import { SeedLogModal } from '@/components/BeforeDashboard/SeedLogModal/SeedLogModal'
-import { parseSeedStream } from '@/lib/seed/parseSeedStream'
-import type { SeedLogEntry, SeedLogStatus } from '@/lib/seed/types'
+import { parseSeedStream } from '@/lib/admin-action-stream/parseSeedStream'
+import type { SeedLogEntry, SeedLogStatus } from '@/lib/admin-action-stream/types'
 
 type Props = {
   endpoint: string

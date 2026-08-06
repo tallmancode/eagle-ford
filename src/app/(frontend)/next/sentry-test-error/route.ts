@@ -3,7 +3,7 @@ import * as Sentry from '@sentry/nextjs'
 import { headers } from 'next/headers'
 import { getPayload } from 'payload'
 
-import { createSeedStreamResponse } from '@/lib/seed/createSeedStreamResponse'
+import { createSeedStreamResponse } from '@/lib/admin-action-stream/createSeedStreamResponse'
 
 export const maxDuration = 30
 
@@ -27,7 +27,7 @@ export const POST = async (): Promise<Response> => {
       log.warn('SENTRY_DSN is not set — server errors will not be reported.')
     }
 
-    const error = new Error('Sentry test error — intentional (Eagle Ford seed button)')
+    const error = new Error('Sentry test error — intentional (Eagle Ford diagnostics button)')
     Sentry.captureException(error)
     await Sentry.flush(2000)
 
