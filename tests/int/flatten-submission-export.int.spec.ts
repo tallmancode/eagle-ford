@@ -3,11 +3,13 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   applyContactFieldsFromSubmissionData,
   denormalizeSubmissionContactFields,
+  getFormSubmissionContactFields,
 } from '@/lib/form-submissions/contactFields'
 import {
   flattenFormSubmissionExportBatch,
   flattenFormSubmissionForCsv,
   flattenFormSubmissionForJson,
+  flattenSubmissionUploads,
   pivotSubmissionData,
   resolveFormExportLabel,
   type FormSubmissionExportDoc,
@@ -54,6 +56,26 @@ describe('resolveFormExportLabel', () => {
   it('falls back to id when title is missing', () => {
     expect(resolveFormExportLabel({ id: 'abc' })).toBe('abc')
     expect(resolveFormExportLabel('abc')).toBe('abc')
+  })
+})
+
+describe('getFormSubmissionContactFields', () => {
+  it('falls back to submissionData on afterRead when stored value is empty', () => {
+    const firstNameField = getFormSubmissionContactFields().find(
+      (field) => 'name' in field && field.name === 'firstName',
+    )
+    const afterRead =
+      firstNameField && 'hooks' in firstNameField ? firstNameField.hooks?.afterRead?.[0] : undefined
+
+    expect(typeof afterRead).toBe('function')
+    expect(
+      afterRead?.({
+        siblingData: {
+          submissionData: [{ field: 'firstName', value: 'Ada' }],
+        },
+        value: '',
+      } as never),
+    ).toBe('Ada')
   })
 })
 
@@ -167,6 +189,43 @@ describe('flattenFormSubmissionForCsv', () => {
     const keys = Object.keys(row)
     expect(keys.indexOf('firstName')).toBeLessThan(keys.indexOf('message'))
     expect(keys.indexOf('email')).toBeLessThan(keys.indexOf('message'))
+  })
+
+  it('includes motor city status columns and upload filenames', () => {
+    const row = flattenFormSubmissionForCsv(
+      { id: 'sub-4', motorCityLeadStatus: 'queued' },
+      {
+        id: 'sub-4',
+        motorCityLeadStatus: 'queued',
+        motorCityLeadAttempts: 2,
+        submissionUploads: [
+          {
+            field: 'driversLicence',
+            value: [{ relationTo: 'media', value: { filename: 'licence.pdf', url: '/media/licence.pdf' } }],
+          },
+        ],
+      },
+    )
+
+    expect(row.motorCityLeadStatus).toBe('queued')
+    expect(row.motorCityLeadAttempts).toBe(2)
+    expect(row.driversLicence).toBe('/media/licence.pdf')
+  })
+})
+
+describe('flattenSubmissionUploads', () => {
+  it('joins multiple upload filenames for one field', () => {
+    expect(
+      flattenSubmissionUploads([
+        {
+          field: 'photos',
+          value: [
+            { relationTo: 'media', value: { filename: 'a.jpg' } },
+            { relationTo: 'media', value: { filename: 'b.jpg' } },
+          ],
+        },
+      ]),
+    ).toEqual({ photos: 'a.jpg; b.jpg' })
   })
 })
 
