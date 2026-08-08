@@ -28,6 +28,7 @@ jobs:
           _SSH_HOST: ${{ secrets.SSH_HOST }}
           _SSH_USER: ${{ secrets.SSH_USER }}
           _APP_ENV: ${{ secrets.APP_ENV }}
+          _APP_DIR: ${{ secrets.APP_DIR }}
         run: |
           missing=0
           if [ -z "$_SSH_KEY" ]; then
@@ -44,6 +45,10 @@ jobs:
           fi
           if [ -z "$_APP_ENV" ]; then
             echo "::error::Missing APP_ENV (set on the production environment or repository secrets)"
+            missing=1
+          fi
+          if [ -z "$_APP_DIR" ]; then
+            echo "::error::Missing APP_DIR (set on the production environment or repository secrets)"
             missing=1
           fi
           [ "$missing" -eq 0 ] || exit 1
@@ -68,7 +73,7 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
           APP_ENV: ${{ secrets.APP_ENV }}
-          APP_DIR: ${{ secrets.APP_DIR || '/www/wwwroot/eagle/ford/production' }}
+          APP_DIR: ${{ secrets.APP_DIR }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           set -e

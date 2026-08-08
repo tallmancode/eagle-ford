@@ -6,6 +6,11 @@ import {
   extractSmtpErrorFields,
 } from '@/lib/email/sentry'
 
+function isEmailDryRun(): boolean {
+  const value = process.env.EMAIL_DRY_RUN?.trim().toLowerCase()
+  return value === 'true' || value === '1' || value === 'yes'
+}
+
 function countAddresses(value: SendEmailOptions['to']): number {
   if (!value) return 0
   if (Array.isArray(value)) return value.length
@@ -21,6 +26,7 @@ function recipientCount(message: SendEmailOptions): number {
 /**
  * Nodemailer adapter that reports send failures to Sentry with scrubbed SMTP context.
  * Re-throws so Payload / form-builder logging behavior is unchanged.
+ * Set EMAIL_DRY_RUN=true to log and skip SMTP (staging).
  */
 export function createInstrumentedEmailAdapter(): Promise<EmailAdapter> {
   const smtpPort = Number(process.env.SMTP_PORT ?? 587)
@@ -56,6 +62,18 @@ async function instrumentEmailAdapter(
     return {
       ...initialized,
       sendEmail: async (message) => {
+        if (isEmailDryRun()) {
+          const messageId = `dry-run-${Date.now()}`
+          console.info('[EMAIL_DRY_RUN] Skipping SMTP send', {
+            messageId,
+            subject: message.subject,
+            recipientCount: recipientCount(message),
+            hasHtml: Boolean(message.html),
+            hasText: Boolean(message.text),
+          })
+          return { messageId }
+        }
+
         try {
           return await initialized.sendEmail(message)
         } catch (error) {
