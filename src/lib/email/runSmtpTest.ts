@@ -120,6 +120,16 @@ export async function runSmtpTest(args: {
     return { ok: false, logs, configStatus, error: { message } }
   }
 
+  const emailDryRun = ['true', '1', 'yes'].includes(
+    (process.env.EMAIL_DRY_RUN?.trim().toLowerCase() || ''),
+  )
+  if (emailDryRun) {
+    const summary = `EMAIL_DRY_RUN: skipped SMTP test send to ${recipient}`
+    log(logs, 'info', summary)
+    await persistLastTest(args.payload, true, summary)
+    return { ok: true, logs, configStatus }
+  }
+
   if (!envConfig.host) {
     const message = 'SMTP_HOST is not set in the server environment.'
     log(logs, 'error', message)
