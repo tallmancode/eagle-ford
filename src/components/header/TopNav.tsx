@@ -33,6 +33,7 @@ export const TopNav = ({
                 href="/"
                 aria-label="Home"
                 aria-current={homeActive ? 'page' : undefined}
+                prefetch={false}
                 className={cn(
                   navLinkFocusResetClass,
                   'hover:text-light-400 transition-colors',

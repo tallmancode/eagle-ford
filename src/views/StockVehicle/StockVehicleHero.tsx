@@ -45,7 +45,7 @@ export function StockVehicleHero({ vehicle }: Props) {
                 imgClassName="object-cover"
                 size="(max-width: 1024px) 100vw, 50vw"
                 priority
-                quality={100}
+                quality={75}
               />
             ) : (
               <div className="flex h-full items-center justify-center text-neutral-400">

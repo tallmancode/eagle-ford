@@ -63,6 +63,7 @@ function renderFlyoutTrigger(
           href={parentHref}
           target={getNavLinkTarget(item)}
           aria-current={active ? 'page' : undefined}
+          prefetch={false}
         >
           {item.label}
           <ChevronDown className="relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180" />
@@ -112,6 +113,7 @@ export const renderNavItem = (item: NavLink, index: number, options: NavItemRend
                       href={childHref}
                       target={getNavLinkTarget(child)}
                       aria-current={childActive ? 'page' : undefined}
+                      prefetch={false}
                       className={cn(
                         navLinkFocusResetClass,
                         'block px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground rounded-md transition-colors',
@@ -139,7 +141,7 @@ export const renderNavItem = (item: NavLink, index: number, options: NavItemRend
       <NavigationMenuItem key={item.id ?? index}>
         <NavigationMenuLink asChild>
           <Button asChild variant="secondary" className="rounded-full" size="sm">
-            <Link href={href} target={target} aria-current={active ? 'page' : undefined}>
+            <Link href={href} target={target} aria-current={active ? 'page' : undefined} prefetch={false}>
               {item.label}
             </Link>
           </Button>
@@ -155,6 +157,7 @@ export const renderNavItem = (item: NavLink, index: number, options: NavItemRend
           href={href}
           target={target}
           aria-current={active ? 'page' : undefined}
+          prefetch={false}
           className={cn(
             navLinkFocusResetClass,
             'hover:bg-transparent cursor-pointer hover:text-primary transition-colors',

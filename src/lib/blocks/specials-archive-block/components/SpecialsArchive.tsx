@@ -16,6 +16,7 @@ function CategoryCard({ category }: { category: SpecialCategory }) {
   return (
     <Link
       href={href}
+      prefetch={false}
       className="group bg-light-50 shadow-card block overflow-hidden rounded-lg transition-shadow hover:shadow-lg"
     >
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">

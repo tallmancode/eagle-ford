@@ -18,7 +18,12 @@ export function VehicleMegaMenuCard({ item, className, onNavigate }: VehicleMega
 
   return (
     <div className={cn('flex flex-col items-center text-center', className)}>
-      <Link href={href} className="group flex w-full flex-col items-center" onClick={onNavigate}>
+      <Link
+        href={href}
+        className="group flex w-full flex-col items-center"
+        onClick={onNavigate}
+        prefetch={false}
+      >
         <div className="relative mb-3 aspect-[3/2] w-full">
           <MediaImage
             resource={item.featureImage}

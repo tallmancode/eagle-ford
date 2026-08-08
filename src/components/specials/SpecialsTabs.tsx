@@ -316,7 +316,9 @@ function SpecialDetailInfo({
       <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         {fordPromiseHref && (
           <Button className="w-full rounded-full sm:w-auto" asChild>
-            <Link href={fordPromiseHref}>Ford Family Promise</Link>
+            <Link href={fordPromiseHref} prefetch={false}>
+              Ford Family Promise
+            </Link>
           </Button>
         )}
         {brochureUrl && (
@@ -329,11 +331,15 @@ function SpecialDetailInfo({
         )}
         {vehicleHref && (
           <Button className="w-full rounded-full sm:w-auto" asChild>
-            <Link href={vehicleHref}>View Full Range</Link>
+            <Link href={vehicleHref} prefetch={false}>
+              View Full Range
+            </Link>
           </Button>
         )}
         <Button variant="outline" className="w-full rounded-full sm:w-auto" asChild>
-          <Link href="/specials">Back to Specials</Link>
+          <Link href="/specials" prefetch={false}>
+            Back to Specials
+          </Link>
         </Button>
       </div>
 
