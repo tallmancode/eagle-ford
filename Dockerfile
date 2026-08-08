@@ -53,6 +53,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+# wget for Compose healthchecks (avoids spawning Node every interval)
+RUN apk add --no-cache wget
 
 # Remove this line if you do not have this folder
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public

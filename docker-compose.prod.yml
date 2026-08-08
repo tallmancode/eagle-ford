@@ -22,16 +22,11 @@ services:
         max-size: '10m'
         max-file: '3'
     healthcheck:
-      test:
-        [
-          'CMD',
-          'node',
-          '-e',
-          "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
-        ]
-      interval: 15s
+      # wget avoids spawning a new Node process every interval (memory spikes).
+      test: ['CMD-SHELL', 'wget -q -O /dev/null http://127.0.0.1:3000/api/health || exit 1']
+      interval: 75s
       timeout: 5s
-      retries: 12
+      retries: 5
       start_period: 60s
 
   # Polls Payload jobs so pending Motor City lead forwards are retried with backoff.
@@ -52,14 +47,25 @@ services:
           echo "lead-jobs: CRON_SECRET is not set; refusing to start"
           exit 1
         fi
-        echo "lead-jobs: polling motor-city-leads every 60s"
+        echo "lead-jobs: polling motor-city-leads every 5m"
         while true; do
           curl -sf \
             -H "Authorization: Bearer $$CRON_SECRET" \
             "http://app:3000/api/payload-jobs/run?queue=motor-city-leads&limit=10" \
             || echo "lead-jobs: motor-city-leads run request failed"
-          sleep 60
+          sleep 300
         done
+    healthcheck:
+      test: ['CMD', 'curl', '-sf', 'http://app:3000/api/health']
+      interval: 90s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
 
   mongo:
     image: mongo:8
@@ -75,7 +81,7 @@ services:
       - internal
     healthcheck:
       test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping')"]
-      interval: 30s
+      interval: 60s
       timeout: 5s
       retries: 10
       start_period: 20s
