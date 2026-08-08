@@ -25,6 +25,8 @@ const nextConfig: NextConfig = {
   },
   output: 'standalone',
   images: {
+    // Keep optimized remote (CMSCloud) + local encodes on disk; default TTL is ~60s.
+    minimumCacheTTL: 2678400, // 31 days
     qualities: [65, 75, 100],
     localPatterns: [
       {

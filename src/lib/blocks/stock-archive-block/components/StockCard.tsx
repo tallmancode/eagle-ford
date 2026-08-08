@@ -58,7 +58,7 @@ export function StockCard({ vehicle }: Props) {
             imgClassName="object-cover"
             maxWidth={600}
             size="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 400px"
-            quality={100}
+            quality={75}
           />
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-neutral-400">

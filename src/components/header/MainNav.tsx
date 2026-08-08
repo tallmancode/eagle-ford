@@ -33,7 +33,12 @@ export const MainNav = ({
         />
       </div>
       {typeof headerLogo === 'object' && headerLogo && (
-        <Link href="/" aria-label="Home" className="absolute left-0  lg:static lg:translate-x-0">
+        <Link
+          href="/"
+          aria-label="Home"
+          className="absolute left-0  lg:static lg:translate-x-0"
+          prefetch={false}
+        >
           <Media resource={headerLogo} imgClassName="lg:w-36 w-32" priority />
         </Link>
       )}

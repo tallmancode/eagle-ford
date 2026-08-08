@@ -234,6 +234,7 @@ const renderMobileMenuItem = (
               aria-current={parentActive ? 'page' : undefined}
               className={cn(mobileLinkClass, parentActive && mobileActiveClass)}
               onClick={onNavigate}
+              prefetch={false}
             >
               {item.label}
             </Link>
@@ -284,6 +285,7 @@ const renderMobileMenuItem = (
           target={target}
           aria-current={active ? 'page' : undefined}
           onClick={onNavigate}
+          prefetch={false}
         >
           {item.label}
         </Link>
@@ -299,6 +301,7 @@ const renderMobileMenuItem = (
       aria-current={active ? 'page' : undefined}
       className={cn(mobileLinkClass, 'my-2 block', active && mobileActiveClass)}
       onClick={onNavigate}
+      prefetch={false}
     >
       {item.label}
     </Link>
@@ -328,6 +331,7 @@ const SubMenuLink = ({
         active && mobileActiveClass,
       )}
       onClick={onNavigate}
+      prefetch={false}
     >
       <div className="text-xl font-semibold">{item.label}</div>
     </Link>
