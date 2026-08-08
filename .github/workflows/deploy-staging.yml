@@ -142,7 +142,7 @@ jobs:
                 'APP_IMAGE=eagle-ford-app:staging' \
                 'COMPOSE_PROJECT_NAME=eagle-ford-staging' \
                 'ALLOW_SEARCH_INDEXING=false' \
-                'MOTOR_CITY_STOCK_API_URL=http://127.0.0.1:5511'
+                'MOTOR_CITY_STOCK_API_URL=https://motor-city-stg.tallmancode.co.za'
               do
                 key=\${pair%%=*}
                 val=\${pair#*=}
