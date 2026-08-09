@@ -23,7 +23,9 @@ import { SubheadingBlock } from '@/lib/blocks/form-block/SubheadingBlock'
 import { handleMultiStepFormUploads } from '@/lib/blocks/form-block/hooks/handleMultiStepFormUploads'
 import {
   denormalizeSubmissionContactFields,
+  formSubmissionListAdmin,
   getFormSubmissionContactFields,
+  withFormSubmissionExportFieldTweaks,
 } from '@/lib/form-submissions/contactFields'
 import { flattenFormSubmissionExportBatch } from '@/lib/form-submissions/flattenSubmissionExport'
 import { getLmsLeadInjectionFields } from '@/lib/motor-city-leads/formFields'
@@ -80,30 +82,12 @@ export const plugins: Plugin[] = [
     uploadCollections: [...FORM_UPLOAD_COLLECTIONS],
     redirectRelationships: ['pages'],
     formSubmissionOverrides: {
-      admin: {
-        defaultColumns: ['form', 'firstName', 'lastName', 'phone', 'email', 'createdAt'],
-      },
-      fields: ({ defaultFields }) => {
-        const withExportTweaks = defaultFields.map((field) => {
-          if (!('name' in field) || field.name !== 'submissionData') return field
-          return {
-            ...field,
-            custom: {
-              ...('custom' in field && field.custom && typeof field.custom === 'object'
-                ? field.custom
-                : {}),
-              'plugin-import-export': {
-                disabled: true,
-              },
-            },
-          }
-        })
-        return [
-          ...withExportTweaks,
-          ...getFormSubmissionContactFields(),
-          ...getMotorCityLeadSubmissionFields(),
-        ]
-      },
+      admin: formSubmissionListAdmin,
+      fields: ({ defaultFields }) => [
+        ...withFormSubmissionExportFieldTweaks(defaultFields),
+        ...getFormSubmissionContactFields(),
+        ...getMotorCityLeadSubmissionFields(),
+      ],
       hooks: {
         beforeChange: [handleMultiStepFormUploads, denormalizeSubmissionContactFields],
         afterChange: [injectFormSubmissionLead],

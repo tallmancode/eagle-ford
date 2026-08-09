@@ -1,7 +1,9 @@
 import type { CollectionBeforeChangeHook, Field } from 'payload'
 
-import { pivotSubmissionData } from '@/lib/form-submissions/flattenSubmissionExport'
-import type { FormSubmissionDataItem } from '@/lib/motor-city-leads/types'
+import {
+  pivotSubmissionData,
+  type FormSubmissionDataItem,
+} from '@/lib/form-submissions/flattenSubmissionExport'
 
 export const FORM_SUBMISSION_CONTACT_FIELDS = [
   'firstName',
@@ -10,44 +12,76 @@ export const FORM_SUBMISSION_CONTACT_FIELDS = [
   'email',
 ] as const
 
+/** Shared Form Submissions list columns across all Eagle sites. */
+export const FORM_SUBMISSION_LIST_COLUMNS = [
+  'form',
+  'firstName',
+  'lastName',
+  'phone',
+  'email',
+  'createdAt',
+] as const
+
+export const formSubmissionListAdmin = {
+  defaultColumns: [...FORM_SUBMISSION_LIST_COLUMNS],
+  useAsTitle: 'form' as const,
+}
+
 export type FormSubmissionContactField = (typeof FORM_SUBMISSION_CONTACT_FIELDS)[number]
+
+function readContactAnswer(
+  fieldName: FormSubmissionContactField,
+  siblingData: Record<string, unknown> | undefined,
+  storedValue: unknown,
+): string {
+  if (typeof storedValue === 'string' && storedValue.trim()) {
+    return storedValue
+  }
+
+  const answers = pivotSubmissionData(
+    siblingData?.submissionData as FormSubmissionDataItem[] | null | undefined,
+  )
+
+  return answers[fieldName] ?? ''
+}
+
+/** Hide nested submission arrays from the export field picker (flatten hook handles CSV). */
+export function withFormSubmissionExportFieldTweaks(defaultFields: Field[]): Field[] {
+  return defaultFields.map((field) => {
+    if (!('name' in field)) return field
+    if (field.name === 'submissionData' || field.name === 'submissionUploads') {
+      return {
+        ...field,
+        custom: {
+          ...('custom' in field && field.custom && typeof field.custom === 'object'
+            ? field.custom
+            : {}),
+          'plugin-import-export': {
+            disabled: true,
+          },
+        },
+      }
+    }
+    return field
+  })
+}
 
 /** Read-only contact columns for list view + export field picker. */
 export function getFormSubmissionContactFields(): Field[] {
-  return [
-    {
-      name: 'firstName',
-      type: 'text',
-      admin: {
-        readOnly: true,
-        description: 'Copied from the form answer named firstName',
-      },
+  return FORM_SUBMISSION_CONTACT_FIELDS.map((fieldName) => ({
+    name: fieldName,
+    type: 'text' as const,
+    admin: {
+      readOnly: true,
+      description: `Copied from the form answer named ${fieldName}`,
     },
-    {
-      name: 'lastName',
-      type: 'text',
-      admin: {
-        readOnly: true,
-        description: 'Copied from the form answer named lastName',
-      },
+    hooks: {
+      afterRead: [
+        ({ siblingData, value }) =>
+          readContactAnswer(fieldName, siblingData as Record<string, unknown> | undefined, value),
+      ],
     },
-    {
-      name: 'phone',
-      type: 'text',
-      admin: {
-        readOnly: true,
-        description: 'Copied from the form answer named phone',
-      },
-    },
-    {
-      name: 'email',
-      type: 'text',
-      admin: {
-        readOnly: true,
-        description: 'Copied from the form answer named email',
-      },
-    },
-  ]
+  }))
 }
 
 export function applyContactFieldsFromSubmissionData(

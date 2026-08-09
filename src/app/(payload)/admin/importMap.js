@@ -40,7 +40,7 @@ import { ColorField as ColorField_31c0780c96066ad2689556a239466438 } from '@/lib
 import { SocialIconRowLabel as SocialIconRowLabel_27f6a7a8b6f24a71f102f20c13591ee6 } from '@/lib/fields/social-icons/components/SocialIconRowLabel'
 import { EmailTestSendField as EmailTestSendField_41dc44921056684a68ecc60f54e17a4e } from '@/lib/fields/email-test-send/EmailTestSendField'
 import { MotorCityStockTestField as MotorCityStockTestField_d64c2bfdf00944370981c95fab9bbd83 } from '@/lib/fields/motor-city-stock-test/MotorCityStockTestField'
-import { DiagnosticsButtonsComponent as DiagnosticsButtonsComponent_fdfc3e37576a0e6bfa4567073a5dec60 } from '@/lib/fields/diagnostics/DiagnosticsButtonsComponent'
+import { DiagnosticsButtonsComponent as DiagnosticsButtonsComponent_41168ffed8f2b43822ee663c6a9481aa } from '@/lib/fields/diagnostics/DiagnosticsButtonsComponent'
 import { MediaCleanupComponent as MediaCleanupComponent_75003b8b08ca0a0451295f801b7dc13a } from '@/lib/fields/media-cleanup/MediaCleanupComponent'
 import { CacheBustComponent as CacheBustComponent_18d9d289e2207348fc87a9a60d05e532 } from '@/lib/fields/cache-bust/CacheBustComponent'
 import { RefetchModelsButton as RefetchModelsButton_1482bb9764efcd52471be065d8f464e8 } from '@/plugins/ai-media-suggestions/components/RefetchModelsButton'
@@ -145,7 +145,7 @@ export const importMap = {
   "@/lib/fields/social-icons/components/SocialIconRowLabel#SocialIconRowLabel": SocialIconRowLabel_27f6a7a8b6f24a71f102f20c13591ee6,
   "@/lib/fields/email-test-send/EmailTestSendField#EmailTestSendField": EmailTestSendField_41dc44921056684a68ecc60f54e17a4e,
   "@/lib/fields/motor-city-stock-test/MotorCityStockTestField#MotorCityStockTestField": MotorCityStockTestField_d64c2bfdf00944370981c95fab9bbd83,
-  "@/lib/fields/diagnostics/DiagnosticsButtonsComponent#DiagnosticsButtonsComponent": DiagnosticsButtonsComponent_fdfc3e37576a0e6bfa4567073a5dec60,
+  "@/lib/fields/diagnostics/DiagnosticsButtonsComponent#DiagnosticsButtonsComponent": DiagnosticsButtonsComponent_41168ffed8f2b43822ee663c6a9481aa,
   "@/lib/fields/media-cleanup/MediaCleanupComponent#MediaCleanupComponent": MediaCleanupComponent_75003b8b08ca0a0451295f801b7dc13a,
   "@/lib/fields/cache-bust/CacheBustComponent#CacheBustComponent": CacheBustComponent_18d9d289e2207348fc87a9a60d05e532,
   "@/plugins/ai-media-suggestions/components/RefetchModelsButton#RefetchModelsButton": RefetchModelsButton_1482bb9764efcd52471be065d8f464e8,
