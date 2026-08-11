@@ -1,6 +1,7 @@
 'use client'
 
-import React, { Suspense, useEffect, useRef, useTransition } from 'react'
+import React, { Suspense, useEffect, useRef, useState, useTransition } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Download } from 'lucide-react'
@@ -27,6 +28,8 @@ import type { Form, Special, Vehicle, VehicleModel, VehicleVariant } from '@/pay
 
 const FINANCE_DISCLAIMER =
   'The instalment quoted does not include any admin costs, license and registration of the vehicle and any value added products. All calculations, rates quoted and payments shown are guidelines only and are not quotations.'
+
+const IMAGE_ILLUSTRATION_DISCLAIMER = '*Images for illustration purposes only.'
 
 export type SpecialTabItem = Pick<
   Special,
@@ -262,6 +265,9 @@ function SpecialCardImage({
         size="(max-width: 1024px) 100vw, 66vw"
         priority={priority}
       />
+      <p className="absolute bottom-3 left-3 z-10 max-w-[calc(100%-1.5rem)] rounded-lg bg-background/90 px-2 py-1 text-[10px] leading-tight text-muted-foreground backdrop-blur-sm lg:hidden">
+        {IMAGE_ILLUSTRATION_DISCLAIMER}
+      </p>
       {hasPricing && (
         <a
           href={detailsHref}
@@ -275,6 +281,9 @@ function SpecialCardImage({
           <SpecialDetailPricing special={special} />
           <p className="mt-1 text-[10px] leading-tight text-muted-foreground">
             All subject to finance approval Ford Credit.
+          </p>
+          <p className="mt-1 hidden text-[10px] leading-tight text-muted-foreground lg:block">
+            {IMAGE_ILLUSTRATION_DISCLAIMER}
           </p>
         </a>
       )}
@@ -428,6 +437,40 @@ function SpecialEnquiryForm({
   )
 }
 
+/** Empty mount target inside the open mobile accordion panel. */
+function MobileEnquiryFormMount({
+  active,
+  onMountChange,
+}: {
+  active: boolean
+  onMountChange: (node: HTMLElement | null) => void
+}) {
+  if (!active) return null
+  return <div ref={onMountChange} />
+}
+
+/** Single mobile enquiry form instance, portaled into the active special's panel. */
+function MobileSpecialEnquiryFormPortal({
+  mountNode,
+  form,
+  special,
+  categoryTitle,
+}: {
+  mountNode: HTMLElement | null
+  form: Form
+  special: SpecialTabItem
+  categoryTitle: string
+}) {
+  if (!mountNode) return null
+  return createPortal(
+    <div className="flex flex-col gap-4">
+      <h2 className="text-xl font-bold text-primary">Enquire Now</h2>
+      <SpecialEnquiryForm form={form} special={special} categoryTitle={categoryTitle} />
+    </div>,
+    mountNode,
+  )
+}
+
 function SpecialsTabsList({
   specials,
   selectedIndex,
@@ -506,6 +549,7 @@ function SpecialsTabsInner({
   const enquiryForm = selectedSpecial
     ? resolveEnquiryForm(selectedSpecial, categoryEnquiryForm)
     : null
+  const [mobileFormMountNode, setMobileFormMountNode] = useState<HTMLElement | null>(null)
 
   useEffect(() => {
     if (specials.length === 0 || !selectedSpecial?.slug) return
@@ -596,7 +640,7 @@ function SpecialsTabsInner({
 
   return (
     <div>
-      {/* Mobile: accordion + form below */}
+      {/* Mobile: accordion; enquiry form portaled into the open panel */}
       <div className="lg:hidden flex flex-col gap-6">
         <div className="border-b border-border">
           <div className="px-4 pb-2 text-xs font-medium tracking-wide text-muted-foreground">
@@ -644,6 +688,10 @@ function SpecialsTabsInner({
                         offerDetails={isSelected ? offerDetails : undefined}
                         calculatorDefaults={calculatorDefaults}
                       />
+                      <MobileEnquiryFormMount
+                        active={isSelected && Boolean(enquiryForm)}
+                        onMountChange={setMobileFormMountNode}
+                      />
                     </div>
                   </AccordionContent>
                 </AccordionItem>
@@ -653,7 +701,8 @@ function SpecialsTabsInner({
         </div>
 
         {enquiryForm && (
-          <SpecialEnquiryForm
+          <MobileSpecialEnquiryFormPortal
+            mountNode={mobileFormMountNode}
             form={enquiryForm}
             special={selectedSpecial}
             categoryTitle={categoryTitle}
