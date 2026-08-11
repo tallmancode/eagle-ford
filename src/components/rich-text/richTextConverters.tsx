@@ -113,12 +113,16 @@ export const richTextConverters: JSXConvertersFunction<NodeTypes> = ({ defaultCo
     const nodeState = (node as Record<string, unknown>)['$'] as Record<string, string> | undefined
     if (!nodeState) return baseText
 
-    // Build inline style from all active state values (color + size)
+    // Build inline style from all active state values (color + size).
+    // The state `css` maps use kebab-case (correct for HTML output), but React
+    // style props require camelCase keys — convert before assigning.
     const inlineStyle: Record<string, string> = {}
     for (const stateKey of Object.values(nodeState)) {
       const entry = richTextColorState[stateKey] ?? richTextSizeState[stateKey]
       if (entry?.css) {
-        Object.assign(inlineStyle, entry.css)
+        for (const [cssKey, cssValue] of Object.entries(entry.css)) {
+          inlineStyle[cssKey.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())] = cssValue
+        }
       }
     }
 
