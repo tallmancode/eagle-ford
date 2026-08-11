@@ -32,6 +32,7 @@ import type {
 import { PrivacyProvider } from '@/lib/providers/privacy'
 import { PrivacyBanner } from '@/lib/components/privacy-banner/PrivacyBanner'
 import { BackToTopButton } from '@/lib/components/back-to-top/BackToTopButton'
+import { WhatsAppFloatingButton } from '@/components/WhatsAppFloatingButton'
 import { ConsentAwareGoogleTagManager } from '@/components/analytics/ConsentAwareGoogleTagManager'
 import { shouldLoadGoogleTagManager } from '@/components/analytics/googleTagManager'
 import { GTMPageView } from '@/components/analytics/GTMPageView'
@@ -124,6 +125,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             />
             {children}
             <BackToTopButton />
+            <WhatsAppFloatingButton
+              number={globalSettings.whatsappButton?.whatsappNumber}
+              message={globalSettings.whatsappButton?.whatsappMessage}
+            />
             <PrivacyBanner></PrivacyBanner>
             <SiteFooter footer={globalFooter} />
           </Providers>

@@ -4610,6 +4610,7 @@ export interface Setting {
   contactInfo: SettingsContactInfo;
   pricingCalculatorDefaults?: PricingCalculatorDefaults;
   analytics: AnalyticsSettings;
+  whatsappButton?: WhatsAppButtonSettings;
   /**
    * Used on live stock / showroom vehicle detail pages. Leave empty to hide the enquiry form.
    */
@@ -4678,6 +4679,20 @@ export interface AnalyticsSettings {
    * The public GTM container ID in the format GTM-XXXXXXXX.
    */
   googleTagManagerId: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WhatsAppButtonSettings".
+ */
+export interface WhatsAppButtonSettings {
+  /**
+   * Leave empty to hide the floating WhatsApp button. Accepts local (0xx...) or international (+27...) formats.
+   */
+  whatsappNumber?: string | null;
+  /**
+   * Message pre-filled when the chat opens. {url} is replaced with the current page URL.
+   */
+  whatsappMessage?: string | null;
 }
 /**
  * Test Mimecast SMTP connectivity. Host, port, user, and password stay in server env (SMTP_*), not in the CMS.
@@ -4873,6 +4888,7 @@ export interface SettingsSelect<T extends boolean = true> {
   contactInfo?: T | SettingsContactInfoSelect<T>;
   pricingCalculatorDefaults?: T | PricingCalculatorDefaultsSelect<T>;
   analytics?: T | AnalyticsSettingsSelect<T>;
+  whatsappButton?: T | WhatsAppButtonSettingsSelect<T>;
   showroomQuoteForm?: T;
   newVehicleQuoteForm?: T;
   email?: T | EmailSettingsSelect<T>;
@@ -4917,6 +4933,14 @@ export interface PricingCalculatorDefaultsSelect<T extends boolean = true> {
 export interface AnalyticsSettingsSelect<T extends boolean = true> {
   enableGoogleTagManager?: T;
   googleTagManagerId?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WhatsAppButtonSettings_select".
+ */
+export interface WhatsAppButtonSettingsSelect<T extends boolean = true> {
+  whatsappNumber?: T;
+  whatsappMessage?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
