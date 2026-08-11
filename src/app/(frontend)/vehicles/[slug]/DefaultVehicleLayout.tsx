@@ -13,7 +13,7 @@ import { getBrochureUrl } from '@/lib/utils/vehicleCta'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { VehicleHero } from '@/lib/blocks/vehicle-hero-block/components/VehicleHero'
 import { VehicleColors } from '@/lib/blocks/vehicle-colors-block/components/VehicleColors'
-import { VehicleFeatures } from '@/lib/blocks/vehicle-features-block/components/VehicleFeatures'
+import { VehicleFeaturesSection } from '@/lib/blocks/vehicle-features-block/components/VehicleFeatures'
 import { VehicleFaq } from '@/lib/blocks/vehicle-faq-block/components/VehicleFaq'
 import VehicleRangePage from './VehicleRangePage'
 
@@ -88,7 +88,7 @@ export function DefaultVehicleLayout({ vehicle, models, enquiryForm }: DefaultVe
       )}
 
       {/* ── Features ── */}
-      <VehicleFeatures features={features} />
+      <VehicleFeaturesSection features={features} />
 
       {/* ── Vehicle Colours ── */}
       <VehicleColors vehicleName={vehicle.name} colours={vehicle.colours ?? []} />
