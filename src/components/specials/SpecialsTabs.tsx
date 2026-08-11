@@ -312,8 +312,12 @@ function SpecialDetailInfo({
   const highlights = variant?.highlights ?? []
   const hasHighlights = highlights.length > 0
   const hasOfferDetails = Boolean(offerDetails)
-  const showFinanceCalculator = special.offerType === 'price-point'
-  const hasDetailTabs = hasHighlights || hasOfferDetails || showFinanceCalculator
+  const isServiceSpecial = special.offerType === 'service'
+  const showFinanceCalculator = !isServiceSpecial && special.offerType === 'price-point'
+  const showKeyFeatures = !isServiceSpecial
+  const hasDetailTabs = isServiceSpecial
+    ? hasOfferDetails
+    : hasHighlights || hasOfferDetails || showFinanceCalculator
   const hasPricing = hasSpecialDetailPricing(special)
   const brochureUrl = getBrochureUrl(vehicle?.brochure)
   const vehicleHref = vehicle?.slug ? `/vehicles/${vehicle.slug}` : null
@@ -364,53 +368,61 @@ function SpecialDetailInfo({
           )}
           {hasDetailTabs && (
             <div className="min-w-0 flex-1">
-              <Tabs key={special.id} defaultValue="offer-details">
-                <TabsList
-                  variant="line"
-                  className="mb-4 flex h-auto w-full flex-wrap justify-start gap-x-1"
-                >
-                  <TabsTrigger value="offer-details">Offer Details</TabsTrigger>
-                  <TabsTrigger value="key-features">Key Features</TabsTrigger>
-                  {showFinanceCalculator && (
-                    <TabsTrigger value="finance-calculator">Finance Calculator</TabsTrigger>
-                  )}
-                </TabsList>
-                <TabsContent value="offer-details">
-                  {hasOfferDetails ? (
-                    offerDetails
-                  ) : (
-                    <p className="text-sm text-muted-foreground">No offer details available.</p>
-                  )}
-                </TabsContent>
-                <TabsContent value="key-features">
-                  {hasHighlights ? (
-                    <ul className="space-y-2">
-                      {highlights.map((item, i) => (
-                        <li
-                          key={item.id ?? i}
-                          className="flex items-start gap-2 text-sm text-muted-foreground"
-                        >
-                          <span className="text-primary mt-0.5 shrink-0">•</span>
-                          <span>{item.highlight}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">No key features available.</p>
-                  )}
-                </TabsContent>
-                {showFinanceCalculator && (
-                  <TabsContent value="finance-calculator">
-                    <FinanceCalculatorClient
-                      key={special.id}
-                      disclaimer={FINANCE_DISCLAIMER}
-                      defaultPurchasePrice={special.specialOffer}
-                      mode="repaymentOnly"
-                      defaults={calculatorDefaults}
-                    />
+              {isServiceSpecial ? (
+                offerDetails
+              ) : (
+                <Tabs key={special.id} defaultValue="offer-details">
+                  <TabsList
+                    variant="line"
+                    className="mb-4 flex h-auto w-full flex-wrap justify-start gap-x-1"
+                  >
+                    <TabsTrigger value="offer-details">Offer Details</TabsTrigger>
+                    {showKeyFeatures && (
+                      <TabsTrigger value="key-features">Key Features</TabsTrigger>
+                    )}
+                    {showFinanceCalculator && (
+                      <TabsTrigger value="finance-calculator">Finance Calculator</TabsTrigger>
+                    )}
+                  </TabsList>
+                  <TabsContent value="offer-details">
+                    {hasOfferDetails ? (
+                      offerDetails
+                    ) : (
+                      <p className="text-sm text-muted-foreground">No offer details available.</p>
+                    )}
                   </TabsContent>
-                )}
-              </Tabs>
+                  {showKeyFeatures && (
+                    <TabsContent value="key-features">
+                      {hasHighlights ? (
+                        <ul className="space-y-2">
+                          {highlights.map((item, i) => (
+                            <li
+                              key={item.id ?? i}
+                              className="flex items-start gap-2 text-sm text-muted-foreground"
+                            >
+                              <span className="text-primary mt-0.5 shrink-0">•</span>
+                              <span>{item.highlight}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">No key features available.</p>
+                      )}
+                    </TabsContent>
+                  )}
+                  {showFinanceCalculator && (
+                    <TabsContent value="finance-calculator">
+                      <FinanceCalculatorClient
+                        key={special.id}
+                        disclaimer={FINANCE_DISCLAIMER}
+                        defaultPurchasePrice={special.specialOffer}
+                        mode="repaymentOnly"
+                        defaults={calculatorDefaults}
+                      />
+                    </TabsContent>
+                  )}
+                </Tabs>
+              )}
             </div>
           )}
         </div>
