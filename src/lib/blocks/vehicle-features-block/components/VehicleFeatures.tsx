@@ -1,16 +1,29 @@
 import React from 'react'
 
-import type { Vehicle } from '@/payload-types'
+import { Button } from '@/components/ui/button'
 import { MediaImage } from '@/components/ui/media-image'
+import type { Setting, Vehicle } from '@/payload-types'
+import { getCachedGlobal } from '@/lib/utils/getGlobals'
 
 type FeatureItem = NonNullable<NonNullable<Vehicle['features']>[number]>
 
 type VehicleFeaturesProps = {
   features: FeatureItem[]
+  salesPhone?: string | null
 }
 
-export function VehicleFeatures({ features }: VehicleFeaturesProps) {
+const featureCtaGtmProps = {
+  'data-gtm-cta-location': 'vehicle-features',
+} as const
+
+function buildTelHref(phone: string): string {
+  return `tel:${phone.replace(/\D/g, '')}`
+}
+
+export function VehicleFeatures({ features, salesPhone }: VehicleFeaturesProps) {
   if (features.length === 0) return null
+
+  const telHref = salesPhone ? buildTelHref(salesPhone) : null
 
   return (
     <>
@@ -46,6 +59,28 @@ export function VehicleFeatures({ features }: VehicleFeaturesProps) {
                       {feature.featureDescription}
                     </p>
                   )}
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <Button asChild className="rounded-full font-semibold">
+                      <a
+                        href="#enquire"
+                        data-gtm-cta="vehicle-feature-enquire"
+                        {...featureCtaGtmProps}
+                      >
+                        Enquire Now
+                      </a>
+                    </Button>
+                    {telHref && (
+                      <Button asChild variant="outline" className="rounded-full font-semibold">
+                        <a
+                          href={telHref}
+                          data-gtm-cta="vehicle-feature-call"
+                          {...featureCtaGtmProps}
+                        >
+                          Call Now
+                        </a>
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -54,4 +89,15 @@ export function VehicleFeatures({ features }: VehicleFeaturesProps) {
       })}
     </>
   )
+}
+
+export async function VehicleFeaturesSection({
+  features,
+}: {
+  features: FeatureItem[]
+}) {
+  const settings = (await getCachedGlobal('settings', 1)) as Setting
+  const salesPhone = settings.contactInfo?.phone ?? null
+
+  return <VehicleFeatures features={features} salesPhone={salesPhone} />
 }
