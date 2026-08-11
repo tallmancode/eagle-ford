@@ -1,6 +1,7 @@
 'use client'
 
-import React, { Suspense, useEffect, useRef, useTransition } from 'react'
+import React, { Suspense, useEffect, useRef, useState, useTransition } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Download } from 'lucide-react'
@@ -27,6 +28,8 @@ import type { Form, Special, Vehicle, VehicleModel, VehicleVariant } from '@/pay
 
 const FINANCE_DISCLAIMER =
   'The instalment quoted does not include any admin costs, license and registration of the vehicle and any value added products. All calculations, rates quoted and payments shown are guidelines only and are not quotations.'
+
+const IMAGE_ILLUSTRATION_DISCLAIMER = '*Images for illustration purposes only.'
 
 export type SpecialTabItem = Pick<
   Special,
@@ -262,6 +265,9 @@ function SpecialCardImage({
         size="(max-width: 1024px) 100vw, 66vw"
         priority={priority}
       />
+      <p className="absolute bottom-3 left-3 z-10 max-w-[calc(100%-1.5rem)] rounded-lg bg-background/90 px-2 py-1 text-[10px] leading-tight text-muted-foreground backdrop-blur-sm lg:hidden">
+        {IMAGE_ILLUSTRATION_DISCLAIMER}
+      </p>
       {hasPricing && (
         <a
           href={detailsHref}
@@ -275,6 +281,9 @@ function SpecialCardImage({
           <SpecialDetailPricing special={special} />
           <p className="mt-1 text-[10px] leading-tight text-muted-foreground">
             All subject to finance approval Ford Credit.
+          </p>
+          <p className="mt-1 hidden text-[10px] leading-tight text-muted-foreground lg:block">
+            {IMAGE_ILLUSTRATION_DISCLAIMER}
           </p>
         </a>
       )}
@@ -303,8 +312,12 @@ function SpecialDetailInfo({
   const highlights = variant?.highlights ?? []
   const hasHighlights = highlights.length > 0
   const hasOfferDetails = Boolean(offerDetails)
-  const showFinanceCalculator = special.offerType === 'price-point'
-  const hasDetailTabs = hasHighlights || hasOfferDetails || showFinanceCalculator
+  const isServiceSpecial = special.offerType === 'service'
+  const showFinanceCalculator = !isServiceSpecial && special.offerType === 'price-point'
+  const showKeyFeatures = !isServiceSpecial
+  const hasDetailTabs = isServiceSpecial
+    ? hasOfferDetails
+    : hasHighlights || hasOfferDetails || showFinanceCalculator
   const hasPricing = hasSpecialDetailPricing(special)
   const brochureUrl = getBrochureUrl(vehicle?.brochure)
   const vehicleHref = vehicle?.slug ? `/vehicles/${vehicle.slug}` : null
@@ -355,53 +368,61 @@ function SpecialDetailInfo({
           )}
           {hasDetailTabs && (
             <div className="min-w-0 flex-1">
-              <Tabs key={special.id} defaultValue="offer-details">
-                <TabsList
-                  variant="line"
-                  className="mb-4 flex h-auto w-full flex-wrap justify-start gap-x-1"
-                >
-                  <TabsTrigger value="offer-details">Offer Details</TabsTrigger>
-                  <TabsTrigger value="key-features">Key Features</TabsTrigger>
-                  {showFinanceCalculator && (
-                    <TabsTrigger value="finance-calculator">Finance Calculator</TabsTrigger>
-                  )}
-                </TabsList>
-                <TabsContent value="offer-details">
-                  {hasOfferDetails ? (
-                    offerDetails
-                  ) : (
-                    <p className="text-sm text-muted-foreground">No offer details available.</p>
-                  )}
-                </TabsContent>
-                <TabsContent value="key-features">
-                  {hasHighlights ? (
-                    <ul className="space-y-2">
-                      {highlights.map((item, i) => (
-                        <li
-                          key={item.id ?? i}
-                          className="flex items-start gap-2 text-sm text-muted-foreground"
-                        >
-                          <span className="text-primary mt-0.5 shrink-0">•</span>
-                          <span>{item.highlight}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">No key features available.</p>
-                  )}
-                </TabsContent>
-                {showFinanceCalculator && (
-                  <TabsContent value="finance-calculator">
-                    <FinanceCalculatorClient
-                      key={special.id}
-                      disclaimer={FINANCE_DISCLAIMER}
-                      defaultPurchasePrice={special.specialOffer}
-                      mode="repaymentOnly"
-                      defaults={calculatorDefaults}
-                    />
+              {isServiceSpecial ? (
+                offerDetails
+              ) : (
+                <Tabs key={special.id} defaultValue="offer-details">
+                  <TabsList
+                    variant="line"
+                    className="mb-4 flex h-auto w-full flex-wrap justify-start gap-x-1"
+                  >
+                    <TabsTrigger value="offer-details">Offer Details</TabsTrigger>
+                    {showKeyFeatures && (
+                      <TabsTrigger value="key-features">Key Features</TabsTrigger>
+                    )}
+                    {showFinanceCalculator && (
+                      <TabsTrigger value="finance-calculator">Finance Calculator</TabsTrigger>
+                    )}
+                  </TabsList>
+                  <TabsContent value="offer-details">
+                    {hasOfferDetails ? (
+                      offerDetails
+                    ) : (
+                      <p className="text-sm text-muted-foreground">No offer details available.</p>
+                    )}
                   </TabsContent>
-                )}
-              </Tabs>
+                  {showKeyFeatures && (
+                    <TabsContent value="key-features">
+                      {hasHighlights ? (
+                        <ul className="space-y-2">
+                          {highlights.map((item, i) => (
+                            <li
+                              key={item.id ?? i}
+                              className="flex items-start gap-2 text-sm text-muted-foreground"
+                            >
+                              <span className="text-primary mt-0.5 shrink-0">•</span>
+                              <span>{item.highlight}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">No key features available.</p>
+                      )}
+                    </TabsContent>
+                  )}
+                  {showFinanceCalculator && (
+                    <TabsContent value="finance-calculator">
+                      <FinanceCalculatorClient
+                        key={special.id}
+                        disclaimer={FINANCE_DISCLAIMER}
+                        defaultPurchasePrice={special.specialOffer}
+                        mode="repaymentOnly"
+                        defaults={calculatorDefaults}
+                      />
+                    </TabsContent>
+                  )}
+                </Tabs>
+              )}
             </div>
           )}
         </div>
@@ -425,6 +446,40 @@ function SpecialEnquiryForm({
       form={form}
       contextValues={buildSpecialContextValues(special, categoryTitle)}
     />
+  )
+}
+
+/** Empty mount target inside the open mobile accordion panel. */
+function MobileEnquiryFormMount({
+  active,
+  onMountChange,
+}: {
+  active: boolean
+  onMountChange: (node: HTMLElement | null) => void
+}) {
+  if (!active) return null
+  return <div ref={onMountChange} />
+}
+
+/** Single mobile enquiry form instance, portaled into the active special's panel. */
+function MobileSpecialEnquiryFormPortal({
+  mountNode,
+  form,
+  special,
+  categoryTitle,
+}: {
+  mountNode: HTMLElement | null
+  form: Form
+  special: SpecialTabItem
+  categoryTitle: string
+}) {
+  if (!mountNode) return null
+  return createPortal(
+    <div className="flex flex-col gap-4">
+      <h2 className="text-xl font-bold text-primary">Enquire Now</h2>
+      <SpecialEnquiryForm form={form} special={special} categoryTitle={categoryTitle} />
+    </div>,
+    mountNode,
   )
 }
 
@@ -506,6 +561,7 @@ function SpecialsTabsInner({
   const enquiryForm = selectedSpecial
     ? resolveEnquiryForm(selectedSpecial, categoryEnquiryForm)
     : null
+  const [mobileFormMountNode, setMobileFormMountNode] = useState<HTMLElement | null>(null)
 
   useEffect(() => {
     if (specials.length === 0 || !selectedSpecial?.slug) return
@@ -596,7 +652,7 @@ function SpecialsTabsInner({
 
   return (
     <div>
-      {/* Mobile: accordion + form below */}
+      {/* Mobile: accordion; enquiry form portaled into the open panel */}
       <div className="lg:hidden flex flex-col gap-6">
         <div className="border-b border-border">
           <div className="px-4 pb-2 text-xs font-medium tracking-wide text-muted-foreground">
@@ -644,6 +700,10 @@ function SpecialsTabsInner({
                         offerDetails={isSelected ? offerDetails : undefined}
                         calculatorDefaults={calculatorDefaults}
                       />
+                      <MobileEnquiryFormMount
+                        active={isSelected && Boolean(enquiryForm)}
+                        onMountChange={setMobileFormMountNode}
+                      />
                     </div>
                   </AccordionContent>
                 </AccordionItem>
@@ -653,7 +713,8 @@ function SpecialsTabsInner({
         </div>
 
         {enquiryForm && (
-          <SpecialEnquiryForm
+          <MobileSpecialEnquiryFormPortal
+            mountNode={mobileFormMountNode}
             form={enquiryForm}
             special={selectedSpecial}
             categoryTitle={categoryTitle}

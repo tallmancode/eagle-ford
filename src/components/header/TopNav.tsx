@@ -37,7 +37,6 @@ export const TopNav = ({
                 className={cn(
                   navLinkFocusResetClass,
                   'hover:text-light-400 transition-colors',
-                  homeActive && 'text-light-400',
                 )}
               >
                 {topNavProps?.homeLinkText}
@@ -88,7 +87,6 @@ export const TopNav = ({
           links={topNavProps?.topNavLinks}
           className="flex justify-end"
           linkClassName="hover:text-light-400"
-          activeClassName="text-light-400"
         />
       </div>
     </div>
