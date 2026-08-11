@@ -135,7 +135,7 @@ Ship path (workspace `.cursor/rules/git-promotion-flow.mdc` + root `AGENTS.md` i
 feature/fix → PR → develop → PR → staging → PR → main → deploy
 ```
 
-- Merge to **`staging`** → `.github/workflows/deploy-staging.yml` → `https://ford-stg.tallmancode.co.za` (Basic Auth)
+- Merge to **`staging`** → manual **Deploy Staging** workflow → `https://ford-stg.tallmancode.co.za` (Basic Auth)
 - Merge to **`main`** → `.github/workflows/deploy.yml` → live site
 - Full VPS layout, compose names, and access control: workspace root [`../AGENTS.md`](../AGENTS.md)
 

@@ -1,43 +1,41 @@
 ---
-description: Temporary fast-main Git flow (override until explicitly restored)
+description: Git promotion flow — develop → staging → main (manual staging deploy)
 alwaysApply: true
 ---
 
-# Git Promotion Flow (TEMPORARY — fast main)
-
-**Until the user says otherwise**, do **not** use `develop` → `staging` → `main`.
-
-```
-feature/fix branch → PR → main → deploy
-```
-
-## Default working branch
-
-- Branch off **`main`**, not `develop` or `staging`.
-- Open feature and fix PRs **into `main`**.
-- Rebase/compare against `origin/main` when preparing PRs.
-
-## Do not use promotion gates
-
-- Do **not** open PRs targeting `develop` or `staging` unless the user asks.
-- Do **not** wait for or run the develop/staging promotion path.
-
-## Production deploy
-
-- Merging to **`main`** triggers `.github/workflows/deploy.yml` and deploys to production.
-- That is intentional in this mode — merge carefully; every main merge can deploy.
-
-## CI
-
-- Heavy PR CI is **disabled** (workflow is `workflow_dispatch` only).
-- Main ruleset should not require the `CI` status check while this mode is active.
-
-## Restoring normal flow
-
-When the user asks to restore the normal path, switch back to:
+# Git Promotion Flow
 
 ```
 feature/fix branch → PR → develop → PR → staging → PR → main → deploy
 ```
 
-and re-enable `.github/workflows/ci.yml` pull_request triggers plus Main ruleset required checks.
+## Default working branch
+
+- Branch off **`develop`**, not `main` or `staging`.
+- Open feature and fix PRs **into `develop`**.
+- Rebase/compare against `origin/develop` when preparing PRs.
+- Do **not** push or commit directly to `develop`, `staging`, or `main` — open a PR, then merge.
+
+## Promotion gates
+
+| Step | Action | Deploy |
+|------|--------|--------|
+| Feature → `develop` | PR + CI | none |
+| `develop` → `staging` | PR + CI | none (manual staging deploy when ready) |
+| `staging` → `main` | Release PR (`/release-to-main`) + CI | `deploy.yml` on merge to `main` |
+
+## Production / staging deploys
+
+- **Staging is manual only** — Actions → **Deploy Staging** (`workflow_dispatch`). Merging to `staging` does **not** spin up Docker.
+- Merging to **`main`** deploys production.
+- Manual redeploy: Actions → Deploy Staging / Deploy Production → `workflow_dispatch`.
+
+## CI
+
+- `.github/workflows/ci.yml` runs on `pull_request` to `develop`, `staging`, and `main`.
+- Require the **CI** check on protected branches when rulesets are enabled.
+
+## Slash commands
+
+- `/push-to-git` — feature/fix work → PR into **`develop`**
+- `/release-to-main` — `staging` → `main` release PR
