@@ -150,6 +150,39 @@ export const SettingsGlobal: GlobalConfig = {
           ],
         },
         {
+          label: 'WhatsApp Button',
+          name: 'whatsappButton',
+          interfaceName: 'WhatsAppButtonSettings',
+          fields: [
+            {
+              name: 'whatsappNumber',
+              label: 'WhatsApp Number',
+              type: 'text',
+              admin: {
+                description:
+                  'Leave empty to hide the floating WhatsApp button. Accepts local (0xx...) or international (+27...) formats.',
+              },
+              validate: (value: string | null | undefined) => {
+                if (!value) return true
+                const pattern = /^\+?[\d\s\-().]{7,20}$/
+                return (
+                  pattern.test(value) || 'Must be a valid phone number (e.g. 084 474 0088)'
+                )
+              },
+            },
+            {
+              name: 'whatsappMessage',
+              label: 'Pre-filled message',
+              type: 'text',
+              defaultValue: 'Hi. Can you please assist? I am currently viewing {url}',
+              admin: {
+                description:
+                  'Message pre-filled when the chat opens. {url} is replaced with the current page URL.',
+              },
+            },
+          ],
+        },
+        {
           label: 'Forms',
           fields: [
             {
