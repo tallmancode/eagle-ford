@@ -25,6 +25,7 @@ export function StockVehicleHero({ vehicle }: Props) {
   const [activeIndex, setActiveIndex] = useState(0)
 
   const title = getVehicleDisplayName(vehicle)
+  const year = typeof vehicle.year === 'number' && Number.isFinite(vehicle.year) ? vehicle.year : null
   const subtitle = vehicle.modelRange?.trim() || null
   const price = getVehiclePrice(vehicle)
   const conditionLabel =
@@ -94,7 +95,16 @@ export function StockVehicleHero({ vehicle }: Props) {
             </div>
 
             <div>
-              <h1 className="text-2xl font-bold text-primary-900 md:text-3xl">{title}</h1>
+              <h1 className="flex items-start gap-3">
+                <span className="min-w-0 flex-1 text-2xl font-bold text-primary-900 md:text-3xl">
+                  {title}
+                </span>
+                {year ? (
+                  <span className="shrink-0 pt-1 text-base font-medium tabular-nums text-primary-700 md:text-lg">
+                    {year}
+                  </span>
+                ) : null}
+              </h1>
               {subtitle && <p className="mt-2 text-lg text-neutral-600">{subtitle}</p>}
             </div>
 
