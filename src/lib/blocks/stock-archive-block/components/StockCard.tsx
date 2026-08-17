@@ -31,6 +31,8 @@ function SpecItem({ icon: Icon, label }: { icon: typeof Gauge; label: string }) 
 export function StockCard({ vehicle }: Props) {
   const image = getStockImageUrl(vehicle.media)
   const title = getVehicleDisplayName(vehicle)
+  const year = typeof vehicle.year === 'number' && Number.isFinite(vehicle.year) ? vehicle.year : null
+  const titleWithYear = year ? `${title} ${year}` : title
   const price = getVehiclePrice(vehicle)
   const detailsHref = buildStockVehiclePath(vehicle)
   const enquireHref = buildStockVehicleEnquirePath(vehicle)
@@ -71,10 +73,17 @@ export function StockCard({ vehicle }: Props) {
         <div className="px-4 pt-4 pb-3">
           <Link href={detailsHref}>
             <h3
-              className="line-clamp-2 min-h-12 text-base font-bold text-primary-900 hover:underline"
-              title={title}
+              className="flex items-start gap-3 hover:underline"
+              title={titleWithYear}
             >
-              {title}
+              <span className="line-clamp-2 min-h-12 min-w-0 flex-1 text-base font-bold text-primary-900">
+                {title}
+              </span>
+              {year ? (
+                <span className="shrink-0 pt-0.5 text-sm font-medium tabular-nums text-primary-700">
+                  {year}
+                </span>
+              ) : null}
             </h3>
           </Link>
         </div>
