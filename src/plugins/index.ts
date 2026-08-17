@@ -34,6 +34,7 @@ import { injectFormSubmissionLead } from '@/lib/motor-city-leads/injectFormSubmi
 import { patchExportCollectionFields } from '@/components/admin/export/patchExportCollectionFields'
 import { aiSeoPlugin } from '@/plugins/ai-seo'
 import { aiMediaSuggestionsPlugin } from '@/plugins/ai-media-suggestions'
+import { mediaGalleryPlugin } from '@sitebytom/payload-media-gallery'
 
 const formStepRowLabelPath = '@/lib/blocks/form-block/components/FormStepRowLabel#FormStepRowLabel'
 
@@ -246,5 +247,28 @@ export const plugins: Plugin[] = [
   sentryPlugin({
     enabled: true,
     Sentry,
+  }),
+  mediaGalleryPlugin({
+    collections: {
+      media: true,
+    },
+    defaultView: 'justified', // 'justified' | 'masonry' | 'grid' | 'list'
+    layouts: {
+      justified: {
+        enabled: true,
+        footer: 'hover', // 'hover' | 'always'
+      },
+      masonry: {
+        enabled: true,
+        footer: 'hover', // 'hover' | 'always'
+      },
+      grid: {
+        enabled: true,
+        footer: 'hover', // 'hover' | 'always'
+      },
+    },
+    lightbox: true,
+    edit: true,
+    disabled: false,
   }),
 ]

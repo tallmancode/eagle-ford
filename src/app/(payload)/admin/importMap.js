@@ -17,6 +17,7 @@ import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { LinkFeatureClient as LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { AISuggestionsField as AISuggestionsField_0190be129daba9a859a99c82bea4405d } from '@/plugins/ai-media-suggestions/components/AISuggestionsField'
+import { MediaGallery as MediaGallery_6f514b404e7f1589cac282e4c156f993 } from '@sitebytom/payload-media-gallery/client'
 import { FormFieldNameInput as FormFieldNameInput_5007207a7f34924ed7587506bd56b263 } from '@/lib/blocks/form-block/components/FormFieldNameInput'
 import { FormFieldRowLabel as FormFieldRowLabel_a109948c17002fcd236dfd1580ad32fc } from '@/lib/blocks/form-block/components/FormFieldRowLabel'
 import { FormStepRowLabel as FormStepRowLabel_4877ce19d078fdaae63ddc21b2694074 } from '@/lib/blocks/form-block/components/FormStepRowLabel'
@@ -122,6 +123,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#LinkFeatureClient": LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/plugins/ai-media-suggestions/components/AISuggestionsField#AISuggestionsField": AISuggestionsField_0190be129daba9a859a99c82bea4405d,
+  "@sitebytom/payload-media-gallery/client#MediaGallery": MediaGallery_6f514b404e7f1589cac282e4c156f993,
   "@/lib/blocks/form-block/components/FormFieldNameInput#FormFieldNameInput": FormFieldNameInput_5007207a7f34924ed7587506bd56b263,
   "@/lib/blocks/form-block/components/FormFieldRowLabel#FormFieldRowLabel": FormFieldRowLabel_a109948c17002fcd236dfd1580ad32fc,
   "@/lib/blocks/form-block/components/FormStepRowLabel#FormStepRowLabel": FormStepRowLabel_4877ce19d078fdaae63ddc21b2694074,
