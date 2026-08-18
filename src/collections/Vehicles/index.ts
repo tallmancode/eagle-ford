@@ -3,6 +3,7 @@ import { slugField } from 'payload'
 
 import { populatePublishedAt } from '@/lib/hooks/populatePublishedAt'
 import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
+import { formatVehicleBadge } from '@/lib/utils/formatVehicleBadge'
 import { generatePreviewPath } from '@/lib/utils/generatePreviewPath'
 import { revalidateVehicle, revalidateVehicleDelete } from './hooks/revalidateVehicle'
 
@@ -57,14 +58,25 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
             {
               name: 'badge',
               label: 'Badge',
-              type: 'select',
-              options: [
-                { label: 'Newly Launched', value: 'newly-launched' },
-                { label: 'Coming Soon', value: 'coming-soon' },
-                { label: 'Limited', value: 'limited' },
-              ],
+              type: 'text',
+              maxLength: 40,
               admin: {
-                description: 'Optional marketing badge displayed on listing cards.',
+                description:
+                  'Optional marketing badge shown on listing cards and the vehicle hero. Type the exact wording, e.g. Newly Launched.',
+              },
+              hooks: {
+                afterRead: [
+                  ({ value }) => {
+                    const formatted = formatVehicleBadge(value)
+                    return formatted || null
+                  },
+                ],
+                beforeChange: [
+                  ({ value }) => {
+                    const formatted = formatVehicleBadge(value)
+                    return formatted || null
+                  },
+                ],
               },
             },
             {

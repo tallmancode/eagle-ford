@@ -6,26 +6,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { MediaImage } from '@/components/ui/media-image'
 import { formatPrice } from '@/lib/utils/formatPrice'
+import { formatVehicleBadge } from '@/lib/utils/formatVehicleBadge'
 import type { Media, VehicleCategory } from '@/payload-types'
 
 export type VehicleCatalogItem = {
   id: string
   name: string
   slug: string
-  badge?: ('newly-launched' | 'coming-soon' | 'limited') | null
+  badge?: string | null
   featureImage: string | Media | null
   categorySlug: string
   startingPrice?: number | null
   priceDisclaimer?: string | null
 }
 
-const badgeLabels: Record<string, string> = {
-  'newly-launched': 'Newly Launched',
-  'coming-soon': 'Coming Soon',
-  limited: 'Limited',
-}
-
 function VehicleCatalogCard({ vehicle }: { vehicle: VehicleCatalogItem }) {
+  const badge = formatVehicleBadge(vehicle.badge)
+
   return (
     <div className="flex h-full flex-col items-center bg-card rounded-lg shadow-sm p-0 border border-border/40">
       <div className="relative w-full aspect-[3/2] mb-3">
@@ -40,10 +37,8 @@ function VehicleCatalogCard({ vehicle }: { vehicle: VehicleCatalogItem }) {
       <h3 className="uppercase text-primary font-bold text-center text-sm leading-tight">
         {vehicle.name}
       </h3>
-      {vehicle.badge && (
-        <span className="mt-1 text-xs uppercase text-muted-foreground text-center">
-          {badgeLabels[vehicle.badge] ?? vehicle.badge}
-        </span>
+      {badge && (
+        <span className="mt-1 text-xs uppercase text-muted-foreground text-center">{badge}</span>
       )}
       {vehicle.startingPrice != null && (
         <p className="mt-2 text-sm text-muted-foreground text-center">
