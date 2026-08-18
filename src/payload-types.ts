@@ -1692,9 +1692,9 @@ export interface Vehicle {
    */
   name: string;
   /**
-   * Optional marketing badge displayed on listing cards.
+   * Optional marketing badge shown on listing cards and the vehicle hero. Type the exact wording, e.g. Newly Launched.
    */
-  badge?: ('newly-launched' | 'coming-soon' | 'limited') | null;
+  badge?: string | null;
   category: string | VehicleCategory;
   /**
    * Hero subtitle, e.g. "Built here. Built different."
