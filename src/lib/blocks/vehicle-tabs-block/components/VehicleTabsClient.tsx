@@ -4,24 +4,21 @@ import React from 'react'
 import Link from 'next/link'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { MediaImage } from '@/components/ui/media-image'
+import { formatVehicleBadge } from '@/lib/utils/formatVehicleBadge'
 import type { Media, VehicleCategory } from '@/payload-types'
 
 export type VehicleTabItem = {
   id: string
   name: string
   slug: string
-  badge?: ('newly-launched' | 'coming-soon' | 'limited') | null
+  badge?: string | null
   featureImage: string | Media | null
   categorySlug: string
 }
 
-const badgeLabels: Record<string, string> = {
-  'newly-launched': 'Newly Launched',
-  'coming-soon': 'Coming Soon',
-  limited: 'Limited',
-}
-
 function VehicleCard({ vehicle }: { vehicle: VehicleTabItem }) {
+  const badge = formatVehicleBadge(vehicle.badge)
+
   return (
     <Link
       href={`/vehicles/${vehicle.slug}`}
@@ -42,7 +39,7 @@ function VehicleCard({ vehicle }: { vehicle: VehicleTabItem }) {
           {vehicle.name}
         </h3>
         <span className="mt-1 min-h-[1rem] text-center text-xs text-muted-foreground">
-          {vehicle.badge ? (badgeLabels[vehicle.badge] ?? vehicle.badge) : '\u00A0'}
+          {badge || '\u00A0'}
         </span>
       </div>
     </Link>
