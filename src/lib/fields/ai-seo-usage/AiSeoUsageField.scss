@@ -1,0 +1,60 @@
+.ai-seo-usage {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-width: 56rem;
+  margin: 1.5rem 0 0;
+}
+
+.ai-seo-usage__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ai-seo-usage__heading {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.ai-seo-usage__intro {
+  margin: 0;
+  color: var(--theme-elevation-800);
+  line-height: 1.45;
+}
+
+.ai-seo-usage__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.75rem 1.25rem;
+  margin: 0;
+}
+
+.ai-seo-usage__stats dt {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.ai-seo-usage__stats dd {
+  margin: 0.15rem 0 0;
+}
+
+.ai-seo-usage__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.ai-seo-usage__table th,
+.ai-seo-usage__table td {
+  text-align: left;
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid var(--theme-elevation-150);
+}
+
+.ai-seo-usage__table th {
+  font-weight: 600;
+}

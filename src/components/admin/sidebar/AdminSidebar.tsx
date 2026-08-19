@@ -2,11 +2,14 @@ import type { ServerProps } from 'payload'
 import React from 'react'
 import { FC } from 'react'
 import { AdminSidebarWrapper } from '@/components/admin/sidebar/AdminSidebarWrapper'
+import { NavHamburger } from '@/components/admin/sidebar/NavHamburger'
+import { NavBrand } from '@/components/admin/sidebar/NavBrand'
 import { RenderServerComponent } from '@payloadcms/ui/elements/RenderServerComponent'
 import { AdminSidebarClient } from '@/components/admin/sidebar/AdminSidebar.client'
 import { EntityToGroup, groupNavItems, EntityType } from '@payloadcms/ui/utilities/groupNavItems'
 import { getNavPrefs } from '@/components/admin/sidebar/getNavPrefs'
 import { Logout } from '@payloadcms/ui'
+
 export const baseClass = 'nav'
 
 export const AdminSidebar: FC<ServerProps> = async (props) => {
@@ -119,8 +122,14 @@ export const AdminSidebar: FC<ServerProps> = async (props) => {
             user,
           },
         })}
-        <div className={`${baseClass}__controls`}>{LogoutComponent} </div>
+        <div className={`${baseClass}__controls`}>{LogoutComponent}</div>
       </nav>
+      <div className={`${baseClass}__header`}>
+        <div className={`${baseClass}__header-content`}>
+          <NavHamburger baseClass={baseClass} />
+          <NavBrand />
+        </div>
+      </div>
     </AdminSidebarWrapper>
   )
 }

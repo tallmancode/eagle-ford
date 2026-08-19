@@ -1,9 +1,11 @@
+import { AiSeoGenerateField as AiSeoGenerateField_56a94d6d0b506cd89b717751dfae1ab3 } from '@/lib/fields/ai-seo-generate/AiSeoGenerateField'
 import { OverviewComponent as OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
-import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
+import { SeoPreviewField as SeoPreviewField_f443a34b87b80a89471d96f29bec6958 } from '@/lib/fields/seo-preview/SeoPreviewField'
 import { SlugField as SlugField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
+import { LiveEditorToggle as LiveEditorToggle_d26de2934fab2f5e50b16fb3e402473a } from 'payload-better-editor/client'
 import { MediaDescription as MediaDescription_bb74f08ef291af65d747d73b27358139 } from '../../../lib/components/media-description/MediaDescription'
 import { MediaAltField as MediaAltField_0a93eb78e36d9bee47d81accd7e33eb0 } from '@/lib/components/media-alt-field/MediaAltField'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -16,7 +18,6 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { LinkFeatureClient as LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
-import { AISuggestionsField as AISuggestionsField_0190be129daba9a859a99c82bea4405d } from '@/plugins/ai-media-suggestions/components/AISuggestionsField'
 import { MediaGallery as MediaGallery_6f514b404e7f1589cac282e4c156f993 } from '@sitebytom/payload-media-gallery/client'
 import { FormFieldNameInput as FormFieldNameInput_5007207a7f34924ed7587506bd56b263 } from '@/lib/blocks/form-block/components/FormFieldNameInput'
 import { FormFieldRowLabel as FormFieldRowLabel_a109948c17002fcd236dfd1580ad32fc } from '@/lib/blocks/form-block/components/FormFieldRowLabel'
@@ -42,11 +43,10 @@ import { SocialIconRowLabel as SocialIconRowLabel_27f6a7a8b6f24a71f102f20c13591e
 import { EmailTestSendField as EmailTestSendField_41dc44921056684a68ecc60f54e17a4e } from '@/lib/fields/email-test-send/EmailTestSendField'
 import { MotorCityStockTestField as MotorCityStockTestField_d64c2bfdf00944370981c95fab9bbd83 } from '@/lib/fields/motor-city-stock-test/MotorCityStockTestField'
 import { DiagnosticsButtonsComponent as DiagnosticsButtonsComponent_41168ffed8f2b43822ee663c6a9481aa } from '@/lib/fields/diagnostics/DiagnosticsButtonsComponent'
+import { AiSeoUsageField as AiSeoUsageField_544e054ce7cf34362d551cc52c6edda6 } from '@/lib/fields/ai-seo-usage/AiSeoUsageField'
 import { MediaCleanupComponent as MediaCleanupComponent_75003b8b08ca0a0451295f801b7dc13a } from '@/lib/fields/media-cleanup/MediaCleanupComponent'
 import { CacheBustComponent as CacheBustComponent_18d9d289e2207348fc87a9a60d05e532 } from '@/lib/fields/cache-bust/CacheBustComponent'
-import { RefetchModelsButton as RefetchModelsButton_1482bb9764efcd52471be065d8f464e8 } from '@/plugins/ai-media-suggestions/components/RefetchModelsButton'
-import { RedactedApiKeyField as RedactedApiKeyField_b7c1f6f5bcf865fd1e7d2a5036e8a253 } from '@/plugins/ai-media-suggestions/components/RedactedApiKeyField'
-import { TestProviderButton as TestProviderButton_133a27e68db993634d085274a9f982aa } from '@/plugins/ai-media-suggestions/components/TestProviderButton'
+import { SettingsBanner as SettingsBanner_d26de2934fab2f5e50b16fb3e402473a } from 'payload-better-editor/client'
 import { SpacingLayoutField as SpacingLayoutField_159c820f40a576f4549e5527a6f70bac } from '@/lib/fields/layout-field/components/SpacingLayoutField'
 import { VisibilityLayoutField as VisibilityLayoutField_a24a3da0769b86a04fcfabb0206dea74 } from '@/lib/fields/layout-field/components/VisibilityLayoutField'
 import { default as default_e301b8bae2b26609d383354140baa92e } from '../../../lib/blocks/section-block/components/SectionBlockLabel'
@@ -94,7 +94,7 @@ import { default as default_bacf9c6f1edd235d0a5b232acada4d25 } from '../../../li
 import { default as default_0653e47a855c4b8ee2332564f959f11c } from '../../../lib/blocks/reviews-block/components/ReviewsBlockLabel'
 import { default as default_c4459d653230b67c2c4fe8ec95131ba0 } from '../../../lib/blocks/vehicle-tabs-block/components/VehicleTabsBlockLabel'
 import { default as default_a7653596fe6e03539b30d7c2a5614de8 } from '../../../lib/blocks/vehicle-catalog-block/components/VehicleCatalogBlockLabel'
-import { LiveStockNavLink as LiveStockNavLink_e8acb1be7b2f6864021d27929c086ced } from '@/components/admin/sidebar/LiveStockNavLink'
+import { AdminSidebar as AdminSidebar_60bcee78bdf110a4097ac7eff655a661 } from '@/components/admin/sidebar/AdminSidebar'
 import { default as default_8a7ab0eb7ab5c511aba12e68480bfe5e } from '@/components/BeforeLogin'
 import { ImportExportProvider as ImportExportProvider_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { AdminErrorBoundary as AdminErrorBoundary_e5a9e14bdbe97e70ba60697217fe7688 } from '@payloadcms/plugin-sentry/client'
@@ -104,12 +104,14 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "@/lib/fields/ai-seo-generate/AiSeoGenerateField#AiSeoGenerateField": AiSeoGenerateField_56a94d6d0b506cd89b717751dfae1ab3,
   "@payloadcms/plugin-seo/client#OverviewComponent": OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaTitleComponent": MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860,
-  "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
+  "@/lib/fields/seo-preview/SeoPreviewField#SeoPreviewField": SeoPreviewField_f443a34b87b80a89471d96f29bec6958,
   "@payloadcms/next/client#SlugField": SlugField_2b8867833a34864a02ddf429b0728a40,
+  "payload-better-editor/client#LiveEditorToggle": LiveEditorToggle_d26de2934fab2f5e50b16fb3e402473a,
   "/lib/components/media-description/MediaDescription#MediaDescription": MediaDescription_bb74f08ef291af65d747d73b27358139,
   "@/lib/components/media-alt-field/MediaAltField#MediaAltField": MediaAltField_0a93eb78e36d9bee47d81accd7e33eb0,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -122,7 +124,6 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#LinkFeatureClient": LinkFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
-  "@/plugins/ai-media-suggestions/components/AISuggestionsField#AISuggestionsField": AISuggestionsField_0190be129daba9a859a99c82bea4405d,
   "@sitebytom/payload-media-gallery/client#MediaGallery": MediaGallery_6f514b404e7f1589cac282e4c156f993,
   "@/lib/blocks/form-block/components/FormFieldNameInput#FormFieldNameInput": FormFieldNameInput_5007207a7f34924ed7587506bd56b263,
   "@/lib/blocks/form-block/components/FormFieldRowLabel#FormFieldRowLabel": FormFieldRowLabel_a109948c17002fcd236dfd1580ad32fc,
@@ -148,11 +149,10 @@ export const importMap = {
   "@/lib/fields/email-test-send/EmailTestSendField#EmailTestSendField": EmailTestSendField_41dc44921056684a68ecc60f54e17a4e,
   "@/lib/fields/motor-city-stock-test/MotorCityStockTestField#MotorCityStockTestField": MotorCityStockTestField_d64c2bfdf00944370981c95fab9bbd83,
   "@/lib/fields/diagnostics/DiagnosticsButtonsComponent#DiagnosticsButtonsComponent": DiagnosticsButtonsComponent_41168ffed8f2b43822ee663c6a9481aa,
+  "@/lib/fields/ai-seo-usage/AiSeoUsageField#AiSeoUsageField": AiSeoUsageField_544e054ce7cf34362d551cc52c6edda6,
   "@/lib/fields/media-cleanup/MediaCleanupComponent#MediaCleanupComponent": MediaCleanupComponent_75003b8b08ca0a0451295f801b7dc13a,
   "@/lib/fields/cache-bust/CacheBustComponent#CacheBustComponent": CacheBustComponent_18d9d289e2207348fc87a9a60d05e532,
-  "@/plugins/ai-media-suggestions/components/RefetchModelsButton#RefetchModelsButton": RefetchModelsButton_1482bb9764efcd52471be065d8f464e8,
-  "@/plugins/ai-media-suggestions/components/RedactedApiKeyField#RedactedApiKeyField": RedactedApiKeyField_b7c1f6f5bcf865fd1e7d2a5036e8a253,
-  "@/plugins/ai-media-suggestions/components/TestProviderButton#TestProviderButton": TestProviderButton_133a27e68db993634d085274a9f982aa,
+  "payload-better-editor/client#SettingsBanner": SettingsBanner_d26de2934fab2f5e50b16fb3e402473a,
   "@/lib/fields/layout-field/components/SpacingLayoutField#SpacingLayoutField": SpacingLayoutField_159c820f40a576f4549e5527a6f70bac,
   "@/lib/fields/layout-field/components/VisibilityLayoutField#VisibilityLayoutField": VisibilityLayoutField_a24a3da0769b86a04fcfabb0206dea74,
   "/lib/blocks/section-block/components/SectionBlockLabel#default": default_e301b8bae2b26609d383354140baa92e,
@@ -200,7 +200,7 @@ export const importMap = {
   "/lib/blocks/reviews-block/components/ReviewsBlockLabel#default": default_0653e47a855c4b8ee2332564f959f11c,
   "/lib/blocks/vehicle-tabs-block/components/VehicleTabsBlockLabel#default": default_c4459d653230b67c2c4fe8ec95131ba0,
   "/lib/blocks/vehicle-catalog-block/components/VehicleCatalogBlockLabel#default": default_a7653596fe6e03539b30d7c2a5614de8,
-  "@/components/admin/sidebar/LiveStockNavLink#LiveStockNavLink": LiveStockNavLink_e8acb1be7b2f6864021d27929c086ced,
+  "@/components/admin/sidebar/AdminSidebar#AdminSidebar": AdminSidebar_60bcee78bdf110a4097ac7eff655a661,
   "@/components/BeforeLogin#default": default_8a7ab0eb7ab5c511aba12e68480bfe5e,
   "@payloadcms/plugin-import-export/rsc#ImportExportProvider": ImportExportProvider_cdf7e044479f899a31f804427d568b36,
   "@payloadcms/plugin-sentry/client#AdminErrorBoundary": AdminErrorBoundary_e5a9e14bdbe97e70ba60697217fe7688,

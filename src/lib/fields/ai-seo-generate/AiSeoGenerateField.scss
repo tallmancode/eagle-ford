@@ -1,0 +1,14 @@
+.ai-seo-generate {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin: 0 0 1.25rem;
+}
+
+.ai-seo-generate__intro {
+  margin: 0;
+  color: var(--theme-elevation-800);
+  line-height: 1.45;
+  max-width: 46rem;
+}
