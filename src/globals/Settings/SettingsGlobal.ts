@@ -326,6 +326,18 @@ export const SettingsGlobal: GlobalConfig = {
           },
           fields: [
             {
+              name: 'aiSeoMonthlyBudgetUsd',
+              type: 'number',
+              label: 'Monthly AI SEO budget (USD)',
+              defaultValue: 25,
+              min: 0,
+              admin: {
+                description:
+                  'Estimated spend cap for Anthropic SEO generation this calendar month (UTC). Override with AI_SEO_MONTHLY_BUDGET_USD in the server env if set. Generation stops when remaining budget reaches zero.',
+                step: 1,
+              },
+            },
+            {
               type: 'ui',
               label: 'Diagnostics',
               name: 'diagnosticsDisplay',
@@ -333,6 +345,16 @@ export const SettingsGlobal: GlobalConfig = {
                 components: {
                   Field:
                     '@/lib/fields/diagnostics/DiagnosticsButtonsComponent#DiagnosticsButtonsComponent',
+                },
+              },
+            },
+            {
+              type: 'ui',
+              label: 'AI SEO usage',
+              name: 'aiSeoUsageDisplay',
+              admin: {
+                components: {
+                  Field: '@/lib/fields/ai-seo-usage/AiSeoUsageField#AiSeoUsageField',
                 },
               },
             },

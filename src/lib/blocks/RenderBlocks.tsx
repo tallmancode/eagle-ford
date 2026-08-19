@@ -223,7 +223,16 @@ export function renderBlock(
 
     if (Block) {
       const key = 'id' in block && block.id ? block.id : `${blockType}-${index}`
-      return <Block {...block} meta={meta} key={key} />
+      const betterEditorId = 'id' in block && block.id ? String(block.id) : undefined
+      return (
+        <div
+          key={key}
+          className="w-full"
+          {...(betterEditorId ? { 'data-better-editor-id': betterEditorId } : {})}
+        >
+          <Block {...block} meta={meta} />
+        </div>
+      )
     }
   }
   return null
