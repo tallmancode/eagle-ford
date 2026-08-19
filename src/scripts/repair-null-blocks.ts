@@ -38,7 +38,7 @@ async function repairPages(payload: Payload, draft: boolean, stats: RepairStats)
           disableRevalidate: true,
         },
         data: {
-          content: sanitized.content,
+          section: sanitized.section,
         },
         draft,
         id: doc.id,

@@ -33,7 +33,7 @@ export default buildConfig({
           exact: true,
         },
       },
-      afterNavLinks: ['@/components/admin/sidebar/LiveStockNavLink#LiveStockNavLink'],
+      Nav: '@/components/admin/sidebar/AdminSidebar#AdminSidebar',
       beforeLogin: ['@/components/BeforeLogin'],
     },
     importMap: {

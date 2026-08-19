@@ -1,15 +1,22 @@
 import type { GenerateDescription } from '@payloadcms/plugin-seo/types'
 import type { Page } from '@/payload-types'
+import { generatePageSeo } from '@/lib/ai-seo/generatePageSeo'
+import { fallbackSeoDescription } from '@/lib/ai-seo/fallbacks'
 
-const MAX_LENGTH = 155
+const generateDescription: GenerateDescription<Page> = async ({ doc, req, collectionSlug }) => {
+  if (!req?.payload) {
+    return fallbackSeoDescription(doc)
+  }
 
-const generateDescription: GenerateDescription<Page> = ({ doc }) => {
-  const title = typeof doc?.title === 'string' ? doc.title.trim() : ''
-  if (!title) return ''
+  const result = await generatePageSeo({
+    doc,
+    payload: req.payload,
+    req,
+    collectionSlug: collectionSlug ?? 'pages',
+  })
 
-  const description = `${title} — Eagle Ford. Explore features, specs, and offers.`
-  if (description.length <= MAX_LENGTH) return description
-  return `${description.slice(0, MAX_LENGTH - 1).trimEnd()}…`
+  if (result.ok) return result.description
+  return result.fallbackDescription
 }
 
 export default generateDescription

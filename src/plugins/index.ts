@@ -32,9 +32,8 @@ import { getLmsLeadInjectionFields } from '@/lib/motor-city-leads/formFields'
 import { getMotorCityLeadSubmissionFields } from '@/lib/motor-city-leads/formSubmissionFields'
 import { injectFormSubmissionLead } from '@/lib/motor-city-leads/injectFormSubmissionLead'
 import { patchExportCollectionFields } from '@/components/admin/export/patchExportCollectionFields'
-import { aiSeoPlugin } from '@/plugins/ai-seo'
-import { aiMediaSuggestionsPlugin } from '@/plugins/ai-media-suggestions'
 import { mediaGalleryPlugin } from '@sitebytom/payload-media-gallery'
+import { betterEditor } from 'payload-better-editor'
 
 const formStepRowLabelPath = '@/lib/blocks/form-block/components/FormStepRowLabel#FormStepRowLabel'
 
@@ -72,8 +71,6 @@ export const plugins: Plugin[] = [
     generateDescription,
     generateURL,
   }),
-  aiSeoPlugin(),
-  aiMediaSuggestionsPlugin(),
   formBuilderPlugin({
     fields: {
       date: true,
@@ -270,5 +267,9 @@ export const plugins: Plugin[] = [
     lightbox: true,
     edit: true,
     disabled: false,
+  }),
+  betterEditor({
+    blocksField: 'section',
+    collections: ['pages'],
   }),
 ]

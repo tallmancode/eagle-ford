@@ -17,6 +17,7 @@
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "repair:null-blocks": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/repair-null-blocks.ts",
     "repair:vehicle-slug-indexes": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/repair-vehicle-slug-indexes.ts",
+    "migrate:section-top-level": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/migrate-section-to-top-level.ts",
     "reinstall": "cross-env NODE_OPTIONS=--no-deprecation rm -rf node_modules && rm pnpm-lock.yaml && pnpm --ignore-workspace install",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "test": "pnpm run test:int && pnpm run test:e2e",
@@ -24,8 +25,7 @@
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.112.5",
-    "@google/generative-ai": "^0.24.1",
+    "@anthropic-ai/sdk": "^0.117.1",
     "@next/third-parties": "^16.2.9",
     "@payloadcms/admin-bar": "3.85.1",
     "@payloadcms/db-mongodb": "3.85.1",
@@ -65,8 +65,8 @@
     "motion": "^12.42.0",
     "next": "16.2.6",
     "nodemailer": "^8.0.11",
-    "ollama": "^0.6.3",
     "payload": "3.85.1",
+    "payload-better-editor": "^1.4.0",
     "prism-react-renderer": "^2.3.1",
     "react": "19.2.6",
     "react-day-picker": "^10.0.1",

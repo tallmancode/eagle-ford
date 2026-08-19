@@ -10,6 +10,7 @@ import { VehicleModelsCollection } from '@/collections/VehicleModels'
 import { VehicleVariantsCollection } from '@/collections/VehicleVariants'
 import { VehicleTemplatesCollection } from '@/collections/VehicleTemplates'
 import { VehicleModelTemplatesCollection } from '@/collections/VehicleModelTemplates'
+import { AiSeoUsageCollection } from '@/collections/AiSeoUsage'
 
 const collections: CollectionConfig[] = [
   PagesCollection,
@@ -23,6 +24,7 @@ const collections: CollectionConfig[] = [
   VehiclesCollection,
   VehicleModelsCollection,
   VehicleVariantsCollection,
+  AiSeoUsageCollection,
 ]
 
 export default collections
