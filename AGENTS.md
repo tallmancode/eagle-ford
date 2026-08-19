@@ -12,7 +12,7 @@ This app is a **satellite site** that consumes live stock from Eagle Motor City 
 
 - Fetches live stock from Motor City via `@/lib/motor-city-stock` (`fetchStock`, `getCachedStock`)
 - For filter UIs, call Motor City's `GET /api/stock/[dealerCode]/filters` endpoint — see [`../eagle-motor-city/AGENTS.md`](../eagle-motor-city/AGENTS.md) for query params and response shape
-- Admin view: **Live Stock** link in the Payload sidebar (below nav groups)
+- Admin view: **Live Stock** in the Payload sidebar under **Data Management**
 - Requires env: `MOTOR_CITY_STOCK_API_URL`, `MOTOR_CITY_STOCK_API_KEY`
 - Auth header: `Authorization: stock-api-clients API-Key <key>`
 - Stock requests return all enabled dealer feeds from Motor City (no brand-key scoping on the Ford side)
@@ -159,6 +159,7 @@ Staging is Basic Auth protected. Satellite staging uses `MOTOR_CITY_STOCK_API_UR
 
 - **CI** — `pull_request` to `develop` / `staging` / `main`
 - Environments **staging** / **production**: `SSH_*`, `APP_DIR`, `APP_ENV`
+- To enable AI SEO generation, include `ANTHROPIC_API_KEY` in `APP_ENV` (optional `ANTHROPIC_SEO_MODEL`, `AI_SEO_MONTHLY_BUDGET_USD`)
 - Staging overrides force `https://ford-stg.tallmancode.co.za`, ports `5411`/`5422`, `MOTOR_CITY_STOCK_API_URL=http://127.0.0.1:5511`
 - Health: `http://127.0.0.1:4411/api/health` (prod) / `5411` (staging); `lead-jobs` sidecar required
 
@@ -169,6 +170,6 @@ Standard commands live in `README.md` / `package.json` (`pnpm dev`, `pnpm lint`,
 - **MongoDB is required and not auto-started.** The startup update script only runs `pnpm install`; it does not start services. Start Mongo before running the app or `pnpm test:int`: `sudo mongod --dbpath /var/lib/mongodb --bind_ip 127.0.0.1 --port 27017` (run it in a persistent tmux session). Verify with `mongosh --eval "db.runCommand({ ping: 1 })"`.
 - **`.env` is git-ignored and must exist.** Copy `.env.example` to `.env` and set at minimum `DATABASE_URL=mongodb://127.0.0.1:27017/eagle-ford`, `PAYLOAD_SECRET`, and `NEXT_PUBLIC_SERVER_URL=http://localhost:3001`.
 - **Dev server runs on port 3001** (`pnpm dev`), not 3000 — the `README.md` port 3000 reference is stale. Admin UI is at `/admin`.
-- **Fresh DB has no pages**, so `/` returns 404 until content exists. Create the first admin user at `/admin` (create-first-user flow), then add a Page. A published page renders at its slug (e.g. `/hello-world`). Developer role: **Settings → Diagnostics → Force Sentry Test Error** to verify Sentry in production.
+- **Fresh DB has no pages**, so `/` returns 404 until content exists. Create the first admin user at `/admin` (create-first-user flow), then add a Page. A published page renders at its slug (e.g. `/hello-world`). Developer role: **Settings → Diagnostics → Force Sentry Test Error** to verify Sentry in production. The same tab shows **AI SEO usage** (token counts, estimated spend, remaining monthly budget). `ANTHROPIC_API_KEY` lives in env / `APP_ENV`, not in the CMS. After a deploy that hoists page blocks, run `pnpm migrate:section-top-level` so existing pages keep Content data.
 - **The Nodemailer `ECONNREFUSED 127.0.0.1:587` error is harmless** in local/cloud dev — SMTP is optional and unconfigured. It appears during `generate:types`, `test:int`, and dev server startup but does not affect functionality.
 - **Motor City stock API is a separate project** (`../eagle-motor-city`, not in this workspace) expected on port 3000. Stock/showroom features (`/showroom/*`, Live Stock admin view) will not return live data without it; the rest of the CMS/site works fine. The stock integration tests mock this API, so `pnpm test:int` passes without it.

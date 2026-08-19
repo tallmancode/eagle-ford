@@ -91,7 +91,7 @@ export default async function Page({
         })}
       />
 
-      <RenderBlocks blocks={page.content?.section ?? null} meta={{ searchParams }} />
+      <RenderBlocks blocks={page.section ?? null} meta={{ searchParams }} />
     </div>
   )
 }

@@ -171,9 +171,9 @@ export interface Config {
     vehicles: Vehicle;
     'vehicle-models': VehicleModel;
     'vehicle-variants': VehicleVariant;
+    'ai-seo-usage': AiSeoUsage;
     users: User;
     redirects: Redirect;
-    'ai-models': AiModel;
     forms: Form;
     'form-submissions': FormSubmission;
     exports: Export;
@@ -197,9 +197,9 @@ export interface Config {
     vehicles: VehiclesSelect<false> | VehiclesSelect<true>;
     'vehicle-models': VehicleModelsSelect<false> | VehicleModelsSelect<true>;
     'vehicle-variants': VehicleVariantsSelect<false> | VehicleVariantsSelect<true>;
+    'ai-seo-usage': AiSeoUsageSelect<false> | AiSeoUsageSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
-    'ai-models': AiModelsSelect<false> | AiModelsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     exports: ExportsSelect<false> | ExportsSelect<true>;
@@ -218,14 +218,14 @@ export interface Config {
     header: Header;
     footer: Footer;
     settings: Setting;
-    'ai-provider-settings': AiProviderSetting;
+    'better-editor-settings': BetterEditorSetting;
     'payload-jobs-stats': PayloadJobsStat;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
-    'ai-provider-settings': AiProviderSettingsSelect<false> | AiProviderSettingsSelect<true>;
+    'better-editor-settings': BetterEditorSettingsSelect<false> | BetterEditorSettingsSelect<true>;
     'payload-jobs-stats': PayloadJobsStatsSelect<false> | PayloadJobsStatsSelect<true>;
   };
   locale: null;
@@ -956,9 +956,7 @@ export interface Page {
    * When enabled, the header is transparent at the top of the page (for hero blocks) and turns solid white on scroll. When disabled (default), the header is always solid white with dark navigation links.
    */
   overlayHeader?: boolean | null;
-  content?: {
-    section?: Section[] | null;
-  };
+  section?: Section[] | null;
   meta?: {
     title?: string | null;
     /**
@@ -2999,6 +2997,30 @@ export interface VehicleModelVariantsBlock {
   blockType: 'vehicle-model-variants';
 }
 /**
+ * Token usage for AI-generated SEO titles and descriptions. Developers only.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-seo-usage".
+ */
+export interface AiSeoUsage {
+  id: string;
+  collectionSlug?: string | null;
+  docId?: string | null;
+  slug?: string | null;
+  user?: (string | null) | User;
+  status: 'success' | 'fallback' | 'error';
+  model?: string | null;
+  inputTokens?: number | null;
+  outputTokens?: number | null;
+  /**
+   * Estimated from a local rate table, not billed usage from Anthropic.
+   */
+  estimatedCostUsd?: number | null;
+  errorCode?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -3045,24 +3067,6 @@ export interface Redirect {
     } | null;
     url?: string | null;
   };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ai-models".
- */
-export interface AiModel {
-  id: string;
-  provider: 'ollama' | 'ollama-cloud' | 'google-gemini' | 'claude-api';
-  /**
-   * API identifier (e.g. llava:latest, models/gemini-2.5-flash)
-   */
-  modelId: string;
-  /**
-   * Human-readable label for the dropdown
-   */
-  displayName?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -3392,16 +3396,16 @@ export interface PayloadLockedDocument {
         value: string | VehicleVariant;
       } | null)
     | ({
+        relationTo: 'ai-seo-usage';
+        value: string | AiSeoUsage;
+      } | null)
+    | ({
         relationTo: 'users';
         value: string | User;
       } | null)
     | ({
         relationTo: 'redirects';
         value: string | Redirect;
-      } | null)
-    | ({
-        relationTo: 'ai-models';
-        value: string | AiModel;
       } | null)
     | ({
         relationTo: 'forms';
@@ -3460,11 +3464,7 @@ export interface PayloadMigration {
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
   overlayHeader?: T;
-  content?:
-    | T
-    | {
-        section?: T | {};
-      };
+  section?: T | {};
   meta?:
     | T
     | {
@@ -3877,6 +3877,24 @@ export interface VehicleVariantsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ai-seo-usage_select".
+ */
+export interface AiSeoUsageSelect<T extends boolean = true> {
+  collectionSlug?: T;
+  docId?: T;
+  slug?: T;
+  user?: T;
+  status?: T;
+  model?: T;
+  inputTokens?: T;
+  outputTokens?: T;
+  estimatedCostUsd?: T;
+  errorCode?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -3914,17 +3932,6 @@ export interface RedirectsSelect<T extends boolean = true> {
         reference?: T;
         url?: T;
       };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ai-models_select".
- */
-export interface AiModelsSelect<T extends boolean = true> {
-  provider?: T;
-  modelId?: T;
-  displayName?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -4621,6 +4628,10 @@ export interface Setting {
   newVehicleQuoteForm?: (string | null) | Form;
   email?: EmailSettings;
   motorCity?: MotorCitySettings;
+  /**
+   * Estimated spend cap for Anthropic SEO generation this calendar month (UTC). Override with AI_SEO_MONTHLY_BUDGET_USD in the server env if set. Generation stops when remaining budget reaches zero.
+   */
+  aiSeoMonthlyBudgetUsd?: number | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -4727,29 +4738,34 @@ export interface MotorCitySettings {
   lastTestSummary?: string | null;
 }
 /**
- * Configure AI provider settings for media suggestions
+ * Editor-wide preferences for the Better Editor overlay.
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ai-provider-settings".
+ * via the `definition` "better-editor-settings".
  */
-export interface AiProviderSetting {
+export interface BetterEditorSetting {
   id: string;
+  sidebarPosition?: ('right' | 'left') | null;
   /**
-   * Select the AI vision provider to use for generating media suggestions
+   * Override admin.width on sidebar fields so they always span the full row.
    */
-  provider: 'ollama' | 'ollama-cloud' | 'google-gemini' | 'claude-api';
+  forceFullWidthFields?: boolean | null;
+  tabletWidth?: number | null;
+  mobileWidth?: number | null;
   /**
-   * Select from cached models. Use 'Refetch models' if the list is empty or outdated.
+   * Hex color (e.g. `#3b82f6`).
    */
-  model?: (string | null) | AiModel;
+  hoverColorTopLevel?: string | null;
   /**
-   * API endpoint URL - Ollama Local: http://localhost:11434 | Ollama Cloud: https://ollama.com (default)
+   * Hex color for blocks nested inside another block.
    */
-  apiUrl?: string | null;
+  hoverColorNested?: string | null;
   /**
-   * API key - Optional for Ollama Local | Required for Ollama Cloud, Google Gemini, and Claude API (console.anthropic.com)
+   * Outline thickness in pixels (1–5).
    */
-  apiKey?: string | null;
+  hoverOutlineWidth?: number | null;
+  showHoverToolbar?: boolean | null;
+  hoverToolbarPosition?: ('top-right' | 'top-left' | 'bottom-right' | 'bottom-left') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -4893,6 +4909,7 @@ export interface SettingsSelect<T extends boolean = true> {
   newVehicleQuoteForm?: T;
   email?: T | EmailSettingsSelect<T>;
   motorCity?: T | MotorCitySettingsSelect<T>;
+  aiSeoMonthlyBudgetUsd?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -4963,13 +4980,18 @@ export interface MotorCitySettingsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ai-provider-settings_select".
+ * via the `definition` "better-editor-settings_select".
  */
-export interface AiProviderSettingsSelect<T extends boolean = true> {
-  provider?: T;
-  model?: T;
-  apiUrl?: T;
-  apiKey?: T;
+export interface BetterEditorSettingsSelect<T extends boolean = true> {
+  sidebarPosition?: T;
+  forceFullWidthFields?: T;
+  tabletWidth?: T;
+  mobileWidth?: T;
+  hoverColorTopLevel?: T;
+  hoverColorNested?: T;
+  hoverOutlineWidth?: T;
+  showHoverToolbar?: T;
+  hoverToolbarPosition?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -5042,9 +5064,9 @@ export interface TaskCreateCollectionExport {
       | 'vehicles'
       | 'vehicle-models'
       | 'vehicle-variants'
+      | 'ai-seo-usage'
       | 'users'
       | 'redirects'
-      | 'ai-models'
       | 'forms'
       | 'form-submissions'
       | 'exports'

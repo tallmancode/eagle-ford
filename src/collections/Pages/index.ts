@@ -11,7 +11,6 @@ import {
   MetaImageField,
   MetaTitleField,
   OverviewField,
-  PreviewField,
 } from '@payloadcms/plugin-seo/fields'
 import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
 
@@ -67,7 +66,7 @@ export const PagesCollection: CollectionConfig<'pages'> = {
           ],
         },
         {
-          name: 'content',
+          // Unnamed tab — section is top-level so better-editor can target blocksField: 'section'
           label: 'Content',
           fields: [
             {
@@ -83,27 +82,39 @@ export const PagesCollection: CollectionConfig<'pages'> = {
           name: 'meta',
           label: 'SEO',
           fields: [
+            {
+              type: 'ui',
+              name: 'aiSeoGenerate',
+              label: 'Generate with AI',
+              admin: {
+                components: {
+                  Field: '@/lib/fields/ai-seo-generate/AiSeoGenerateField#AiSeoGenerateField',
+                },
+              },
+            },
             OverviewField({
               titlePath: 'meta.title',
               descriptionPath: 'meta.description',
               imagePath: 'meta.image',
             }),
             MetaTitleField({
-              hasGenerateFn: true,
+              hasGenerateFn: false,
             }),
             MetaImageField({
               relationTo: 'media',
             }),
 
-            MetaDescriptionField({ hasGenerateFn: true }),
-            PreviewField({
-              // if the `generateUrl` function is configured
-              hasGenerateFn: true,
-
-              // field paths to match the target field for data
-              titlePath: 'meta.title',
-              descriptionPath: 'meta.description',
-            }),
+            MetaDescriptionField({ hasGenerateFn: false }),
+            {
+              type: 'ui',
+              name: 'seoPreview',
+              label: 'Preview',
+              admin: {
+                components: {
+                  Field: '@/lib/fields/seo-preview/SeoPreviewField#SeoPreviewField',
+                },
+              },
+            },
           ],
         },
       ],
