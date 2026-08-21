@@ -33,6 +33,7 @@ import { getMotorCityLeadSubmissionFields } from '@/lib/motor-city-leads/formSub
 import { injectFormSubmissionLead } from '@/lib/motor-city-leads/injectFormSubmissionLead'
 import { patchExportCollectionFields } from '@/components/admin/export/patchExportCollectionFields'
 import { mediaGalleryPlugin } from '@sitebytom/payload-media-gallery'
+import { imageOptimizer } from '@inoo-ch/payload-image-optimizer'
 import { betterEditor } from 'payload-better-editor'
 
 const formStepRowLabelPath = '@/lib/blocks/form-block/components/FormStepRowLabel#FormStepRowLabel'
@@ -244,6 +245,17 @@ export const plugins: Plugin[] = [
   sentryPlugin({
     enabled: true,
     Sentry,
+  }),
+  imageOptimizer({
+    collections: {
+      media: {
+        format: { format: 'webp', quality: 80 },
+        maxDimensions: { width: 3440, height: 1440 },
+      },
+    },
+    stripMetadata: true,
+    generateThumbHash: true,
+    clientOptimization: true,
   }),
   mediaGalleryPlugin({
     collections: {

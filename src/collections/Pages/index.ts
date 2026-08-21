@@ -74,7 +74,7 @@ export const PagesCollection: CollectionConfig<'pages'> = {
               label: false,
               type: 'blocks',
               blocks: [],
-              blockReferences: ['section'],
+              blockReferences: ['section', 'sectionV2'],
             },
           ],
         },

@@ -8,6 +8,7 @@ import React from 'react'
 
 import { importMap } from './admin/importMap.js'
 import './custom.scss'
+import '@/lib/blocks/v2/components/ui/v2-field-shell-gap.css'
 
 type Args = {
   children: React.ReactNode

@@ -1,0 +1,208 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.rowLabel {
+  width: 100%;
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--theme-elevation-500, #888);
+}
+
+.swatch {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--theme-elevation-250, #ccc);
+  border-radius: 999px;
+  cursor: pointer;
+  background: var(--swatch-color, #fff);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 6%);
+}
+
+.swatch:hover {
+  border-color: var(--theme-elevation-400, #999);
+}
+
+.swatch:focus-visible {
+  outline: 2px solid var(--theme-success-500, #3d9970);
+  outline-offset: 2px;
+}
+
+.swatchActive {
+  border-color: var(--theme-success-600, #24a148);
+  box-shadow:
+    0 0 0 2px var(--theme-bg, #fff),
+    0 0 0 4px var(--theme-success-600, #24a148);
+}
+
+.swatchInherit {
+  background:
+    linear-gradient(
+      135deg,
+      var(--theme-bg, #fff) 46%,
+      var(--theme-error-500, #c4554d) 46%,
+      var(--theme-error-500, #c4554d) 54%,
+      var(--theme-bg, #fff) 54%
+    );
+}
+
+.customBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px dashed var(--theme-elevation-250, #ccc);
+  border-radius: 999px;
+  background: var(--theme-bg, #fff);
+  color: var(--theme-elevation-700, #555);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.customBtn:hover {
+  border-color: var(--theme-elevation-400, #999);
+  background: var(--theme-elevation-50, #fafafa);
+}
+
+.customBtn:focus-visible {
+  outline: 2px solid var(--theme-success-500, #3d9970);
+  outline-offset: 2px;
+}
+
+.customBtnActive {
+  border-style: solid;
+  border-color: var(--theme-success-600, #24a148);
+  color: var(--theme-success-800, #166534);
+}
+
+.popover {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid var(--theme-elevation-150, #e5e5e5);
+  border-radius: 8px;
+  background: var(--theme-bg, #fff);
+}
+
+.popoverRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nativeColor {
+  width: 36px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--theme-elevation-150, #e5e5e5);
+  border-radius: 6px;
+  background: var(--theme-bg, #fff);
+  cursor: pointer;
+}
+
+.hexInput {
+  flex: 1;
+  min-height: 32px;
+  padding: 4px 8px;
+  border: 1px solid var(--theme-elevation-150, #e5e5e5);
+  border-radius: 6px;
+  background: var(--theme-bg, #fff);
+  color: var(--theme-text, #222);
+  font-size: 13px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.hexInput:focus-visible,
+.nativeColor:focus-visible,
+.labelInput:focus-visible {
+  outline: 2px solid var(--theme-success-500, #3d9970);
+  outline-offset: 1px;
+}
+
+.iconBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--theme-elevation-150, #e5e5e5);
+  border-radius: 6px;
+  background: var(--theme-bg, #fff);
+  color: var(--theme-elevation-700, #555);
+  cursor: pointer;
+}
+
+.iconBtn:hover {
+  background: var(--theme-elevation-50, #fafafa);
+}
+
+.iconBtn:focus-visible {
+  outline: 2px solid var(--theme-success-500, #3d9970);
+  outline-offset: 2px;
+}
+
+.saveRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 4px;
+  border-top: 1px solid var(--theme-elevation-100, #f2f2f2);
+}
+
+.labelInput {
+  min-height: 32px;
+  padding: 4px 8px;
+  border: 1px solid var(--theme-elevation-150, #e5e5e5);
+  border-radius: 6px;
+  background: var(--theme-bg, #fff);
+  color: var(--theme-text, #222);
+  font-size: 13px;
+}
+
+.saveBtn {
+  min-height: 32px;
+  padding: 4px 10px;
+  border: 1px solid var(--theme-elevation-150, #e5e5e5);
+  border-radius: 6px;
+  background: var(--theme-elevation-50, #fafafa);
+  color: var(--theme-text, #222);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.saveBtn:hover:not(:disabled) {
+  background: var(--theme-elevation-100, #f2f2f2);
+}
+
+.saveBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.saveBtn:focus-visible {
+  outline: 2px solid var(--theme-success-500, #3d9970);
+  outline-offset: 2px;
+}

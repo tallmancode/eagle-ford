@@ -1,4 +1,5 @@
 import type { Heading } from '@/payload-types'
+import { getBetterEditorBlockProps } from '@/lib/blocks/betterEditor'
 import { renderTextWithColorTags } from '../../utils/renderTextWithColorTags'
 import {
   colorMap,
@@ -33,7 +34,10 @@ export const SeparatorHeading: React.FC<Heading> = (props) => {
   const lineColorClass = color === 'white' ? 'bg-white/30' : 'bg-neutral-300'
 
   return (
-    <div className={`mb-8 flex w-full items-center gap-4 ${rowAlignClass} `}>
+    <div
+      className={`mb-8 flex w-full items-center gap-4 ${rowAlignClass} `}
+      {...getBetterEditorBlockProps(props)}
+    >
       {showLeftLine && <div className={`h-px flex-1 ${lineColorClass}`} aria-hidden="true" />}
       <HeadingTag
         className={[

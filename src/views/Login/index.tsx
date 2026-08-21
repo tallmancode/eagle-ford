@@ -50,8 +50,8 @@ export default function LoginView({ initPageResult, searchParams }: AdminViewSer
       : undefined
 
   return (
-    <div className="tw w-full h-full relative">
-      <div className="tw w-full max-w-200 relative left-[100px] h-full min-h-dvh bg-dark-950/50 flex flex-col justify-center items-center px-10 py-8">
+    <div className="tw w-full h-full relative flex lg:block justify-center">
+      <div className="tw w-full md:max-w-200 relative md:left-25 h-full min-h-dvh bg-dark-950/50 flex flex-col justify-center items-center px-10 py-8">
         <div className="w-full h-auto max-w-xl mx-auto mb-8">
           <FullLogo className="w-full h-auto"></FullLogo>
         </div>

@@ -1,0 +1,25 @@
+---
+description: Ford v2 blocks use the v2 styling field kit; keep them independent of v1 layout-field
+globs: src/lib/blocks/v2/**
+alwaysApply: false
+---
+
+# Ford v2 blocks
+
+v2 blocks and styling fields live under `src/lib/blocks/v2`. They are **independent** of `src/lib/fields/layout-field` (v1 Section/Row).
+
+## Styling fields
+
+- Add layout via factories from `@/lib/blocks/v2` (`PaddingField`, `MarginField`, `InsetField`, `GapField`, `DisplayField`, `PositionField`, `ContainerField`, `OverflowField`, `VisibilityField`, `ColorField`, or `StyleFields`).
+- Application field chrome defaults belong in `src/lib/blocks/v2/theme.ts` (units, linked, container).
+- Per-block padding/margin amounts: `defineV2BlocksConfig({ sectionBlock: { padding: { mobile: { top: '1' } } } })` from `payload.config.ts`, and pass `block: 'sectionBlock'` to `StyleFields`.
+- Call-site field `defaults` / `defaultValue` still override.
+- Frontend: `applyStyles` / `applyPadding` (etc.) with an optional `slot`. Do not reuse `.section-layout-*` classes.
+- Admin fields must stay compact (Better Editor inspector). Reuse `components/ui` (breakpoint tabs, box editor, segmented control).
+- New fields: follow workspace skill `eagle-v2-styling-fields`.
+
+## Blocks
+
+- Colocate Payload config + render component under `src/lib/blocks/v2/<name>-block/`.
+- Do not register a v2 block in v1 `section-block/blockRefs.ts` unless the task explicitly mounts it there.
+- Always add `admin.images.icon` + `admin.images.thumbnail` (3:2 PNG + square SVG under `public/blocks/`). Follow workspace skill `creating-block-admin-images` and match `heading-block-thumbnail.png` / `section-inner-block-thumbnail.png` style.

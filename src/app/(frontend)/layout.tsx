@@ -10,6 +10,7 @@ import { JsonLd } from '@/components/JsonLd/JsonLd'
 import { Providers } from '@/providers'
 
 import './globals.css'
+import '@/lib/blocks/v2/box.css'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
 import { mergeOpenGraph } from '@/lib/utils/mergeOpenGraph'
 import { getDefaultRobots } from '@/constants/crawlerPolicy'

@@ -9,6 +9,7 @@ import {
 } from '@/lib/blocks/finance-calculator-block/financeCalculatorOptions'
 import { isAdmin } from '@/lib/utils/accessUtil'
 import AddressField from '@/lib/fields/address-field/AddressField'
+import { sanitizeHex } from '@/lib/blocks/v2/apply/values'
 
 export const SettingsGlobal: GlobalConfig = {
   slug: 'settings',
@@ -59,6 +60,51 @@ export const SettingsGlobal: GlobalConfig = {
               },
             },
             AddressField(),
+          ],
+        },
+        {
+          label: 'Brand palette',
+          name: 'brandPalette',
+          interfaceName: 'BrandPaletteSettings',
+          fields: [
+            {
+              name: 'customColors',
+              type: 'array',
+              label: 'Saved custom colors',
+              labels: {
+                singular: 'Custom color',
+                plural: 'Custom colors',
+              },
+              maxRows: 24,
+              admin: {
+                description:
+                  'These colors appear in the v2 color picker next to Primary, Neutral, and the other brand tokens. You can also save a color from the picker. Blocks store the hex, so deleting a saved color does not change pages that already use it.',
+                initCollapsed: true,
+              },
+              fields: [
+                {
+                  name: 'label',
+                  type: 'text',
+                  label: 'Name',
+                  admin: {
+                    description: 'Optional short name shown in the picker.',
+                  },
+                },
+                {
+                  name: 'hex',
+                  type: 'text',
+                  label: 'Hex color',
+                  required: true,
+                  admin: {
+                    description: 'e.g. #1E1654',
+                  },
+                  validate: (value: string | null | undefined) => {
+                    if (!value) return 'Hex color is required.'
+                    return sanitizeHex(value) ? true : 'Must be a hex color (e.g. #1E1654).'
+                  },
+                },
+              ],
+            },
           ],
         },
         {

@@ -14,6 +14,7 @@ import {
 } from '@/lib/fields/layout-field/utils/layout-utils'
 import { backgroundColorToClass } from '@/lib/fields/background-color/backgroundColorUtils'
 import { cn } from '@/lib/utils/cn'
+import { getBetterEditorBlockProps } from '@/lib/blocks/betterEditor'
 
 const alignClassMap: Record<string, string> = {
   left: 'justify-start',
@@ -121,7 +122,12 @@ export const RowBlockComponent: React.FC<Row & { meta?: BlockRenderMeta }> = (pr
   if (backgroundClass && container) {
     const outerClassName = cn(backgroundClass, spacingClassMargin, visibilityClass)
     return (
-      <Tag className={outerClassName} style={spacingStyle} {...ariaProps}>
+      <Tag
+        className={outerClassName}
+        style={spacingStyle}
+        {...ariaProps}
+        {...getBetterEditorBlockProps(props)}
+      >
         <div className={contentClasses || undefined}>
           <RenderBlocks blocks={content} meta={nestedMeta} />
         </div>
@@ -139,7 +145,12 @@ export const RowBlockComponent: React.FC<Row & { meta?: BlockRenderMeta }> = (pr
   )
 
   return (
-    <Tag className={className} style={spacingStyle} {...ariaProps}>
+    <Tag
+      className={className}
+      style={spacingStyle}
+      {...ariaProps}
+      {...getBetterEditorBlockProps(props)}
+    >
       <RenderBlocks blocks={content} meta={nestedMeta} />
     </Tag>
   )

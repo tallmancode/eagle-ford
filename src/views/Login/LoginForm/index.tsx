@@ -118,7 +118,9 @@ export const LoginForm: React.FC<{
       >
         {t('authentication:forgotPasswordQuestion')}
       </Link>
-      <FormSubmit size="large">{t('authentication:login')}</FormSubmit>
+      <FormSubmit size="large" className={'bg-primary-500 hover:bg-primary-300 disabled:bg-primary-300'}>
+        {t('authentication:login')}
+      </FormSubmit>
     </Form>
   )
 }

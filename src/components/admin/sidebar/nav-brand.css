@@ -1,0 +1,41 @@
+/* Loaded from NavBrand.tsx so Turbopack emits this with the component chunk.
+   Payload nav CSS and cached admin-nav.scss have used width/height 100% + object-fit:cover. */
+
+a.app-header__account,
+.app-header a.app-header__account {
+  display: none !important;
+}
+
+.nav__header,
+.nav__header-content,
+.admin-nav__brand,
+.admin-nav__logo {
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.nav__header-content,
+.admin-nav__brand {
+  max-height: var(--app-header-height, 56px);
+}
+
+.admin-nav__logo {
+  display: flex;
+  align-items: center;
+  width: auto !important;
+  height: auto !important;
+  max-height: calc(var(--app-header-height, 56px) - 12px);
+  flex: 0 1 auto !important;
+}
+
+.admin-nav__logo img,
+.admin-nav__logo-img {
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: calc(var(--app-header-height, 56px) - 12px) !important;
+  object-fit: contain !important;
+}

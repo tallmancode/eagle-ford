@@ -1,5 +1,31 @@
 import { SectionBlock } from '@/lib/blocks/section-block/SectionBlock'
 import { SectionInnerBlock } from '@/lib/blocks/section-block/SectionInnerBlock'
+import { SectionV2Block } from '@/lib/blocks/v2/section-block/SectionBlockConfig'
+import { WrapperV2Block } from '@/lib/blocks/v2/wrapper-block/WrapperBlockConfig'
+import { ColumnV2Block } from '@/lib/blocks/v2/column-block/ColumnBlockConfig'
+import { HeadingV2Block } from '@/lib/blocks/v2/heading-block/HeadingBlockConfig'
+import { EyebrowV2Block } from '@/lib/blocks/v2/eyebrow-block/EyebrowBlockConfig'
+import { HeadingTextV2Block } from '@/lib/blocks/v2/heading-text-block/HeadingTextBlockConfig'
+import { SubheadingV2Block } from '@/lib/blocks/v2/subheading-block/SubheadingBlockConfig'
+import { RichTextV2Block } from '@/lib/blocks/v2/rich-text-block/RichTextBlockConfig'
+import { ButtonV2Block } from '@/lib/blocks/v2/button-block/ButtonBlockConfig'
+import { CardV2Block } from '@/lib/blocks/v2/card-block/CardBlockConfig'
+import { AccordionV2Block } from '@/lib/blocks/v2/accordion-block/AccordionBlockConfig'
+import { ImageV2Block } from '@/lib/blocks/v2/image-block/ImageBlockConfig'
+import { SeparatorV2Block } from '@/lib/blocks/v2/separator-block/SeparatorBlockConfig'
+import { FormV2Block } from '@/lib/blocks/v2/form-block/FormBlockConfig'
+import { IconV2Block } from '@/lib/blocks/v2/icon-block/IconBlockConfig'
+import { VideoV2Block } from '@/lib/blocks/v2/video-block/VideoBlockConfig'
+import { QuoteV2Block } from '@/lib/blocks/v2/quote-block/QuoteBlockConfig'
+import { SpacerV2Block } from '@/lib/blocks/v2/spacer-block/SpacerBlockConfig'
+import { HeroV2Block } from '@/lib/blocks/v2/hero-block/HeroBlockConfig'
+import { MapV2Block } from '@/lib/blocks/v2/map-block/MapBlockConfig'
+import { FaqV2Block } from '@/lib/blocks/v2/faq-block/FaqBlockConfig'
+import { StockArchiveV2Block } from '@/lib/blocks/v2/stock-archive-block/StockArchiveBlockConfig'
+import { CarouselV2Block } from '@/lib/blocks/v2/carousel-block/CarouselBlockConfig'
+import { SpecialsArchiveV2Block } from '@/lib/blocks/v2/specials-archive-block/SpecialsArchiveBlockConfig'
+import { VehicleCatalogV2Block } from '@/lib/blocks/v2/vehicle-catalog-block/VehicleCatalogBlockConfig'
+import { GalleryV2Block } from '@/lib/blocks/v2/gallery-block/GalleryBlockConfig'
 import { RowBlock } from '@/lib/blocks/row-block/RowBlock'
 import { HeroBlock } from '@/lib/blocks/hero-block/HeroBlock'
 import { HeadingBlock } from '@/lib/blocks/heading-block/HeadingBlock'
@@ -49,6 +75,32 @@ import { VehicleModelVariantsBlock } from '@/lib/blocks/vehicle-model-variants-b
 const Blocks = [
   SectionBlock,
   SectionInnerBlock,
+  SectionV2Block,
+  WrapperV2Block,
+  ColumnV2Block,
+  HeadingV2Block,
+  EyebrowV2Block,
+  HeadingTextV2Block,
+  SubheadingV2Block,
+  RichTextV2Block,
+  ButtonV2Block,
+  CardV2Block,
+  AccordionV2Block,
+  ImageV2Block,
+  SeparatorV2Block,
+  FormV2Block,
+  IconV2Block,
+  VideoV2Block,
+  QuoteV2Block,
+  SpacerV2Block,
+  HeroV2Block,
+  MapV2Block,
+  FaqV2Block,
+  StockArchiveV2Block,
+  CarouselV2Block,
+  SpecialsArchiveV2Block,
+  VehicleCatalogV2Block,
+  GalleryV2Block,
   RowBlock,
   HeroBlock,
   HeadingBlock,

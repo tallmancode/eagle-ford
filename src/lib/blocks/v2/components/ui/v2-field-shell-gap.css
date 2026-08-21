@@ -1,0 +1,15 @@
+/* Loaded from FieldShell.tsx so Turbopack emits this with the component chunk. */
+
+.v2-field-shell {
+  width: 100%;
+  box-sizing: border-box;
+  padding-bottom: 12px;
+}
+
+.group-field.v2-style-fields > .group-field__wrap,
+.v2-style-fields > .group-field__wrap,
+.group-field__wrap:has(.v2-field-shell) {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
