@@ -27,6 +27,28 @@ import type {
   SpecialsArchiveV2,
   VehicleCatalogV2,
   GalleryV2,
+  FeatureListV2,
+  FeatureRowsV2,
+  PopupCardsV2,
+  StatsV2,
+  TeamGridV2,
+  HoursTabsV2,
+  ContactInfoV2,
+  ContactFooterV2,
+  FinanceCalculatorV2,
+  ReviewsV2,
+  VehicleHeroV2,
+  VehicleModelsV2,
+  VehicleColorsV2,
+  VehicleGalleryV2,
+  VehicleFeaturesV2,
+  VehicleFaqV2,
+  VehicleSpecialCategoriesV2,
+  VehicleModelHeroV2,
+  VehicleModelHighlightsV2,
+  VehicleModelColorsV2,
+  VehicleModelSiblingsV2,
+  VehicleModelVariantsV2,
   Config,
   Heading,
   Hero,
@@ -101,6 +123,28 @@ import { CarouselV2BlockComponent } from '@/lib/blocks/v2/carousel-block/compone
 import { SpecialsArchiveV2BlockComponent } from '@/lib/blocks/v2/specials-archive-block/components/SpecialsArchiveBlockComponent'
 import { VehicleCatalogV2BlockComponent } from '@/lib/blocks/v2/vehicle-catalog-block/components/VehicleCatalogBlockComponent'
 import { GalleryV2BlockComponent } from '@/lib/blocks/v2/gallery-block/components/GalleryBlockComponent'
+import { FeatureListV2BlockComponent } from '@/lib/blocks/v2/feature-list-block/components/FeatureListBlockComponent'
+import { FeatureRowsV2BlockComponent } from '@/lib/blocks/v2/feature-rows-block/components/FeatureRowsBlockComponent'
+import { PopupCardsV2BlockComponent } from '@/lib/blocks/v2/popup-cards-block/components/PopupCardsBlockComponent'
+import { StatsV2BlockComponent } from '@/lib/blocks/v2/stats-block/components/StatsBlockComponent'
+import { TeamGridV2BlockComponent } from '@/lib/blocks/v2/team-grid-block/components/TeamGridBlockComponent'
+import { HoursTabsV2BlockComponent } from '@/lib/blocks/v2/hours-tabs-block/components/HoursTabsBlockComponent'
+import { ContactInfoV2BlockComponent } from '@/lib/blocks/v2/contact-info-block/components/ContactInfoBlockComponent'
+import { ContactFooterV2BlockComponent } from '@/lib/blocks/v2/contact-footer-block/components/ContactFooterBlockComponent'
+import { FinanceCalculatorV2BlockComponent } from '@/lib/blocks/v2/finance-calculator-block/components/FinanceCalculatorBlockComponent'
+import { ReviewsV2BlockComponent } from '@/lib/blocks/v2/reviews-block/components/ReviewsBlockComponent'
+import { VehicleHeroV2BlockComponent } from '@/lib/blocks/v2/vehicle-hero-block/components/VehicleHeroBlockComponent'
+import { VehicleModelsV2BlockComponent } from '@/lib/blocks/v2/vehicle-models-block/components/VehicleModelsBlockComponent'
+import { VehicleColorsV2BlockComponent } from '@/lib/blocks/v2/vehicle-colors-block/components/VehicleColorsBlockComponent'
+import { VehicleGalleryV2BlockComponent } from '@/lib/blocks/v2/vehicle-gallery-block/components/VehicleGalleryBlockComponent'
+import { VehicleFeaturesV2BlockComponent } from '@/lib/blocks/v2/vehicle-features-block/components/VehicleFeaturesBlockComponent'
+import { VehicleFaqV2BlockComponent } from '@/lib/blocks/v2/vehicle-faq-block/components/VehicleFaqBlockComponent'
+import { VehicleSpecialCategoriesV2BlockComponent } from '@/lib/blocks/v2/vehicle-special-categories-block/components/VehicleSpecialCategoriesBlockComponent'
+import { VehicleModelHeroV2BlockComponent } from '@/lib/blocks/v2/vehicle-model-hero-block/components/VehicleModelHeroBlockComponent'
+import { VehicleModelHighlightsV2BlockComponent } from '@/lib/blocks/v2/vehicle-model-highlights-block/components/VehicleModelHighlightsBlockComponent'
+import { VehicleModelColorsV2BlockComponent } from '@/lib/blocks/v2/vehicle-model-colors-block/components/VehicleModelColorsBlockComponent'
+import { VehicleModelSiblingsV2BlockComponent } from '@/lib/blocks/v2/vehicle-model-siblings-block/components/VehicleModelSiblingsBlockComponent'
+import { VehicleModelVariantsV2BlockComponent } from '@/lib/blocks/v2/vehicle-model-variants-block/components/VehicleModelVariantsBlockComponent'
 import React, { Fragment } from 'react'
 import { HeadingBlockComponent } from '@/lib/blocks/heading-block/components/HeadingBlockComponent'
 import { HeroBlock } from '@/lib/blocks/hero-block/components/HeroBlockComponent'
@@ -182,6 +226,28 @@ type BlockComponentMap = {
   specialsArchiveV2: SpecialsArchiveV2
   vehicleCatalogV2: VehicleCatalogV2
   galleryV2: GalleryV2
+  featureListV2: FeatureListV2
+  featureRowsV2: FeatureRowsV2
+  popupCardsV2: PopupCardsV2
+  statsV2: StatsV2
+  teamGridV2: TeamGridV2
+  hoursTabsV2: HoursTabsV2
+  contactInfoV2: ContactInfoV2
+  contactFooterV2: ContactFooterV2
+  financeCalculatorV2: FinanceCalculatorV2
+  reviewsV2: ReviewsV2
+  vehicleHeroV2: VehicleHeroV2
+  vehicleModelsV2: VehicleModelsV2
+  vehicleColorsV2: VehicleColorsV2
+  vehicleGalleryV2: VehicleGalleryV2
+  vehicleFeaturesV2: VehicleFeaturesV2
+  vehicleFaqV2: VehicleFaqV2
+  vehicleSpecialCategoriesV2: VehicleSpecialCategoriesV2
+  vehicleModelHeroV2: VehicleModelHeroV2
+  vehicleModelHighlightsV2: VehicleModelHighlightsV2
+  vehicleModelColorsV2: VehicleModelColorsV2
+  vehicleModelSiblingsV2: VehicleModelSiblingsV2
+  vehicleModelVariantsV2: VehicleModelVariantsV2
   row: Row
   heading: Heading
   hero: Hero
@@ -268,6 +334,60 @@ const blockComponents: {
     WithMeta<VehicleCatalogV2>
   >,
   galleryV2: GalleryV2BlockComponent,
+  featureListV2: FeatureListV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<FeatureListV2>
+  >,
+  featureRowsV2: FeatureRowsV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<FeatureRowsV2>
+  >,
+  popupCardsV2: PopupCardsV2BlockComponent as unknown as React.ComponentType<WithMeta<PopupCardsV2>>,
+  statsV2: StatsV2BlockComponent as unknown as React.ComponentType<WithMeta<StatsV2>>,
+  teamGridV2: TeamGridV2BlockComponent as unknown as React.ComponentType<WithMeta<TeamGridV2>>,
+  hoursTabsV2: HoursTabsV2BlockComponent as unknown as React.ComponentType<WithMeta<HoursTabsV2>>,
+  contactInfoV2: ContactInfoV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<ContactInfoV2>
+  >,
+  contactFooterV2: ContactFooterV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<ContactFooterV2>
+  >,
+  financeCalculatorV2: FinanceCalculatorV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<FinanceCalculatorV2>
+  >,
+  reviewsV2: ReviewsV2BlockComponent as unknown as React.ComponentType<WithMeta<ReviewsV2>>,
+  vehicleHeroV2: VehicleHeroV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleHeroV2>
+  >,
+  vehicleModelsV2: VehicleModelsV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleModelsV2>
+  >,
+  vehicleColorsV2: VehicleColorsV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleColorsV2>
+  >,
+  vehicleGalleryV2: VehicleGalleryV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleGalleryV2>
+  >,
+  vehicleFeaturesV2: VehicleFeaturesV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleFeaturesV2>
+  >,
+  vehicleFaqV2: VehicleFaqV2BlockComponent as unknown as React.ComponentType<WithMeta<VehicleFaqV2>>,
+  vehicleSpecialCategoriesV2: VehicleSpecialCategoriesV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleSpecialCategoriesV2>
+  >,
+  vehicleModelHeroV2: VehicleModelHeroV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleModelHeroV2>
+  >,
+  vehicleModelHighlightsV2: VehicleModelHighlightsV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleModelHighlightsV2>
+  >,
+  vehicleModelColorsV2: VehicleModelColorsV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleModelColorsV2>
+  >,
+  vehicleModelSiblingsV2: VehicleModelSiblingsV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleModelSiblingsV2>
+  >,
+  vehicleModelVariantsV2: VehicleModelVariantsV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleModelVariantsV2>
+  >,
   row: RowBlockComponent,
   heading: HeadingBlockComponent,
   hero: HeroBlock,

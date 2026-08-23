@@ -17,6 +17,7 @@ import { VisibilityField } from '@/lib/blocks/v2/fields/visibility'
 import { ContainerField } from '@/lib/blocks/v2/fields/container'
 import { ColorField } from '@/lib/blocks/v2/fields/color'
 
+/** Default layout fields for most v2 blocks. `container` is Section/Wrapper only. */
 export const STYLE_FIELD_KEYS: StyleFieldKey[] = [
   'padding',
   'margin',
@@ -24,7 +25,6 @@ export const STYLE_FIELD_KEYS: StyleFieldKey[] = [
   'gap',
   'display',
   'position',
-  'container',
   'backgroundColor',
   'overflow',
   'visibility',

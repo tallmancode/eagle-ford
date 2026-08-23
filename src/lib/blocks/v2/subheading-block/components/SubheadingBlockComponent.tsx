@@ -24,7 +24,7 @@ export function SubheadingV2BlockComponent(props: SubheadingV2) {
       {...attrs}
       {...getBetterEditorBlockProps(props)}
     >
-      <p className={`text-neutral-500 max-w-2xl ${sizes.subheading}`}>
+      <p className={`text-neutral-500 ${sizes.subheading}`}>
         {renderTextWithColorTags(text)}
       </p>
     </div>

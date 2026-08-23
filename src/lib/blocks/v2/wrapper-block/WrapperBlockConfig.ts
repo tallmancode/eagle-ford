@@ -43,7 +43,25 @@ export const WrapperV2Block: Block = {
         },
         {
           label: 'Layout',
-          fields: [StyleFields({ name: 'styles', label: false, block: 'wrapperBlock' })],
+          fields: [
+            StyleFields({
+              name: 'styles',
+              label: false,
+              block: 'wrapperBlock',
+              include: [
+                'padding',
+                'margin',
+                'inset',
+                'gap',
+                'display',
+                'position',
+                'container',
+                'backgroundColor',
+                'overflow',
+                'visibility',
+              ],
+            }),
+          ],
         },
       ],
     },

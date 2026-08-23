@@ -30,6 +30,37 @@ export const SectionV2Block: Block = {
           label: 'Content',
           fields: [
             {
+              name: 'enableFixedBackground',
+              type: 'checkbox',
+              label: 'Fixed background image',
+              defaultValue: false,
+              admin: {
+                description:
+                  'Pin a full-bleed background image behind this section (parallax-style on supporting browsers).',
+              },
+            },
+            {
+              name: 'backgroundImage',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'Background Image',
+              admin: {
+                condition: (_data, siblingData) => Boolean(siblingData?.enableFixedBackground),
+              },
+            },
+            {
+              name: 'overlayOpacity',
+              type: 'number',
+              label: 'Overlay Opacity',
+              defaultValue: 40,
+              min: 0,
+              max: 100,
+              admin: {
+                description: 'Dark overlay over the background image (0–100) for text readability.',
+                condition: (_data, siblingData) => Boolean(siblingData?.enableFixedBackground),
+              },
+            },
+            {
               type: 'blocks',
               name: 'content',
               label: false,
@@ -43,7 +74,25 @@ export const SectionV2Block: Block = {
         },
         {
           label: 'Layout',
-          fields: [StyleFields({ name: 'styles', label: false, block: 'sectionBlock' })],
+          fields: [
+            StyleFields({
+              name: 'styles',
+              label: false,
+              block: 'sectionBlock',
+              include: [
+                'padding',
+                'margin',
+                'inset',
+                'gap',
+                'display',
+                'position',
+                'container',
+                'backgroundColor',
+                'overflow',
+                'visibility',
+              ],
+            }),
+          ],
         },
       ],
     },

@@ -47,7 +47,13 @@ export const HeadingV2Block: Block = {
         },
         {
           label: 'Layout',
-          fields: [StyleFields({ name: 'styles', label: false })],
+          fields: [
+            StyleFields({
+              name: 'styles',
+              label: false,
+              include: ['padding', 'margin', 'display', 'position', 'backgroundColor', 'visibility'],
+            }),
+          ],
         },
       ],
     },

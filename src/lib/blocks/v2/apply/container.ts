@@ -8,7 +8,11 @@ const OFF_AT_MD = ['md:max-w-none', 'md:!mx-0', 'md:!px-0']
 const OFF_AT_LG = ['lg:max-w-none', 'lg:!mx-0', 'lg:!px-0']
 
 export function applyContainer(value: ContainerValue | null | undefined): ApplyResult {
-  const merged = mergeContainerValue(value, v2Theme.container.defaultEnabled)
+  // Theme `defaultEnabled` is for Section/Wrapper field defaultValue only.
+  // Content blocks call applyStyles without a container field — do not invent the class.
+  if (value == null || typeof value !== 'object') return emptyApplyResult()
+
+  const merged = mergeContainerValue(value, false)
   const resolved = resolveContainerBreakpoints(merged.breakpoints)
   const name = v2Theme.container.className || 'container'
   const { base, md, lg } = resolved

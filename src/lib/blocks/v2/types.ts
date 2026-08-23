@@ -27,6 +27,28 @@ export type GapValue = {
 
 export type DisplayOption = 'block' | 'flex' | 'inline-flex' | 'grid' | 'inline-block' | 'none'
 
+export type FlexDirectionOption = 'row' | 'row-reverse' | 'col' | 'col-reverse'
+
+export type FlexWrapOption = 'nowrap' | 'wrap' | 'wrap-reverse'
+
+export type FlexJustifyOption = 'start' | 'end' | 'center' | 'between' | 'around' | 'evenly'
+
+export type FlexAlignOption = 'start' | 'end' | 'center' | 'baseline' | 'stretch'
+
+export type GridColsOption =
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8'
+  | '9'
+  | '10'
+  | '11'
+  | '12'
+
 export type PositionOption = 'static' | 'relative' | 'absolute' | 'sticky' | 'fixed'
 
 export type OverflowOption = 'visible' | 'hidden' | 'scroll' | 'auto' | 'clip'
@@ -37,6 +59,11 @@ export type KeywordBreakpoints<T extends string> = Record<BreakpointKey, T | ''>
 
 export type DisplayValue = {
   breakpoints: KeywordBreakpoints<DisplayOption>
+  flexDirection?: KeywordBreakpoints<FlexDirectionOption>
+  flexWrap?: KeywordBreakpoints<FlexWrapOption>
+  flexJustify?: KeywordBreakpoints<FlexJustifyOption>
+  flexAlign?: KeywordBreakpoints<FlexAlignOption>
+  gridCols?: KeywordBreakpoints<GridColsOption>
 }
 
 export type PositionValue = {

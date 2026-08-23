@@ -15,6 +15,7 @@ export function FieldShell({
   onBreakpoint,
   overrides,
   overflow = 'hidden',
+  defaultOpen = false,
   children,
 }: {
   label: string
@@ -23,9 +24,11 @@ export function FieldShell({
   onBreakpoint?: (next: BreakpointKey) => void
   overrides?: Record<BreakpointKey, boolean>
   overflow?: 'hidden' | 'visible'
+  /** When true, the panel starts expanded (useful for fields with conditional extras). */
+  defaultOpen?: boolean
   children: ReactNode
 }) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(defaultOpen)
   const showBreakpoints = Boolean(activeBp && onBreakpoint && overrides)
   const inheritFrom = activeBp ? BREAKPOINT_META[activeBp].inheritsFrom : null
   const showInherit = Boolean(showBreakpoints && inheritFrom && activeBp && overrides && !overrides[activeBp])

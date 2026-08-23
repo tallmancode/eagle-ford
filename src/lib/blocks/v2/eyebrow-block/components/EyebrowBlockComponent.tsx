@@ -21,7 +21,10 @@ export function EyebrowV2BlockComponent(props: EyebrowV2) {
   const uppercase = uppercaseSetting ?? true
   const colorCss = resolveColorCss(color, 'primary')
   const isChip = tagStyle === 'filled' || tagStyle === 'outline'
-  if (tagStyle !== 'filled' && tagStyle !== 'outline' && tagStyle !== 'none') return null
+  const isDashed = tagStyle === 'dashed'
+  if (tagStyle !== 'filled' && tagStyle !== 'outline' && tagStyle !== 'dashed' && tagStyle !== 'none') {
+    return null
+  }
 
   const tagStyleProps: CSSProperties = {}
   if (colorCss) {
@@ -34,8 +37,29 @@ export function EyebrowV2BlockComponent(props: EyebrowV2) {
 
   const tagChipClass = isChip ? 'px-3 py-1 rounded' : ''
   const outlineClass = tagStyle === 'outline' ? 'border' : ''
-  const alignClass = alignmentMap[alignment ?? 'center'] ?? alignmentMap.center
+  const resolvedAlignment = alignment ?? 'center'
+  const alignClass = alignmentMap[resolvedAlignment] ?? alignmentMap.center
   const { className, style, attrs } = applyStyles((styles ?? {}) as StyleValues, { slot: 'root' })
+
+  const showLeftDash = isDashed && (resolvedAlignment === 'left' || resolvedAlignment === 'center')
+  const showRightDash = isDashed && (resolvedAlignment === 'right' || resolvedAlignment === 'center')
+  const dashStyle: CSSProperties | undefined = colorCss ? { backgroundColor: colorCss } : undefined
+
+  const labelEl = (
+    <span
+      className={[
+        'inline-block text-sm font-semibold tracking-widest',
+        uppercase ? 'uppercase' : '',
+        tagChipClass,
+        outlineClass,
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      style={tagStyleProps}
+    >
+      {label}
+    </span>
+  )
 
   return (
     <div
@@ -44,19 +68,15 @@ export function EyebrowV2BlockComponent(props: EyebrowV2) {
       {...attrs}
       {...getBetterEditorBlockProps(props)}
     >
-      <span
-        className={[
-          'inline-block text-sm font-semibold tracking-widest',
-          uppercase ? 'uppercase' : '',
-          tagChipClass,
-          outlineClass,
-        ]
-          .filter(Boolean)
-          .join(' ')}
-        style={tagStyleProps}
-      >
-        {label}
-      </span>
+      {isDashed ? (
+        <div className="flex items-center gap-2">
+          {showLeftDash ? <div className="h-px w-6 bg-primary" style={dashStyle} /> : null}
+          {labelEl}
+          {showRightDash ? <div className="h-px w-6 bg-primary" style={dashStyle} /> : null}
+        </div>
+      ) : (
+        labelEl
+      )}
     </div>
   )
 }

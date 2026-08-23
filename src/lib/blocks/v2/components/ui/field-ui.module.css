@@ -75,6 +75,26 @@
   color: var(--theme-elevation-600, #666);
 }
 
+.subGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 10px;
+  border: 1px solid var(--theme-elevation-150, #e5e5e5);
+  border-radius: 8px;
+  background: var(--theme-bg, #fff);
+}
+
+.subGroupLabel {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--theme-elevation-600, #666);
+}
+
 .inheritHint {
   margin: 0;
   font-size: 11px;

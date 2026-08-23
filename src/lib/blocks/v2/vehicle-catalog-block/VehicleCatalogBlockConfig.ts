@@ -1,4 +1,5 @@
 import type { Block } from 'payload'
+import { ColorField } from '@/lib/blocks/v2/fields/color'
 import { StyleFields } from '@/lib/blocks/v2/fields/style-fields'
 
 export const VehicleCatalogV2Block: Block = {
@@ -27,14 +28,12 @@ export const VehicleCatalogV2Block: Block = {
         {
           label: 'Content',
           fields: [
-            {
-              name: 'heading',
-              type: 'text',
-              label: 'Heading',
-              admin: {
-                description: 'Optional heading displayed above the tabs (e.g. "All Vehicles")',
-              },
-            },
+            ColorField({
+              name: 'cardBackgroundColor',
+              label: 'Card Background',
+              description:
+                'Background colour for each vehicle card. Leave empty to use the default card colour.',
+            }),
           ],
         },
         {

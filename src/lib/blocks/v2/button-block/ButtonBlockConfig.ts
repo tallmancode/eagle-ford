@@ -51,6 +51,7 @@ export const ButtonV2Block: Block = {
                     { label: 'URL', value: 'url' },
                     { label: 'Internal link', value: 'reference' },
                     { label: 'Anchor (same page)', value: 'anchor' },
+                    { label: 'Browser back', value: 'historyBack' },
                   ],
                   admin: {
                     layout: 'horizontal',
@@ -114,6 +115,26 @@ export const ButtonV2Block: Block = {
                 description:
                   'The Section ID of the target section (without #). Set on the target section via its Accessibility settings.',
                 condition: (_data, siblingData) => siblingData?.linkType === 'anchor',
+              },
+            },
+            {
+              name: 'fallbackUrl',
+              type: 'text',
+              label: 'Fallback URL',
+              defaultValue: '/',
+              admin: {
+                description:
+                  'Used when there is no browser history to go back to (e.g. opened in a new tab).',
+                condition: (_data, siblingData) => siblingData?.linkType === 'historyBack',
+              },
+            },
+            {
+              name: 'showBackIcon',
+              type: 'checkbox',
+              label: 'Show back arrow icon',
+              defaultValue: true,
+              admin: {
+                condition: (_data, siblingData) => siblingData?.linkType === 'historyBack',
               },
             },
             {

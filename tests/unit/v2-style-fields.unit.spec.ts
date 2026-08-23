@@ -226,6 +226,68 @@ describe('v2 apply helpers', () => {
     expect(applyDisplay(value).className).toBe('flex lg:grid')
   })
 
+  it('emits flex direction and wrap only when display is flex', () => {
+    expect(
+      applyDisplay({
+        breakpoints: { base: 'flex', md: '', lg: '' },
+        flexDirection: { base: 'col', md: '', lg: '' },
+        flexWrap: { base: 'wrap', md: '', lg: '' },
+      }).className,
+    ).toBe('flex flex-col flex-wrap')
+
+    expect(
+      applyDisplay({
+        breakpoints: { base: 'block', md: '', lg: '' },
+        flexDirection: { base: 'col', md: '', lg: '' },
+        flexWrap: { base: 'wrap', md: '', lg: '' },
+      }).className,
+    ).toBe('block')
+  })
+
+  it('emits flex justify and align only when display is flex', () => {
+    expect(
+      applyDisplay({
+        breakpoints: { base: 'flex', md: '', lg: '' },
+        flexJustify: { base: 'between', md: '', lg: '' },
+        flexAlign: { base: 'center', md: '', lg: '' },
+      }).className,
+    ).toBe('flex justify-between items-center')
+
+    expect(
+      applyDisplay({
+        breakpoints: { base: 'grid', md: '', lg: '' },
+        flexJustify: { base: 'between', md: '', lg: '' },
+        flexAlign: { base: 'center', md: '', lg: '' },
+      }).className,
+    ).toBe('grid')
+  })
+
+  it('emits flex extras for inline-flex and grid-cols only under grid', () => {
+    expect(
+      applyDisplay({
+        breakpoints: { base: 'inline-flex', md: '', lg: '' },
+        flexDirection: { base: 'row', md: '', lg: '' },
+      }).className,
+    ).toBe('inline-flex flex-row')
+
+    expect(
+      applyDisplay({
+        breakpoints: { base: 'grid', md: '', lg: '' },
+        gridCols: { base: '3', md: '', lg: '' },
+        flexDirection: { base: 'col', md: '', lg: '' },
+      }).className,
+    ).toBe('grid grid-cols-3')
+  })
+
+  it('cascades flex direction and only emits when it changes', () => {
+    expect(
+      applyDisplay({
+        breakpoints: { base: 'flex', md: '', lg: '' },
+        flexDirection: { base: 'col', md: '', lg: 'row' },
+      }).className,
+    ).toBe('flex flex-col lg:flex-row')
+  })
+
   it('restores flex after hiding so visibility does not force block', () => {
     const value: VisibilityValue = {
       breakpoints: { base: 'hidden', md: 'visible', lg: '' },
@@ -235,12 +297,22 @@ describe('v2 apply helpers', () => {
     )
   })
 
-  it('emits the Ford container class by default', () => {
+  it('emits the Ford container class when the stored value is on', () => {
     expect(
       applyContainer({
         breakpoints: { base: true, md: null, lg: null },
       }).className,
     ).toBe('container')
+  })
+
+  it('does not invent a container class when no value is stored', () => {
+    expect(applyContainer(undefined).className).toBe('')
+    expect(applyContainer(null).className).toBe('')
+    expect(
+      applyStyles({
+        display: { breakpoints: { base: 'flex', md: '', lg: '' } },
+      }).className,
+    ).toBe('flex')
   })
 
   it('turns container off from tablet up', () => {

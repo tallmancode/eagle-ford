@@ -1,5 +1,6 @@
 import type { Block } from 'payload'
 import { blockRichTextEditor } from '@/lib/blocks/rich-text-block/blockRichTextEditor'
+import { LucideIconField } from '@/lib/fields/lucide-icons'
 import { StyleFields } from '@/lib/blocks/v2/fields/style-fields'
 
 export const CardV2Block: Block = {
@@ -46,6 +47,9 @@ export const CardV2Block: Block = {
                 description: 'Leave empty to use the media library alt text.',
               },
             },
+            LucideIconField({
+              required: false,
+            }),
             {
               name: 'title',
               type: 'text',
@@ -56,6 +60,60 @@ export const CardV2Block: Block = {
               type: 'richText',
               label: 'Body',
               editor: blockRichTextEditor,
+            },
+            {
+              name: 'enableCardLink',
+              type: 'checkbox',
+              label: 'Make whole card a link',
+              defaultValue: false,
+              admin: {
+                description:
+                  'When enabled, clicking the image or title navigates to the card link. The button below can still be shown separately.',
+              },
+            },
+            {
+              name: 'cardLinkType',
+              type: 'radio',
+              label: 'Card Link Type',
+              defaultValue: 'url',
+              options: [
+                { label: 'URL', value: 'url' },
+                { label: 'Internal link', value: 'reference' },
+              ],
+              admin: {
+                layout: 'horizontal',
+                condition: (_data, siblingData) => Boolean(siblingData?.enableCardLink),
+              },
+            },
+            {
+              name: 'cardUrl',
+              type: 'text',
+              label: 'Card URL',
+              admin: {
+                description: 'e.g. /contact or https://example.com',
+                condition: (_data, siblingData) =>
+                  Boolean(siblingData?.enableCardLink) && siblingData?.cardLinkType === 'url',
+              },
+            },
+            {
+              name: 'cardReference',
+              type: 'relationship',
+              label: 'Card Page',
+              relationTo: ['pages'],
+              maxDepth: 2,
+              admin: {
+                condition: (_data, siblingData) =>
+                  Boolean(siblingData?.enableCardLink) && siblingData?.cardLinkType === 'reference',
+              },
+            },
+            {
+              name: 'cardNewTab',
+              type: 'checkbox',
+              label: 'Open card link in new tab',
+              defaultValue: false,
+              admin: {
+                condition: (_data, siblingData) => Boolean(siblingData?.enableCardLink),
+              },
             },
             {
               name: 'showButton',

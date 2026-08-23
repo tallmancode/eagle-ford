@@ -45,6 +45,7 @@ export const EyebrowV2Block: Block = {
               options: [
                 { label: 'Filled', value: 'filled' },
                 { label: 'Outline', value: 'outline' },
+                { label: 'Dashed', value: 'dashed' },
                 { label: 'None', value: 'none' },
               ],
             },

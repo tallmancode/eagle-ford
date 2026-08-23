@@ -38,7 +38,7 @@ export const SpecialTemplatesCollection: CollectionConfig<'special-templates'> =
       label: false,
       type: 'blocks',
       blocks: [],
-      blockReferences: ['section'],
+      blockReferences: ['section', 'sectionV2'],
     },
   ],
   hooks: {

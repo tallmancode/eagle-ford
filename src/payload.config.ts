@@ -30,9 +30,17 @@ defineV2BlocksConfig({
         bottom: '1',
       },
     },
-    container:{
+    container: {
       defaultEnabled: true,
-    }
+    },
+  },
+  wrapperBlock: {
+    padding: {
+      mobile: {
+        top: '0.5',
+        bottom: '0.5',
+      },
+    },
   },
 })
 

@@ -26,6 +26,28 @@ import { CarouselV2Block } from '@/lib/blocks/v2/carousel-block/CarouselBlockCon
 import { SpecialsArchiveV2Block } from '@/lib/blocks/v2/specials-archive-block/SpecialsArchiveBlockConfig'
 import { VehicleCatalogV2Block } from '@/lib/blocks/v2/vehicle-catalog-block/VehicleCatalogBlockConfig'
 import { GalleryV2Block } from '@/lib/blocks/v2/gallery-block/GalleryBlockConfig'
+import { FeatureListV2Block } from '@/lib/blocks/v2/feature-list-block/FeatureListBlockConfig'
+import { FeatureRowsV2Block } from '@/lib/blocks/v2/feature-rows-block/FeatureRowsBlockConfig'
+import { PopupCardsV2Block } from '@/lib/blocks/v2/popup-cards-block/PopupCardsBlockConfig'
+import { StatsV2Block } from '@/lib/blocks/v2/stats-block/StatsBlockConfig'
+import { TeamGridV2Block } from '@/lib/blocks/v2/team-grid-block/TeamGridBlockConfig'
+import { HoursTabsV2Block } from '@/lib/blocks/v2/hours-tabs-block/HoursTabsBlockConfig'
+import { ContactInfoV2Block } from '@/lib/blocks/v2/contact-info-block/ContactInfoBlockConfig'
+import { ContactFooterV2Block } from '@/lib/blocks/v2/contact-footer-block/ContactFooterBlockConfig'
+import { FinanceCalculatorV2Block } from '@/lib/blocks/v2/finance-calculator-block/FinanceCalculatorBlockConfig'
+import { ReviewsV2Block } from '@/lib/blocks/v2/reviews-block/ReviewsBlockConfig'
+import { VehicleHeroV2Block } from '@/lib/blocks/v2/vehicle-hero-block/VehicleHeroBlockConfig'
+import { VehicleModelsV2Block } from '@/lib/blocks/v2/vehicle-models-block/VehicleModelsBlockConfig'
+import { VehicleColorsV2Block } from '@/lib/blocks/v2/vehicle-colors-block/VehicleColorsBlockConfig'
+import { VehicleGalleryV2Block } from '@/lib/blocks/v2/vehicle-gallery-block/VehicleGalleryBlockConfig'
+import { VehicleFeaturesV2Block } from '@/lib/blocks/v2/vehicle-features-block/VehicleFeaturesBlockConfig'
+import { VehicleFaqV2Block } from '@/lib/blocks/v2/vehicle-faq-block/VehicleFaqBlockConfig'
+import { VehicleSpecialCategoriesV2Block } from '@/lib/blocks/v2/vehicle-special-categories-block/VehicleSpecialCategoriesBlockConfig'
+import { VehicleModelHeroV2Block } from '@/lib/blocks/v2/vehicle-model-hero-block/VehicleModelHeroBlockConfig'
+import { VehicleModelHighlightsV2Block } from '@/lib/blocks/v2/vehicle-model-highlights-block/VehicleModelHighlightsBlockConfig'
+import { VehicleModelColorsV2Block } from '@/lib/blocks/v2/vehicle-model-colors-block/VehicleModelColorsBlockConfig'
+import { VehicleModelSiblingsV2Block } from '@/lib/blocks/v2/vehicle-model-siblings-block/VehicleModelSiblingsBlockConfig'
+import { VehicleModelVariantsV2Block } from '@/lib/blocks/v2/vehicle-model-variants-block/VehicleModelVariantsBlockConfig'
 import { RowBlock } from '@/lib/blocks/row-block/RowBlock'
 import { HeroBlock } from '@/lib/blocks/hero-block/HeroBlock'
 import { HeadingBlock } from '@/lib/blocks/heading-block/HeadingBlock'
@@ -101,6 +123,28 @@ const Blocks = [
   SpecialsArchiveV2Block,
   VehicleCatalogV2Block,
   GalleryV2Block,
+  FeatureListV2Block,
+  FeatureRowsV2Block,
+  PopupCardsV2Block,
+  StatsV2Block,
+  TeamGridV2Block,
+  HoursTabsV2Block,
+  ContactInfoV2Block,
+  ContactFooterV2Block,
+  FinanceCalculatorV2Block,
+  ReviewsV2Block,
+  VehicleHeroV2Block,
+  VehicleModelsV2Block,
+  VehicleColorsV2Block,
+  VehicleGalleryV2Block,
+  VehicleFeaturesV2Block,
+  VehicleFaqV2Block,
+  VehicleSpecialCategoriesV2Block,
+  VehicleModelHeroV2Block,
+  VehicleModelHighlightsV2Block,
+  VehicleModelColorsV2Block,
+  VehicleModelSiblingsV2Block,
+  VehicleModelVariantsV2Block,
   RowBlock,
   HeroBlock,
   HeadingBlock,

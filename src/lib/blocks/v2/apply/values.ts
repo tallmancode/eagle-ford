@@ -9,7 +9,13 @@ import type {
   ContainerValue,
   DisplayOption,
   DisplayValue,
+  FlexAlignOption,
+  FlexDirectionOption,
+  FlexJustifyOption,
+  FlexWrapOption,
   GapValue,
+  GridColsOption,
+  KeywordBreakpoints,
   OverflowAxes,
   OverflowOption,
   OverflowValue,
@@ -19,7 +25,7 @@ import type {
   VisibilityOption,
   VisibilityValue,
 } from '@/lib/blocks/v2/types'
-import { emptyAxisPair, emptyOverflowAxes, emptySides } from '@/lib/blocks/v2/apply/cascade'
+import { emptyAxisPair, emptyKeywordBreakpoints, emptyOverflowAxes, emptySides } from '@/lib/blocks/v2/apply/cascade'
 
 export const DISPLAY_OPTIONS: DisplayOption[] = [
   'block',
@@ -28,6 +34,47 @@ export const DISPLAY_OPTIONS: DisplayOption[] = [
   'grid',
   'inline-block',
   'none',
+]
+
+export const FLEX_DIRECTION_OPTIONS: FlexDirectionOption[] = [
+  'row',
+  'row-reverse',
+  'col',
+  'col-reverse',
+]
+
+export const FLEX_WRAP_OPTIONS: FlexWrapOption[] = ['nowrap', 'wrap', 'wrap-reverse']
+
+export const FLEX_JUSTIFY_OPTIONS: FlexJustifyOption[] = [
+  'start',
+  'end',
+  'center',
+  'between',
+  'around',
+  'evenly',
+]
+
+export const FLEX_ALIGN_OPTIONS: FlexAlignOption[] = [
+  'start',
+  'end',
+  'center',
+  'baseline',
+  'stretch',
+]
+
+export const GRID_COLS_OPTIONS: GridColsOption[] = [
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '10',
+  '11',
+  '12',
 ]
 
 export const POSITION_OPTIONS: PositionOption[] = [
@@ -91,8 +138,22 @@ export function emptyGapValue(defaults: V2BoxDefaults): GapValue {
   }
 }
 
-export function emptyDisplayValue(): DisplayValue {
-  return { breakpoints: { base: '', md: '', lg: '' } }
+export function emptyDisplayValue(): {
+  breakpoints: KeywordBreakpoints<DisplayOption>
+  flexDirection: KeywordBreakpoints<FlexDirectionOption>
+  flexWrap: KeywordBreakpoints<FlexWrapOption>
+  flexJustify: KeywordBreakpoints<FlexJustifyOption>
+  flexAlign: KeywordBreakpoints<FlexAlignOption>
+  gridCols: KeywordBreakpoints<GridColsOption>
+} {
+  return {
+    breakpoints: emptyKeywordBreakpoints(),
+    flexDirection: emptyKeywordBreakpoints(),
+    flexWrap: emptyKeywordBreakpoints(),
+    flexJustify: emptyKeywordBreakpoints(),
+    flexAlign: emptyKeywordBreakpoints(),
+    gridCols: emptyKeywordBreakpoints(),
+  }
 }
 
 export function emptyPositionValue(): PositionValue {
@@ -284,8 +345,28 @@ function mergeKeywordValue<T extends string>(
 
 type KeywordBreakpointsLike = Record<string, unknown>
 
-export function mergeDisplayValue(value: DisplayValue | null | undefined): DisplayValue {
-  return mergeKeywordValue(value, DISPLAY_OPTIONS)
+export function mergeDisplayValue(value: DisplayValue | null | undefined): {
+  breakpoints: KeywordBreakpoints<DisplayOption>
+  flexDirection: KeywordBreakpoints<FlexDirectionOption>
+  flexWrap: KeywordBreakpoints<FlexWrapOption>
+  flexJustify: KeywordBreakpoints<FlexJustifyOption>
+  flexAlign: KeywordBreakpoints<FlexAlignOption>
+  gridCols: KeywordBreakpoints<GridColsOption>
+} {
+  return {
+    breakpoints: mergeKeywordValue(value, DISPLAY_OPTIONS).breakpoints,
+    flexDirection: mergeKeywordValue(
+      { breakpoints: value?.flexDirection },
+      FLEX_DIRECTION_OPTIONS,
+    ).breakpoints,
+    flexWrap: mergeKeywordValue({ breakpoints: value?.flexWrap }, FLEX_WRAP_OPTIONS).breakpoints,
+    flexJustify: mergeKeywordValue(
+      { breakpoints: value?.flexJustify },
+      FLEX_JUSTIFY_OPTIONS,
+    ).breakpoints,
+    flexAlign: mergeKeywordValue({ breakpoints: value?.flexAlign }, FLEX_ALIGN_OPTIONS).breakpoints,
+    gridCols: mergeKeywordValue({ breakpoints: value?.gridCols }, GRID_COLS_OPTIONS).breakpoints,
+  }
 }
 
 export function mergePositionValue(value: PositionValue | null | undefined): PositionValue {
@@ -423,7 +504,52 @@ function validateKeywordValue(value: unknown, allowed: readonly string[], label:
 }
 
 export function validateDisplayValue(value: unknown): true | string {
-  return validateKeywordValue(value, DISPLAY_OPTIONS, 'Display')
+  if (value === null || value === undefined || value === '') return true
+  if (!isObject(value)) return 'Display must be an object'
+  const displayCheck = validateKeywordMap(value.breakpoints, DISPLAY_OPTIONS, 'Display')
+  if (displayCheck !== true) return displayCheck
+  const directionCheck = validateKeywordMap(value.flexDirection, FLEX_DIRECTION_OPTIONS, 'Flex direction')
+  if (directionCheck !== true) return directionCheck
+  const wrapCheck = validateKeywordMap(value.flexWrap, FLEX_WRAP_OPTIONS, 'Flex wrap')
+  if (wrapCheck !== true) return wrapCheck
+  const justifyCheck = validateKeywordMap(value.flexJustify, FLEX_JUSTIFY_OPTIONS, 'Flex justify')
+  if (justifyCheck !== true) return justifyCheck
+  const alignCheck = validateKeywordMap(value.flexAlign, FLEX_ALIGN_OPTIONS, 'Flex align')
+  if (alignCheck !== true) return alignCheck
+  const colsCheck = validateKeywordMap(value.gridCols, GRID_COLS_OPTIONS, 'Grid columns')
+  if (colsCheck !== true) return colsCheck
+  const keys = Object.keys(value)
+  if (
+    !keys.every(
+      (k) =>
+        k === 'breakpoints' ||
+        k === 'flexDirection' ||
+        k === 'flexWrap' ||
+        k === 'flexJustify' ||
+        k === 'flexAlign' ||
+        k === 'gridCols',
+    )
+  ) {
+    return 'Unexpected keys'
+  }
+  return true
+}
+
+function validateKeywordMap(
+  raw: unknown,
+  allowed: readonly string[],
+  label: string,
+): true | string {
+  if (raw === undefined) return true
+  if (!isObject(raw)) return `Invalid ${label} breakpoints`
+  for (const bp of BREAKPOINTS) {
+    const value = raw[bp]
+    if (value === undefined || value === '') continue
+    if (typeof value !== 'string' || !allowed.includes(value)) {
+      return `Invalid ${label} for ${bp}`
+    }
+  }
+  return true
 }
 
 export function validatePositionValue(value: unknown): true | string {
