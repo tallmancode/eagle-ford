@@ -24,6 +24,7 @@ import { FaqV2Block } from '@/lib/blocks/v2/faq-block/FaqBlockConfig'
 import { StockArchiveV2Block } from '@/lib/blocks/v2/stock-archive-block/StockArchiveBlockConfig'
 import { CarouselV2Block } from '@/lib/blocks/v2/carousel-block/CarouselBlockConfig'
 import { SpecialsArchiveV2Block } from '@/lib/blocks/v2/specials-archive-block/SpecialsArchiveBlockConfig'
+import { SpecialsTabsV2Block } from '@/lib/blocks/v2/specials-tabs-block/SpecialsTabsBlockConfig'
 import { VehicleCatalogV2Block } from '@/lib/blocks/v2/vehicle-catalog-block/VehicleCatalogBlockConfig'
 import { GalleryV2Block } from '@/lib/blocks/v2/gallery-block/GalleryBlockConfig'
 import { FeatureListV2Block } from '@/lib/blocks/v2/feature-list-block/FeatureListBlockConfig'
@@ -121,6 +122,7 @@ const Blocks = [
   StockArchiveV2Block,
   CarouselV2Block,
   SpecialsArchiveV2Block,
+  SpecialsTabsV2Block,
   VehicleCatalogV2Block,
   GalleryV2Block,
   FeatureListV2Block,

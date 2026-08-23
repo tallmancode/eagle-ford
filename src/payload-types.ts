@@ -137,6 +137,7 @@ export interface Config {
     stockArchiveV2: StockArchiveV2;
     carouselV2: CarouselV2;
     specialsArchiveV2: SpecialsArchiveV2;
+    specialsTabsV2: SpecialsTabsV2;
     vehicleCatalogV2: VehicleCatalogV2;
     galleryV2: GalleryV2;
     featureListV2: FeatureListV2;
@@ -1115,6 +1116,7 @@ export interface SectionV2 {
         | StockArchiveV2
         | CarouselV2
         | SpecialsArchiveV2
+        | SpecialsTabsV2
         | VehicleCatalogV2
         | GalleryV2
         | FeatureListV2
@@ -2711,6 +2713,7 @@ export interface WrapperV2 {
         | StockArchiveV2
         | CarouselV2
         | SpecialsArchiveV2
+        | SpecialsTabsV2
         | VehicleCatalogV2
         | GalleryV2
         | FeatureListV2
@@ -2932,6 +2935,7 @@ export interface ColumnV2 {
         | StockArchiveV2
         | CarouselV2
         | SpecialsArchiveV2
+        | SpecialsTabsV2
         | VehicleCatalogV2
         | GalleryV2
         | FeatureListV2
@@ -5923,6 +5927,246 @@ export interface SpecialsArchiveV2 {
   id?: string | null;
   blockName?: string | null;
   blockType: 'specialsArchiveV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "specialsTabsV2".
+ */
+export interface SpecialsTabsV2 {
+  /**
+   * Renders the category name above the specials tabs.
+   */
+  showCategoryTitle?: boolean | null;
+  /**
+   * Background of the selected special in the list (desktop and mobile).
+   */
+  activeTabBackground?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Title colour of the selected special.
+   */
+  activeTabText?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Background of specials that are not selected.
+   */
+  inactiveTabBackground?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Title colour of specials that are not selected.
+   */
+  inactiveTabText?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Left border accent on the selected special.
+   */
+  activeTabAccent?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Background of the offer-type pill (e.g. Price Point Specials).
+   */
+  badgeBackground?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Text colour of the offer-type pill.
+   */
+  badgeText?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Colour of the category heading above the tabs (when shown).
+   */
+  categoryTitleColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Colour for special offer / payment amounts.
+   */
+  pricingColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Colour for “Specials” headers, pricing labels, and helper copy.
+   */
+  mutedTextColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'specialsTabsV2';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -9060,9 +9304,14 @@ export interface SpecialTemplate {
    * e.g. "Standard Special Layout" or "Vehicle Offer Layout"
    */
   title: string;
+  /**
+   * Category shown in Better Editor / live preview. Leave empty to use the first category (by sort order).
+   */
+  previewCategory?: (string | null) | SpecialCategory;
   section?: (Section | SectionV2)[] | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -10062,9 +10311,11 @@ export interface SpecialCategoriesSelect<T extends boolean = true> {
  */
 export interface SpecialTemplatesSelect<T extends boolean = true> {
   title?: T;
+  previewCategory?: T;
   section?: T | {};
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -11744,6 +11995,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'specials';
           value: string | Special;
+        } | null)
+      | ({
+          relationTo: 'special-templates';
+          value: string | SpecialTemplate;
         } | null)
       | ({
           relationTo: 'vehicles';

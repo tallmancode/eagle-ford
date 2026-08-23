@@ -21,10 +21,11 @@ import { FinanceCalculatorClient } from '@/lib/blocks/finance-calculator-block/c
 import type { FinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-block/getFinanceCalculatorDefaults'
 import { getOfferTypeLabel } from '@/lib/specials/constants'
 import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
-import { getSpecialCategoryPath } from '@/lib/specials/paths'
+import { getSpecialCategoryPathPreservingParams } from '@/lib/specials/paths'
 import { formatZAR } from '@/lib/utils/formatZAR'
 import { getBrochureUrl } from '@/lib/utils/vehicleCta'
 import type { Form, Special, Vehicle, VehicleModel, VehicleVariant } from '@/payload-types'
+import type { CSSProperties } from 'react'
 
 const FINANCE_DISCLAIMER =
   'The instalment quoted does not include any admin costs, license and registration of the vehicle and any value added products. All calculations, rates quoted and payments shown are guidelines only and are not quotations.'
@@ -49,6 +50,19 @@ export type SpecialTabItem = Pick<
   | 'enquiryForm'
 >
 
+/** Resolved CSS colour strings from Specials Tabs (v2) Appearance fields. */
+export type SpecialsTabsAppearance = {
+  activeTabBackground?: string
+  activeTabText?: string
+  inactiveTabBackground?: string
+  inactiveTabText?: string
+  activeTabAccent?: string
+  badgeBackground?: string
+  badgeText?: string
+  pricingColor?: string
+  mutedTextColor?: string
+}
+
 type SpecialsTabsProps = {
   categorySlug: string
   categoryTitle: string
@@ -58,6 +72,54 @@ type SpecialsTabsProps = {
   initialSpecialSlug?: string
   offerDetails?: React.ReactNode
   calculatorDefaults?: FinanceCalculatorDefaults | null
+  appearance?: SpecialsTabsAppearance | null
+}
+
+/** Prefer hex/literal colours for client-component inline styles (avoids CSS-var hydration diffs). */
+function mutedTextStyle(appearance?: SpecialsTabsAppearance | null): CSSProperties | undefined {
+  return appearance?.mutedTextColor ? { color: appearance.mutedTextColor } : undefined
+}
+
+function pricingTextStyle(appearance?: SpecialsTabsAppearance | null): CSSProperties | undefined {
+  return appearance?.pricingColor ? { color: appearance.pricingColor } : undefined
+}
+
+function tabRowStyle(
+  isSelected: boolean,
+  appearance?: SpecialsTabsAppearance | null,
+): CSSProperties | undefined {
+  if (!appearance) return undefined
+
+  if (isSelected) {
+    const style: CSSProperties = {}
+    if (appearance.activeTabBackground) style.backgroundColor = appearance.activeTabBackground
+    if (appearance.activeTabAccent) style.borderLeftColor = appearance.activeTabAccent
+    if (appearance.activeTabText) style.color = appearance.activeTabText
+    return Object.keys(style).length > 0 ? style : undefined
+  }
+
+  const style: CSSProperties = {}
+  if (appearance.inactiveTabBackground) style.backgroundColor = appearance.inactiveTabBackground
+  if (appearance.inactiveTabText) style.color = appearance.inactiveTabText
+  return Object.keys(style).length > 0 ? style : undefined
+}
+
+function tabTitleStyle(
+  isSelected: boolean,
+  appearance?: SpecialsTabsAppearance | null,
+): CSSProperties | undefined {
+  if (!appearance) return undefined
+  if (isSelected && appearance.activeTabText) return { color: appearance.activeTabText }
+  if (!isSelected && appearance.inactiveTabText) return { color: appearance.inactiveTabText }
+  return undefined
+}
+
+function badgeStyle(appearance?: SpecialsTabsAppearance | null): CSSProperties | undefined {
+  if (!appearance?.badgeBackground && !appearance?.badgeText) return undefined
+  const style: CSSProperties = {}
+  if (appearance.badgeBackground) style.backgroundColor = appearance.badgeBackground
+  if (appearance.badgeText) style.color = appearance.badgeText
+  return style
 }
 
 function findSpecialIndex(
@@ -110,21 +172,35 @@ function buildSpecialContextValues(
   }
 }
 
-function SpecialListPricing({ special }: { special: SpecialTabItem }) {
+function SpecialListPricing({
+  special,
+  appearance,
+}: {
+  special: SpecialTabItem
+  appearance?: SpecialsTabsAppearance | null
+}) {
   if (special.offerType === 'price-point') {
     if (special.specialOffer == null && special.bestSaving == null) return null
     return (
       <span className="flex flex-col items-start">
         {special.specialOffer != null && (
           <span className="flex items-center space-x-1">
-            <span className="text-xs">Special Offer:</span>
-            <span className="font-semibold text-secondary">{formatZAR(special.specialOffer)}*</span>
+            <span className="text-xs" style={mutedTextStyle(appearance)}>
+              Special Offer:
+            </span>
+            <span className="font-semibold text-secondary" style={pricingTextStyle(appearance)}>
+              {formatZAR(special.specialOffer)}*
+            </span>
           </span>
         )}
         {special.bestSaving != null && (
           <span className="flex items-center space-x-1">
-            <span className="text-xs">Best saving:</span>
-            <span className="font-semibold text-secondary">{formatZAR(special.bestSaving)}*</span>
+            <span className="text-xs" style={mutedTextStyle(appearance)}>
+              Best saving:
+            </span>
+            <span className="font-semibold text-secondary" style={pricingTextStyle(appearance)}>
+              {formatZAR(special.bestSaving)}*
+            </span>
           </span>
         )}
       </span>
@@ -135,8 +211,12 @@ function SpecialListPricing({ special }: { special: SpecialTabItem }) {
     return (
       <span className="flex justify-start">
         <span className="flex items-center space-x-1">
-          <span className="text-xs">Payment From:</span>
-          <span className="font-semibold text-secondary">{formatZAR(special.paymentFrom)}*pm</span>
+          <span className="text-xs" style={mutedTextStyle(appearance)}>
+            Payment From:
+          </span>
+          <span className="font-semibold text-secondary" style={pricingTextStyle(appearance)}>
+            {formatZAR(special.paymentFrom)}*pm
+          </span>
         </span>
       </span>
     )
@@ -158,7 +238,13 @@ function hasSpecialDetailPricing(special: SpecialTabItem): boolean {
   return false
 }
 
-function SpecialDetailPricing({ special }: { special: SpecialTabItem }) {
+function SpecialDetailPricing({
+  special,
+  appearance,
+}: {
+  special: SpecialTabItem
+  appearance?: SpecialsTabsAppearance | null
+}) {
   const offerLabel = special.pricingLabel?.trim() || 'Special Offer'
 
   if (special.offerType === 'price-point') {
@@ -166,16 +252,26 @@ function SpecialDetailPricing({ special }: { special: SpecialTabItem }) {
       <div className="space-y-2">
         {special.specialOffer != null && (
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground">{offerLabel}</span>
-            <span className="font-semibold text-secondary text-2xl">
+            <span className="text-xs text-muted-foreground" style={mutedTextStyle(appearance)}>
+              {offerLabel}
+            </span>
+            <span
+              className="font-semibold text-secondary text-2xl"
+              style={pricingTextStyle(appearance)}
+            >
               {formatZAR(special.specialOffer)}*
             </span>
           </div>
         )}
         {special.bestSaving != null && (
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground">Best saving</span>
-            <span className="font-semibold text-secondary text-2xl">
+            <span className="text-xs text-muted-foreground" style={mutedTextStyle(appearance)}>
+              Best saving
+            </span>
+            <span
+              className="font-semibold text-secondary text-2xl"
+              style={pricingTextStyle(appearance)}
+            >
               {formatZAR(special.bestSaving)}*
             </span>
           </div>
@@ -188,8 +284,13 @@ function SpecialDetailPricing({ special }: { special: SpecialTabItem }) {
     return (
       <div className="space-y-2">
         <div className="flex flex-col">
-          <span className="text-xs text-muted-foreground">Payment from</span>
-          <span className="font-semibold text-secondary text-2xl">
+          <span className="text-xs text-muted-foreground" style={mutedTextStyle(appearance)}>
+            Payment from
+          </span>
+          <span
+            className="font-semibold text-secondary text-2xl"
+            style={pricingTextStyle(appearance)}
+          >
             {formatZAR(special.paymentFrom)}*pm
           </span>
         </div>
@@ -201,8 +302,13 @@ function SpecialDetailPricing({ special }: { special: SpecialTabItem }) {
     return (
       <div className="space-y-2">
         <div className="flex flex-col">
-          <span className="text-xs text-muted-foreground">{offerLabel}</span>
-          <span className="font-semibold text-secondary text-lg">
+          <span className="text-xs text-muted-foreground" style={mutedTextStyle(appearance)}>
+            {offerLabel}
+          </span>
+          <span
+            className="font-semibold text-secondary text-lg"
+            style={pricingTextStyle(appearance)}
+          >
             {formatZAR(special.specialOffer)}*
           </span>
         </div>
@@ -244,11 +350,13 @@ function SpecialCardImage({
   special,
   priority,
   showPricingOverlay = true,
+  appearance,
 }: {
   special: SpecialTabItem
   priority?: boolean
   /** Desktop grid only — mobile accordion shows pricing in SpecialDetailInfo instead. */
   showPricingOverlay?: boolean
+  appearance?: SpecialsTabsAppearance | null
 }) {
   if (!special.cardImage) return null
 
@@ -278,7 +386,7 @@ function SpecialCardImage({
           }}
           className="absolute bottom-3 right-3 z-10 max-w-[min(100%,16rem)] rounded-xl bg-background/90 px-3 py-2 shadow-sm backdrop-blur-sm transition-opacity hover:opacity-90 sm:text-right"
         >
-          <SpecialDetailPricing special={special} />
+          <SpecialDetailPricing special={special} appearance={appearance} />
           <p className="mt-1 text-[10px] leading-tight text-muted-foreground">
             All subject to finance approval Ford Credit.
           </p>
@@ -296,11 +404,13 @@ function SpecialDetailInfo({
   fordPromiseHref,
   offerDetails,
   calculatorDefaults,
+  appearance,
 }: {
   special: SpecialTabItem
   fordPromiseHref: string | null
   offerDetails?: React.ReactNode
   calculatorDefaults?: FinanceCalculatorDefaults | null
+  appearance?: SpecialsTabsAppearance | null
 }) {
   const title = getSpecialDisplayTitle(special)
   const variant =
@@ -363,7 +473,7 @@ function SpecialDetailInfo({
         >
           {hasPricing && (
             <div className="shrink-0">
-              <SpecialDetailPricing special={special} />
+              <SpecialDetailPricing special={special} appearance={appearance} />
             </div>
           )}
           {hasDetailTabs && (
@@ -487,14 +597,19 @@ function SpecialsTabsList({
   specials,
   selectedIndex,
   onSelect,
+  appearance,
 }: {
   specials: SpecialTabItem[]
   selectedIndex: number
   onSelect: (index: number) => void
+  appearance?: SpecialsTabsAppearance | null
 }) {
   return (
     <>
-      <div className="gap-4 px-4 flex justify-between pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+      <div
+        className="gap-4 px-4 flex justify-between pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground"
+        style={mutedTextStyle(appearance)}
+      >
         <span>Specials</span>
         <span className="text-xs">*Click the specials below to view deatils</span>
       </div>
@@ -512,17 +627,24 @@ function SpecialsTabsList({
                     ? 'bg-primary/5 border-l-primary text-primary'
                     : 'border-l-transparent hover:bg-muted/50'
                 }`}
+                style={tabRowStyle(isSelected, appearance)}
               >
                 <span className="flex justify-between">
-                  <span className={`font-semibold text-sm ${isSelected ? 'text-primary' : ''}`}>
+                  <span
+                    className={`font-semibold text-sm ${isSelected ? 'text-primary' : ''}`}
+                    style={tabTitleStyle(isSelected, appearance)}
+                  >
                     {getSpecialDisplayTitle(special)}
                   </span>
-                  <span className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+                  <span
+                    className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground"
+                    style={badgeStyle(appearance)}
+                  >
                     {getOfferTypeLabel(special.offerType)}
                   </span>
                 </span>
 
-                <SpecialListPricing special={special} />
+                <SpecialListPricing special={special} appearance={appearance} />
               </button>
             </li>
           )
@@ -541,6 +663,7 @@ function SpecialsTabsInner({
   initialSpecialSlug,
   offerDetails,
   calculatorDefaults,
+  appearance,
 }: SpecialsTabsProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -568,7 +691,10 @@ function SpecialsTabsInner({
     if (searchParams.get('special') === selectedSpecial.slug) return
 
     startTransition(() => {
-      router.replace(getSpecialCategoryPath(categorySlug, selectedSpecial.slug), { scroll: false })
+      router.replace(
+        getSpecialCategoryPathPreservingParams(categorySlug, selectedSpecial.slug, searchParams),
+        { scroll: false },
+      )
     })
   }, [categorySlug, router, searchParams, selectedSpecial?.slug, specials.length])
 
@@ -638,7 +764,10 @@ function SpecialsTabsInner({
     const special = specials[index]
     if (!special?.slug) return
     startTransition(() => {
-      router.replace(getSpecialCategoryPath(categorySlug, special.slug), { scroll: false })
+      router.replace(
+        getSpecialCategoryPathPreservingParams(categorySlug, special.slug, searchParams),
+        { scroll: false },
+      )
     })
   }
 
@@ -655,7 +784,10 @@ function SpecialsTabsInner({
       {/* Mobile: accordion; enquiry form portaled into the open panel */}
       <div className="lg:hidden flex flex-col gap-6">
         <div className="border-b border-border">
-          <div className="px-4 pb-2 text-xs font-medium tracking-wide text-muted-foreground">
+          <div
+            className="px-4 pb-2 text-xs font-medium tracking-wide text-muted-foreground"
+            style={mutedTextStyle(appearance)}
+          >
             <span>Specials</span>
           </div>
           <Accordion
@@ -679,12 +811,16 @@ function SpecialsTabsInner({
                   <AccordionTrigger
                     data-special-accordion-trigger={String(special.id)}
                     className="group scroll-mt-24 hover:no-underline w-full px-4 py-4 text-left transition-colors border-l-4 border-l-transparent bg-muted/50 data-[state=open]:bg-primary/5 data-[state=open]:border-l-primary hover:bg-muted [&>svg]:text-muted-foreground group-data-[state=open]:[&>svg]:text-primary"
+                    style={tabRowStyle(isSelected, appearance)}
                   >
                     <span className="flex flex-1 flex-col gap-2 text-left">
-                      <span className="font-semibold text-sm group-data-[state=open]:text-primary">
+                      <span
+                        className="font-semibold text-sm group-data-[state=open]:text-primary"
+                        style={tabTitleStyle(isSelected, appearance)}
+                      >
                         {getSpecialDisplayTitle(special)}
                       </span>
-                      <SpecialListPricing special={special} />
+                      <SpecialListPricing special={special} appearance={appearance} />
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="px-4 pt-2 pb-6">
@@ -693,12 +829,14 @@ function SpecialsTabsInner({
                         special={special}
                         priority={isSelected}
                         showPricingOverlay={false}
+                        appearance={appearance}
                       />
                       <SpecialDetailInfo
                         special={special}
                         fordPromiseHref={fordPromiseHref}
                         offerDetails={isSelected ? offerDetails : undefined}
                         calculatorDefaults={calculatorDefaults}
+                        appearance={appearance}
                       />
                       <MobileEnquiryFormMount
                         active={isSelected && Boolean(enquiryForm)}
@@ -729,11 +867,12 @@ function SpecialsTabsInner({
             specials={specials}
             selectedIndex={selectedIndex}
             onSelect={selectSpecial}
+            appearance={appearance}
           />
         </div>
 
         <div className="col-start-2 row-start-1">
-          <SpecialCardImage special={selectedSpecial} priority />
+          <SpecialCardImage special={selectedSpecial} priority appearance={appearance} />
         </div>
 
         <div className="col-start-1 row-start-2">
@@ -752,6 +891,7 @@ function SpecialsTabsInner({
             fordPromiseHref={fordPromiseHref}
             offerDetails={offerDetails}
             calculatorDefaults={calculatorDefaults}
+            appearance={appearance}
           />
         </div>
       </div>

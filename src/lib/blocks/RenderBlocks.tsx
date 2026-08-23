@@ -25,6 +25,7 @@ import type {
   StockArchiveV2,
   CarouselV2,
   SpecialsArchiveV2,
+  SpecialsTabsV2,
   VehicleCatalogV2,
   GalleryV2,
   FeatureListV2,
@@ -121,6 +122,7 @@ import { FaqV2BlockComponent } from '@/lib/blocks/v2/faq-block/components/FaqBlo
 import { StockArchiveV2BlockComponent } from '@/lib/blocks/v2/stock-archive-block/components/StockArchiveBlockComponent'
 import { CarouselV2BlockComponent } from '@/lib/blocks/v2/carousel-block/components/CarouselBlockComponent'
 import { SpecialsArchiveV2BlockComponent } from '@/lib/blocks/v2/specials-archive-block/components/SpecialsArchiveBlockComponent'
+import { SpecialsTabsV2BlockComponent } from '@/lib/blocks/v2/specials-tabs-block/components/SpecialsTabsBlockComponent'
 import { VehicleCatalogV2BlockComponent } from '@/lib/blocks/v2/vehicle-catalog-block/components/VehicleCatalogBlockComponent'
 import { GalleryV2BlockComponent } from '@/lib/blocks/v2/gallery-block/components/GalleryBlockComponent'
 import { FeatureListV2BlockComponent } from '@/lib/blocks/v2/feature-list-block/components/FeatureListBlockComponent'
@@ -224,6 +226,7 @@ type BlockComponentMap = {
   stockArchiveV2: StockArchiveV2
   carouselV2: CarouselV2
   specialsArchiveV2: SpecialsArchiveV2
+  specialsTabsV2: SpecialsTabsV2
   vehicleCatalogV2: VehicleCatalogV2
   galleryV2: GalleryV2
   featureListV2: FeatureListV2
@@ -329,6 +332,9 @@ const blockComponents: {
   carouselV2: CarouselV2BlockComponent,
   specialsArchiveV2: SpecialsArchiveV2BlockComponent as unknown as React.ComponentType<
     WithMeta<SpecialsArchiveV2>
+  >,
+  specialsTabsV2: SpecialsTabsV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<SpecialsTabsV2>
   >,
   vehicleCatalogV2: VehicleCatalogV2BlockComponent as unknown as React.ComponentType<
     WithMeta<VehicleCatalogV2>

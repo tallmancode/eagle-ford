@@ -18,6 +18,7 @@ export const elementV2ContentRefs: BlockSlug[] = [
   'stockArchiveV2',
   'carouselV2',
   'specialsArchiveV2',
+  'specialsTabsV2',
   'vehicleCatalogV2',
   'galleryV2',
   'featureListV2',

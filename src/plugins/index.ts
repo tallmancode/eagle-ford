@@ -282,6 +282,6 @@ export const plugins: Plugin[] = [
   }),
   betterEditor({
     blocksField: 'section',
-    collections: ['pages'],
+    collections: ['pages', 'special-templates'],
   }),
 ]
