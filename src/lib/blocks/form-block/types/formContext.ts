@@ -19,7 +19,10 @@ export type SpecialsPageMeta = {
   specials: SpecialTabItem[]
   initialSpecialSlug?: string
   calculatorDefaults?: FinanceCalculatorDefaults | null
+  /** Desktop detail pane — must be a distinct React tree from `offerDetailsMobile`. */
   offerDetails?: ReactNode
+  /** Mobile accordion detail pane — distinct tree to avoid reuse hydration mismatches. */
+  offerDetailsMobile?: ReactNode
 }
 
 export type BlockRenderMeta = FormBlockMeta & {
