@@ -6,10 +6,15 @@ import React from 'react'
 import type { Form } from '@/payload-types'
 import type { FormBlockType } from '@/payload-types'
 import type { FormBlockMeta } from '@/lib/blocks/form-block/types/formContext'
-import { FormBlockClient } from '@/lib/blocks/form-block/components/FormBlockClient'
+import {
+  FormBlockClient,
+  type FormBlockLayout,
+} from '@/lib/blocks/form-block/components/FormBlockClient'
 
-export async function FormBlockComponent(props: FormBlockType & { meta?: FormBlockMeta }) {
-  const { enableIntro, form: formProp, introContent, meta } = props
+export async function FormBlockComponent(
+  props: FormBlockType & { meta?: FormBlockMeta; layout?: FormBlockLayout },
+) {
+  const { enableIntro, form: formProp, introContent, meta, layout } = props
 
   let form: Form | null = null
 
@@ -35,6 +40,7 @@ export async function FormBlockComponent(props: FormBlockType & { meta?: FormBlo
       enableIntro={enableIntro}
       form={form}
       introContent={introContent as SerializedEditorState | null | undefined}
+      layout={layout}
     />
   )
 }

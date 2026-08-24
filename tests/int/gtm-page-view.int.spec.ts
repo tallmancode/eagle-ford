@@ -70,4 +70,26 @@ describe('GTMPageView', () => {
       page_path: '/vehicles/everest',
     })
   })
+
+  it('fires again when only search params change', () => {
+    usePathname.mockReturnValue('/showroom')
+    useSearchParams.mockReturnValue(new URLSearchParams())
+
+    const { rerender } = render(createElement(GTMPageView, { gtmId: 'GTM-P2JCNCLC' }))
+
+    expect(sendGTMEvent).toHaveBeenCalledWith({
+      event: 'page_view',
+      page_path: '/showroom',
+    })
+
+    sendGTMEvent.mockClear()
+    useSearchParams.mockReturnValue(new URLSearchParams('bodyType=hatch&page=2'))
+
+    rerender(createElement(GTMPageView, { gtmId: 'GTM-P2JCNCLC' }))
+
+    expect(sendGTMEvent).toHaveBeenCalledWith({
+      event: 'page_view',
+      page_path: '/showroom?bodyType=hatch&page=2',
+    })
+  })
 })

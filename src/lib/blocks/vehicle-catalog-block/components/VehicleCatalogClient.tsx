@@ -66,7 +66,13 @@ function VehicleCatalogCard({
       )}
       <div className="mt-auto w-full pt-4 px-4">
         <Button asChild className="w-full rounded-full">
-          <Link href={`/vehicles/${vehicle.slug}`}>Explore Vehicle</Link>
+          <Link
+            href={`/vehicles/${vehicle.slug}`}
+            data-gtm-cta="explore-vehicle"
+            data-gtm-cta-location="vehicle-catalog"
+          >
+            Explore Vehicle
+          </Link>
         </Button>
       </div>
     </div>

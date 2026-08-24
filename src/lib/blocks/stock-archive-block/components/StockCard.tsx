@@ -51,6 +51,8 @@ export function StockCard({ vehicle }: Props) {
       <Link
         href={detailsHref}
         className="relative block aspect-[16/10] w-full overflow-hidden bg-neutral-100"
+        data-gtm-cta="stock-view-details"
+        data-gtm-cta-location="stock-archive-card"
       >
         {image ? (
           <MediaImage
@@ -71,7 +73,11 @@ export function StockCard({ vehicle }: Props) {
 
       <div className="flex flex-1 flex-col">
         <div className="px-4 pt-4 pb-3">
-          <Link href={detailsHref}>
+          <Link
+            href={detailsHref}
+            data-gtm-cta="stock-view-details"
+            data-gtm-cta-location="stock-archive-card"
+          >
             <h3
               className="flex items-start gap-3 hover:underline"
               title={titleWithYear}

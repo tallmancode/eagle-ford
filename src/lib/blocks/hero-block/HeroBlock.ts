@@ -2,6 +2,7 @@ import type { Block } from 'payload'
 import { heroOptions } from '@/lib/blocks/hero-block/heroOptions'
 import { carouselHeroConfig } from '@/lib/blocks/hero-block/templates/carousel-hero/config'
 import { bannerHeroConfig } from '@/lib/blocks/hero-block/templates/banner-hero/config'
+import { formHeroConfig } from '@/lib/blocks/hero-block/templates/form-hero/config'
 
 export const HeroBlock: Block = {
   slug: 'hero',
@@ -36,5 +37,6 @@ export const HeroBlock: Block = {
     },
     carouselHeroConfig,
     bannerHeroConfig,
+    formHeroConfig,
   ],
 }

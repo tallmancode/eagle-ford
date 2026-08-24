@@ -3,6 +3,7 @@ import type { BlockSlug } from 'payload'
 /** Element blocks — mount inside Section/Wrapper/Column (v2) only. */
 export const elementV2ContentRefs: BlockSlug[] = [
   'buttonV2',
+  'buttonGroupV2',
   'cardV2',
   'accordionV2',
   'imageV2',
@@ -20,9 +21,11 @@ export const elementV2ContentRefs: BlockSlug[] = [
   'specialsArchiveV2',
   'specialsTabsV2',
   'vehicleCatalogV2',
+  'vehicleTabsV2',
   'galleryV2',
   'featureListV2',
   'featureRowsV2',
+  'overlapMediaStoryV2',
   'popupCardsV2',
   'statsV2',
   'teamGridV2',

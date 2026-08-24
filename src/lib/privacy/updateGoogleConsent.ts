@@ -1,3 +1,5 @@
+import { canSendAnalytics } from '@/components/analytics/canSendAnalytics'
+
 type ConsentState = 'granted' | 'denied'
 
 declare global {
@@ -18,6 +20,7 @@ function ensureGtag(): void {
 
 export function updateGoogleConsent(accepted: boolean): void {
   if (typeof window === 'undefined') return
+  if (!canSendAnalytics()) return
 
   ensureGtag()
 

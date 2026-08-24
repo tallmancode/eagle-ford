@@ -1,4 +1,5 @@
 import type { CtaButton } from '@/payload-types'
+import { gtmCtaProps } from '@/components/analytics/gtmCtaProps'
 import { Button } from '@/components/ui/button'
 import { resolveNavHref } from '@/lib/fields/navigation/resolveNavHref'
 import { lucideIconMap } from '@/lib/fields/lucide-icons'
@@ -29,6 +30,7 @@ export const CtaButtonBlockComponent: React.FC<CtaButton & { meta?: unknown }> =
   variant = 'default',
   size = 'default',
   align = 'left',
+  trackAsCta,
   meta,
 }) => {
   const inRow = (meta as { inRow?: boolean } | undefined)?.inRow === true
@@ -36,6 +38,11 @@ export const CtaButtonBlockComponent: React.FC<CtaButton & { meta?: unknown }> =
   const wrapperClass = inRow ? undefined : cn('flex w-full', alignClass[align ?? 'left'])
   const Icon = icon ? lucideIconMap[icon] : undefined
   const tapClass = mobileTapClass[resolvedSize] ?? mobileTapClass.default
+  const trackingProps = gtmCtaProps({
+    trackAsCta,
+    name: label,
+    location: 'cta-button',
+  })
 
   const buttonContent = (
     <>
@@ -50,7 +57,9 @@ export const CtaButtonBlockComponent: React.FC<CtaButton & { meta?: unknown }> =
   if (linkType === 'anchor') {
     return wrap(
       <Button asChild variant={variant ?? 'default'} size={resolvedSize} className={tapClass}>
-        <a href={`#${anchorId}`}>{buttonContent}</a>
+        <a href={`#${anchorId}`} {...trackingProps}>
+          {buttonContent}
+        </a>
       </Button>,
     )
   }
@@ -71,7 +80,7 @@ export const CtaButtonBlockComponent: React.FC<CtaButton & { meta?: unknown }> =
 
   return wrap(
     <Button asChild variant={variant ?? 'default'} size={resolvedSize} className={tapClass}>
-      <Link href={href} {...newTabProps}>
+      <Link href={href} {...newTabProps} {...trackingProps}>
         {buttonContent}
       </Link>
     </Button>,

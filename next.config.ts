@@ -27,6 +27,8 @@ const nextConfig: NextConfig = {
   images: {
     // Keep optimized remote (CMSCloud) + local encodes on disk; default TTL is ~60s.
     minimumCacheTTL: 2678400, // 31 days
+    // 3440 matches Payload original / ultrawide heroes; omit 3840 so non-hero slots do not request 4K.
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2560, 3440],
     qualities: [65, 75, 100],
     localPatterns: [
       {
@@ -139,45 +141,49 @@ if (isProdBuild && !process.env.NEXT_SERVER_ACTIONS_ENCRYPTION_KEY) {
   )
 }
 
-export default withSentryConfig(withPayload(nextConfig, { devBundleServerPackages: false }), {
-  // For all available options, see:
-  // https://www.npmjs.com/package/@sentry/webpack-plugin#options
+const payloadConfig = withPayload(nextConfig, { devBundleServerPackages: false })
 
-  org: 'tallmancode',
+export default isProdBuild
+  ? withSentryConfig(payloadConfig, {
+      // For all available options, see:
+      // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
-  project: 'eagle-ford-staging',
+      org: 'tallmancode',
 
-  // Only print logs for uploading source maps in CI
-  silent: !process.env.CI,
+      project: 'eagle-ford-staging',
 
-  // Skip source map upload when not a production build or auth token is absent (local builds)
-  sourcemaps: {
-    disable: !isProdBuild || !hasSentryAuth,
-  },
+      // Only print logs for uploading source maps in CI
+      silent: !process.env.CI,
 
-  // For all available options, see:
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+      // Skip source map upload when not a production build or auth token is absent (local builds)
+      sourcemaps: {
+        disable: !isProdBuild || !hasSentryAuth,
+      },
 
-  // Upload a larger set of source maps for prettier stack traces (increases build time)
-  widenClientFileUpload: true,
+      // For all available options, see:
+      // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
-  // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
-  // This can increase your server load as well as your hosting bill.
-  // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
-  // side errors will fail.
-  tunnelRoute: '/monitoring',
+      // Upload a larger set of source maps for prettier stack traces (increases build time)
+      widenClientFileUpload: true,
 
-  webpack: {
-    // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
-    // See the following for more information:
-    // https://docs.sentry.io/product/crons/
-    // https://vercel.com/docs/cron-jobs
-    automaticVercelMonitors: true,
+      // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
+      // This can increase your server load as well as your hosting bill.
+      // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
+      // side errors will fail.
+      tunnelRoute: '/monitoring',
 
-    // Tree-shaking options for reducing bundle size
-    treeshake: {
-      // Automatically tree-shake Sentry logger statements to reduce bundle size
-      removeDebugLogging: true,
-    },
-  },
-})
+      webpack: {
+        // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
+        // See the following for more information:
+        // https://docs.sentry.io/product/crons/
+        // https://vercel.com/docs/cron-jobs
+        automaticVercelMonitors: true,
+
+        // Tree-shaking options for reducing bundle size
+        treeshake: {
+          // Automatically tree-shake Sentry logger statements to reduce bundle size
+          removeDebugLogging: true,
+        },
+      },
+    })
+  : payloadConfig

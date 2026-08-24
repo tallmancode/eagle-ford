@@ -87,6 +87,8 @@ function MobileNavContactFooter({ settings }: { settings: Setting }) {
           <a
             href={`tel:${phone.replace(/\D/g, '')}`}
             className="flex items-center justify-center gap-2"
+            data-gtm-cta="call-now"
+            data-gtm-cta-location="header-mobile-nav"
           >
             <PhoneCall className="size-4 shrink-0" />
             <span>{formatPhoneNumber(phone)}</span>
@@ -286,6 +288,8 @@ const renderMobileMenuItem = (
           aria-current={active ? 'page' : undefined}
           onClick={onNavigate}
           prefetch={false}
+          data-gtm-cta="nav-cta"
+          data-gtm-cta-location="header-mobile-nav"
         >
           {item.label}
         </Link>

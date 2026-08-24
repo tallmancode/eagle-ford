@@ -39,7 +39,12 @@ export const MainNav = ({
           className="absolute left-0  lg:static lg:translate-x-0"
           prefetch={false}
         >
-          <Media resource={headerLogo} imgClassName="lg:w-36 w-32" priority />
+          <Media
+            resource={headerLogo}
+            imgClassName="lg:w-36 w-32"
+            priority
+            size="(max-width: 1023px) 128px, 144px"
+          />
         </Link>
       )}
       <div className="flex items-center justify-end lg:flex-1">

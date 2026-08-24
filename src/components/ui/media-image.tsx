@@ -1,8 +1,8 @@
+import { getImageProps } from 'next/image'
 import Image from 'next/image'
 import type { Media } from '@/payload-types'
 import { getMediaUrl } from '@/lib/utils/getMediaUrl'
 import { getOptimalMediaSize } from '@/lib/utils/getOptimalMediaSize'
-import { cssVariables } from '@/cssVariables'
 import { cn } from '@/lib/utils/cn'
 import React from 'react'
 
@@ -32,17 +32,9 @@ interface Props {
   quality?: number // override default image quality (1-100)
 }
 
-const { breakpoints } = cssVariables
 const DEFAULT_MOBILE_MEDIA_QUERY = '(max-width: 767px)'
 
-function getDefaultSizes(): string {
-  const sorted = Object.entries(breakpoints)
-    .map(([, value]) => value)
-    .sort((a, b) => a - b)
-
-  const mediaQueries = sorted.map((value) => `(max-width: ${value}px) 100vw`)
-  return [...mediaQueries, '100vw'].join(', ')
-}
+type ResolvedSource = { src: string; width?: number; height?: number; alt: string }
 
 function resolveMediaSource(
   resource: Media | string | null | undefined,
@@ -50,7 +42,7 @@ function resolveMediaSource(
   altFromProps: string | undefined,
   widthFromProps: number | undefined,
   heightFromProps: number | undefined,
-): { src: string; width?: number; height?: number; alt: string } {
+): ResolvedSource {
   let width: number | undefined
   let height: number | undefined
   let src = ''
@@ -85,6 +77,36 @@ function resolveMediaSource(
   return { src, width, height, alt }
 }
 
+function imagePropArgs(
+  source: ResolvedSource,
+  fill: boolean | undefined,
+  extras: {
+    sizes: string
+    quality: number
+    className?: string
+    priority?: boolean
+    loading?: 'lazy' | 'eager'
+  },
+) {
+  const alt = source.alt || ''
+  if (fill) {
+    return {
+      src: source.src,
+      alt,
+      fill: true as const,
+      ...extras,
+    }
+  }
+
+  return {
+    src: source.src,
+    alt,
+    width: source.width ?? 1920,
+    height: source.height ?? 1080,
+    ...extras,
+  }
+}
+
 export const MediaImage: React.FC<Props> = (props) => {
   const {
     resource,
@@ -116,34 +138,58 @@ export const MediaImage: React.FC<Props> = (props) => {
 
   if (!desktop.src) return null
 
-  const sizes = sizeFromProps ? sizeFromProps : getDefaultSizes()
+  const sizes = sizeFromProps || '100vw'
   const isPriority = Boolean(priority)
+  const quality = qualityFromProps ?? 75
+  const loadingProp = isPriority ? undefined : (loading ?? 'lazy')
 
-  const image = (
-    <Image
-      src={desktop.src}
-      alt={desktop.alt || ''}
-      fill={fill}
-      className={imgClassName}
-      sizes={sizes}
-      height={!fill ? desktop.height : undefined}
-      width={!fill ? desktop.width : undefined}
-      priority={isPriority}
-      fetchPriority={isPriority ? 'high' : undefined}
-      quality={qualityFromProps ?? 75}
-      loading={isPriority ? undefined : (loading ?? 'lazy')}
-    />
-  )
+  let content: React.ReactNode
 
-  const content =
-    mobile?.src ? (
-      <picture className={pictureClassName}>
-        <source media={mobileMediaQuery} srcSet={mobile.src} />
-        {image}
-      </picture>
-    ) : (
-      image
+  if (mobile?.src) {
+    const {
+      props: { srcSet: desktopSrcSet },
+    } = getImageProps(
+      imagePropArgs(desktop, fill, {
+        sizes,
+        quality,
+        className: imgClassName,
+      }),
     )
+    const {
+      props: { srcSet: _mobileSrcSet, ...mobileImg },
+    } = getImageProps(
+      imagePropArgs(mobile, fill, {
+        sizes,
+        quality,
+        className: imgClassName,
+        priority: isPriority,
+        loading: loadingProp,
+      }),
+    )
+
+    content = (
+      <picture className={cn(fill && 'relative block size-full', pictureClassName)}>
+        <source media={`not ${mobileMediaQuery}`} srcSet={desktopSrcSet} sizes={sizes} />
+        <img {...mobileImg} alt={mobileImg.alt ?? desktop.alt ?? ''} />
+      </picture>
+    )
+  } else {
+    content = (
+      <Image
+        src={desktop.src}
+        alt={desktop.alt || ''}
+        fill={fill}
+        className={imgClassName}
+        sizes={sizes}
+        height={!fill ? desktop.height : undefined}
+        width={!fill ? desktop.width : undefined}
+        priority={isPriority}
+        fetchPriority={isPriority ? 'high' : undefined}
+        quality={quality}
+        loading={loadingProp}
+      />
+    )
+  }
 
   if (className) {
     return <span className={cn(fill && 'relative block size-full', className)}>{content}</span>

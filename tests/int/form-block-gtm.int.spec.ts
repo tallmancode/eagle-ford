@@ -44,14 +44,16 @@ const form: Form = {
   createdAt: '2026-01-01T00:00:00.000Z',
 }
 
-afterEach(() => {
-  cleanup()
-  vi.restoreAllMocks()
-})
-
 beforeEach(() => {
   sendGTMEvent.mockClear()
   push.mockClear()
+  document.documentElement.setAttribute('data-analytics', 'live')
+})
+
+afterEach(() => {
+  cleanup()
+  vi.restoreAllMocks()
+  document.documentElement.removeAttribute('data-analytics')
 })
 
 describe('FormBlockClient GTM tracking', () => {
@@ -78,5 +80,28 @@ describe('FormBlockClient GTM tracking', () => {
         form_name: form.title,
       })
     })
+  })
+
+  it('does not fire form_submit outside live production', async () => {
+    document.documentElement.removeAttribute('data-analytics')
+
+    const fetchMock = vi.fn().mockResolvedValue({
+      status: 200,
+      json: async () => ({}),
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    render(createElement(FormBlockClient, { form }))
+
+    fireEvent.change(screen.getByLabelText('Full Name *'), {
+      target: { value: 'Jane Doe' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalled()
+    })
+
+    expect(sendGTMEvent).not.toHaveBeenCalled()
   })
 })
