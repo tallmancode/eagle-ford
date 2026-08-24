@@ -3,7 +3,7 @@ import { applyStyles } from '@/lib/blocks/v2/apply/styles'
 import { getBetterEditorBlockProps } from '@/lib/blocks/betterEditor'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
-import { getMediaUrl } from '@/lib/utils/getMediaUrl'
+import { getOptimizedBackgroundUrl } from '@/lib/utils/getOptimizedBackgroundUrl'
 import { cn } from '@/lib/utils/cn'
 import type { Media, SectionV2 } from '@/payload-types'
 
@@ -15,7 +15,7 @@ export function SectionV2BlockComponent(props: SectionV2 & { meta?: BlockRenderM
     enableFixedBackground && backgroundImage && typeof backgroundImage === 'object'
       ? (backgroundImage as Media)
       : null
-  const bgUrl = image?.url ? getMediaUrl(image.url, image.updatedAt) : null
+  const bgUrl = getOptimizedBackgroundUrl(image)
   const opacity = Math.min(100, Math.max(0, overlayOpacity ?? 0))
 
   if (bgUrl) {
