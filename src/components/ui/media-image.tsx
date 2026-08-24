@@ -125,13 +125,7 @@ export const MediaImage: React.FC<Props> = (props) => {
     quality: qualityFromProps,
   } = props
 
-  const desktop = resolveMediaSource(
-    resource,
-    maxWidth,
-    altFromProps,
-    props.width,
-    props.height,
-  )
+  const desktop = resolveMediaSource(resource, maxWidth, altFromProps, props.width, props.height)
   const mobile = mobileResource
     ? resolveMediaSource(mobileResource, mobileMaxWidth, altFromProps, undefined, undefined)
     : null
@@ -156,7 +150,7 @@ export const MediaImage: React.FC<Props> = (props) => {
       }),
     )
     const {
-      props: { srcSet: _mobileSrcSet, ...mobileImg },
+      props: { srcSet: mobileSrcSet, ...mobileImg },
     } = getImageProps(
       imagePropArgs(mobile, fill, {
         sizes,
@@ -167,10 +161,18 @@ export const MediaImage: React.FC<Props> = (props) => {
       }),
     )
 
+    // Art-direction: desktop + mobile each need their own srcSet. Dropping the mobile
+    // srcSet left the <img> on a single largest src (e.g. w=3440) and failed PSI
+    // "Improve image delivery" / responsive-images checks.
     content = (
       <picture className={cn(fill && 'relative block size-full', pictureClassName)}>
         <source media={`not ${mobileMediaQuery}`} srcSet={desktopSrcSet} sizes={sizes} />
-        <img {...mobileImg} alt={mobileImg.alt ?? desktop.alt ?? ''} />
+        <source media={mobileMediaQuery} srcSet={mobileSrcSet} sizes={sizes} />
+        <img
+          {...mobileImg}
+          alt={mobileImg.alt ?? desktop.alt ?? ''}
+          fetchPriority={isPriority ? 'high' : mobileImg.fetchPriority}
+        />
       </picture>
     )
   } else {

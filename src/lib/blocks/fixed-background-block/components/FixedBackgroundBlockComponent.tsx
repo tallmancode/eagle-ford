@@ -1,6 +1,6 @@
 import type { FixedBackgroundBlockType, Media } from '@/payload-types'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
-import { getMediaUrl } from '@/lib/utils/getMediaUrl'
+import { getOptimizedBackgroundUrl } from '@/lib/utils/getOptimizedBackgroundUrl'
 import { cn } from '@/lib/utils/cn'
 import React from 'react'
 
@@ -10,9 +10,9 @@ export const FixedBackgroundBlockComponent: React.FC<FixedBackgroundBlockType> =
   const image =
     backgroundImage && typeof backgroundImage === 'object' ? (backgroundImage as Media) : null
 
-  if (!image?.url) return null
+  const bgUrl = getOptimizedBackgroundUrl(image)
+  if (!bgUrl) return null
 
-  const bgUrl = getMediaUrl(image.url, image.updatedAt)
   const opacity = Math.min(100, Math.max(0, overlayOpacity ?? 0))
 
   return (
