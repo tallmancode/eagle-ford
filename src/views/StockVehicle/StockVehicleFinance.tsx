@@ -24,7 +24,13 @@ export function StockVehicleFinance({ vehicle, calculatorDefaults }: Props) {
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <h2 className="text-2xl font-bold text-primary-900 md:text-3xl">Can I afford it?</h2>
           <Button asChild variant="outline" className="rounded-lg border-primary text-primary">
-            <Link href="#enquire">Apply For Finance</Link>
+            <Link
+              href="#enquire"
+              data-gtm-cta="apply-for-finance"
+              data-gtm-cta-location="stock-vehicle-finance"
+            >
+              Apply For Finance
+            </Link>
           </Button>
         </div>
 

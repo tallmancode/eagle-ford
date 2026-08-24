@@ -2008,6 +2008,10 @@ export interface IconText {
  */
 export interface CtaButton {
   label: string;
+  /**
+   * On by default. Uncheck to skip the cta_click event for this button. Tracking only runs on the live production site.
+   */
+  trackAsCta?: boolean | null;
   icon?: string | null;
   linkType: 'url' | 'reference' | 'anchor';
   variant?: ('default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'white') | null;
@@ -3701,6 +3705,10 @@ export interface RichTextV2 {
  */
 export interface ButtonV2 {
   label: string;
+  /**
+   * On by default. Uncheck to skip the cta_click event for this button. Tracking only runs on the live production site.
+   */
+  trackAsCta?: boolean | null;
   icon?: string | null;
   linkType: 'url' | 'reference' | 'anchor' | 'historyBack';
   variant?: ('default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'white') | null;

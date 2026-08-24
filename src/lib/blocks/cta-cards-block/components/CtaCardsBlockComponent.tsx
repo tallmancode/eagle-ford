@@ -27,7 +27,12 @@ export const CtaCardsBlockComponent: React.FC<CtaCards> = ({ cards }) => {
               <h3 className="text-xl font-bold text-foreground mb-2">{card.title}</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">{card.description}</p>
             </div>
-            <Link href={resolvedLink.href} {...newTabProps}>
+            <Link
+              href={resolvedLink.href}
+              {...newTabProps}
+              data-gtm-cta="cta-card"
+              data-gtm-cta-location="cta-cards"
+            >
               <Button variant="outline" className="rounded-full w-full">
                 {card.label}
                 <ChevronRight className="size-4 ml-1" />

@@ -48,7 +48,11 @@ function RequestQuoteCta() {
       <p className="text-sm text-muted-foreground mb-4">
         Already have a Model in mind? We&apos;ll get you the best deal.
       </p>
-      <Link href="#enquire">
+      <Link
+        href="#enquire"
+        data-gtm-cta="request-quote"
+        data-gtm-cta-location="vehicle-models"
+      >
         <Button variant="outline" className="rounded-full w-full sm:w-auto">
           Request a Quote
         </Button>
@@ -101,7 +105,11 @@ function ModelDetailContent({
             </div>
           )}
           <div className="flex flex-wrap gap-3">
-            <Link href={getVehicleModelPath(vehicle.slug ?? '', model.slug ?? '')}>
+            <Link
+              href={getVehicleModelPath(vehicle.slug ?? '', model.slug ?? '')}
+              data-gtm-cta="view-details"
+              data-gtm-cta-location="vehicle-models"
+            >
               <Button variant="outline" className="rounded-full">
                 View Details
               </Button>

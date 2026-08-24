@@ -111,7 +111,14 @@ export const StandardCarousel: React.FC<Hero> = (props) => {
             return (
               <CarouselItem key={slide.id}>
                 {href ? (
-                  <Link href={href} className="block" tabIndex={-1} aria-label="View details">
+                  <Link
+                    href={href}
+                    className="block"
+                    tabIndex={-1}
+                    aria-label="View details"
+                    data-gtm-cta="hero-slide"
+                    data-gtm-cta-location="hero-carousel"
+                  >
                     {image}
                   </Link>
                 ) : (

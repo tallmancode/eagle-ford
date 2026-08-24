@@ -121,7 +121,11 @@ export const CtaOverlayBanner: React.FC<Hero> = (props) => {
         {(primaryButton?.label || secondaryButton?.label) && (
           <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:flex-wrap md:justify-start">
             {primaryButton?.label && primaryButton.href && (
-              <a href={primaryButton.href}>
+              <a
+                href={primaryButton.href}
+                data-gtm-cta="hero-primary-cta"
+                data-gtm-cta-location="hero-cta-overlay"
+              >
                 <Button className="rounded-full gap-2" variant="secondary">
                   <ButtonIcon name={primaryButton.icon} className="size-4" />
                   {primaryButton.label}
@@ -129,7 +133,11 @@ export const CtaOverlayBanner: React.FC<Hero> = (props) => {
               </a>
             )}
             {secondaryButton?.label && secondaryButton.href && (
-              <a href={secondaryButton.href}>
+              <a
+                href={secondaryButton.href}
+                data-gtm-cta="hero-secondary-cta"
+                data-gtm-cta-location="hero-cta-overlay"
+              >
                 <Button variant="default" className="rounded-full gap-2">
                   <ButtonIcon name={secondaryButton.icon} className="size-4" />
                   {secondaryButton.label}

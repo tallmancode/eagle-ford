@@ -3,6 +3,7 @@
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { RichText as ConvertRichText } from '@payloadcms/richtext-lexical/react'
 import { sendGTMEvent } from '@next/third-parties/google'
+import { canSendAnalytics } from '@/components/analytics/canSendAnalytics'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -338,11 +339,13 @@ export function FormBlockClient({
           setIsLoading(false)
           setHasSubmitted(true)
 
-          sendGTMEvent({
-            event: 'form_submit',
-            form_id: formID,
-            form_name: form.title,
-          })
+          if (canSendAnalytics()) {
+            sendGTMEvent({
+              event: 'form_submit',
+              form_id: formID,
+              form_name: form.title,
+            })
+          }
 
           const redirectUrl = getRedirectUrl(form)
           if (redirectUrl) {

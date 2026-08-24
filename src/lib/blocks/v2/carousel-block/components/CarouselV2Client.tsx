@@ -93,6 +93,8 @@ export function CarouselV2Client({
                 href={slide.linkUrl}
                 className="block"
                 {...(slide.newTab ? { rel: 'noopener noreferrer', target: '_blank' as const } : {})}
+                data-gtm-cta="carousel-slide"
+                data-gtm-cta-location="carousel-v2"
               >
                 {image}
               </Link>

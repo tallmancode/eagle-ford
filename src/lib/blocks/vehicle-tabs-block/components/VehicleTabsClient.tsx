@@ -35,6 +35,8 @@ function VehicleCard({
         .filter(Boolean)
         .join(' ')}
       style={cardBackgroundCss ? { backgroundColor: cardBackgroundCss } : undefined}
+      data-gtm-cta="vehicle-card"
+      data-gtm-cta-location="vehicle-tabs"
     >
       <div className="relative mb-3 aspect-[3/2] w-full shrink-0 overflow-hidden">
         {vehicle.featureImage ? (

@@ -141,7 +141,14 @@ export const renderNavItem = (item: NavLink, index: number, options: NavItemRend
       <NavigationMenuItem key={item.id ?? index}>
         <NavigationMenuLink asChild>
           <Button asChild variant="secondary" className="rounded-full" size="sm">
-            <Link href={href} target={target} aria-current={active ? 'page' : undefined} prefetch={false}>
+            <Link
+              href={href}
+              target={target}
+              aria-current={active ? 'page' : undefined}
+              prefetch={false}
+              data-gtm-cta="nav-cta"
+              data-gtm-cta-location="header-nav"
+            >
               {item.label}
             </Link>
           </Button>
