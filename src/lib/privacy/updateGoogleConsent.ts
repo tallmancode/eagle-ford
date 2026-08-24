@@ -2,8 +2,7 @@ type ConsentState = 'granted' | 'denied'
 
 declare global {
   interface Window {
-    /** Align with `@next/third-parties` Window.dataLayer typing. */
-    dataLayer?: Object[]
+    // dataLayer is already declared by `@next/third-parties` — do not redeclare.
     gtag?: (...args: unknown[]) => void
   }
 }
