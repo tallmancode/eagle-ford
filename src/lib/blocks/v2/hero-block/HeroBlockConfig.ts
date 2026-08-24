@@ -2,6 +2,7 @@ import type { Block } from 'payload'
 import { heroOptions } from '@/lib/blocks/hero-block/heroOptions'
 import { carouselHeroConfig } from '@/lib/blocks/hero-block/templates/carousel-hero/config'
 import { bannerHeroConfig } from '@/lib/blocks/hero-block/templates/banner-hero/config'
+import { formHeroConfig } from '@/lib/blocks/hero-block/templates/form-hero/config'
 import { StyleFields } from '@/lib/blocks/v2/fields/style-fields'
 
 export const HeroV2Block: Block = {
@@ -44,6 +45,7 @@ export const HeroV2Block: Block = {
             },
             carouselHeroConfig,
             bannerHeroConfig,
+            formHeroConfig,
           ],
         },
         {

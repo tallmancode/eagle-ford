@@ -3,6 +3,7 @@
 import type { StyleValues } from '@/lib/blocks/v2/apply/styles'
 import { applyStyles } from '@/lib/blocks/v2/apply/styles'
 import { getBetterEditorBlockProps } from '@/lib/blocks/betterEditor'
+import { gtmCtaProps } from '@/components/analytics/gtmCtaProps'
 import { CtaButtonBlockComponent } from '@/lib/blocks/cta-button-block/components/CtaButtonBlockComponent'
 import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 import { Button } from '@/components/ui/button'
@@ -24,6 +25,7 @@ function HistoryBackButton({
   align = 'left',
   fallbackUrl = '/',
   showBackIcon = true,
+  trackAsCta,
   meta,
 }: {
   label: string
@@ -32,11 +34,17 @@ function HistoryBackButton({
   align?: CtaButton['align']
   fallbackUrl?: string | null
   showBackIcon?: boolean | null
+  trackAsCta?: boolean | null
   meta?: BlockRenderMeta
 }) {
   const router = useRouter()
   const inRow = (meta as { inRow?: boolean } | undefined)?.inRow === true
   const wrapperClass = inRow ? undefined : cn('flex w-full', alignClass[align ?? 'left'])
+  const trackingProps = gtmCtaProps({
+    trackAsCta,
+    name: label,
+    location: 'cta-button',
+  })
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -47,7 +55,13 @@ function HistoryBackButton({
   }
 
   const button = (
-    <Button type="button" variant={variant ?? 'default'} size={size ?? 'default'} onClick={handleBack}>
+    <Button
+      type="button"
+      variant={variant ?? 'default'}
+      size={size ?? 'default'}
+      onClick={handleBack}
+      {...trackingProps}
+    >
       {showBackIcon ? <ArrowLeft /> : null}
       {label}
     </Button>
@@ -75,6 +89,7 @@ export function ButtonV2BlockComponent(props: ButtonV2 & { meta?: BlockRenderMet
           align={ctaProps.align}
           fallbackUrl={fallbackUrl}
           showBackIcon={showBackIcon}
+          trackAsCta={ctaProps.trackAsCta}
           meta={meta}
         />
       ) : (

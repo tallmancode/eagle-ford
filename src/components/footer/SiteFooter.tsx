@@ -8,6 +8,7 @@ import {
   SOCIAL_ICONS,
 } from '@/lib/fields/social-icons'
 import { getMediaUrl } from '@/lib/utils/getMediaUrl'
+import { getOptimalMediaSize } from '@/lib/utils/getOptimalMediaSize'
 import type { Footer, Media, NavLinks } from '@/payload-types'
 
 const columnHeadingClass = 'text-white text-sm font-bold uppercase tracking-widest mb-4'
@@ -15,6 +16,37 @@ const linkClass =
   'text-gray-300 hover:text-white text-sm leading-relaxed transition-colors duration-200'
 
 type NavLink = NonNullable<NavLinks>[number]
+
+function FooterSizedImage({
+  media,
+  alt,
+  sizes,
+  className,
+  displayWidth,
+  fallbackHeight,
+}: {
+  media: Media
+  alt: string
+  sizes: string
+  className: string
+  displayWidth: number
+  fallbackHeight: number
+}) {
+  const optimal = getOptimalMediaSize(media, displayWidth * 2)
+  const src = optimal?.url ?? getMediaUrl(media.url)
+  if (!src) return null
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={optimal?.width ?? media.width ?? displayWidth}
+      height={optimal?.height ?? media.height ?? fallbackHeight}
+      sizes={sizes}
+      className={className}
+    />
+  )
+}
 
 function FooterLink({
   link,
@@ -136,23 +168,25 @@ export const SiteFooter = ({ footer }: { footer: Footer }) => {
               return (
                 <div key={col.id} className="flex flex-col items-center md:items-start gap-4">
                   {logoMedia && (
-                    <Image
-                      src={getMediaUrl(logoMedia.url)}
+                    <FooterSizedImage
+                      media={logoMedia}
                       alt={logoMedia.alt ?? 'Logo'}
-                      width={logoMedia.width ?? 112}
-                      height={logoMedia.height ?? 60}
+                      sizes="112px"
                       className="w-28 brightness-0 invert"
+                      displayWidth={112}
+                      fallbackHeight={60}
                     />
                   )}
 
                   {col.badgeEnabled &&
                     (badgeMedia ? (
-                      <Image
-                        src={getMediaUrl(badgeMedia.url)}
+                      <FooterSizedImage
+                        media={badgeMedia}
                         alt={badgeMedia.alt ?? 'Dealership badge'}
-                        width={badgeMedia.width ?? 160}
-                        height={badgeMedia.height ?? 80}
+                        sizes="160px"
                         className="w-full max-w-[160px]"
+                        displayWidth={160}
+                        fallbackHeight={80}
                       />
                     ) : (
                       <div className="bg-white rounded-lg px-4 py-3 flex flex-col items-center gap-1 w-full max-w-[160px]">

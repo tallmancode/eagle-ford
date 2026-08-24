@@ -54,12 +54,14 @@ Configurable tokens live in:
 
 Configured in Payload **Settings → Analytics** (`enableGoogleTagManager` + `googleTagManagerId`). No `NEXT_PUBLIC_GTM_ID` env var — the container ID lives in CMS.
 
-- When enabled, GTM **always loads** via `ConsentAwareGoogleTagManager`. Consent Mode (not mount gating) controls ads/analytics storage.
+- **Live production only:** GTM, dataLayer events (`page_view` / `form_submit` / `cta_click`), Consent Mode updates, and the Facebook pixel run only when `NODE_ENV=production` **and** `ALLOW_SEARCH_INDEXING=true`. Staging and local/dev stay silent even if CMS GTM is enabled (`data-analytics="live"` on `<html>` is the client marker).
+- When enabled on live, GTM **always loads** via `ConsentAwareGoogleTagManager`. Consent Mode (not mount gating) controls ads/analytics storage.
 - Consent defaults are set `denied` in a `beforeInteractive` script in `src/app/(frontend)/layout.tsx`. `PrivacyProvider` / `updateGoogleConsent` grant or keep denied after the banner (or auto-grant for non-EU visitors).
 - Client-side SPA events (App Router does not fire GTM History Change reliably):
-  - `page_view` — `{ event, page_path }` on route changes (`GTMPageView`)
+  - `page_view` — `{ event, page_path }` on route changes including query-string updates (`GTMPageView`)
   - `form_submit` — `{ event, form_id, form_name }` on successful form submit (`FormBlockClient`)
   - `cta_click` — `{ event, cta_name, cta_location, cta_href }` via delegated clicks on `[data-gtm-cta]` / `data-gtm-cta-location` (`GTMCtaClickTracker`)
+- CTA Button / Button (v2) blocks have **Track click in Google Tag Manager** (`trackAsCta`, default on).
 - Components: `src/components/analytics/ConsentAwareGoogleTagManager.tsx`, `GTMPageView.tsx`, `GTMCtaClickTracker.tsx`
 - **GTM UI:** add Custom Event triggers for `page_view`, `form_submit`, and `cta_click` (do not rely on History Change alone).
 - **Skill:** `.cursor/skills/adding-gtm/` is the rollout playbook for sibling Eagle satellites (Mazda/Suzuki/Mahindra) — copy this Ford reference implementation, do not invent a divergent pattern.

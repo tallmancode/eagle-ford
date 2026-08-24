@@ -47,6 +47,8 @@ function ImageCard({ item }: { item: ImageCardItem }) {
           href={resolvedImageLink.href}
           className="block"
           {...newTabProps(resolvedImageLink.openInNewTab)}
+          data-gtm-cta="image-card-cta"
+          data-gtm-cta-location="image-cards"
         >
           {imageEl}
         </Link>
@@ -57,7 +59,12 @@ function ImageCard({ item }: { item: ImageCardItem }) {
       <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
       {resolvedCtaLink && (
         <Button className="rounded-full w-fit" asChild>
-          <Link href={resolvedCtaLink.href} {...newTabProps(resolvedCtaLink.openInNewTab)}>
+          <Link
+            href={resolvedCtaLink.href}
+            {...newTabProps(resolvedCtaLink.openInNewTab)}
+            data-gtm-cta="image-card-cta"
+            data-gtm-cta-location="image-cards"
+          >
             {item.link?.label ?? 'Explore'}
           </Link>
         </Button>
