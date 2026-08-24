@@ -71,8 +71,13 @@ type SpecialsTabsProps = {
   specials: SpecialTabItem[]
   initialSpecialSlug?: string
   offerDetails?: React.ReactNode
+  /** Distinct tree from `offerDetails` for mobile accordion (avoids React node reuse). */
+  offerDetailsMobile?: React.ReactNode
   calculatorDefaults?: FinanceCalculatorDefaults | null
   appearance?: SpecialsTabsAppearance | null
+  showOfferDetails?: boolean | null
+  showKeyFeatures?: boolean | null
+  showFinanceCalculator?: boolean | null
 }
 
 /** Prefer hex/literal colours for client-component inline styles (avoids CSS-var hydration diffs). */
@@ -405,12 +410,18 @@ function SpecialDetailInfo({
   offerDetails,
   calculatorDefaults,
   appearance,
+  showOfferDetails = true,
+  showKeyFeatures = true,
+  showFinanceCalculator = true,
 }: {
   special: SpecialTabItem
   fordPromiseHref: string | null
   offerDetails?: React.ReactNode
   calculatorDefaults?: FinanceCalculatorDefaults | null
   appearance?: SpecialsTabsAppearance | null
+  showOfferDetails?: boolean | null
+  showKeyFeatures?: boolean | null
+  showFinanceCalculator?: boolean | null
 }) {
   const title = getSpecialDisplayTitle(special)
   const variant =
@@ -423,14 +434,29 @@ function SpecialDetailInfo({
   const hasHighlights = highlights.length > 0
   const hasOfferDetails = Boolean(offerDetails)
   const isServiceSpecial = special.offerType === 'service'
-  const showFinanceCalculator = !isServiceSpecial && special.offerType === 'price-point'
-  const showKeyFeatures = !isServiceSpecial
+  const offerDetailsEnabled = showOfferDetails !== false
+  const keyFeaturesEnabled = showKeyFeatures !== false && !isServiceSpecial
+  const financeEnabled =
+    showFinanceCalculator !== false && !isServiceSpecial && special.offerType === 'price-point'
   const hasDetailTabs = isServiceSpecial
-    ? hasOfferDetails
-    : hasHighlights || hasOfferDetails || showFinanceCalculator
+    ? offerDetailsEnabled && hasOfferDetails
+    : (offerDetailsEnabled && hasOfferDetails) ||
+      (keyFeaturesEnabled && hasHighlights) ||
+      financeEnabled
   const hasPricing = hasSpecialDetailPricing(special)
   const brochureUrl = getBrochureUrl(vehicle?.brochure)
   const vehicleHref = vehicle?.slug ? `/vehicles/${vehicle.slug}` : null
+  const defaultDetailTab = offerDetailsEnabled
+    ? 'offer-details'
+    : keyFeaturesEnabled
+      ? 'key-features'
+      : 'finance-calculator'
+  const tabsKey = [
+    special.id,
+    offerDetailsEnabled ? 'o' : '',
+    keyFeaturesEnabled ? 'k' : '',
+    financeEnabled ? 'f' : '',
+  ].join('-')
 
   return (
     <div>
@@ -481,27 +507,31 @@ function SpecialDetailInfo({
               {isServiceSpecial ? (
                 offerDetails
               ) : (
-                <Tabs key={special.id} defaultValue="offer-details">
+                <Tabs key={tabsKey} defaultValue={defaultDetailTab}>
                   <TabsList
                     variant="line"
                     className="mb-4 flex h-auto w-full flex-wrap justify-start gap-x-1"
                   >
-                    <TabsTrigger value="offer-details">Offer Details</TabsTrigger>
-                    {showKeyFeatures && (
+                    {offerDetailsEnabled ? (
+                      <TabsTrigger value="offer-details">Offer Details</TabsTrigger>
+                    ) : null}
+                    {keyFeaturesEnabled ? (
                       <TabsTrigger value="key-features">Key Features</TabsTrigger>
-                    )}
-                    {showFinanceCalculator && (
+                    ) : null}
+                    {financeEnabled ? (
                       <TabsTrigger value="finance-calculator">Finance Calculator</TabsTrigger>
-                    )}
+                    ) : null}
                   </TabsList>
-                  <TabsContent value="offer-details">
-                    {hasOfferDetails ? (
-                      offerDetails
-                    ) : (
-                      <p className="text-sm text-muted-foreground">No offer details available.</p>
-                    )}
-                  </TabsContent>
-                  {showKeyFeatures && (
+                  {offerDetailsEnabled ? (
+                    <TabsContent value="offer-details">
+                      {hasOfferDetails ? (
+                        offerDetails
+                      ) : (
+                        <p className="text-sm text-muted-foreground">No offer details available.</p>
+                      )}
+                    </TabsContent>
+                  ) : null}
+                  {keyFeaturesEnabled ? (
                     <TabsContent value="key-features">
                       {hasHighlights ? (
                         <ul className="space-y-2">
@@ -519,8 +549,8 @@ function SpecialDetailInfo({
                         <p className="text-sm text-muted-foreground">No key features available.</p>
                       )}
                     </TabsContent>
-                  )}
-                  {showFinanceCalculator && (
+                  ) : null}
+                  {financeEnabled ? (
                     <TabsContent value="finance-calculator">
                       <FinanceCalculatorClient
                         key={special.id}
@@ -530,7 +560,7 @@ function SpecialDetailInfo({
                         defaults={calculatorDefaults}
                       />
                     </TabsContent>
-                  )}
+                  ) : null}
                 </Tabs>
               )}
             </div>
@@ -662,8 +692,12 @@ function SpecialsTabsInner({
   specials,
   initialSpecialSlug,
   offerDetails,
+  offerDetailsMobile,
   calculatorDefaults,
   appearance,
+  showOfferDetails,
+  showKeyFeatures,
+  showFinanceCalculator,
 }: SpecialsTabsProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -673,9 +707,7 @@ function SpecialsTabsInner({
   const didInitialMobileScrollRef = useRef(false)
 
   if (arrivedWithSpecialQueryRef.current === null) {
-    arrivedWithSpecialQueryRef.current = Boolean(
-      searchParams.get('special') ?? initialSpecialSlug,
-    )
+    arrivedWithSpecialQueryRef.current = Boolean(searchParams.get('special') ?? initialSpecialSlug)
   }
 
   const specialFromQuery = searchParams.get('special') ?? initialSpecialSlug
@@ -807,7 +839,11 @@ function SpecialsTabsInner({
             {specials.map((special, index) => {
               const isSelected = index === selectedIndex
               return (
-                <AccordionItem key={special.id} value={String(special.id)} className="border-b border-border">
+                <AccordionItem
+                  key={special.id}
+                  value={String(special.id)}
+                  className="border-b border-border"
+                >
                   <AccordionTrigger
                     data-special-accordion-trigger={String(special.id)}
                     className="group scroll-mt-24 hover:no-underline w-full px-4 py-4 text-left transition-colors border-l-4 border-l-transparent bg-muted/50 data-[state=open]:bg-primary/5 data-[state=open]:border-l-primary hover:bg-muted [&>svg]:text-muted-foreground group-data-[state=open]:[&>svg]:text-primary"
@@ -831,13 +867,18 @@ function SpecialsTabsInner({
                         showPricingOverlay={false}
                         appearance={appearance}
                       />
-                      <SpecialDetailInfo
-                        special={special}
-                        fordPromiseHref={fordPromiseHref}
-                        offerDetails={isSelected ? offerDetails : undefined}
-                        calculatorDefaults={calculatorDefaults}
-                        appearance={appearance}
-                      />
+                      {isSelected ? (
+                        <SpecialDetailInfo
+                          special={special}
+                          fordPromiseHref={fordPromiseHref}
+                          offerDetails={offerDetailsMobile ?? offerDetails}
+                          calculatorDefaults={calculatorDefaults}
+                          appearance={appearance}
+                          showOfferDetails={showOfferDetails}
+                          showKeyFeatures={showKeyFeatures}
+                          showFinanceCalculator={showFinanceCalculator}
+                        />
+                      ) : null}
                       <MobileEnquiryFormMount
                         active={isSelected && Boolean(enquiryForm)}
                         onMountChange={setMobileFormMountNode}
@@ -892,6 +933,9 @@ function SpecialsTabsInner({
             offerDetails={offerDetails}
             calculatorDefaults={calculatorDefaults}
             appearance={appearance}
+            showOfferDetails={showOfferDetails}
+            showKeyFeatures={showKeyFeatures}
+            showFinanceCalculator={showFinanceCalculator}
           />
         </div>
       </div>
