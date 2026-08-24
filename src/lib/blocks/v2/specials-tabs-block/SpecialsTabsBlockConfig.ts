@@ -23,6 +23,36 @@ export const SpecialsTabsV2Block: Block = {
   },
   fields: [
     {
+      name: 'showOfferDetails',
+      type: 'checkbox',
+      label: 'Show offer details',
+      defaultValue: true,
+      admin: {
+        description:
+          'Offer Details tab on the selected special (or the offer body on service specials). Save the template to refresh the preview.',
+      },
+    },
+    {
+      name: 'showKeyFeatures',
+      type: 'checkbox',
+      label: 'Show key features',
+      defaultValue: true,
+      admin: {
+        description:
+          'Key Features tab (not used for service specials). Save the template to refresh the preview.',
+      },
+    },
+    {
+      name: 'showFinanceCalculator',
+      type: 'checkbox',
+      label: 'Show finance calculator',
+      defaultValue: true,
+      admin: {
+        description:
+          'Finance Calculator tab on price-point specials (not used for service specials). Save the template to refresh the preview.',
+      },
+    },
+    {
       type: 'tabs',
       tabs: [
         {
@@ -43,8 +73,7 @@ export const SpecialsTabsV2Block: Block = {
         },
         {
           label: 'Appearance',
-          description:
-            'Colours for the specials list tabs. Leave empty to use the site defaults.',
+          description: 'Colours for the specials list tabs. Leave empty to use the site defaults.',
           fields: [
             ColorField({
               name: 'activeTabBackground',
