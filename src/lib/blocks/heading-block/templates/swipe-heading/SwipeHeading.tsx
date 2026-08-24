@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 import type { Heading } from '@/payload-types'
+import { getBetterEditorBlockProps } from '@/lib/blocks/betterEditor'
 import { renderTextWithColorTags } from '../../utils/renderTextWithColorTags'
 import {
   alignmentMap,
@@ -103,7 +104,7 @@ export const SwipeHeading: React.FC<Heading> = (props) => {
     .join(' ')
 
   return (
-    <div className={`mb-8 flex w-full flex-col ${alignmentClass}`}>
+    <div className={`mb-8 flex w-full flex-col ${alignmentClass}`} {...getBetterEditorBlockProps(props)}>
       <SwipeHeadingAnimation
         text={renderTextWithColorTags(heading)}
         className={headingClassName}

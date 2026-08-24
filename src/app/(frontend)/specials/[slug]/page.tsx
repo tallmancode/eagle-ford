@@ -3,17 +3,21 @@ import type { Metadata } from 'next'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
-import { draftMode } from 'next/headers'
+import { cookies, draftMode } from 'next/headers'
 import React, { cache } from 'react'
 
 import { SpecialsTabs } from '@/components/specials/SpecialsTabs'
 import { JsonLd } from '@/components/JsonLd/JsonLd'
+import { LivePreviewListener } from '@/components/LivePreviewListener'
 import { DEFAULT_OG_IMAGE_PATH } from '@/constants/site'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { getFinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-block/getFinanceCalculatorDefaults'
+import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
+import { contentContainsSpecialsTabs } from '@/lib/blocks/v2/specials-tabs-block/contentContainsSpecialsTabs'
 import { getOfferTypeLabel } from '@/lib/specials/constants'
 import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getSpecialCategoryPath } from '@/lib/specials/paths'
+import { SPECIAL_TEMPLATE_PREVIEW_COOKIE } from '@/lib/specials/templatePreviewCookie'
 import { getSpecialCategorySeoDescription } from '@/lib/specials/specialCategorySeo'
 import { buildDocumentMetadata, resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
 import {
@@ -65,22 +69,28 @@ type Args = {
   }>
   searchParams: Promise<{
     special?: string
+    templatePreview?: string
   }>
 }
 
 async function resolveSpecialTemplate(
-  template: SpecialListItem['template'] | SpecialCategory['template'],
+  template: SpecialListItem['template'] | SpecialCategory['template'] | string | null | undefined,
 ): Promise<SpecialTemplate | null> {
   if (!template) return null
-  if (typeof template === 'object') return template
+
+  const { isEnabled: draft } = await draftMode()
+  const templateId = typeof template === 'object' ? template.id : template
+
+  if (!draft && typeof template === 'object') return template
 
   const payload = await getPayload({ config: configPromise })
   const result = await payload.findByID({
     collection: 'special-templates',
-    id: template,
+    id: templateId,
+    draft,
     depth: 2,
     disableErrors: true,
-    overrideAccess: false,
+    overrideAccess: draft,
   })
 
   return result ?? null
@@ -208,8 +218,11 @@ export default async function SpecialCategoryPage({
   params: paramsPromise,
   searchParams: searchParamsPromise,
 }: Args) {
+  const { isEnabled: draft } = await draftMode()
   const { slug = '' } = await paramsPromise
-  const { special: initialSpecialSlug } = await searchParamsPromise
+  const { special: initialSpecialSlug, templatePreview } = await searchParamsPromise
+  const cookieStore = await cookies()
+  const templatePreviewFromCookie = cookieStore.get(SPECIAL_TEMPLATE_PREVIEW_COOKIE)?.value
   const decodedSlug = decodeURIComponent(slug)
   const url = getSpecialCategoryPath(decodedSlug)
   const category = await queryCategoryBySlug({ slug: decodedSlug })
@@ -219,12 +232,19 @@ export default async function SpecialCategoryPage({
   const specials = await querySpecialsByCategoryId({ categoryId: category.id })
   const selectedSpecial = findSelectedSpecial(specials, initialSpecialSlug)
 
-  const [template, specialContentSections] = selectedSpecial
-    ? await Promise.all([
-        resolveSpecialTemplate(selectedSpecial.template ?? category.template),
-        resolveSpecialContent(selectedSpecial.id),
-      ])
-    : [null, null]
+  const forcedTemplateId =
+    draft && (templatePreview || templatePreviewFromCookie)
+      ? (templatePreview ?? templatePreviewFromCookie)!
+      : null
+
+  const [template, specialContentSections] = await Promise.all([
+    forcedTemplateId
+      ? resolveSpecialTemplate(forcedTemplateId)
+      : selectedSpecial
+        ? resolveSpecialTemplate(selectedSpecial.template ?? category.template)
+        : Promise.resolve(null),
+    selectedSpecial ? resolveSpecialContent(selectedSpecial.id) : Promise.resolve(null),
+  ])
   const templateSections = template?.section
   const useTemplate = Array.isArray(templateSections) && templateSections.length > 0
   const useSpecialContent =
@@ -287,7 +307,11 @@ export default async function SpecialCategoryPage({
     ),
   }))
 
-  const blockMeta = selectedSpecial
+  const isTemplatePreview = Boolean(forcedTemplateId)
+  const templateHasSpecialsTabs = contentContainsSpecialsTabs(templateSections)
+  const useLegacyHardcodedTabs = !isTemplatePreview && !templateHasSpecialsTabs
+
+  const baseMeta: BlockRenderMeta | undefined = selectedSpecial
     ? {
         ...(vehicle ? { vehicle } : {}),
         ...(vehicleModel ? { vehicleModel } : {}),
@@ -299,11 +323,36 @@ export default async function SpecialCategoryPage({
           specialTitle: selectedDisplayTitle,
         },
       }
-    : undefined
+    : {
+        contextValues: {
+          specialCategory: category.title,
+        },
+      }
+
+  const offerDetails =
+    useSpecialContent && specialContentSections ? (
+      <RenderBlocks blocks={specialContentSections} meta={baseMeta} />
+    ) : null
+
+  const blockMeta: BlockRenderMeta = {
+    ...baseMeta,
+    specialsPage: {
+      categorySlug: category.slug,
+      categoryTitle: category.title,
+      categoryEnquiryForm,
+      fordPromiseHref,
+      specials: specialsWithForms,
+      initialSpecialSlug,
+      calculatorDefaults,
+      offerDetails,
+    },
+  }
 
   return (
     <div>
       <PayloadRedirects disableNotFound url={url} />
+
+      {draft && <LivePreviewListener />}
 
       <JsonLd
         data={buildJsonLdGraph(
@@ -339,32 +388,30 @@ export default async function SpecialCategoryPage({
         )}
       />
 
-      <section className="py-14 px-4">
-        <div className="container mx-auto">
-          <div className="mb-10">
-            <h1 className="text-3xl font-bold text-primary md:text-4xl">{category.title}</h1>
+      {useLegacyHardcodedTabs ? (
+        <section className="py-14 px-4">
+          <div className="container mx-auto">
+            <div className="mb-10">
+              <h1 className="text-3xl font-bold text-primary md:text-4xl">{category.title}</h1>
+            </div>
+
+            <SpecialsTabs
+              categorySlug={category.slug}
+              categoryTitle={category.title}
+              categoryEnquiryForm={categoryEnquiryForm}
+              fordPromiseHref={fordPromiseHref}
+              specials={specialsWithForms}
+              initialSpecialSlug={initialSpecialSlug}
+              calculatorDefaults={calculatorDefaults}
+              offerDetails={offerDetails}
+            />
           </div>
+        </section>
+      ) : null}
 
-          <SpecialsTabs
-            categorySlug={category.slug}
-            categoryTitle={category.title}
-            categoryEnquiryForm={categoryEnquiryForm}
-            fordPromiseHref={fordPromiseHref}
-            specials={specialsWithForms}
-            initialSpecialSlug={initialSpecialSlug}
-            calculatorDefaults={calculatorDefaults}
-            offerDetails={
-              useSpecialContent && specialContentSections ? (
-                <RenderBlocks blocks={specialContentSections} meta={blockMeta} />
-              ) : null
-            }
-          />
-        </div>
-      </section>
-
-      {useTemplate && templateSections && (
+      {useTemplate && templateSections ? (
         <RenderBlocks blocks={templateSections} meta={blockMeta} />
-      )}
+      ) : null}
     </div>
   )
 }

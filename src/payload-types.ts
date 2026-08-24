@@ -113,6 +113,55 @@ export interface Config {
   blocks: {
     section: Section;
     sectionInner: SectionInner;
+    sectionV2: SectionV2;
+    wrapperV2: WrapperV2;
+    columnV2: ColumnV2;
+    headingV2: HeadingV2;
+    eyebrowV2: EyebrowV2;
+    headingTextV2: HeadingTextV2;
+    subheadingV2: SubheadingV2;
+    richTextV2: RichTextV2;
+    buttonV2: ButtonV2;
+    cardV2: CardV2;
+    accordionV2: AccordionV2;
+    imageV2: ImageV2;
+    separatorV2: SeparatorV2;
+    formV2: FormV2;
+    iconV2: IconV2;
+    videoV2: VideoV2;
+    quoteV2: QuoteV2;
+    spacerV2: SpacerV2;
+    heroV2: HeroV2;
+    mapV2: MapV2;
+    faqV2: FaqV2;
+    stockArchiveV2: StockArchiveV2;
+    carouselV2: CarouselV2;
+    specialsArchiveV2: SpecialsArchiveV2;
+    specialsTabsV2: SpecialsTabsV2;
+    vehicleCatalogV2: VehicleCatalogV2;
+    galleryV2: GalleryV2;
+    featureListV2: FeatureListV2;
+    featureRowsV2: FeatureRowsV2;
+    popupCardsV2: PopupCardsV2;
+    statsV2: StatsV2;
+    teamGridV2: TeamGridV2;
+    hoursTabsV2: HoursTabsV2;
+    contactInfoV2: ContactInfoV2;
+    contactFooterV2: ContactFooterV2;
+    financeCalculatorV2: FinanceCalculatorV2;
+    reviewsV2: ReviewsV2;
+    vehicleHeroV2: VehicleHeroV2;
+    vehicleModelsV2: VehicleModelsV2;
+    vehicleColorsV2: VehicleColorsV2;
+    vehicleGalleryV2: VehicleGalleryV2;
+    vehicleFeaturesV2: VehicleFeaturesV2;
+    vehicleFaqV2: VehicleFaqV2;
+    vehicleSpecialCategoriesV2: VehicleSpecialCategoriesV2;
+    vehicleModelHeroV2: VehicleModelHeroV2;
+    vehicleModelHighlightsV2: VehicleModelHighlightsV2;
+    vehicleModelColorsV2: VehicleModelColorsV2;
+    vehicleModelSiblingsV2: VehicleModelSiblingsV2;
+    vehicleModelVariantsV2: VehicleModelVariantsV2;
     row: Row;
     hero: Hero;
     heading: Heading;
@@ -218,6 +267,7 @@ export interface Config {
     header: Header;
     footer: Footer;
     settings: Setting;
+    'image-optimizer-state': ImageOptimizerState;
     'better-editor-settings': BetterEditorSetting;
     'payload-jobs-stats': PayloadJobsStat;
   };
@@ -225,6 +275,7 @@ export interface Config {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
+    'image-optimizer-state': ImageOptimizerStateSelect<false> | ImageOptimizerStateSelect<true>;
     'better-editor-settings': BetterEditorSettingsSelect<false> | BetterEditorSettingsSelect<true>;
     'payload-jobs-stats': PayloadJobsStatsSelect<false> | PayloadJobsStatsSelect<true>;
   };
@@ -239,6 +290,7 @@ export interface Config {
       sweepMotorCityLeads: TaskSweepMotorCityLeads;
       createCollectionExport: TaskCreateCollectionExport;
       createCollectionImport: TaskCreateCollectionImport;
+      imageOptimizer_regenerateDocument: TaskImageOptimizerRegenerateDocument;
       schedulePublish: TaskSchedulePublish;
       inline: {
         input: unknown;
@@ -875,6 +927,13 @@ export interface Media {
     };
     [k: string]: unknown;
   } | null;
+  imageOptimizer?: {
+    thumbHash?: string | null;
+    originalSize?: number | null;
+    optimizedSize?: number | null;
+    status?: ('complete' | 'error') | null;
+    error?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -956,7 +1015,7 @@ export interface Page {
    * When enabled, the header is transparent at the top of the page (for hero blocks) and turns solid white on scroll. When disabled (default), the header is always solid white with dark navigation links.
    */
   overlayHeader?: boolean | null;
-  section?: Section[] | null;
+  section?: (Section | SectionV2)[] | null;
   meta?: {
     title?: string | null;
     /**
@@ -977,122 +1036,323 @@ export interface Page {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "specials".
+ * via the `definition` "sectionV2".
  */
-export interface Special {
-  id: string;
-  _order?: string | null;
-  offerType: 'price-point' | 'payment' | 'service' | 'enquiry';
+export interface SectionV2 {
   /**
-   * Groups this special under a campaign or theme (e.g. Truck Month, Holiday).
+   * Pin a full-bleed background image behind this section (parallax-style on supporting browsers).
    */
-  category: string | SpecialCategory;
+  enableFixedBackground?: boolean | null;
+  backgroundImage?: (string | null) | Media;
   /**
-   * Optional. Defaults to the offer type label if left blank.
+   * Dark overlay over the background image (0–100) for text readability.
    */
-  title?: string | null;
-  /**
-   * Optional. Defaults to the offer type label if left blank.
-   */
-  subTitle?: string | null;
-  cardImage: string | Media;
-  /**
-   * Optional. Links this special to a vehicle family page. Leave blank for service or non-vehicle offers.
-   */
-  vehicle?: (string | null) | Vehicle;
-  /**
-   * Optional. Links this special to a specific trim/model page. Leave blank when not applicable.
-   */
-  vehicleModel?: (string | null) | VehicleModel;
-  /**
-   * Optional. Links this special to a specific variant configuration. Public links go to the parent model page.
-   */
-  vehicleVariant?: (string | null) | VehicleVariant;
-  /**
-   * Cash price in Rand, e.g. 489900 for R489 900
-   */
-  pricingLabel?: string | null;
-  /**
-   * Cash price in Rand, e.g. 489900 for R489 900
-   */
-  specialOffer?: number | null;
-  /**
-   * Saving amount in Rand, e.g. 100100 for R100 100
-   */
-  bestSaving?: number | null;
-  /**
-   * Monthly payment in Rand, e.g. 7799 for R7 799*pm
-   */
-  paymentFrom?: number | null;
-  content?: {
-    section?: Section[] | null;
+  overlayOpacity?: number | null;
+  content?:
+    | (
+        | Heading
+        | Hero
+        | RichText
+        | FeatureList
+        | FeatureRows
+        | FormBlockType
+        | ContactInfoBlock
+        | IconText
+        | CtaButton
+        | BackButton
+        | WhyCards
+        | Map
+        | TeamGrid
+        | ImageBlock
+        | FixedBackgroundBlockType
+        | CtaCards
+        | ImageCards
+        | StatsBlock
+        | HoursTabs
+        | Faq
+        | ContactFooter
+        | FeatureGrid
+        | Benefits
+        | BenefitsGrid
+        | PopupCards
+        | FinanceCalculatorBlockType
+        | SpecialsArchive
+        | StockArchive
+        | Partners
+        | Reviews
+        | VehicleTabsBlock
+        | VehicleCatalogBlock
+        | VehicleHeroBlock
+        | VehicleModelsBlock
+        | VehicleColorsBlock
+        | VehicleFaqBlock
+        | VehicleGalleryBlock
+        | VehicleFeaturesBlock
+        | VehicleSpecialCategoriesBlock
+        | VehicleModelHeroBlock
+        | VehicleModelHighlightsBlock
+        | VehicleModelColorsBlock
+        | VehicleModelSiblingsBlock
+        | VehicleModelVariantsBlock
+        | WrapperV2
+        | HeadingV2
+        | EyebrowV2
+        | HeadingTextV2
+        | SubheadingV2
+        | RichTextV2
+        | ButtonV2
+        | CardV2
+        | AccordionV2
+        | ImageV2
+        | SeparatorV2
+        | FormV2
+        | IconV2
+        | VideoV2
+        | QuoteV2
+        | SpacerV2
+        | HeroV2
+        | MapV2
+        | FaqV2
+        | StockArchiveV2
+        | CarouselV2
+        | SpecialsArchiveV2
+        | SpecialsTabsV2
+        | VehicleCatalogV2
+        | GalleryV2
+        | FeatureListV2
+        | FeatureRowsV2
+        | PopupCardsV2
+        | StatsV2
+        | TeamGridV2
+        | HoursTabsV2
+        | ContactInfoV2
+        | ContactFooterV2
+        | FinanceCalculatorV2
+        | ReviewsV2
+        | VehicleHeroV2
+        | VehicleModelsV2
+        | VehicleColorsV2
+        | VehicleGalleryV2
+        | VehicleFeaturesV2
+        | VehicleFaqV2
+        | VehicleSpecialCategoriesV2
+        | VehicleModelHeroV2
+        | VehicleModelHighlightsV2
+        | VehicleModelColorsV2
+        | VehicleModelSiblingsV2
+        | VehicleModelVariantsV2
+      )[]
+    | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Constrain width to the site container. Can differ per breakpoint.
+     */
+    container?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
   };
-  /**
-   * Optional. Overrides the category template when this special is selected. If blank, the category template is used.
-   */
-  template?: (string | null) | SpecialTemplate;
-  /**
-   * Optional. Overrides the category enquire form when this special is selected. If blank, the category form is used.
-   */
-  enquiryForm?: (string | null) | Form;
-  publishedAt?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'sectionV2';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "special-categories".
+ * via the `definition` "rich-text".
  */
-export interface SpecialCategory {
-  id: string;
-  title: string;
-  /**
-   * Image shown on specials archive category cards.
-   */
-  featureImage?: (string | null) | Media;
-  /**
-   * Lower numbers appear first.
-   */
-  sortOrder?: number | null;
-  /**
-   * Optional. Default layout for specials in this category. Individual specials can override this.
-   */
-  template?: (string | null) | SpecialTemplate;
-  /**
-   * Optional. Default enquire form for specials in this category. Individual specials can override this.
-   */
-  enquiryForm?: (string | null) | Form;
-  /**
-   * Optional. Internal page linked by the Ford Family Promise button on specials in this category.
-   */
-  fordPromisePage?: (string | null) | Page;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
+export interface RichText {
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'rich-text';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "special-templates".
+ * via the `definition` "feature-list".
  */
-export interface SpecialTemplate {
-  id: string;
-  /**
-   * e.g. "Standard Special Layout" or "Vehicle Offer Layout"
-   */
-  title: string;
-  section?: Section[] | null;
-  updatedAt: string;
-  createdAt: string;
+export interface FeatureList {
+  features: {
+    title: string;
+    description: string;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'feature-list';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureRows".
+ */
+export interface FeatureRows {
+  rows: {
+    icon: string;
+    title: string;
+    description: string;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+    };
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'feature-rows';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormBlockType".
+ */
+export interface FormBlockType {
+  form: string | Form;
+  enableIntro?: boolean | null;
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'formBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1678,622 +1938,6 @@ export interface SubheadingBlockType {
   id?: string | null;
   blockName?: string | null;
   blockType: 'subheading';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicles".
- */
-export interface Vehicle {
-  id: string;
-  /**
-   * e.g. "Next Level Ranger"
-   */
-  name: string;
-  /**
-   * Optional marketing badge shown on listing cards and the vehicle hero. Type the exact wording, e.g. Newly Launched.
-   */
-  badge?: string | null;
-  category: string | VehicleCategory;
-  /**
-   * Hero subtitle, e.g. "Built here. Built different."
-   */
-  tagline?: string | null;
-  /**
-   * Hero call-to-action buttons. "Enquiry" scrolls to the form; "Brochure" links to the brochure PDF.
-   */
-  ctaButtons?:
-    | {
-        label: string;
-        action: 'enquiry' | 'brochure' | 'link';
-        /**
-         * Internal path (e.g. /contact) or external URL.
-         */
-        url?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Key stats shown in a horizontal strip, e.g. towing capacity or payload.
-   */
-  specHighlights?:
-    | {
-        /**
-         * e.g. "3500kg"
-         */
-        value: string;
-        /**
-         * e.g. "Towing"
-         */
-        label: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Available powertrain options displayed as chips.
-   */
-  engineOptions?:
-    | {
-        /**
-         * e.g. "3.0L V6"
-         */
-        name: string;
-        /**
-         * e.g. "Turbo Diesel"
-         */
-        engineType: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * PDF brochure available for download on the vehicle page.
-   */
-  brochure?: (string | null) | Media;
-  /**
-   * Marketing feature sections shown on the vehicle page with alternating image and text.
-   */
-  features?:
-    | {
-        featureTitle: string;
-        featureDescription?: string | null;
-        featureImage?: (string | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  colours?:
-    | {
-        /**
-         * e.g. "Frozen White"
-         */
-        colourName: string;
-        /**
-         * e.g. "Platinum Only" or "Sport & Tremor Only"
-         */
-        colourNote?: string | null;
-        colourSwatch?: (string | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Full-width background image displayed at the top of the vehicle page.
-   */
-  heroImage: string | Media;
-  /**
-   * Image shown on vehicle listing cards (e.g. a cut-out or top-down shot). Falls back to Hero Image if not set.
-   */
-  featureImage?: (string | null) | Media;
-  gallery?:
-    | {
-        image: string | Media;
-        id?: string | null;
-      }[]
-    | null;
-  faqs?:
-    | {
-        question: string;
-        answer: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Arbitrary key/value pairs. Reference these by key inside template blocks.
-   */
-  customFields?:
-    | {
-        /**
-         * Unique identifier, e.g. "warrantyYears".
-         */
-        key: string;
-        value?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Lowest variant price as a whole number, e.g. 621000 for R 621,000.
-   */
-  startingPrice?: number | null;
-  priceDisclaimer?: string | null;
-  /**
-   * Finance monthly payment as a whole number, e.g. 6799 for R 6,799 p/m.
-   */
-  monthlyPrice?: number | null;
-  monthlyPriceNote?: string | null;
-  /**
-   * Finance and payment option cards shown on the vehicle page.
-   */
-  paymentOptions?:
-    | {
-        title: string;
-        description?: string | null;
-        ctaLabel: string;
-        /**
-         * Internal path (e.g. #enquire) or external URL.
-         */
-        ctaUrl?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  content?: {
-    description?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    section?: Section[] | null;
-  };
-  meta?: {
-    metaTitle?: string | null;
-    metaDescription?: string | null;
-    metaImage?: (string | null) | Media;
-  };
-  /**
-   * When enabled, this vehicle family appears in the mega menu alongside any trims that also have Show in Mega Menu enabled.
-   */
-  showInMegaMenu?: boolean | null;
-  /**
-   * Lower numbers appear first.
-   */
-  sortOrder?: number | null;
-  /**
-   * Optional. Layout template used to render this vehicle page.
-   */
-  template?: (string | null) | VehicleTemplate;
-  publishedAt?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-categories".
- */
-export interface VehicleCategory {
-  id: string;
-  title: string;
-  /**
-   * Lower numbers appear first.
-   */
-  sortOrder?: number | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-templates".
- */
-export interface VehicleTemplate {
-  id: string;
-  /**
-   * e.g. "Standard Vehicle Layout" or "Commercial Vehicle Layout"
-   */
-  title: string;
-  section?: Section[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-models".
- */
-export interface VehicleModel {
-  id: string;
-  /**
-   * Trim or series name, e.g. "Ranger Sport" or "Wildtrak".
-   */
-  name: string;
-  /**
-   * Parent vehicle family this trim belongs to.
-   */
-  vehicle: string | Vehicle;
-  /**
-   * Optional hero subtitle for this trim page.
-   */
-  tagline?: string | null;
-  /**
-   * Full-width hero for this trim. Falls back to the parent vehicle hero image if not set.
-   */
-  heroImage?: (string | null) | Media;
-  /**
-   * Card/listing image for this trim. Falls back to model hero, then parent vehicle images.
-   */
-  featureImage?: (string | null) | Media;
-  /**
-   * Marketing feature sections shown on the model page.
-   */
-  features?:
-    | {
-        featureTitle: string;
-        featureDescription?: string | null;
-        featureImage?: (string | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Colour options for this trim. Leave empty to inherit from the parent vehicle.
-   */
-  colours?:
-    | {
-        colourName: string;
-        colourNote?: string | null;
-        colourSwatch?: (string | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  gallery?:
-    | {
-        image: string | Media;
-        id?: string | null;
-      }[]
-    | null;
-  faqs?:
-    | {
-        question: string;
-        answer: string;
-        id?: string | null;
-      }[]
-    | null;
-  content?: {
-    /**
-     * Trim-specific marketing copy shown on the model page.
-     */
-    description?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    section?: Section[] | null;
-  };
-  meta?: {
-    metaTitle?: string | null;
-    metaDescription?: string | null;
-    metaImage?: (string | null) | Media;
-  };
-  /**
-   * When enabled, this trim appears in the mega menu alongside any vehicle families that also have Show in Mega Menu enabled.
-   */
-  showInMegaMenu?: boolean | null;
-  /**
-   * Lower numbers appear first within a vehicle family.
-   */
-  sortOrder?: number | null;
-  /**
-   * Optional. Layout template used to render this model page.
-   */
-  template?: (string | null) | VehicleModelTemplate;
-  publishedAt?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-model-templates".
- */
-export interface VehicleModelTemplate {
-  id: string;
-  /**
-   * e.g. "Standard Model Layout" or "Commercial Model Layout"
-   */
-  title: string;
-  section?: Section[] | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "vehicle-variants".
- */
-export interface VehicleVariant {
-  id: string;
-  /**
-   * e.g. "2.0 SiT Double Cab XL 4x2 6MT"
-   */
-  name: string;
-  /**
-   * Parent trim/series this configuration belongs to.
-   */
-  model: string | VehicleModel;
-  /**
-   * Specific price for this configuration, e.g. 621000 for R 621,000.
-   */
-  price: number;
-  /**
-   * Optional hero for this variant. Falls back to the parent model or vehicle images.
-   */
-  heroImage?: (string | null) | Media;
-  /**
-   * Card/listing image for this variant.
-   */
-  featureImage?: (string | null) | Media;
-  /**
-   * Key feature bullet points shown in the variant list on the model page.
-   */
-  highlights?:
-    | {
-        highlight: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Colour options for this variant. Leave empty to inherit from the parent model or vehicle.
-   */
-  colours?:
-    | {
-        colourName: string;
-        colourNote?: string | null;
-        colourSwatch?: (string | null) | Media;
-        id?: string | null;
-      }[]
-    | null;
-  content?: {
-    /**
-     * Optional variant-specific copy shown in the in-page variant list.
-     */
-    description?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-  };
-  meta?: {
-    metaTitle?: string | null;
-    metaDescription?: string | null;
-    metaImage?: (string | null) | Media;
-  };
-  /**
-   * Lower numbers appear first within a model.
-   */
-  sortOrder?: number | null;
-  publishedAt?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "OverlayCarousel".
- */
-export interface OverlayCarousel {
-  slides: {
-    /**
-     * Desktop / large screens. Recommended: 1920×1080px, WebP or JPEG.
-     */
-    image: string | Media;
-    /**
-     * Optional. Used instead of the Background Image when the page loads on a mobile-sized screen (under 768px). If empty, the Background Image is used. Recommended: portrait or square crop, WebP or JPEG.
-     */
-    mobileImage?: (string | null) | Media;
-    heading?: string | null;
-    subheading?: string | null;
-    alignment?: ('left' | 'center' | 'right') | null;
-    id?: string | null;
-  }[];
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "BannerHero".
- */
-export interface BannerHero {
-  bannerTemplate: 'full-width' | 'overlay' | 'cta-overlay';
-  fullWidthBannerContent?: FullWidthBanner;
-  overlayBannerContent?: OverlayBanner;
-  ctaOverlayContent?: CtaOverlayBanner;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FullWidthBanner".
- */
-export interface FullWidthBanner {
-  /**
-   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
-   */
-  image: string | Media;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "OverlayBanner".
- */
-export interface OverlayBanner {
-  /**
-   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
-   */
-  image: string | Media;
-  heading?: string | null;
-  subheading?: string | null;
-  alignment?: ('left' | 'center' | 'right') | null;
-  /**
-   * Adds a semi-transparent dark tint over the image to improve text legibility.
-   */
-  darkOverlay?: boolean | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "CtaOverlayBanner".
- */
-export interface CtaOverlayBanner {
-  /**
-   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
-   */
-  image: string | Media;
-  /**
-   * Small uppercase label above the heading (e.g. "Eagle Ford — Service Centre").
-   */
-  eyebrow?: string | null;
-  heading: string;
-  subheading?: string | null;
-  primaryButton?: {
-    label?: string | null;
-    /**
-     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
-     */
-    href?: string | null;
-    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
-  };
-  secondaryButton?: {
-    label?: string | null;
-    /**
-     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
-     */
-    href?: string | null;
-    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
-  };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "rich-text".
- */
-export interface RichText {
-  content: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'rich-text';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "feature-list".
- */
-export interface FeatureList {
-  features: {
-    title: string;
-    description: string;
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'feature-list';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FeatureRows".
- */
-export interface FeatureRows {
-  rows: {
-    icon: string;
-    title: string;
-    description: string;
-    link?: {
-      type?: ('reference' | 'custom') | null;
-      newTab?: boolean | null;
-      reference?: {
-        relationTo: 'pages';
-        value: string | Page;
-      } | null;
-      url?: string | null;
-    };
-    id?: string | null;
-  }[];
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'feature-rows';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "FormBlockType".
- */
-export interface FormBlockType {
-  form: string | Form;
-  enableIntro?: boolean | null;
-  introContent?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'formBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2997,6 +2641,7138 @@ export interface VehicleModelVariantsBlock {
   blockType: 'vehicle-model-variants';
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "wrapperV2".
+ */
+export interface WrapperV2 {
+  content?:
+    | (
+        | Heading
+        | Hero
+        | RichText
+        | FeatureList
+        | FeatureRows
+        | FormBlockType
+        | ContactInfoBlock
+        | IconText
+        | CtaButton
+        | BackButton
+        | WhyCards
+        | Map
+        | TeamGrid
+        | ImageBlock
+        | FixedBackgroundBlockType
+        | CtaCards
+        | ImageCards
+        | StatsBlock
+        | HoursTabs
+        | Faq
+        | ContactFooter
+        | FeatureGrid
+        | Benefits
+        | BenefitsGrid
+        | PopupCards
+        | FinanceCalculatorBlockType
+        | SpecialsArchive
+        | StockArchive
+        | Partners
+        | Reviews
+        | VehicleTabsBlock
+        | VehicleCatalogBlock
+        | VehicleHeroBlock
+        | VehicleModelsBlock
+        | VehicleColorsBlock
+        | VehicleFaqBlock
+        | VehicleGalleryBlock
+        | VehicleFeaturesBlock
+        | VehicleSpecialCategoriesBlock
+        | VehicleModelHeroBlock
+        | VehicleModelHighlightsBlock
+        | VehicleModelColorsBlock
+        | VehicleModelSiblingsBlock
+        | VehicleModelVariantsBlock
+        | ColumnV2
+        | HeadingV2
+        | EyebrowV2
+        | HeadingTextV2
+        | SubheadingV2
+        | RichTextV2
+        | ButtonV2
+        | CardV2
+        | AccordionV2
+        | ImageV2
+        | SeparatorV2
+        | FormV2
+        | IconV2
+        | VideoV2
+        | QuoteV2
+        | SpacerV2
+        | HeroV2
+        | MapV2
+        | FaqV2
+        | StockArchiveV2
+        | CarouselV2
+        | SpecialsArchiveV2
+        | SpecialsTabsV2
+        | VehicleCatalogV2
+        | GalleryV2
+        | FeatureListV2
+        | FeatureRowsV2
+        | PopupCardsV2
+        | StatsV2
+        | TeamGridV2
+        | HoursTabsV2
+        | ContactInfoV2
+        | ContactFooterV2
+        | FinanceCalculatorV2
+        | ReviewsV2
+        | VehicleHeroV2
+        | VehicleModelsV2
+        | VehicleColorsV2
+        | VehicleGalleryV2
+        | VehicleFeaturesV2
+        | VehicleFaqV2
+        | VehicleSpecialCategoriesV2
+        | VehicleModelHeroV2
+        | VehicleModelHighlightsV2
+        | VehicleModelColorsV2
+        | VehicleModelSiblingsV2
+        | VehicleModelVariantsV2
+      )[]
+    | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Constrain width to the site container. Can differ per breakpoint.
+     */
+    container?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'wrapperV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "columnV2".
+ */
+export interface ColumnV2 {
+  content?:
+    | (
+        | Heading
+        | Hero
+        | RichText
+        | FeatureList
+        | FeatureRows
+        | FormBlockType
+        | ContactInfoBlock
+        | IconText
+        | CtaButton
+        | BackButton
+        | WhyCards
+        | Map
+        | TeamGrid
+        | ImageBlock
+        | FixedBackgroundBlockType
+        | CtaCards
+        | ImageCards
+        | StatsBlock
+        | HoursTabs
+        | Faq
+        | ContactFooter
+        | FeatureGrid
+        | Benefits
+        | BenefitsGrid
+        | PopupCards
+        | FinanceCalculatorBlockType
+        | SpecialsArchive
+        | StockArchive
+        | Partners
+        | Reviews
+        | VehicleTabsBlock
+        | VehicleCatalogBlock
+        | VehicleHeroBlock
+        | VehicleModelsBlock
+        | VehicleColorsBlock
+        | VehicleFaqBlock
+        | VehicleGalleryBlock
+        | VehicleFeaturesBlock
+        | VehicleSpecialCategoriesBlock
+        | VehicleModelHeroBlock
+        | VehicleModelHighlightsBlock
+        | VehicleModelColorsBlock
+        | VehicleModelSiblingsBlock
+        | VehicleModelVariantsBlock
+        | HeadingV2
+        | EyebrowV2
+        | HeadingTextV2
+        | SubheadingV2
+        | RichTextV2
+        | ButtonV2
+        | CardV2
+        | AccordionV2
+        | ImageV2
+        | SeparatorV2
+        | FormV2
+        | IconV2
+        | VideoV2
+        | QuoteV2
+        | SpacerV2
+        | HeroV2
+        | MapV2
+        | FaqV2
+        | StockArchiveV2
+        | CarouselV2
+        | SpecialsArchiveV2
+        | SpecialsTabsV2
+        | VehicleCatalogV2
+        | GalleryV2
+        | FeatureListV2
+        | FeatureRowsV2
+        | PopupCardsV2
+        | StatsV2
+        | TeamGridV2
+        | HoursTabsV2
+        | ContactInfoV2
+        | ContactFooterV2
+        | FinanceCalculatorV2
+        | ReviewsV2
+        | VehicleHeroV2
+        | VehicleModelsV2
+        | VehicleColorsV2
+        | VehicleGalleryV2
+        | VehicleFeaturesV2
+        | VehicleFaqV2
+        | VehicleSpecialCategoriesV2
+        | VehicleModelHeroV2
+        | VehicleModelHighlightsV2
+        | VehicleModelColorsV2
+        | VehicleModelSiblingsV2
+        | VehicleModelVariantsV2
+      )[]
+    | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'columnV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "headingV2".
+ */
+export interface HeadingV2 {
+  /**
+   * Stack Eyebrow, Heading Text, and Subheading blocks in any order. Use the individual Typography blocks outside this composition when you need them alone.
+   */
+  content?: (EyebrowV2 | HeadingTextV2 | SubheadingV2)[] | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'headingV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "eyebrowV2".
+ */
+export interface EyebrowV2 {
+  label: string;
+  style?: ('filled' | 'outline' | 'dashed' | 'none') | null;
+  color?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  alignment?: ('left' | 'center' | 'right') | null;
+  uppercase?: boolean | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'eyebrowV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "headingTextV2".
+ */
+export interface HeadingTextV2 {
+  /**
+   * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
+   */
+  text: string;
+  headingTag?: ('h1' | 'h2' | 'h3' | 'h4') | null;
+  size?: ('sm' | 'md' | 'lg' | 'xl') | null;
+  alignment?: ('left' | 'center' | 'right') | null;
+  color?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  fontWeight?: ('normal' | 'medium' | 'semibold' | 'bold' | 'extrabold') | null;
+  uppercase?: boolean | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'headingTextV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subheadingV2".
+ */
+export interface SubheadingV2 {
+  /**
+   * Wrap text in <accent-under>text</accent-under> for a primary underline accent, or <accent-under color="#RRGGBB">text</accent-under> for a custom color. Also supports <color=#RRGGBB>text</color>.
+   */
+  text: string;
+  size?: ('sm' | 'md' | 'lg' | 'xl') | null;
+  alignment?: ('left' | 'center' | 'right') | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'subheadingV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "richTextV2".
+ */
+export interface RichTextV2 {
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'richTextV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "buttonV2".
+ */
+export interface ButtonV2 {
+  label: string;
+  icon?: string | null;
+  linkType: 'url' | 'reference' | 'anchor' | 'historyBack';
+  variant?: ('default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'white') | null;
+  /**
+   * e.g. /contact, https://example.com, tel:0105971555, mailto:info@example.com
+   */
+  url?: string | null;
+  reference?: {
+    relationTo: 'pages';
+    value: string | Page;
+  } | null;
+  newTab?: boolean | null;
+  /**
+   * The Section ID of the target section (without #). Set on the target section via its Accessibility settings.
+   */
+  anchorId?: string | null;
+  /**
+   * Used when there is no browser history to go back to (e.g. opened in a new tab).
+   */
+  fallbackUrl?: string | null;
+  showBackIcon?: boolean | null;
+  size?: ('sm' | 'default' | 'lg') | null;
+  align?: ('left' | 'center' | 'right') | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'buttonV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cardV2".
+ */
+export interface CardV2 {
+  /**
+   * Optional image shown at the top of the card.
+   */
+  image?: (string | null) | Media;
+  /**
+   * Leave empty to use the media library alt text.
+   */
+  imageAlt?: string | null;
+  icon?: string | null;
+  title?: string | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * When enabled, clicking the image or title navigates to the card link. The button below can still be shown separately.
+   */
+  enableCardLink?: boolean | null;
+  cardLinkType?: ('url' | 'reference') | null;
+  /**
+   * e.g. /contact or https://example.com
+   */
+  cardUrl?: string | null;
+  cardReference?: {
+    relationTo: 'pages';
+    value: string | Page;
+  } | null;
+  cardNewTab?: boolean | null;
+  /**
+   * Add a call-to-action button at the bottom of the card.
+   */
+  showButton?: boolean | null;
+  buttonLabel?: string | null;
+  buttonLinkType?: ('url' | 'reference') | null;
+  /**
+   * e.g. /contact or https://example.com
+   */
+  buttonUrl?: string | null;
+  buttonReference?: {
+    relationTo: 'pages';
+    value: string | Page;
+  } | null;
+  buttonNewTab?: boolean | null;
+  buttonVariant?: ('default' | 'outline' | 'secondary' | 'ghost' | 'link') | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cardV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "accordionV2".
+ */
+export interface AccordionV2 {
+  /**
+   * Each item has a title and expandable rich-text content.
+   */
+  items: {
+    title: string;
+    content?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    id?: string | null;
+  }[];
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'accordionV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "imageV2".
+ */
+export interface ImageV2 {
+  image: string | Media;
+  /**
+   * Override the alt text from the media library. Leave empty to use the media alt text.
+   */
+  alt?: string | null;
+  /**
+   * Optional caption shown below the image.
+   */
+  caption?: string | null;
+  /**
+   * Optional. Makes the image clickable (e.g. /contact or https://…).
+   */
+  linkUrl?: string | null;
+  newTab?: boolean | null;
+  cornerRadius?: ('none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl') | null;
+  aspectRatio?: ('auto' | '1/1' | '4/3' | '3/2' | '16/9' | '21/9') | null;
+  shadow?: ('none' | 'sm' | 'md' | 'lg') | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'imageV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "separatorV2".
+ */
+export interface SeparatorV2 {
+  /**
+   * Line style for the divider.
+   */
+  variant?: ('solid' | 'dashed' | 'dotted') | null;
+  thickness?: ('hairline' | 'thin' | 'medium' | 'thick') | null;
+  color?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'separatorV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "formV2".
+ */
+export interface FormV2 {
+  /**
+   * Select a form from Forms. Submit, email, and LMS behaviour come from that form.
+   */
+  form: string | Form;
+  enableIntro?: boolean | null;
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'formV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "iconV2".
+ */
+export interface IconV2 {
+  icon: string;
+  /**
+   * Optional text shown next to the icon.
+   */
+  label?: string | null;
+  size?: ('sm' | 'md' | 'lg' | 'xl') | null;
+  /**
+   * Inherit uses the surrounding text color.
+   */
+  color?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  align?: ('left' | 'center' | 'right') | null;
+  enableLink?: boolean | null;
+  /**
+   * e.g. tel:0104400510, mailto:info@example.com, /contact
+   */
+  url?: string | null;
+  newTab?: boolean | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'iconV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videoV2".
+ */
+export interface VideoV2 {
+  /**
+   * YouTube, YouTube Shorts, or Vimeo URL (watch, share, or embed link).
+   */
+  embedUrl: string;
+  /**
+   * Title for the video iframe. Defaults to “Video”.
+   */
+  title?: string | null;
+  /**
+   * Optional. Shown until the visitor plays the video (click-to-load). Leave empty to embed immediately.
+   */
+  poster?: (string | null) | Media;
+  aspectRatio?: ('16/9' | '4/3' | '1/1' | '9/16') | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'videoV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quoteV2".
+ */
+export interface QuoteV2 {
+  /**
+   * The quotation text (without surrounding quotation marks).
+   */
+  quote: string;
+  /**
+   * Who said it — e.g. a name or role.
+   */
+  attribution?: string | null;
+  /**
+   * Optional source or publication (shown after the attribution).
+   */
+  source?: string | null;
+  align?: ('left' | 'center') | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'quoteV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "spacerV2".
+ */
+export interface SpacerV2 {
+  /**
+   * Quick vertical space. Use the Layout tab for finer padding/margin control. This is empty space — not a visible divider.
+   */
+  height?: ('xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl') | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'spacerV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "heroV2".
+ */
+export interface HeroV2 {
+  template: 'banner' | 'carousel';
+  carouselHeroContent?: CarouselHero;
+  bannerHeroContent?: BannerHero;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'heroV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BannerHero".
+ */
+export interface BannerHero {
+  bannerTemplate: 'full-width' | 'overlay' | 'cta-overlay';
+  fullWidthBannerContent?: FullWidthBanner;
+  overlayBannerContent?: OverlayBanner;
+  ctaOverlayContent?: CtaOverlayBanner;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FullWidthBanner".
+ */
+export interface FullWidthBanner {
+  /**
+   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   */
+  image: string | Media;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OverlayBanner".
+ */
+export interface OverlayBanner {
+  /**
+   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   */
+  image: string | Media;
+  heading?: string | null;
+  subheading?: string | null;
+  alignment?: ('left' | 'center' | 'right') | null;
+  /**
+   * Adds a semi-transparent dark tint over the image to improve text legibility.
+   */
+  darkOverlay?: boolean | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaOverlayBanner".
+ */
+export interface CtaOverlayBanner {
+  /**
+   * Recommended: wide format (e.g. 1920×600px), WebP or JPEG.
+   */
+  image: string | Media;
+  /**
+   * Small uppercase label above the heading (e.g. "Eagle Ford — Service Centre").
+   */
+  eyebrow?: string | null;
+  /**
+   * Leave empty to keep the default soft white eyebrow colour.
+   */
+  eyebrowColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  heading: string;
+  /**
+   * Leave empty to keep the default white heading colour.
+   */
+  headingColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  subheading?: string | null;
+  /**
+   * Leave empty to keep the default soft white subheading colour.
+   */
+  subheadingColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Tint colour over the banner image. Leave empty (with Overlay Opacity empty) to keep the default left-to-right dark gradient.
+   */
+  overlayColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * How strong the overlay is, from 0 (transparent) to 100 (solid). When Overlay Color is set and this is empty, defaults to 60. Setting either overlay field replaces the default gradient with a flat tint.
+   */
+  overlayOpacity?: number | null;
+  primaryButton?: {
+    label?: string | null;
+    /**
+     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
+     */
+    href?: string | null;
+    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
+  };
+  secondaryButton?: {
+    label?: string | null;
+    /**
+     * e.g. tel:0105971555 or mailto:service@eagleford.co.za or /contact
+     */
+    href?: string | null;
+    icon?: ('none' | 'phone' | 'mail' | 'map-pin' | 'clock' | 'arrow-right') | null;
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mapV2".
+ */
+export interface MapV2 {
+  /**
+   * Paste the embed URL from Google Maps: open the location → Share → Embed a map → copy the src URL from the iframe code.
+   */
+  embedUrl: string;
+  /**
+   * Accessible title for the map iframe. Defaults to "Location map".
+   */
+  title?: string | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mapV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqV2".
+ */
+export interface FaqV2 {
+  items: {
+    question: string;
+    answer?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    image?: (string | null) | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    id?: string | null;
+  }[];
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'faqV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stockArchiveV2".
+ */
+export interface StockArchiveV2 {
+  conditionFilter?: ('all' | 'new' | 'pre-owned') | null;
+  limit?: number | null;
+  showPagination?: boolean | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stockArchiveV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "carouselV2".
+ */
+export interface CarouselV2 {
+  /**
+   * Each slide is an image. Optional caption and link.
+   */
+  slides: {
+    image: string | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    /**
+     * Optional caption shown under the slide.
+     */
+    caption?: string | null;
+    /**
+     * Optional. Makes the slide clickable (e.g. /specials or https://…).
+     */
+    linkUrl?: string | null;
+    newTab?: boolean | null;
+    id?: string | null;
+  }[];
+  autoPlay?: boolean | null;
+  /**
+   * Time in milliseconds between slide transitions.
+   */
+  autoPlayInterval?: number | null;
+  /**
+   * Previous/next navigation arrows.
+   */
+  showArrows?: boolean | null;
+  /**
+   * Slide indicator dots below the carousel.
+   */
+  showDots?: boolean | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'carouselV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "specialsArchiveV2".
+ */
+export interface SpecialsArchiveV2 {
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'specialsArchiveV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "specialsTabsV2".
+ */
+export interface SpecialsTabsV2 {
+  /**
+   * Renders the category name above the specials tabs.
+   */
+  showCategoryTitle?: boolean | null;
+  /**
+   * Background of the selected special in the list (desktop and mobile).
+   */
+  activeTabBackground?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Title colour of the selected special.
+   */
+  activeTabText?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Background of specials that are not selected.
+   */
+  inactiveTabBackground?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Title colour of specials that are not selected.
+   */
+  inactiveTabText?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Left border accent on the selected special.
+   */
+  activeTabAccent?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Background of the offer-type pill (e.g. Price Point Specials).
+   */
+  badgeBackground?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Text colour of the offer-type pill.
+   */
+  badgeText?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Colour of the category heading above the tabs (when shown).
+   */
+  categoryTitleColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Colour for special offer / payment amounts.
+   */
+  pricingColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Colour for “Specials” headers, pricing labels, and helper copy.
+   */
+  mutedTextColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'specialsTabsV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicleCatalogV2".
+ */
+export interface VehicleCatalogV2 {
+  /**
+   * Background colour for each vehicle card. Leave empty to use the default card colour.
+   */
+  cardBackgroundColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicleCatalogV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "galleryV2".
+ */
+export interface GalleryV2 {
+  /**
+   * Clicking an image opens it in a lightbox.
+   */
+  images: {
+    image: string | Media;
+    /**
+     * Override the alt text from the media library. Leave empty to use the media alt text.
+     */
+    imageAlt?: string | null;
+    caption?: string | null;
+    id?: string | null;
+  }[];
+  /**
+   * Number of columns on large screens. Smaller screens stack automatically.
+   */
+  columns?: ('2' | '3' | '4') | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'galleryV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "featureListV2".
+ */
+export interface FeatureListV2 {
+  showCheckIcon?: boolean | null;
+  features: {
+    title: string;
+    description: string;
+    id?: string | null;
+  }[];
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featureListV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "featureRowsV2".
+ */
+export interface FeatureRowsV2 {
+  /**
+   * Each row shows an icon, title, description, and an optional link button.
+   */
+  rows: {
+    icon: string;
+    title: string;
+    description: string;
+    link?: {
+      type?: ('reference' | 'custom') | null;
+      newTab?: boolean | null;
+      reference?: {
+        relationTo: 'pages';
+        value: string | Page;
+      } | null;
+      url?: string | null;
+    };
+    id?: string | null;
+  }[];
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featureRowsV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "popupCardsV2".
+ */
+export interface PopupCardsV2 {
+  columns?: ('1' | '2' | '3') | null;
+  cards: {
+    image: string | Media;
+    /**
+     * Leave empty to use the media library alt text.
+     */
+    imageAlt?: string | null;
+    icon?: string | null;
+    title: string;
+    description: string;
+    buttonLabel: string;
+    popupTitle: string;
+    popupSubtitle?: string | null;
+    /**
+     * Main popup content. Use headings and lists in the rich text editor.
+     */
+    popupBody?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    id?: string | null;
+  }[];
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'popupCardsV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "statsV2".
+ */
+export interface StatsV2 {
+  valueSize?: ('md' | 'lg' | 'xl') | null;
+  stats: {
+    value: string;
+    label: string;
+    id?: string | null;
+  }[];
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'statsV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "teamGridV2".
+ */
+export interface TeamGridV2 {
+  columns?: ('2' | '3' | '4') | null;
+  members: {
+    name: string;
+    image?: (string | null) | Media;
+    /**
+     * YouTube embed or Shorts URL. Leave empty for non-clickable cards.
+     */
+    videoUrl?: string | null;
+    id?: string | null;
+  }[];
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'teamGridV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hoursTabsV2".
+ */
+export interface HoursTabsV2 {
+  departments: {
+    label: string;
+    rows: {
+      dayPreset:
+        | 'Monday – Friday'
+        | 'Monday'
+        | 'Tuesday'
+        | 'Wednesday'
+        | 'Thursday'
+        | 'Friday'
+        | 'Saturday'
+        | 'Sunday'
+        | 'custom';
+      dayCustom?: string | null;
+      closed?: boolean | null;
+      /**
+       * e.g. 08h00–17h30
+       */
+      hours?: string | null;
+      id?: string | null;
+    }[];
+    id?: string | null;
+  }[];
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'hoursTabsV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contactInfoV2".
+ */
+export interface ContactInfoV2 {
+  heading?: string | null;
+  phone: string;
+  email: string;
+  addressLine1: string;
+  addressLine2?: string | null;
+  businessHours: {
+    label: string;
+    hours: string;
+    id?: string | null;
+  }[];
+  ctaButtons?:
+    | {
+        link?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?: {
+            relationTo: 'pages';
+            value: string | Page;
+          } | null;
+          url?: string | null;
+          label?: string | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  showBorder?: boolean | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contactInfoV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contactFooterV2".
+ */
+export interface ContactFooterV2 {
+  addressSource?: ('settings' | 'override') | null;
+  addressOverride?: string | null;
+  hoursSource?: ('settings' | 'override') | null;
+  hoursOverride?: string | null;
+  phoneSource?: ('settings' | 'override') | null;
+  phoneOverride?: string | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contactFooterV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "financeCalculatorV2".
+ */
+export interface FinanceCalculatorV2 {
+  /**
+   * Pre-fills the purchase price field (ZAR). Rates come from Settings.
+   */
+  defaultPurchasePrice?: number | null;
+  /**
+   * Optional legal or estimate disclaimer shown below the results.
+   */
+  disclaimer?: string | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'financeCalculatorV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviewsV2".
+ */
+export interface ReviewsV2 {
+  /**
+   * Sample data ships with the site. A CMS reviews collection can be wired later.
+   */
+  source?: 'sample' | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'reviewsV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicleHeroV2".
+ */
+export interface VehicleHeroV2 {
+  showPrice?: boolean | null;
+  showBadge?: boolean | null;
+  showBrochure?: boolean | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicleHeroV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicleModelsV2".
+ */
+export interface VehicleModelsV2 {
+  /**
+   * Optional heading above the models list. Leave empty to use the vehicle name.
+   */
+  heading?: string | null;
+  /**
+   * Stored for future use. The UI currently supports both layouts.
+   */
+  layout?: ('grid' | 'accordion') | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicleModelsV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicleColorsV2".
+ */
+export interface VehicleColorsV2 {
+  /**
+   * Optional heading. Leave empty to use "{Vehicle} Colours".
+   */
+  heading?: string | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicleColorsV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicleGalleryV2".
+ */
+export interface VehicleGalleryV2 {
+  /**
+   * Maximum number of gallery images to display.
+   */
+  maxImages?: number | null;
+  /**
+   * Reserved; 0 = off
+   */
+  autoplayInterval?: number | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicleGalleryV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicleFeaturesV2".
+ */
+export interface VehicleFeaturesV2 {
+  /**
+   * Optional limit on how many features to show. Leave empty to show all.
+   */
+  maxFeatures?: number | null;
+  /**
+   * When enabled, shows a Call Now button using the sales phone from Settings.
+   */
+  showCallCta?: boolean | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicleFeaturesV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicleFaqV2".
+ */
+export interface VehicleFaqV2 {
+  /**
+   * Optional heading. Leave empty to use "Frequently Asked Questions".
+   */
+  heading?: string | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicleFaqV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicleSpecialCategoriesV2".
+ */
+export interface VehicleSpecialCategoriesV2 {
+  /**
+   * Optional heading displayed above the specials list.
+   */
+  heading?: string | null;
+  /**
+   * Shown when this vehicle has no matching special categories.
+   */
+  emptyStateCopy?: string | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicleSpecialCategoriesV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicleModelHeroV2".
+ */
+export interface VehicleModelHeroV2 {
+  showPrice?: boolean | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicleModelHeroV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicleModelHighlightsV2".
+ */
+export interface VehicleModelHighlightsV2 {
+  /**
+   * Optional heading. Leave empty to use "Overview".
+   */
+  heading?: string | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicleModelHighlightsV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicleModelColorsV2".
+ */
+export interface VehicleModelColorsV2 {
+  /**
+   * Optional heading. Leave empty to use "{Model} Colours".
+   */
+  heading?: string | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicleModelColorsV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicleModelSiblingsV2".
+ */
+export interface VehicleModelSiblingsV2 {
+  /**
+   * Optional heading. Leave empty to use "{Vehicle} Trims".
+   */
+  heading?: string | null;
+  /**
+   * Number of sibling models shown per page.
+   */
+  pageSize?: number | null;
+  /**
+   * When enabled, the current model appears in the siblings list.
+   */
+  includeCurrent?: boolean | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicleModelSiblingsV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicleModelVariantsV2".
+ */
+export interface VehicleModelVariantsV2 {
+  /**
+   * When enabled, the first variant accordion item starts open.
+   */
+  defaultExpanded?: boolean | null;
+  showPrices?: boolean | null;
+  styles?: {
+    /**
+     * Padding per breakpoint. Empty values inherit from smaller screens.
+     */
+    padding?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Margin per breakpoint. Use auto to center. Empty values inherit from smaller screens.
+     */
+    margin?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Offsets for positioned elements (relative, absolute, sticky, or fixed). Empty values inherit from smaller screens.
+     */
+    inset?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Row and column gap when this element is flex or grid. Empty values inherit from smaller screens.
+     */
+    gap?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Layout mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    display?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Positioning mode per breakpoint. Empty values inherit from smaller screens.
+     */
+    position?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    backgroundColor?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * How content that overflows this box is clipped or scrolled.
+     */
+    overflow?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    /**
+     * Hidden removes the block from layout. Invisible hides it but keeps its space.
+     */
+    visibility?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'vehicleModelVariantsV2';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "specials".
+ */
+export interface Special {
+  id: string;
+  _order?: string | null;
+  offerType: 'price-point' | 'payment' | 'service' | 'enquiry';
+  /**
+   * Groups this special under a campaign or theme (e.g. Truck Month, Holiday).
+   */
+  category: string | SpecialCategory;
+  /**
+   * Optional. Defaults to the offer type label if left blank.
+   */
+  title?: string | null;
+  /**
+   * Optional. Defaults to the offer type label if left blank.
+   */
+  subTitle?: string | null;
+  cardImage: string | Media;
+  /**
+   * Optional. Links this special to a vehicle family page. Leave blank for service or non-vehicle offers.
+   */
+  vehicle?: (string | null) | Vehicle;
+  /**
+   * Optional. Links this special to a specific trim/model page. Leave blank when not applicable.
+   */
+  vehicleModel?: (string | null) | VehicleModel;
+  /**
+   * Optional. Links this special to a specific variant configuration. Public links go to the parent model page.
+   */
+  vehicleVariant?: (string | null) | VehicleVariant;
+  /**
+   * Cash price in Rand, e.g. 489900 for R489 900
+   */
+  pricingLabel?: string | null;
+  /**
+   * Cash price in Rand, e.g. 489900 for R489 900
+   */
+  specialOffer?: number | null;
+  /**
+   * Saving amount in Rand, e.g. 100100 for R100 100
+   */
+  bestSaving?: number | null;
+  /**
+   * Monthly payment in Rand, e.g. 7799 for R7 799*pm
+   */
+  paymentFrom?: number | null;
+  content?: {
+    section?: (Section | SectionV2)[] | null;
+  };
+  /**
+   * Optional. Overrides the category template when this special is selected. If blank, the category template is used.
+   */
+  template?: (string | null) | SpecialTemplate;
+  /**
+   * Optional. Overrides the category enquire form when this special is selected. If blank, the category form is used.
+   */
+  enquiryForm?: (string | null) | Form;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "special-categories".
+ */
+export interface SpecialCategory {
+  id: string;
+  title: string;
+  /**
+   * Image shown on specials archive category cards.
+   */
+  featureImage?: (string | null) | Media;
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
+  /**
+   * Optional. Default layout for specials in this category. Individual specials can override this.
+   */
+  template?: (string | null) | SpecialTemplate;
+  /**
+   * Optional. Default enquire form for specials in this category. Individual specials can override this.
+   */
+  enquiryForm?: (string | null) | Form;
+  /**
+   * Optional. Internal page linked by the Ford Family Promise button on specials in this category.
+   */
+  fordPromisePage?: (string | null) | Page;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "special-templates".
+ */
+export interface SpecialTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Special Layout" or "Vehicle Offer Layout"
+   */
+  title: string;
+  /**
+   * Category shown in Better Editor / live preview. Leave empty to use the first category (by sort order).
+   */
+  previewCategory?: (string | null) | SpecialCategory;
+  section?: (Section | SectionV2)[] | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicles".
+ */
+export interface Vehicle {
+  id: string;
+  /**
+   * e.g. "Next Level Ranger"
+   */
+  name: string;
+  /**
+   * Optional marketing badge shown on listing cards and the vehicle hero. Type the exact wording, e.g. Newly Launched.
+   */
+  badge?: string | null;
+  category: string | VehicleCategory;
+  /**
+   * Hero subtitle, e.g. "Built here. Built different."
+   */
+  tagline?: string | null;
+  /**
+   * Hero call-to-action buttons. "Enquiry" scrolls to the form; "Brochure" links to the brochure PDF.
+   */
+  ctaButtons?:
+    | {
+        label: string;
+        action: 'enquiry' | 'brochure' | 'link';
+        /**
+         * Internal path (e.g. /contact) or external URL.
+         */
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Key stats shown in a horizontal strip, e.g. towing capacity or payload.
+   */
+  specHighlights?:
+    | {
+        /**
+         * e.g. "3500kg"
+         */
+        value: string;
+        /**
+         * e.g. "Towing"
+         */
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Available powertrain options displayed as chips.
+   */
+  engineOptions?:
+    | {
+        /**
+         * e.g. "3.0L V6"
+         */
+        name: string;
+        /**
+         * e.g. "Turbo Diesel"
+         */
+        engineType: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * PDF brochure available for download on the vehicle page.
+   */
+  brochure?: (string | null) | Media;
+  /**
+   * Marketing feature sections shown on the vehicle page with alternating image and text.
+   */
+  features?:
+    | {
+        featureTitle: string;
+        featureDescription?: string | null;
+        featureImage?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  colours?:
+    | {
+        /**
+         * e.g. "Frozen White"
+         */
+        colourName: string;
+        /**
+         * e.g. "Platinum Only" or "Sport & Tremor Only"
+         */
+        colourNote?: string | null;
+        colourSwatch?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Full-width background image displayed at the top of the vehicle page.
+   */
+  heroImage: string | Media;
+  /**
+   * Image shown on vehicle listing cards (e.g. a cut-out or top-down shot). Falls back to Hero Image if not set.
+   */
+  featureImage?: (string | null) | Media;
+  gallery?:
+    | {
+        image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Arbitrary key/value pairs. Reference these by key inside template blocks.
+   */
+  customFields?:
+    | {
+        /**
+         * Unique identifier, e.g. "warrantyYears".
+         */
+        key: string;
+        value?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Lowest variant price as a whole number, e.g. 621000 for R 621,000.
+   */
+  startingPrice?: number | null;
+  priceDisclaimer?: string | null;
+  /**
+   * Finance monthly payment as a whole number, e.g. 6799 for R 6,799 p/m.
+   */
+  monthlyPrice?: number | null;
+  monthlyPriceNote?: string | null;
+  /**
+   * Finance and payment option cards shown on the vehicle page.
+   */
+  paymentOptions?:
+    | {
+        title: string;
+        description?: string | null;
+        ctaLabel: string;
+        /**
+         * Internal path (e.g. #enquire) or external URL.
+         */
+        ctaUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  content?: {
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    section?: (Section | SectionV2)[] | null;
+  };
+  meta?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    metaImage?: (string | null) | Media;
+  };
+  /**
+   * When enabled, this vehicle family appears in the mega menu alongside any trims that also have Show in Mega Menu enabled.
+   */
+  showInMegaMenu?: boolean | null;
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
+  /**
+   * Optional. Layout template used to render this vehicle page.
+   */
+  template?: (string | null) | VehicleTemplate;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-categories".
+ */
+export interface VehicleCategory {
+  id: string;
+  title: string;
+  /**
+   * Lower numbers appear first.
+   */
+  sortOrder?: number | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-templates".
+ */
+export interface VehicleTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Vehicle Layout" or "Commercial Vehicle Layout"
+   */
+  title: string;
+  section?: (Section | SectionV2)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-models".
+ */
+export interface VehicleModel {
+  id: string;
+  /**
+   * Trim or series name, e.g. "Ranger Sport" or "Wildtrak".
+   */
+  name: string;
+  /**
+   * Parent vehicle family this trim belongs to.
+   */
+  vehicle: string | Vehicle;
+  /**
+   * Optional hero subtitle for this trim page.
+   */
+  tagline?: string | null;
+  /**
+   * Full-width hero for this trim. Falls back to the parent vehicle hero image if not set.
+   */
+  heroImage?: (string | null) | Media;
+  /**
+   * Card/listing image for this trim. Falls back to model hero, then parent vehicle images.
+   */
+  featureImage?: (string | null) | Media;
+  /**
+   * Marketing feature sections shown on the model page.
+   */
+  features?:
+    | {
+        featureTitle: string;
+        featureDescription?: string | null;
+        featureImage?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Colour options for this trim. Leave empty to inherit from the parent vehicle.
+   */
+  colours?:
+    | {
+        colourName: string;
+        colourNote?: string | null;
+        colourSwatch?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  gallery?:
+    | {
+        image: string | Media;
+        id?: string | null;
+      }[]
+    | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  content?: {
+    /**
+     * Trim-specific marketing copy shown on the model page.
+     */
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    section?: (Section | SectionV2)[] | null;
+  };
+  meta?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    metaImage?: (string | null) | Media;
+  };
+  /**
+   * When enabled, this trim appears in the mega menu alongside any vehicle families that also have Show in Mega Menu enabled.
+   */
+  showInMegaMenu?: boolean | null;
+  /**
+   * Lower numbers appear first within a vehicle family.
+   */
+  sortOrder?: number | null;
+  /**
+   * Optional. Layout template used to render this model page.
+   */
+  template?: (string | null) | VehicleModelTemplate;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-model-templates".
+ */
+export interface VehicleModelTemplate {
+  id: string;
+  /**
+   * e.g. "Standard Model Layout" or "Commercial Model Layout"
+   */
+  title: string;
+  section?: (Section | SectionV2)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vehicle-variants".
+ */
+export interface VehicleVariant {
+  id: string;
+  /**
+   * e.g. "2.0 SiT Double Cab XL 4x2 6MT"
+   */
+  name: string;
+  /**
+   * Parent trim/series this configuration belongs to.
+   */
+  model: string | VehicleModel;
+  /**
+   * Specific price for this configuration, e.g. 621000 for R 621,000.
+   */
+  price: number;
+  /**
+   * Optional hero for this variant. Falls back to the parent model or vehicle images.
+   */
+  heroImage?: (string | null) | Media;
+  /**
+   * Card/listing image for this variant.
+   */
+  featureImage?: (string | null) | Media;
+  /**
+   * Key feature bullet points shown in the variant list on the model page.
+   */
+  highlights?:
+    | {
+        highlight: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Colour options for this variant. Leave empty to inherit from the parent model or vehicle.
+   */
+  colours?:
+    | {
+        colourName: string;
+        colourNote?: string | null;
+        colourSwatch?: (string | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  content?: {
+    /**
+     * Optional variant-specific copy shown in the in-page variant list.
+     */
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  meta?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    metaImage?: (string | null) | Media;
+  };
+  /**
+   * Lower numbers appear first within a model.
+   */
+  sortOrder?: number | null;
+  publishedAt?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OverlayCarousel".
+ */
+export interface OverlayCarousel {
+  slides: {
+    /**
+     * Desktop / large screens. Recommended: 1920×1080px, WebP or JPEG.
+     */
+    image: string | Media;
+    /**
+     * Optional. Used instead of the Background Image when the page loads on a mobile-sized screen (under 768px). If empty, the Background Image is used. Recommended: portrait or square crop, WebP or JPEG.
+     */
+    mobileImage?: (string | null) | Media;
+    heading?: string | null;
+    subheading?: string | null;
+    alignment?: ('left' | 'center' | 'right') | null;
+    id?: string | null;
+  }[];
+}
+/**
  * Token usage for AI-generated SEO titles and descriptions. Developers only.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3286,6 +10062,7 @@ export interface PayloadJob {
           | 'sweepMotorCityLeads'
           | 'createCollectionExport'
           | 'createCollectionImport'
+          | 'imageOptimizer_regenerateDocument'
           | 'schedulePublish';
         taskID: string;
         input?:
@@ -3326,6 +10103,7 @@ export interface PayloadJob {
         | 'sweepMotorCityLeads'
         | 'createCollectionExport'
         | 'createCollectionImport'
+        | 'imageOptimizer_regenerateDocument'
         | 'schedulePublish'
       )
     | null;
@@ -3533,9 +10311,11 @@ export interface SpecialCategoriesSelect<T extends boolean = true> {
  */
 export interface SpecialTemplatesSelect<T extends boolean = true> {
   title?: T;
+  previewCategory?: T;
   section?: T | {};
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3545,6 +10325,15 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   creditText?: T;
   caption?: T;
+  imageOptimizer?:
+    | T
+    | {
+        thumbHash?: T;
+        originalSize?: T;
+        optimizedSize?: T;
+        status?: T;
+        error?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -4615,6 +11404,7 @@ export interface Footer {
 export interface Setting {
   id: string;
   contactInfo: SettingsContactInfo;
+  brandPalette?: BrandPaletteSettings;
   pricingCalculatorDefaults?: PricingCalculatorDefaults;
   analytics: AnalyticsSettings;
   whatsappButton?: WhatsAppButtonSettings;
@@ -4654,6 +11444,28 @@ export interface SettingsContactInfo {
     postCode?: string | null;
     mapsLink?: string | null;
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BrandPaletteSettings".
+ */
+export interface BrandPaletteSettings {
+  /**
+   * These colors appear in the v2 color picker next to Primary, Neutral, and the other brand tokens. You can also save a color from the picker. Blocks store the hex, so deleting a saved color does not change pages that already use it.
+   */
+  customColors?:
+    | {
+        /**
+         * Optional short name shown in the picker.
+         */
+        label?: string | null;
+        /**
+         * e.g. #1E1654
+         */
+        hex: string;
+        id?: string | null;
+      }[]
+    | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -4736,6 +11548,24 @@ export interface MotorCitySettings {
   lastTestAt?: string | null;
   lastTestOk?: boolean | null;
   lastTestSummary?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "image-optimizer-state".
+ */
+export interface ImageOptimizerState {
+  id: string;
+  collections?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
 }
 /**
  * Editor-wide preferences for the Better Editor overlay.
@@ -4902,6 +11732,7 @@ export interface FooterSelect<T extends boolean = true> {
  */
 export interface SettingsSelect<T extends boolean = true> {
   contactInfo?: T | SettingsContactInfoSelect<T>;
+  brandPalette?: T | BrandPaletteSettingsSelect<T>;
   pricingCalculatorDefaults?: T | PricingCalculatorDefaultsSelect<T>;
   analytics?: T | AnalyticsSettingsSelect<T>;
   whatsappButton?: T | WhatsAppButtonSettingsSelect<T>;
@@ -4931,6 +11762,19 @@ export interface SettingsContactInfoSelect<T extends boolean = true> {
         province?: T;
         postCode?: T;
         mapsLink?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BrandPaletteSettings_select".
+ */
+export interface BrandPaletteSettingsSelect<T extends boolean = true> {
+  customColors?:
+    | T
+    | {
+        label?: T;
+        hex?: T;
+        id?: T;
       };
 }
 /**
@@ -4977,6 +11821,16 @@ export interface MotorCitySettingsSelect<T extends boolean = true> {
   lastTestAt?: T;
   lastTestOk?: T;
   lastTestSummary?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "image-optimizer-state_select".
+ */
+export interface ImageOptimizerStateSelect<T extends boolean = true> {
+  collections?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -5113,6 +11967,20 @@ export interface TaskCreateCollectionImport {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskImageOptimizer_regenerateDocument".
+ */
+export interface TaskImageOptimizerRegenerateDocument {
+  input: {
+    collectionSlug: string;
+    docId: string;
+  };
+  output: {
+    status?: string | null;
+    reason?: string | null;
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "TaskSchedulePublish".
  */
 export interface TaskSchedulePublish {
@@ -5127,6 +11995,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'specials';
           value: string | Special;
+        } | null)
+      | ({
+          relationTo: 'special-templates';
+          value: string | SpecialTemplate;
         } | null)
       | ({
           relationTo: 'vehicles';

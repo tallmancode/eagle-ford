@@ -1,4 +1,5 @@
 import type { Heading, StandardHeading as StandardHeadingContent } from '@/payload-types'
+import { getBetterEditorBlockProps } from '@/lib/blocks/betterEditor'
 import { SplitTextHeading } from '@/lib/blocks/heading-block/templates/standard-heading/SplitTextHeading'
 import { hasHeadingMarkup } from '../../utils/parseHeadingColorTags'
 import { renderTextWithColorTags } from '../../utils/renderTextWithColorTags'
@@ -96,7 +97,7 @@ export const StandardHeading: React.FC<Heading> = (props) => {
     .join(' ')
 
   return (
-    <div className={`flex flex-col mb-8 ${alignClass}`}>
+    <div className={`flex flex-col mb-8 ${alignClass}`} {...getBetterEditorBlockProps(props)}>
       {tag?.label != null && tag?.label !== '' && tagStyleClass != null && (
         <span
           className={[

@@ -1,4 +1,5 @@
 import type { Heading } from '@/payload-types'
+import { getBetterEditorBlockProps } from '@/lib/blocks/betterEditor'
 import { renderTextWithColorTags } from '../../utils/renderTextWithColorTags'
 import {
   alignmentMap,
@@ -34,7 +35,7 @@ export const DashHeading: React.FC<Heading> = (props) => {
   const showRightDash = resolvedAlignment === 'right' || resolvedAlignment === 'center'
 
   return (
-    <div className={`flex flex-col gap-3 mb-8 ${alignClass}`}>
+    <div className={`flex flex-col gap-3 mb-8 ${alignClass}`} {...getBetterEditorBlockProps(props)}>
       <div className="flex items-center gap-2">
         {showLeftDash && <div className="h-px w-6 bg-primary" />}
         <span

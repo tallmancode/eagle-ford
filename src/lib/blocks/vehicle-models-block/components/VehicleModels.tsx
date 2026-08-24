@@ -113,7 +113,11 @@ function ModelDetailContent({
   )
 }
 
-export function VehicleModels({ vehicle, models }: VehicleModelsProps) {
+export function VehicleModels({
+  vehicle,
+  models,
+  heading,
+}: VehicleModelsProps & { heading?: string | null }) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const selectedModel = models[selectedIndex] ?? models[0]
   if (!selectedModel) return null
@@ -126,7 +130,9 @@ export function VehicleModels({ vehicle, models }: VehicleModelsProps) {
     <section id="models" className="py-14 px-4">
       <div className="container mx-auto">
         <div className="flex items-center justify-between gap-4 mb-8">
-          <h2 className="text-primary text-3xl md:text-4xl font-bold">{vehicle.name} Models</h2>
+          <h2 className="text-primary text-3xl md:text-4xl font-bold">
+            {heading?.trim() || `${vehicle.name} Models`}
+          </h2>
         </div>
 
         {/* Mobile: accordion */}

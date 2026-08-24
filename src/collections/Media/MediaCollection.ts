@@ -72,6 +72,7 @@ export const MediaCollection: CollectionConfig = {
     crop: true,
     formatOptions: {
       format: 'webp',
+      options: { quality: 80 },
     },
     resizeOptions: {
       width: 3440,

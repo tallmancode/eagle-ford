@@ -1,15 +1,26 @@
 import type { PayloadRequest } from 'payload'
 import { getPayload } from 'payload'
 
-import { draftMode } from 'next/headers'
+import { cookies, draftMode } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { NextRequest } from 'next/server'
 
 import configPromise from '@payload-config'
+import { SPECIAL_TEMPLATE_PREVIEW_COOKIE } from '@/lib/specials/templatePreviewCookie'
 
 export type PreviewSearchParams = {
   path: string
   previewSecret: string
+}
+
+function extractTemplatePreviewId(path: string): string | null {
+  try {
+    const url = new URL(path, 'http://localhost')
+    const value = url.searchParams.get('templatePreview')
+    return value && value.length > 0 ? value : null
+  } catch {
+    return null
+  }
 }
 
 export async function GET(req: NextRequest): Promise<Response> {
@@ -45,15 +56,26 @@ export async function GET(req: NextRequest): Promise<Response> {
   }
 
   const draft = await draftMode()
+  const cookieStore = await cookies()
 
   if (!user) {
     draft.disable()
+    cookieStore.delete(SPECIAL_TEMPLATE_PREVIEW_COOKIE)
     return new Response('You are not allowed to preview this page', { status: 403 })
   }
 
-  // You can add additional checks here to see if the user is allowed to preview this page
-
   draft.enable()
+
+  const templatePreviewId = extractTemplatePreviewId(path)
+  if (templatePreviewId) {
+    cookieStore.set(SPECIAL_TEMPLATE_PREVIEW_COOKIE, templatePreviewId, {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
+    })
+  } else {
+    cookieStore.delete(SPECIAL_TEMPLATE_PREVIEW_COOKIE)
+  }
 
   redirect(path)
 }

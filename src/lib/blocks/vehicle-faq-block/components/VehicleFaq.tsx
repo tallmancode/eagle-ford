@@ -14,16 +14,17 @@ type FaqItem = NonNullable<Vehicle['faqs']>[number]
 
 type VehicleFaqProps = {
   faqs: FaqItem[]
+  heading?: string | null
 }
 
-export function VehicleFaq({ faqs }: VehicleFaqProps) {
+export function VehicleFaq({ faqs, heading }: VehicleFaqProps) {
   if (faqs.length === 0) return null
 
   return (
     <section className="py-14 px-4">
       <div className="container mx-auto max-w-3xl">
         <h2 className="text-primary text-3xl font-bold text-center mb-10">
-          Frequently Asked Questions
+          {heading?.trim() || 'Frequently Asked Questions'}
         </h2>
         <Accordion type="single" collapsible className="w-full">
           {faqs.map((faq, i) => (

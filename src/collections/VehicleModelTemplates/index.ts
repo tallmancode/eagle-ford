@@ -38,7 +38,7 @@ export const VehicleModelTemplatesCollection: CollectionConfig<'vehicle-model-te
       label: false,
       type: 'blocks',
       blocks: [],
-      blockReferences: ['section'],
+      blockReferences: ['section', 'sectionV2'],
     },
   ],
   hooks: {

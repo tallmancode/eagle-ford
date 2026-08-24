@@ -2,6 +2,8 @@ import React from 'react'
 import type { Hero } from '@/payload-types'
 import { MediaImage } from '@/components/ui/media-image'
 import { Button } from '@/components/ui/button'
+import { resolveColorCss } from '@/lib/blocks/v2/apply/color'
+import { cn } from '@/lib/utils/cn'
 import { Phone, Mail, MapPin, Clock, ArrowRight } from 'lucide-react'
 
 const iconMap = {
@@ -12,6 +14,9 @@ const iconMap = {
   'arrow-right': ArrowRight,
   none: null,
 }
+
+const DEFAULT_OVERLAY_COLOR = '#000000'
+const DEFAULT_OVERLAY_OPACITY = 60
 
 type IconKey = keyof typeof iconMap
 
@@ -28,7 +33,30 @@ export const CtaOverlayBanner: React.FC<Hero> = (props) => {
 
   if (!content?.image) return null
 
-  const { image, eyebrow, heading, subheading, primaryButton, secondaryButton } = content
+  const {
+    image,
+    eyebrow,
+    eyebrowColor,
+    heading,
+    headingColor,
+    subheading,
+    subheadingColor,
+    overlayColor,
+    overlayOpacity,
+    primaryButton,
+    secondaryButton,
+  } = content
+
+  const eyebrowColorCss = resolveColorCss(eyebrowColor)
+  const headingColorCss = resolveColorCss(headingColor)
+  const subheadingColorCss = resolveColorCss(subheadingColor)
+  const overlayColorCss = resolveColorCss(overlayColor)
+  const opacityIsSet = typeof overlayOpacity === 'number'
+  const useCustomOverlay = Boolean(overlayColorCss) || opacityIsSet
+  const resolvedOverlayOpacity = Math.min(
+    100,
+    Math.max(0, opacityIsSet ? overlayOpacity : DEFAULT_OVERLAY_OPACITY),
+  )
 
   return (
     <section className="relative w-full overflow-hidden min-h-[500px] md:min-h-[500px]">
@@ -42,22 +70,52 @@ export const CtaOverlayBanner: React.FC<Hero> = (props) => {
         size="100vw"
       />
 
-      <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/20" />
+      {useCustomOverlay ? (
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            backgroundColor: overlayColorCss ?? DEFAULT_OVERLAY_COLOR,
+            opacity: resolvedOverlayOpacity / 100,
+          }}
+        />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/20" />
+      )}
 
       <div className="relative z-10 container mx-auto flex flex-col items-center text-center justify-center py-20 px-4 h-full min-h-[380px] md:min-h-[480px] md:items-start md:text-left">
         {eyebrow && (
-          <p className="text-white/70 uppercase tracking-widest text-sm font-medium mb-3">
+          <p
+            className={cn(
+              'uppercase tracking-widest text-sm font-medium mb-3',
+              !eyebrowColorCss && 'text-white/70',
+            )}
+            style={eyebrowColorCss ? { color: eyebrowColorCss } : undefined}
+          >
             {eyebrow}
           </p>
         )}
 
         {heading && (
-          <h1 className="text-white text-4xl md:text-5xl font-bold mb-4 leading-tight">
+          <h1
+            className={cn(
+              'text-4xl md:text-5xl font-bold mb-4 leading-tight',
+              !headingColorCss && 'text-white',
+            )}
+            style={headingColorCss ? { color: headingColorCss } : undefined}
+          >
             {heading}
           </h1>
         )}
 
-        {subheading && <p className="text-white/80 text-lg max-w-xl mb-8">{subheading}</p>}
+        {subheading && (
+          <p
+            className={cn('text-lg max-w-xl mb-8', !subheadingColorCss && 'text-white/80')}
+            style={subheadingColorCss ? { color: subheadingColorCss } : undefined}
+          >
+            {subheading}
+          </p>
+        )}
 
         {(primaryButton?.label || secondaryButton?.label) && (
           <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:flex-wrap md:justify-start">
