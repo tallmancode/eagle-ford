@@ -331,7 +331,19 @@ export default async function SpecialCategoryPage({
 
   const offerDetails =
     useSpecialContent && specialContentSections ? (
-      <RenderBlocks blocks={specialContentSections} meta={baseMeta} />
+      <RenderBlocks
+        key="special-offer-details-desktop"
+        blocks={specialContentSections}
+        meta={baseMeta}
+      />
+    ) : null
+  const offerDetailsMobile =
+    useSpecialContent && specialContentSections ? (
+      <RenderBlocks
+        key="special-offer-details-mobile"
+        blocks={specialContentSections}
+        meta={baseMeta}
+      />
     ) : null
 
   const blockMeta: BlockRenderMeta = {
@@ -345,6 +357,7 @@ export default async function SpecialCategoryPage({
       initialSpecialSlug,
       calculatorDefaults,
       offerDetails,
+      offerDetailsMobile,
     },
   }
 

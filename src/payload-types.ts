@@ -5934,6 +5934,18 @@ export interface SpecialsArchiveV2 {
  */
 export interface SpecialsTabsV2 {
   /**
+   * Offer Details tab on the selected special (or the offer body on service specials). Save the template to refresh the preview.
+   */
+  showOfferDetails?: boolean | null;
+  /**
+   * Key Features tab (not used for service specials). Save the template to refresh the preview.
+   */
+  showKeyFeatures?: boolean | null;
+  /**
+   * Finance Calculator tab on price-point specials (not used for service specials). Save the template to refresh the preview.
+   */
+  showFinanceCalculator?: boolean | null;
+  /**
    * Renders the category name above the specials tabs.
    */
   showCategoryTitle?: boolean | null;

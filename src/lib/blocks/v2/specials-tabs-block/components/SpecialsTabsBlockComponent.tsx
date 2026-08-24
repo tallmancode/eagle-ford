@@ -5,14 +5,14 @@ import { mergeColorValue } from '@/lib/blocks/v2/apply/values'
 import { COLOR_TOKEN_MAP } from '@/lib/blocks/v2/theme'
 import { getBetterEditorBlockProps } from '@/lib/blocks/betterEditor'
 import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
-import {
-  SpecialsTabs,
-  type SpecialsTabsAppearance,
-} from '@/components/specials/SpecialsTabs'
+import { SpecialsTabs, type SpecialsTabsAppearance } from '@/components/specials/SpecialsTabs'
 import type { ColorTokenKey, ColorValue } from '@/lib/blocks/v2/types'
 
 type SpecialsTabsV2Props = {
   showCategoryTitle?: boolean | null
+  showOfferDetails?: boolean | null
+  showKeyFeatures?: boolean | null
+  showFinanceCalculator?: boolean | null
   activeTabBackground?: ColorValue | null
   activeTabText?: ColorValue | null
   inactiveTabBackground?: ColorValue | null
@@ -27,6 +27,11 @@ type SpecialsTabsV2Props = {
   blockType?: string
   id?: string | null
   meta?: BlockRenderMeta
+}
+
+/** CMS checkboxes default on; only an explicit `false` hides the section. */
+function isEnabled(value: boolean | null | undefined): boolean {
+  return value !== false
 }
 
 /** Solid hex for client-component inline styles — avoids CSS-var hydration mismatches. */
@@ -53,7 +58,10 @@ function pickAppearance(
 
 export function SpecialsTabsV2BlockComponent(props: SpecialsTabsV2Props) {
   const {
-    showCategoryTitle = true,
+    showCategoryTitle,
+    showOfferDetails,
+    showKeyFeatures,
+    showFinanceCalculator,
     activeTabBackground,
     activeTabText,
     inactiveTabBackground,
@@ -101,7 +109,7 @@ export function SpecialsTabsV2BlockComponent(props: SpecialsTabsV2Props) {
     >
       <section className="py-14 px-4">
         <div className="container mx-auto">
-          {showCategoryTitle !== false ? (
+          {isEnabled(showCategoryTitle) ? (
             <div className="mb-10">
               <h1
                 className={`text-3xl font-bold md:text-4xl ${categoryTitleCss ? '' : 'text-primary'}`}
@@ -121,7 +129,11 @@ export function SpecialsTabsV2BlockComponent(props: SpecialsTabsV2Props) {
             initialSpecialSlug={specialsPage.initialSpecialSlug}
             calculatorDefaults={specialsPage.calculatorDefaults}
             offerDetails={specialsPage.offerDetails}
+            offerDetailsMobile={specialsPage.offerDetailsMobile}
             appearance={appearance}
+            showOfferDetails={isEnabled(showOfferDetails)}
+            showKeyFeatures={isEnabled(showKeyFeatures)}
+            showFinanceCalculator={isEnabled(showFinanceCalculator)}
           />
         </div>
       </section>
