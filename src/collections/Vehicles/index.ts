@@ -448,7 +448,7 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
               label: false,
               type: 'blocks',
               blocks: [],
-              blockReferences: ['section'],
+              blockReferences: ['section', 'sectionV2'],
             },
           ],
         },

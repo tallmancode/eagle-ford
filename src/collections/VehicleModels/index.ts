@@ -272,7 +272,7 @@ export const VehicleModelsCollection: CollectionConfig<'vehicle-models'> = {
               label: false,
               type: 'blocks',
               blocks: [],
-              blockReferences: ['section'],
+              blockReferences: ['section', 'sectionV2'],
             },
           ],
         },

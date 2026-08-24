@@ -106,6 +106,15 @@ Three tiers — only vehicles and models have public pages:
 - Register every new vehicle-model block in the same three places as vehicle blocks (`index.ts`, `RenderBlocks.tsx`, `blockRefs.ts`).
 - Model pages render at `/vehicles/{vehicleSlug}/{modelSlug}`.
 
+### v2 blocks and styling fields
+
+New block work that needs editor-controlled layout lives under `src/lib/blocks/v2` (not v1 `src/lib/fields/layout-field`).
+
+- Styling field factories + apply helpers: `@/lib/blocks/v2` (`PaddingField`, `StyleFields`, `applyStyles`, …)
+- Brand defaults: `src/lib/blocks/v2/theme.ts` (copy the folder to another brand and edit this file)
+- Skill: workspace `.cursor/skills/eagle-v2-styling-fields/`
+- Do not mix v2 fields into existing Section/Row unless a migration is requested
+
 ### Normal Blocks
 
 - Use this pattern for reusable content blocks that editors configure directly.

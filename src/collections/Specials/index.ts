@@ -204,7 +204,7 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
               label: false,
               type: 'blocks',
               blocks: [],
-              blockReferences: ['section'],
+              blockReferences: ['section', 'sectionV2'],
             },
           ],
         },

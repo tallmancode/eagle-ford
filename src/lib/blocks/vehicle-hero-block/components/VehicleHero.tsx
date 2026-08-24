@@ -70,13 +70,23 @@ function HeroCtaButton({
 
 type VehicleHeroProps = {
   vehicle: Vehicle
+  showPrice?: boolean
+  showBadge?: boolean
+  showBrochure?: boolean
 }
 
-export function VehicleHero({ vehicle }: VehicleHeroProps) {
-  const ctaButtons = vehicle.ctaButtons ?? []
-  const brochureUrl = getBrochureUrl(vehicle.brochure)
-  const hasPrice = vehicle.startingPrice != null || vehicle.monthlyPrice != null
-  const badge = formatVehicleBadge(vehicle.badge)
+export function VehicleHero({
+  vehicle,
+  showPrice = true,
+  showBadge = true,
+  showBrochure = true,
+}: VehicleHeroProps) {
+  const ctaButtons = (vehicle.ctaButtons ?? []).filter(
+    (cta) => showBrochure || cta.action !== 'brochure',
+  )
+  const brochureUrl = showBrochure ? getBrochureUrl(vehicle.brochure) : null
+  const hasPrice = showPrice && (vehicle.startingPrice != null || vehicle.monthlyPrice != null)
+  const badge = showBadge ? formatVehicleBadge(vehicle.badge) : null
 
   return (
     <section className="relative w-full overflow-hidden min-h-[420px] md:min-h-[560px]">

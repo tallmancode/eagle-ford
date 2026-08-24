@@ -20,11 +20,25 @@ export type VehicleCatalogItem = {
   priceDisclaimer?: string | null
 }
 
-function VehicleCatalogCard({ vehicle }: { vehicle: VehicleCatalogItem }) {
+function VehicleCatalogCard({
+  vehicle,
+  cardBackgroundCss,
+}: {
+  vehicle: VehicleCatalogItem
+  cardBackgroundCss?: string
+}) {
   const badge = formatVehicleBadge(vehicle.badge)
 
   return (
-    <div className="flex h-full flex-col items-center bg-card rounded-lg shadow-sm p-0 border border-border/40">
+    <div
+      className={[
+        'flex h-full flex-col items-center rounded-lg shadow-sm p-0 border border-border/40',
+        cardBackgroundCss ? undefined : 'bg-card',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      style={cardBackgroundCss ? { backgroundColor: cardBackgroundCss } : undefined}
+    >
       <div className="relative w-full aspect-[3/2] mb-3">
         <MediaImage
           resource={vehicle.featureImage}
@@ -50,7 +64,7 @@ function VehicleCatalogCard({ vehicle }: { vehicle: VehicleCatalogItem }) {
           {vehicle.priceDisclaimer}
         </p>
       )}
-      <div className="mt-auto w-full pt-4">
+      <div className="mt-auto w-full pt-4 px-4">
         <Button asChild className="w-full rounded-full">
           <Link href={`/vehicles/${vehicle.slug}`}>Explore Vehicle</Link>
         </Button>
@@ -60,25 +74,34 @@ function VehicleCatalogCard({ vehicle }: { vehicle: VehicleCatalogItem }) {
 }
 
 type Props = {
-  heading?: string | null
   categories: Pick<VehicleCategory, 'id' | 'title' | 'slug'>[]
   vehicles: VehicleCatalogItem[]
+  cardBackgroundCss?: string
 }
 
-function VehicleGrid({ vehicles }: { vehicles: VehicleCatalogItem[] }) {
+function VehicleGrid({
+  vehicles,
+  cardBackgroundCss,
+}: {
+  vehicles: VehicleCatalogItem[]
+  cardBackgroundCss?: string
+}) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {vehicles.map((vehicle) => (
-        <VehicleCatalogCard key={vehicle.id} vehicle={vehicle} />
+        <VehicleCatalogCard
+          key={vehicle.id}
+          vehicle={vehicle}
+          cardBackgroundCss={cardBackgroundCss}
+        />
       ))}
     </div>
   )
 }
 
-export function VehicleCatalogClient({ heading, categories, vehicles }: Props) {
+export function VehicleCatalogClient({ categories, vehicles, cardBackgroundCss }: Props) {
   return (
     <div>
-      {heading && <h2 className="text-2xl text-muted-foreground mb-6">{heading}</h2>}
       <Tabs defaultValue="all">
         <TabsList variant="line" className="mb-6 flex flex-wrap h-auto gap-x-1">
           <TabsTrigger value="all">All Vehicles</TabsTrigger>
@@ -90,14 +113,14 @@ export function VehicleCatalogClient({ heading, categories, vehicles }: Props) {
         </TabsList>
 
         <TabsContent value="all">
-          <VehicleGrid vehicles={vehicles} />
+          <VehicleGrid vehicles={vehicles} cardBackgroundCss={cardBackgroundCss} />
         </TabsContent>
 
         {categories.map((cat) => {
           const filtered = vehicles.filter((v) => v.categorySlug === cat.slug)
           return (
             <TabsContent key={cat.id} value={cat.slug}>
-              <VehicleGrid vehicles={filtered} />
+              <VehicleGrid vehicles={filtered} cardBackgroundCss={cardBackgroundCss} />
             </TabsContent>
           )
         })}

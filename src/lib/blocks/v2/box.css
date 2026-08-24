@@ -1,0 +1,106 @@
+/* v2 box/gap apply CSS — imported from the frontend layout (not globals.css).
+   Tailwind 4 strips class selectors like .v2-pad / .v2-box-padding from any
+   CSS it processes. Attribute selectors matching apply() data-* attrs survive. */
+
+[data-v2-pad] {
+  padding-top: var(--v2-pad-top, 0);
+  padding-right: var(--v2-pad-right, 0);
+  padding-bottom: var(--v2-pad-bottom, 0);
+  padding-left: var(--v2-pad-left, 0);
+}
+
+.container[data-v2-pad] {
+  padding-left: var(--v2-pad-left, var(--container-padding-x));
+  padding-right: var(--v2-pad-right, var(--container-padding-x));
+}
+
+[data-v2-mar] {
+  margin-top: var(--v2-mar-top, 0);
+  margin-right: var(--v2-mar-right, 0);
+  margin-bottom: var(--v2-mar-bottom, 0);
+  margin-left: var(--v2-mar-left, 0);
+}
+
+[data-v2-inset] {
+  top: var(--v2-pin-top, auto);
+  right: var(--v2-pin-right, auto);
+  bottom: var(--v2-pin-bottom, auto);
+  left: var(--v2-pin-left, auto);
+}
+
+[data-v2-gap] {
+  row-gap: var(--v2-gap-row);
+  column-gap: var(--v2-gap-column);
+}
+
+@media (min-width: 768px) {
+  [data-v2-pad] {
+    padding-top: var(--v2-pad-top-md, var(--v2-pad-top, 0));
+    padding-right: var(--v2-pad-right-md, var(--v2-pad-right, 0));
+    padding-bottom: var(--v2-pad-bottom-md, var(--v2-pad-bottom, 0));
+    padding-left: var(--v2-pad-left-md, var(--v2-pad-left, 0));
+  }
+
+  .container[data-v2-pad] {
+    padding-left: var(--v2-pad-left-md, var(--v2-pad-left, var(--container-padding-x)));
+    padding-right: var(--v2-pad-right-md, var(--v2-pad-right, var(--container-padding-x)));
+  }
+
+  [data-v2-mar] {
+    margin-top: var(--v2-mar-top-md, var(--v2-mar-top, 0));
+    margin-right: var(--v2-mar-right-md, var(--v2-mar-right, 0));
+    margin-bottom: var(--v2-mar-bottom-md, var(--v2-mar-bottom, 0));
+    margin-left: var(--v2-mar-left-md, var(--v2-mar-left, 0));
+  }
+
+  [data-v2-inset] {
+    top: var(--v2-pin-top-md, var(--v2-pin-top, auto));
+    right: var(--v2-pin-right-md, var(--v2-pin-right, auto));
+    bottom: var(--v2-pin-bottom-md, var(--v2-pin-bottom, auto));
+    left: var(--v2-pin-left-md, var(--v2-pin-left, auto));
+  }
+
+  [data-v2-gap] {
+    row-gap: var(--v2-gap-row-md, var(--v2-gap-row));
+    column-gap: var(--v2-gap-column-md, var(--v2-gap-column));
+  }
+}
+
+@media (min-width: 1024px) {
+  [data-v2-pad] {
+    padding-top: var(--v2-pad-top-lg, var(--v2-pad-top-md, var(--v2-pad-top, 0)));
+    padding-right: var(--v2-pad-right-lg, var(--v2-pad-right-md, var(--v2-pad-right, 0)));
+    padding-bottom: var(--v2-pad-bottom-lg, var(--v2-pad-bottom-md, var(--v2-pad-bottom, 0)));
+    padding-left: var(--v2-pad-left-lg, var(--v2-pad-left-md, var(--v2-pad-left, 0)));
+  }
+
+  .container[data-v2-pad] {
+    padding-left: var(
+      --v2-pad-left-lg,
+      var(--v2-pad-left-md, var(--v2-pad-left, var(--container-padding-x)))
+    );
+    padding-right: var(
+      --v2-pad-right-lg,
+      var(--v2-pad-right-md, var(--v2-pad-right, var(--container-padding-x)))
+    );
+  }
+
+  [data-v2-mar] {
+    margin-top: var(--v2-mar-top-lg, var(--v2-mar-top-md, var(--v2-mar-top, 0)));
+    margin-right: var(--v2-mar-right-lg, var(--v2-mar-right-md, var(--v2-mar-right, 0)));
+    margin-bottom: var(--v2-mar-bottom-lg, var(--v2-mar-bottom-md, var(--v2-mar-bottom, 0)));
+    margin-left: var(--v2-mar-left-lg, var(--v2-mar-left-md, var(--v2-mar-left, 0)));
+  }
+
+  [data-v2-inset] {
+    top: var(--v2-pin-top-lg, var(--v2-pin-top-md, var(--v2-pin-top, auto)));
+    right: var(--v2-pin-right-lg, var(--v2-pin-right-md, var(--v2-pin-right, auto)));
+    bottom: var(--v2-pin-bottom-lg, var(--v2-pin-bottom-md, var(--v2-pin-bottom, auto)));
+    left: var(--v2-pin-left-lg, var(--v2-pin-left-md, var(--v2-pin-left, auto)));
+  }
+
+  [data-v2-gap] {
+    row-gap: var(--v2-gap-row-lg, var(--v2-gap-row-md, var(--v2-gap-row)));
+    column-gap: var(--v2-gap-column-lg, var(--v2-gap-column-md, var(--v2-gap-column)));
+  }
+}

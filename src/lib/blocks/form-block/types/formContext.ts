@@ -1,10 +1,25 @@
 import type { Form, Vehicle, VehicleModel, VehicleVariant } from '@/payload-types'
+import type { ReactNode } from 'react'
 import { getAllInputFields } from '@/lib/blocks/form-block/utils/getFormSteps'
+import type { FinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-block/getFinanceCalculatorDefaults'
+import type { SpecialTabItem } from '@/components/specials/SpecialsTabs'
 
 export type FormBlockContextValues = Record<string, string>
 
 export type FormBlockMeta = {
   contextValues?: FormBlockContextValues
+}
+
+/** Category + specials data for Specials Tabs blocks on specials category pages. */
+export type SpecialsPageMeta = {
+  categorySlug: string
+  categoryTitle: string
+  categoryEnquiryForm: Form | null
+  fordPromiseHref: string | null
+  specials: SpecialTabItem[]
+  initialSpecialSlug?: string
+  calculatorDefaults?: FinanceCalculatorDefaults | null
+  offerDetails?: ReactNode
 }
 
 export type BlockRenderMeta = FormBlockMeta & {
@@ -13,6 +28,7 @@ export type BlockRenderMeta = FormBlockMeta & {
   vehicleModel?: VehicleModel
   vehicleVariant?: VehicleVariant
   searchParams?: Record<string, string | string[] | undefined>
+  specialsPage?: SpecialsPageMeta
 }
 
 /** Field names marked Hidden in the CMS form builder. */

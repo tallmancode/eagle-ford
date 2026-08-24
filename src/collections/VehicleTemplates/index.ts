@@ -38,7 +38,7 @@ export const VehicleTemplatesCollection: CollectionConfig<'vehicle-templates'> =
       label: false,
       type: 'blocks',
       blocks: [],
-      blockReferences: ['section'],
+      blockReferences: ['section', 'sectionV2'],
     },
   ],
   hooks: {

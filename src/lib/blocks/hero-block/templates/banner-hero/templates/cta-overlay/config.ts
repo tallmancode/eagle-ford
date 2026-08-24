@@ -1,4 +1,5 @@
 import type { GroupField } from 'payload'
+import { ColorField } from '@/lib/blocks/v2/fields/color'
 
 const buttonIconOptions = [
   { label: 'None', value: 'none' },
@@ -60,16 +61,48 @@ export const ctaOverlayBannerConfig: GroupField = {
           'Small uppercase label above the heading (e.g. "Eagle Ford — Service Centre").',
       },
     },
+    ColorField({
+      name: 'eyebrowColor',
+      label: 'Eyebrow Text Color',
+      description: 'Leave empty to keep the default soft white eyebrow colour.',
+    }),
     {
       name: 'heading',
       type: 'text',
       label: 'Heading',
       required: true,
     },
+    ColorField({
+      name: 'headingColor',
+      label: 'Heading Color',
+      description: 'Leave empty to keep the default white heading colour.',
+    }),
     {
       name: 'subheading',
       type: 'textarea',
       label: 'Subheading',
+    },
+    ColorField({
+      name: 'subheadingColor',
+      label: 'Subheading Color',
+      description: 'Leave empty to keep the default soft white subheading colour.',
+    }),
+    ColorField({
+      name: 'overlayColor',
+      label: 'Overlay Color',
+      description:
+        'Tint colour over the banner image. Leave empty (with Overlay Opacity empty) to keep the default left-to-right dark gradient.',
+    }),
+    {
+      name: 'overlayOpacity',
+      type: 'number',
+      label: 'Overlay Opacity',
+      min: 0,
+      max: 100,
+      admin: {
+        description:
+          'How strong the overlay is, from 0 (transparent) to 100 (solid). When Overlay Color is set and this is empty, defaults to 60. Setting either overlay field replaces the default gradient with a flat tint.',
+      },
     },
     {
       name: 'primaryButton',

@@ -12,7 +12,7 @@
   --nav-logo-ink: #1d2b4d;
   --nav-dash: #2f5fb0;
 
-  --nav-panel: var(--theme-elevation-0, #fcfbf9);
+  --nav-panel: var(--theme-elevation-0, #f00);
   --nav-surface: var(--theme-input-bg, #ffffff);
   --nav-border: var(--theme-elevation-150, #ebe6dc);
   --nav-hover: var(--theme-elevation-50, #f1ede5);
@@ -24,6 +24,11 @@
 
   --admin-nav-transition: 0.15s ease;
   --admin-nav-radius: 8px;
+}
+
+/* Payload default header account icon — profile lives on the sidebar chip. */
+.app-header .app-header__account {
+  display: none !important;
 }
 
 [data-theme='dark'] {
@@ -53,10 +58,18 @@
   font-family: var(--nav-font-sans);
 }
 
+.nav__header,
+.nav__header-content {
+  overflow: hidden;
+  width: 100%;
+}
+
 .nav__header-content {
   display: flex;
   align-items: center;
   max-width: var(--nav-width);
+  max-height: var(--app-header-height, 56px);
+  min-width: 0;
   padding-inline-start: var(--gutter-h);
 }
 
@@ -65,24 +78,33 @@
   align-items: center;
   gap: 9px;
   min-width: 0;
+  max-width: 100%;
+  max-height: var(--app-header-height, 56px);
+  overflow: hidden;
 }
 
 .admin-nav__logo {
-  width: 26px;
-  height: 26px;
+  width: auto;
+  max-width: 100%;
+  max-height: calc(var(--app-header-height, 56px) - 12px);
   border-radius: 7px;
   overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: none;
-  background: var(--nav-logo-ink);
+  flex: 0 1 auto;
+  min-width: 0;
+  background: transparent;
 }
 
-.admin-nav__logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.admin-nav__logo img,
+.admin-nav__logo-img {
+  display: block;
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: calc(var(--app-header-height, 56px) - 12px) !important;
+  object-fit: contain !important;
 }
 
 .admin-nav__wordmark {
@@ -300,13 +322,26 @@
   align-items: center;
   gap: 9px;
   width: 100%;
+  box-sizing: border-box;
   padding: 7px 9px;
   border: 1px solid var(--nav-border);
   border-radius: 10px;
   background: var(--nav-surface);
   color: var(--nav-text);
   text-align: left;
+  text-decoration: none;
   font-family: var(--nav-font-sans);
+  cursor: pointer;
+  transition: background-color var(--admin-nav-transition);
+}
+
+.admin-nav__user-trigger:hover {
+  background-color: var(--nav-hover);
+}
+
+.admin-nav__user-trigger:focus-visible {
+  outline: 2px solid var(--nav-accent);
+  outline-offset: 2px;
 }
 
 .admin-nav__user-avatar {

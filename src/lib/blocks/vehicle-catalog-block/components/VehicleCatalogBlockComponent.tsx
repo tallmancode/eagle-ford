@@ -4,7 +4,14 @@ import configPromise from '@payload-config'
 import type { VehicleCategory, VehicleCatalogBlock } from '@/payload-types'
 import { VehicleCatalogClient, type VehicleCatalogItem } from './VehicleCatalogClient'
 
-export async function VehicleCatalogBlockComponent({ heading }: VehicleCatalogBlock) {
+type VehicleCatalogBlockProps = VehicleCatalogBlock & {
+  /** Optional CSS colour for vehicle cards (used by Vehicle Catalog v2). */
+  cardBackgroundCss?: string
+}
+
+export async function VehicleCatalogBlockComponent({
+  cardBackgroundCss,
+}: VehicleCatalogBlockProps) {
   const payload = await getPayload({ config: configPromise })
 
   const [categoriesResult, vehiclesResult] = await Promise.all([
@@ -50,5 +57,11 @@ export async function VehicleCatalogBlockComponent({ heading }: VehicleCatalogBl
     })
   }
 
-  return <VehicleCatalogClient heading={heading} categories={categories} vehicles={vehicles} />
+  return (
+    <VehicleCatalogClient
+      categories={categories}
+      vehicles={vehicles}
+      cardBackgroundCss={cardBackgroundCss}
+    />
+  )
 }

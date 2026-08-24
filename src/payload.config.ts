@@ -11,6 +11,7 @@ import { defaultLexical } from '@/lib/fields/defaultLexical'
 import { getTrustedOrigins } from './lib/utils/getServerSideURL'
 import Globals from '@/globals'
 import Blocks from '@/lib/blocks'
+import { defineV2BlocksConfig } from '@/lib/blocks/v2'
 import { SITE_FAVICON_LINKS } from './constants/siteIcons'
 import { createInstrumentedEmailAdapter } from '@/lib/email/createInstrumentedEmailAdapter'
 import { invalidQueryJsonAfterError } from '@/lib/payload/invalidQueryJsonError'
@@ -19,6 +20,29 @@ import { sweepMotorCityLeadsHandler } from '@/tasks/sweepMotorCityLeads'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+/** Per-block v2 style defaults (not a Payload `buildConfig` key — applied via StyleFields). */
+defineV2BlocksConfig({
+  sectionBlock: {
+    padding: {
+      mobile: {
+        top: '1',
+        bottom: '1',
+      },
+    },
+    container: {
+      defaultEnabled: true,
+    },
+  },
+  wrapperBlock: {
+    padding: {
+      mobile: {
+        top: '0.5',
+        bottom: '0.5',
+      },
+    },
+  },
+})
 
 export default buildConfig({
   admin: {
@@ -67,6 +91,7 @@ export default buildConfig({
       icons: [...SITE_FAVICON_LINKS],
     },
   },
+
   graphQL: {
     disable: true,
   },

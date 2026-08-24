@@ -20,6 +20,9 @@ type VehicleModelSiblingsProps = {
   vehicle: Vehicle
   currentModel: VehicleModel
   models: ModelWithPricing[]
+  heading?: string | null
+  pageSize?: number | null
+  includeCurrent?: boolean | null
 }
 
 function getCardImage(
@@ -30,24 +33,33 @@ function getCardImage(
   return model.featureImage ?? model.heroImage ?? vehicleFeatureImage ?? vehicleHeroImage ?? null
 }
 
-export function VehicleModelSiblings({ vehicle, currentModel, models }: VehicleModelSiblingsProps) {
-  const siblings = models.filter((m) => m.id !== currentModel.id)
+export function VehicleModelSiblings({
+  vehicle,
+  currentModel,
+  models,
+  heading,
+  pageSize,
+  includeCurrent = false,
+}: VehicleModelSiblingsProps) {
+  const siblings = includeCurrent
+    ? models
+    : models.filter((m) => m.id !== currentModel.id)
+  const perPage = Math.max(1, pageSize ?? MODELS_PER_PAGE)
   const [modelPage, setModelPage] = useState(0)
 
   if (siblings.length === 0) return null
 
-  const modelPages = Math.ceil(siblings.length / MODELS_PER_PAGE)
-  const visibleModels = siblings.slice(
-    modelPage * MODELS_PER_PAGE,
-    (modelPage + 1) * MODELS_PER_PAGE,
-  )
+  const modelPages = Math.ceil(siblings.length / perPage)
+  const visibleModels = siblings.slice(modelPage * perPage, (modelPage + 1) * perPage)
   const vehicleFeatureImage = vehicle.featureImage ?? vehicle.heroImage ?? null
   const vehicleHeroImage = vehicle.heroImage ?? null
 
   return (
     <section id="models" className="bg-muted/40 py-14 px-4">
       <div className="container mx-auto">
-        <h2 className="text-primary text-3xl font-bold text-center mb-10">{vehicle.name} Trims</h2>
+        <h2 className="text-primary text-3xl font-bold text-center mb-10">
+          {heading?.trim() || `${vehicle.name} Trims`}
+        </h2>
 
         <div className="relative">
           {modelPages > 1 && (
