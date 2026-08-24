@@ -4,7 +4,12 @@ import configPromise from '@payload-config'
 import type { VehicleCategory, VehicleTabsBlock } from '@/payload-types'
 import { VehicleTabsClient, type VehicleTabItem } from './VehicleTabsClient'
 
-export async function VehicleTabsBlockComponent(_props: VehicleTabsBlock) {
+type VehicleTabsBlockProps = VehicleTabsBlock & {
+  /** Optional CSS colour for vehicle cards (used by Vehicle Tabs v2). */
+  cardBackgroundCss?: string
+}
+
+export async function VehicleTabsBlockComponent({ cardBackgroundCss }: VehicleTabsBlockProps) {
   const payload = await getPayload({ config: configPromise })
 
   const [categoriesResult, vehiclesResult] = await Promise.all([
@@ -48,5 +53,11 @@ export async function VehicleTabsBlockComponent(_props: VehicleTabsBlock) {
     })
   }
 
-  return <VehicleTabsClient categories={categories} vehicles={vehicles} />
+  return (
+    <VehicleTabsClient
+      categories={categories}
+      vehicles={vehicles}
+      cardBackgroundCss={cardBackgroundCss}
+    />
+  )
 }

@@ -1,5 +1,6 @@
 import type { Block } from 'payload'
 import { headingMarkupDescription } from '@/lib/blocks/heading-block/utils/headingMarkupDescription'
+import { ColorField } from '@/lib/blocks/v2/fields/color'
 import { StyleFields } from '@/lib/blocks/v2/fields/style-fields'
 
 export const SubheadingV2Block: Block = {
@@ -63,6 +64,7 @@ export const SubheadingV2Block: Block = {
                 { label: 'Right', value: 'right' },
               ],
             },
+            ColorField({ name: 'color', label: 'Color', defaultToken: 'muted' }),
           ],
         },
         {

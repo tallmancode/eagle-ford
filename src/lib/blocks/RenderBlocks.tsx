@@ -10,6 +10,7 @@ import type {
   SubheadingV2,
   RichTextV2,
   ButtonV2,
+  ButtonGroupV2,
   CardV2,
   AccordionV2,
   ImageV2,
@@ -27,9 +28,11 @@ import type {
   SpecialsArchiveV2,
   SpecialsTabsV2,
   VehicleCatalogV2,
+  VehicleTabsV2,
   GalleryV2,
   FeatureListV2,
   FeatureRowsV2,
+  OverlapMediaStoryV2,
   PopupCardsV2,
   StatsV2,
   TeamGridV2,
@@ -107,6 +110,7 @@ import { HeadingTextV2BlockComponent } from '@/lib/blocks/v2/heading-text-block/
 import { SubheadingV2BlockComponent } from '@/lib/blocks/v2/subheading-block/components/SubheadingBlockComponent'
 import { RichTextV2BlockComponent } from '@/lib/blocks/v2/rich-text-block/components/RichTextBlockComponent'
 import { ButtonV2BlockComponent } from '@/lib/blocks/v2/button-block/components/ButtonBlockComponent'
+import { ButtonGroupV2BlockComponent } from '@/lib/blocks/v2/button-group-block/components/ButtonGroupBlockComponent'
 import { CardV2BlockComponent } from '@/lib/blocks/v2/card-block/components/CardBlockComponent'
 import { AccordionV2BlockComponent } from '@/lib/blocks/v2/accordion-block/components/AccordionBlockComponent'
 import { ImageV2BlockComponent } from '@/lib/blocks/v2/image-block/components/ImageBlockComponent'
@@ -124,9 +128,11 @@ import { CarouselV2BlockComponent } from '@/lib/blocks/v2/carousel-block/compone
 import { SpecialsArchiveV2BlockComponent } from '@/lib/blocks/v2/specials-archive-block/components/SpecialsArchiveBlockComponent'
 import { SpecialsTabsV2BlockComponent } from '@/lib/blocks/v2/specials-tabs-block/components/SpecialsTabsBlockComponent'
 import { VehicleCatalogV2BlockComponent } from '@/lib/blocks/v2/vehicle-catalog-block/components/VehicleCatalogBlockComponent'
+import { VehicleTabsV2BlockComponent } from '@/lib/blocks/v2/vehicle-tabs-block/components/VehicleTabsBlockComponent'
 import { GalleryV2BlockComponent } from '@/lib/blocks/v2/gallery-block/components/GalleryBlockComponent'
 import { FeatureListV2BlockComponent } from '@/lib/blocks/v2/feature-list-block/components/FeatureListBlockComponent'
 import { FeatureRowsV2BlockComponent } from '@/lib/blocks/v2/feature-rows-block/components/FeatureRowsBlockComponent'
+import { OverlapMediaStoryV2BlockComponent } from '@/lib/blocks/v2/overlap-media-story-block/components/OverlapMediaStoryBlockComponent'
 import { PopupCardsV2BlockComponent } from '@/lib/blocks/v2/popup-cards-block/components/PopupCardsBlockComponent'
 import { StatsV2BlockComponent } from '@/lib/blocks/v2/stats-block/components/StatsBlockComponent'
 import { TeamGridV2BlockComponent } from '@/lib/blocks/v2/team-grid-block/components/TeamGridBlockComponent'
@@ -211,6 +217,7 @@ type BlockComponentMap = {
   subheadingV2: SubheadingV2
   richTextV2: RichTextV2
   buttonV2: ButtonV2
+  buttonGroupV2: ButtonGroupV2
   cardV2: CardV2
   accordionV2: AccordionV2
   imageV2: ImageV2
@@ -228,9 +235,11 @@ type BlockComponentMap = {
   specialsArchiveV2: SpecialsArchiveV2
   specialsTabsV2: SpecialsTabsV2
   vehicleCatalogV2: VehicleCatalogV2
+  vehicleTabsV2: VehicleTabsV2
   galleryV2: GalleryV2
   featureListV2: FeatureListV2
   featureRowsV2: FeatureRowsV2
+  overlapMediaStoryV2: OverlapMediaStoryV2
   popupCardsV2: PopupCardsV2
   statsV2: StatsV2
   teamGridV2: TeamGridV2
@@ -314,6 +323,7 @@ const blockComponents: {
   subheadingV2: SubheadingV2BlockComponent,
   richTextV2: RichTextV2BlockComponent,
   buttonV2: ButtonV2BlockComponent,
+  buttonGroupV2: ButtonGroupV2BlockComponent,
   cardV2: CardV2BlockComponent,
   accordionV2: AccordionV2BlockComponent,
   imageV2: ImageV2BlockComponent,
@@ -339,12 +349,18 @@ const blockComponents: {
   vehicleCatalogV2: VehicleCatalogV2BlockComponent as unknown as React.ComponentType<
     WithMeta<VehicleCatalogV2>
   >,
+  vehicleTabsV2: VehicleTabsV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<VehicleTabsV2>
+  >,
   galleryV2: GalleryV2BlockComponent,
   featureListV2: FeatureListV2BlockComponent as unknown as React.ComponentType<
     WithMeta<FeatureListV2>
   >,
   featureRowsV2: FeatureRowsV2BlockComponent as unknown as React.ComponentType<
     WithMeta<FeatureRowsV2>
+  >,
+  overlapMediaStoryV2: OverlapMediaStoryV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<OverlapMediaStoryV2>
   >,
   popupCardsV2: PopupCardsV2BlockComponent as unknown as React.ComponentType<WithMeta<PopupCardsV2>>,
   statsV2: StatsV2BlockComponent as unknown as React.ComponentType<WithMeta<StatsV2>>,

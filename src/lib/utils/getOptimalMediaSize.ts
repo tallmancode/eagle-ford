@@ -1,6 +1,9 @@
 import type { Media } from '@/payload-types'
 import { getMediaUrl } from '@/lib/utils/getMediaUrl'
 
+/** Matches Payload `upload.resizeOptions.width` — full-bleed heroes can use the original. */
+export const FULL_BLEED_IMAGE_MAX_WIDTH = 3440
+
 /** Aspect-preserving Payload sizes, ordered smallest → largest. Skip square/og (cropped). */
 const SIZE_KEYS = ['thumbnail', 'small', 'medium', 'large', 'xlarge'] as const
 
@@ -57,7 +60,19 @@ export function getOptimalMediaSize(
       }
     }
 
-    if (largest) return largest
+    if (largest) {
+      const originalWidth = typeof media.width === 'number' ? media.width : 0
+      const originalHeight = typeof media.height === 'number' ? media.height : 0
+      // Derivatives top out at xlarge (1920). Use the original when the slot is wider.
+      if (media.url && originalWidth > largest.width && targetWidth > largest.width) {
+        return {
+          url: getMediaUrl(media.url, cacheTag),
+          width: originalWidth,
+          height: originalHeight > 0 ? originalHeight : Math.round(originalWidth * 0.5625),
+        }
+      }
+      return largest
+    }
   }
 
   if (

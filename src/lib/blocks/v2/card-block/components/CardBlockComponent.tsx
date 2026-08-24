@@ -89,7 +89,13 @@ export function CardV2BlockComponent(props: CardV2) {
       {media ? (
         <div className="relative aspect-[16/10] w-full overflow-hidden">
           {cardHref ? (
-            <Link href={cardHref} className="absolute inset-0 block" {...cardNewTabProps}>
+            <Link
+              href={cardHref}
+              className="absolute inset-0 block"
+              {...cardNewTabProps}
+              data-gtm-cta="card-cta"
+              data-gtm-cta-location="card-v2"
+            >
               <MediaImage
                 resource={media}
                 alt={imageAlt ?? undefined}
@@ -114,7 +120,13 @@ export function CardV2BlockComponent(props: CardV2) {
       <div className="flex flex-col gap-3 p-6">
         {Icon ? <Icon className="size-8 shrink-0 text-primary" aria-hidden /> : null}
         {cardHref && titleNode ? (
-          <Link href={cardHref} className="hover:underline" {...cardNewTabProps}>
+          <Link
+            href={cardHref}
+            className="hover:underline"
+            {...cardNewTabProps}
+            data-gtm-cta="card-cta"
+            data-gtm-cta-location="card-v2"
+          >
             {titleNode}
           </Link>
         ) : (
@@ -128,7 +140,12 @@ export function CardV2BlockComponent(props: CardV2) {
         {buttonHref && buttonLabel ? (
           <div className="pt-1">
             <Button asChild variant={buttonVariant ?? 'default'} size="default">
-              <Link href={buttonHref} {...buttonNewTabProps}>
+              <Link
+                href={buttonHref}
+                {...buttonNewTabProps}
+                data-gtm-cta="card-cta"
+                data-gtm-cta-location="card-v2"
+              >
                 {buttonLabel}
               </Link>
             </Button>

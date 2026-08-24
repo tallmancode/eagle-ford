@@ -12,6 +12,7 @@ import {
 import { Hero } from '@/payload-types'
 import Autoplay from 'embla-carousel-autoplay'
 import { MediaImage } from '@/components/ui/media-image'
+import { FULL_BLEED_IMAGE_MAX_WIDTH } from '@/lib/utils/getOptimalMediaSize'
 
 const DEFAULT_INTERVAL = 5000
 
@@ -77,7 +78,7 @@ export const OverlayCarousel: React.FC<Hero> = (props) => {
                     mobileResource={slide.mobileImage}
                     priority={isFirstSlide}
                     loading={isFirstSlide ? 'eager' : 'lazy'}
-                    maxWidth={1920}
+                    maxWidth={FULL_BLEED_IMAGE_MAX_WIDTH}
                     mobileMaxWidth={768}
                     size="100vw"
                     quality={isFirstSlide ? 65 : 75}

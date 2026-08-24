@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/react'
 import { createElement } from 'react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { ConsentAwareGoogleTagManager } from '@/components/analytics/ConsentAwareGoogleTagManager'
 
@@ -14,6 +14,12 @@ vi.mock('@next/third-parties/google', () => ({
 
 afterEach(() => {
   cleanup()
+  vi.unstubAllEnvs()
+})
+
+beforeEach(() => {
+  vi.stubEnv('NODE_ENV', 'production')
+  vi.stubEnv('ALLOW_SEARCH_INDEXING', 'true')
 })
 
 describe('ConsentAwareGoogleTagManager', () => {
@@ -63,5 +69,18 @@ describe('ConsentAwareGoogleTagManager', () => {
     expect(screen.getByTestId('google-tag-manager').getAttribute('data-gtm-id')).toBe(
       'GTM-P2JCNCLC',
     )
+  })
+
+  it('does not render outside live production', () => {
+    vi.stubEnv('NODE_ENV', 'development')
+
+    render(
+      createElement(ConsentAwareGoogleTagManager, {
+        enabled: true,
+        containerId: 'GTM-P2JCNCLC',
+      }),
+    )
+
+    expect(screen.queryByTestId('google-tag-manager')).toBeNull()
   })
 })

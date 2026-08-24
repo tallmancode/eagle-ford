@@ -35,7 +35,10 @@ import { PrivacyBanner } from '@/lib/components/privacy-banner/PrivacyBanner'
 import { BackToTopButton } from '@/lib/components/back-to-top/BackToTopButton'
 import { WhatsAppFloatingButton } from '@/components/WhatsAppFloatingButton'
 import { ConsentAwareGoogleTagManager } from '@/components/analytics/ConsentAwareGoogleTagManager'
-import { shouldLoadGoogleTagManager } from '@/components/analytics/googleTagManager'
+import {
+  isAnalyticsLiveProduction,
+  shouldLoadGoogleTagManager,
+} from '@/components/analytics/googleTagManager'
 import { GTMPageView } from '@/components/analytics/GTMPageView'
 import { GTMCtaClickTracker } from '@/components/analytics/GTMCtaClickTracker'
 
@@ -79,9 +82,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     enabled: globalSettings.analytics?.enableGoogleTagManager,
     containerId: globalSettings.analytics?.googleTagManagerId,
   })
+  const analyticsLive = isAnalyticsLiveProduction()
 
   return (
-    <html className={cn(GeistMono.variable, fordF1.variable)} data-theme="light" lang="en">
+    <html
+      className={cn(GeistMono.variable, fordF1.variable)}
+      data-theme="light"
+      lang="en"
+      {...(analyticsLive ? { 'data-analytics': 'live' } : {})}
+    >
       <head>
         {gtmId ? (
           <Script id="gtm-consent-default" strategy="beforeInteractive">

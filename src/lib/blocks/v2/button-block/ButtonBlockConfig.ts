@@ -37,6 +37,16 @@ export const ButtonV2Block: Block = {
               label: 'Button Label',
               required: true,
             },
+            {
+              name: 'trackAsCta',
+              type: 'checkbox',
+              label: 'Track click in Google Tag Manager',
+              defaultValue: true,
+              admin: {
+                description:
+                  'On by default. Uncheck to skip the cta_click event for this button. Tracking only runs on the live production site.',
+              },
+            },
             LucideIconField({ required: false }),
             {
               type: 'row',

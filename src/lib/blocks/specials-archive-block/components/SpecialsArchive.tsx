@@ -18,6 +18,8 @@ function CategoryCard({ category }: { category: SpecialCategory }) {
       href={href}
       prefetch={false}
       className="group bg-light-50 shadow-card block overflow-hidden rounded-lg transition-shadow hover:shadow-lg"
+      data-gtm-cta="specials-category-card"
+      data-gtm-cta-location="specials-archive"
     >
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
         {hasImage ? (

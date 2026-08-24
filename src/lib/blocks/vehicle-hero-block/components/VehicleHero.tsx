@@ -7,6 +7,7 @@ import type { Vehicle } from '@/payload-types'
 import { formatPrice } from '@/lib/utils/formatPrice'
 import { formatVehicleBadge } from '@/lib/utils/formatVehicleBadge'
 import { getBrochureUrl, isExternalUrl, resolveCtaUrl } from '@/lib/utils/vehicleCta'
+import { FULL_BLEED_IMAGE_MAX_WIDTH } from '@/lib/utils/getOptimalMediaSize'
 
 type CtaButton = NonNullable<Vehicle['ctaButtons']>[number]
 
@@ -95,7 +96,7 @@ export function VehicleHero({
         fill
         imgClassName="object-cover object-center"
         priority
-        maxWidth={1920}
+        maxWidth={FULL_BLEED_IMAGE_MAX_WIDTH}
         size="100vw"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/20" />

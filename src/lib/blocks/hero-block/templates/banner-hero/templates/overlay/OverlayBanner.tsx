@@ -1,5 +1,6 @@
 import type { Hero } from '@/payload-types'
 import { MediaImage } from '@/components/ui/media-image'
+import { FULL_BLEED_IMAGE_MAX_WIDTH } from '@/lib/utils/getOptimalMediaSize'
 
 const alignmentClasses = {
   left: 'items-center text-center md:items-start md:text-left',
@@ -22,7 +23,7 @@ export const OverlayBanner: React.FC<Hero> = (props) => {
         imgClassName="w-full h-auto block"
         priority
         loading="eager"
-        maxWidth={1920}
+        maxWidth={FULL_BLEED_IMAGE_MAX_WIDTH}
         size="100vw"
       />
 

@@ -465,14 +465,26 @@ function SpecialDetailInfo({
       <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         {fordPromiseHref && (
           <Button className="w-full rounded-full sm:w-auto" asChild>
-            <Link href={fordPromiseHref} prefetch={false}>
+            <Link
+              href={fordPromiseHref}
+              prefetch={false}
+              data-gtm-cta="ford-family-promise"
+              data-gtm-cta-location="specials-detail"
+            >
               Ford Family Promise
             </Link>
           </Button>
         )}
         {brochureUrl && (
           <Button variant="secondary" className="w-full rounded-full sm:w-auto" asChild>
-            <a href={brochureUrl} target="_blank" rel="noopener noreferrer" download>
+            <a
+              href={brochureUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+              data-gtm-cta="download-brochure"
+              data-gtm-cta-location="specials-detail"
+            >
               <Download className="mr-2 size-4" />
               Download Brochure
             </a>
@@ -480,13 +492,23 @@ function SpecialDetailInfo({
         )}
         {vehicleHref && (
           <Button className="w-full rounded-full sm:w-auto" asChild>
-            <Link href={vehicleHref} prefetch={false}>
+            <Link
+              href={vehicleHref}
+              prefetch={false}
+              data-gtm-cta="view-full-range"
+              data-gtm-cta-location="specials-detail"
+            >
               View Full Range
             </Link>
           </Button>
         )}
         <Button variant="outline" className="w-full rounded-full sm:w-auto" asChild>
-          <Link href="/specials" prefetch={false}>
+          <Link
+            href="/specials"
+            prefetch={false}
+            data-gtm-cta="back-to-specials"
+            data-gtm-cta-location="specials-detail"
+          >
             Back to Specials
           </Link>
         </Button>

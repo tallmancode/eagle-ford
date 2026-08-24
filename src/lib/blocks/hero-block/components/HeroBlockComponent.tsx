@@ -1,12 +1,15 @@
 import type { Hero, Media } from '@/payload-types'
 import { HeroMappings } from '@/lib/blocks/hero-block/heroMappings'
-import { getMediaUrl } from '@/lib/utils/getMediaUrl'
+import { FULL_BLEED_IMAGE_MAX_WIDTH, getOptimalMediaSize } from '@/lib/utils/getOptimalMediaSize'
 import { preload } from 'react-dom'
 
 export type HeroKey = keyof typeof HeroMappings
 
-const DEVICE_WIDTHS = [640, 750, 828, 1080, 1200, 1920]
+const DEVICE_WIDTHS = [640, 750, 828, 1080, 1200, 1920, 2560, 3440]
 const LCP_QUALITY = 75
+const MOBILE_MAX_WIDTH = 768
+const MOBILE_MEDIA = '(max-width: 767px)'
+const DESKTOP_MEDIA = '(min-width: 768px)'
 
 function buildNextImageSrcset(relativePath: string): string {
   return DEVICE_WIDTHS.map(
@@ -14,10 +17,15 @@ function buildNextImageSrcset(relativePath: string): string {
   ).join(', ')
 }
 
-function getLcpImagePath(props: Hero): string | null {
+function resolveOptimizedPath(image: unknown, targetWidth: number): string | null {
+  if (!image || typeof image !== 'object') return null
+  return getOptimalMediaSize(image as Media, targetWidth)?.url || null
+}
+
+function getLcpSources(props: Hero): { desktop: string | null; mobile: string | null } {
   if (props.template === 'carousel') {
     const carouselContent = props.carouselHeroContent
-    if (!carouselContent) return null
+    if (!carouselContent) return { desktop: null, mobile: null }
 
     const slides =
       carouselContent.carouselTemplate === 'standard'
@@ -25,13 +33,32 @@ function getLcpImagePath(props: Hero): string | null {
         : carouselContent.overlayCarouselContent?.slides
 
     const firstSlide = slides?.[0]
-    if (!firstSlide) return null
-    const image = firstSlide.image
-    if (image && typeof image === 'object') {
-      return getMediaUrl((image as Media).url, (image as Media).updatedAt) || null
+    if (!firstSlide) return { desktop: null, mobile: null }
+
+    return {
+      desktop: resolveOptimizedPath(firstSlide.image, FULL_BLEED_IMAGE_MAX_WIDTH),
+      mobile: resolveOptimizedPath(firstSlide.mobileImage, MOBILE_MAX_WIDTH),
     }
   }
-  return null
+
+  if (props.template === 'form') {
+    return {
+      desktop: resolveOptimizedPath(props.formHeroContent?.image, FULL_BLEED_IMAGE_MAX_WIDTH),
+      mobile: null,
+    }
+  }
+
+  return { desktop: null, mobile: null }
+}
+
+function preloadHeroImage(path: string, media?: string) {
+  preload(`/_next/image?url=${encodeURIComponent(path)}&w=828&q=${LCP_QUALITY}`, {
+    as: 'image',
+    imageSrcSet: buildNextImageSrcset(path),
+    imageSizes: '100vw',
+    fetchPriority: 'high',
+    ...(media ? { media } : {}),
+  })
 }
 
 export const HeroBlock: React.FC<Hero> = (props) => {
@@ -48,14 +75,12 @@ export const HeroBlock: React.FC<Hero> = (props) => {
   // Emit an early <link rel="preload" fetchpriority="high"> for the LCP hero image.
   // preload() is a React 19 resource API that emits hints into the document <head>
   // from server components, ensuring the browser discovers the image before JS runs.
-  const lcpPath = getLcpImagePath(props)
-  if (lcpPath) {
-    preload(`/_next/image?url=${encodeURIComponent(lcpPath)}&w=828&q=${LCP_QUALITY}`, {
-      as: 'image',
-      imageSrcSet: buildNextImageSrcset(lcpPath),
-      imageSizes: '100vw',
-      fetchPriority: 'high',
-    })
+  const { desktop, mobile } = getLcpSources(props)
+  if (mobile) {
+    preloadHeroImage(mobile, MOBILE_MEDIA)
+  }
+  if (desktop) {
+    preloadHeroImage(desktop, mobile ? DESKTOP_MEDIA : undefined)
   }
 
   const HeroToRender = HeroMappings[template as HeroKey]

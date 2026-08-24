@@ -1,5 +1,6 @@
 'use client'
 
+import { canSendAnalytics } from '@/components/analytics/canSendAnalytics'
 import canUseDOM from '@/lib/utils/canUseDOM'
 import { updateGoogleConsent } from '@/lib/privacy/updateGoogleConsent'
 import React, { createContext, use, useCallback, useEffect, useState } from 'react'
@@ -69,6 +70,8 @@ const PrivacyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   }, [])
 
   useEffect(() => {
+    if (!canSendAnalytics()) return
+
     import('react-facebook-pixel')
       .then((x) => x.default)
       .then((ReactPixel) => {
