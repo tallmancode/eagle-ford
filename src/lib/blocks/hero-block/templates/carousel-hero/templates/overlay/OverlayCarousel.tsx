@@ -15,11 +15,32 @@ import { MediaImage } from '@/components/ui/media-image'
 import { FULL_BLEED_IMAGE_MAX_WIDTH } from '@/lib/utils/getOptimalMediaSize'
 
 const DEFAULT_INTERVAL = 5000
+const ADJACENT_SLIDE_MAX_WIDTH = 1920
+const FIRST_SLIDE_QUALITY = 65
+const ADJACENT_SLIDE_QUALITY = 65
 
 const alignmentClasses = {
   left: 'items-start text-left',
   center: 'items-center text-center',
   right: 'items-end text-right',
+}
+
+function isNearSlide(index: number, current: number, total: number): boolean {
+  if (total <= 0) return false
+  if (index === 0) return true
+  if (index === current) return true
+  if (index === (current + 1) % total) return true
+  if (index === (current - 1 + total) % total) return true
+  return false
+}
+
+function slideAspectRatio(image: unknown): number {
+  if (image && typeof image === 'object' && 'width' in image && 'height' in image) {
+    const width = Number((image as { width?: number }).width)
+    const height = Number((image as { height?: number }).height)
+    if (width > 0 && height > 0) return width / height
+  }
+  return 21 / 9
 }
 
 export const OverlayCarousel: React.FC<Hero> = (props) => {
@@ -65,6 +86,7 @@ export const OverlayCarousel: React.FC<Hero> = (props) => {
         <CarouselContent>
           {slides.map((slide, index) => {
             const isFirstSlide = index === 0
+            const loadImage = isNearSlide(index, current, slides.length)
             const align =
               (slide.alignment as keyof typeof alignmentClasses | null | undefined) ?? 'left'
             const alignClass = alignmentClasses[align] ?? alignmentClasses.left
@@ -72,17 +94,27 @@ export const OverlayCarousel: React.FC<Hero> = (props) => {
             return (
               <CarouselItem key={slide.id}>
                 <div className="relative w-full overflow-hidden">
-                  <MediaImage
-                    imgClassName="w-full h-auto block"
-                    resource={slide.image}
-                    mobileResource={slide.mobileImage}
-                    priority={isFirstSlide}
-                    loading={isFirstSlide ? 'eager' : 'lazy'}
-                    maxWidth={FULL_BLEED_IMAGE_MAX_WIDTH}
-                    mobileMaxWidth={768}
-                    size="100vw"
-                    quality={isFirstSlide ? 65 : 75}
-                  />
+                  {loadImage ? (
+                    <MediaImage
+                      imgClassName="w-full h-auto block"
+                      resource={slide.image}
+                      mobileResource={slide.mobileImage}
+                      priority={isFirstSlide}
+                      loading={isFirstSlide ? 'eager' : 'lazy'}
+                      maxWidth={
+                        isFirstSlide ? FULL_BLEED_IMAGE_MAX_WIDTH : ADJACENT_SLIDE_MAX_WIDTH
+                      }
+                      mobileMaxWidth={768}
+                      size="100vw"
+                      quality={isFirstSlide ? FIRST_SLIDE_QUALITY : ADJACENT_SLIDE_QUALITY}
+                    />
+                  ) : (
+                    <div
+                      className="w-full bg-dark-900"
+                      style={{ aspectRatio: slideAspectRatio(slide.image) }}
+                      aria-hidden
+                    />
+                  )}
 
                   <div className="absolute inset-0 bg-dark-950/50" aria-hidden />
 
