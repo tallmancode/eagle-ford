@@ -4,6 +4,7 @@ import { MediaImage } from '@/components/ui/media-image'
 import { Button } from '@/components/ui/button'
 import { resolveColorCss } from '@/lib/blocks/v2/apply/color'
 import { cn } from '@/lib/utils/cn'
+import { FULL_BLEED_IMAGE_MAX_WIDTH } from '@/lib/utils/getOptimalMediaSize'
 import { Phone, Mail, MapPin, Clock, ArrowRight } from 'lucide-react'
 
 const iconMap = {
@@ -66,7 +67,7 @@ export const CtaOverlayBanner: React.FC<Hero> = (props) => {
         imgClassName="object-cover object-center"
         priority
         loading="eager"
-        maxWidth={1920}
+        maxWidth={FULL_BLEED_IMAGE_MAX_WIDTH}
         size="100vw"
       />
 

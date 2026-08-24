@@ -9,6 +9,7 @@ import { HeadingTextV2Block } from '@/lib/blocks/v2/heading-text-block/HeadingTe
 import { SubheadingV2Block } from '@/lib/blocks/v2/subheading-block/SubheadingBlockConfig'
 import { RichTextV2Block } from '@/lib/blocks/v2/rich-text-block/RichTextBlockConfig'
 import { ButtonV2Block } from '@/lib/blocks/v2/button-block/ButtonBlockConfig'
+import { ButtonGroupV2Block } from '@/lib/blocks/v2/button-group-block/ButtonGroupBlockConfig'
 import { CardV2Block } from '@/lib/blocks/v2/card-block/CardBlockConfig'
 import { AccordionV2Block } from '@/lib/blocks/v2/accordion-block/AccordionBlockConfig'
 import { ImageV2Block } from '@/lib/blocks/v2/image-block/ImageBlockConfig'
@@ -26,9 +27,11 @@ import { CarouselV2Block } from '@/lib/blocks/v2/carousel-block/CarouselBlockCon
 import { SpecialsArchiveV2Block } from '@/lib/blocks/v2/specials-archive-block/SpecialsArchiveBlockConfig'
 import { SpecialsTabsV2Block } from '@/lib/blocks/v2/specials-tabs-block/SpecialsTabsBlockConfig'
 import { VehicleCatalogV2Block } from '@/lib/blocks/v2/vehicle-catalog-block/VehicleCatalogBlockConfig'
+import { VehicleTabsV2Block } from '@/lib/blocks/v2/vehicle-tabs-block/VehicleTabsBlockConfig'
 import { GalleryV2Block } from '@/lib/blocks/v2/gallery-block/GalleryBlockConfig'
 import { FeatureListV2Block } from '@/lib/blocks/v2/feature-list-block/FeatureListBlockConfig'
 import { FeatureRowsV2Block } from '@/lib/blocks/v2/feature-rows-block/FeatureRowsBlockConfig'
+import { OverlapMediaStoryV2Block } from '@/lib/blocks/v2/overlap-media-story-block/OverlapMediaStoryBlockConfig'
 import { PopupCardsV2Block } from '@/lib/blocks/v2/popup-cards-block/PopupCardsBlockConfig'
 import { StatsV2Block } from '@/lib/blocks/v2/stats-block/StatsBlockConfig'
 import { TeamGridV2Block } from '@/lib/blocks/v2/team-grid-block/TeamGridBlockConfig'
@@ -107,6 +110,7 @@ const Blocks = [
   SubheadingV2Block,
   RichTextV2Block,
   ButtonV2Block,
+  ButtonGroupV2Block,
   CardV2Block,
   AccordionV2Block,
   ImageV2Block,
@@ -124,9 +128,11 @@ const Blocks = [
   SpecialsArchiveV2Block,
   SpecialsTabsV2Block,
   VehicleCatalogV2Block,
+  VehicleTabsV2Block,
   GalleryV2Block,
   FeatureListV2Block,
   FeatureRowsV2Block,
+  OverlapMediaStoryV2Block,
   PopupCardsV2Block,
   StatsV2Block,
   TeamGridV2Block,

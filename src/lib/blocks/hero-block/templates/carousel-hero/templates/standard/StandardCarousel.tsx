@@ -14,6 +14,7 @@ import Autoplay from 'embla-carousel-autoplay'
 import { MediaImage } from '@/components/ui/media-image'
 import { getSpecialCategoryPath } from '@/lib/specials/paths'
 import { getPagePath } from '@/lib/utils/getPagePath'
+import { FULL_BLEED_IMAGE_MAX_WIDTH } from '@/lib/utils/getOptimalMediaSize'
 import Link from 'next/link'
 
 const DEFAULT_INTERVAL = 5000
@@ -101,7 +102,7 @@ export const StandardCarousel: React.FC<Hero> = (props) => {
                 mobileResource={slide.mobileImage}
                 priority={isFirstSlide}
                 loading={isFirstSlide ? 'eager' : 'lazy'}
-                maxWidth={1920}
+                    maxWidth={FULL_BLEED_IMAGE_MAX_WIDTH}
                 mobileMaxWidth={768}
                 size="100vw"
                 quality={isFirstSlide ? 65 : 75}

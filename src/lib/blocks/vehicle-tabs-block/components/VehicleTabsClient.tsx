@@ -16,13 +16,25 @@ export type VehicleTabItem = {
   categorySlug: string
 }
 
-function VehicleCard({ vehicle }: { vehicle: VehicleTabItem }) {
+function VehicleCard({
+  vehicle,
+  cardBackgroundCss,
+}: {
+  vehicle: VehicleTabItem
+  cardBackgroundCss?: string
+}) {
   const badge = formatVehicleBadge(vehicle.badge)
 
   return (
     <Link
       href={`/vehicles/${vehicle.slug}`}
-      className="group flex h-full flex-col items-center bg-card rounded-lg shadow-sm p-4 border border-border/40 hover:shadow-md transition-shadow"
+      className={[
+        'group flex h-full flex-col items-center rounded-lg shadow-sm p-4 border border-border/40 hover:shadow-md transition-shadow',
+        cardBackgroundCss ? undefined : 'bg-card',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      style={cardBackgroundCss ? { backgroundColor: cardBackgroundCss } : undefined}
     >
       <div className="relative mb-3 aspect-[3/2] w-full shrink-0 overflow-hidden">
         {vehicle.featureImage ? (
@@ -49,9 +61,10 @@ function VehicleCard({ vehicle }: { vehicle: VehicleTabItem }) {
 type Props = {
   categories: Pick<VehicleCategory, 'id' | 'title' | 'slug'>[]
   vehicles: VehicleTabItem[]
+  cardBackgroundCss?: string
 }
 
-export function VehicleTabsClient({ categories, vehicles }: Props) {
+export function VehicleTabsClient({ categories, vehicles, cardBackgroundCss }: Props) {
   return (
     <div>
       <Tabs defaultValue="all">
@@ -67,7 +80,11 @@ export function VehicleTabsClient({ categories, vehicles }: Props) {
         <TabsContent value="all">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {vehicles.map((vehicle) => (
-              <VehicleCard key={vehicle.id} vehicle={vehicle} />
+              <VehicleCard
+                key={vehicle.id}
+                vehicle={vehicle}
+                cardBackgroundCss={cardBackgroundCss}
+              />
             ))}
           </div>
         </TabsContent>
@@ -78,7 +95,11 @@ export function VehicleTabsClient({ categories, vehicles }: Props) {
             <TabsContent key={cat.id} value={cat.slug}>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {filtered.map((vehicle) => (
-                  <VehicleCard key={vehicle.id} vehicle={vehicle} />
+                  <VehicleCard
+                    key={vehicle.id}
+                    vehicle={vehicle}
+                    cardBackgroundCss={cardBackgroundCss}
+                  />
                 ))}
               </div>
             </TabsContent>

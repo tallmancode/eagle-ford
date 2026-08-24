@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import type { Vehicle, VehicleModel } from '@/payload-types'
 import { formatPrice } from '@/lib/utils/formatPrice'
 import { getModelHeroImage } from '@/lib/utils/vehicleModel'
+import { FULL_BLEED_IMAGE_MAX_WIDTH } from '@/lib/utils/getOptimalMediaSize'
 
 type VehicleModelHeroProps = {
   vehicle: Vehicle
@@ -24,7 +25,7 @@ export function VehicleModelHero({ vehicle, model, startingPrice }: VehicleModel
           fill
           imgClassName="object-cover object-center"
           priority
-          maxWidth={1920}
+          maxWidth={FULL_BLEED_IMAGE_MAX_WIDTH}
           size="100vw"
         />
       )}

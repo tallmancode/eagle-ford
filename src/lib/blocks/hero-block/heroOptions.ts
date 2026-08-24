@@ -10,4 +10,8 @@ export const heroOptions: {
     label: 'Carousel Hero',
     value: 'carousel',
   },
+  {
+    label: 'Form Banner',
+    value: 'form',
+  },
 ]
