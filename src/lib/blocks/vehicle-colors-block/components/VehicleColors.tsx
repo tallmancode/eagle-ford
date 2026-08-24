@@ -10,9 +10,10 @@ type ColourItem = NonNullable<NonNullable<Vehicle['colours']>[number]>
 type VehicleColorsProps = {
   vehicleName: string
   colours: ColourItem[]
+  heading?: string | null
 }
 
-export function VehicleColors({ vehicleName, colours }: VehicleColorsProps) {
+export function VehicleColors({ vehicleName, colours, heading }: VehicleColorsProps) {
   const [selectedColour, setSelectedColour] = useState(0)
 
   if (colours.length === 0) {
@@ -22,7 +23,9 @@ export function VehicleColors({ vehicleName, colours }: VehicleColorsProps) {
   return (
     <section className="px-4 py-14">
       <div className="container mx-auto">
-        <h2 className="mb-10 text-center text-3xl font-bold text-primary">{vehicleName} Colours</h2>
+        <h2 className="mb-10 text-center text-3xl font-bold text-primary">
+          {heading?.trim() || `${vehicleName} Colours`}
+        </h2>
 
         <div className="relative mx-auto mb-4 aspect-[16/10] w-full max-w-3xl overflow-hidden rounded-2xl bg-muted sm:aspect-[16/9]">
           {colours[selectedColour]?.colourSwatch ? (

@@ -9,6 +9,9 @@ export const CtaButtonBlock: Block = {
   },
   admin: {
     group: 'Buttons',
+    components: {
+      Label: '/lib/blocks/v2/components/BlockTextLabel#BlockTextLabel',
+    },
     images: {
       thumbnail: {
         url: '/blocks/cta-button-block.jpg',

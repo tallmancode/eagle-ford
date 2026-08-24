@@ -16,6 +16,9 @@ importers:
       '@anthropic-ai/sdk':
         specifier: ^0.117.1
         version: 0.117.1(zod@4.4.3)
+      '@inoo-ch/payload-image-optimizer':
+        specifier: ^3.5.3
+        version: 3.5.3(next@16.2.6(patch_hash=0b1978fd286b7d985840c36f375511a34432e4073270057cb425cda20b87cf58)(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.58.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.101.0))(payload@3.85.1(graphql@16.14.2)(typescript@5.7.3))(react@19.2.6)(sharp@0.34.2)
       '@next/third-parties':
         specifier: ^16.2.9
         version: 16.2.9(next@16.2.6(patch_hash=0b1978fd286b7d985840c36f375511a34432e4073270057cb425cda20b87cf58)(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.58.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.101.0))(react@19.2.6)
@@ -1188,6 +1191,15 @@ packages:
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [x64]
     os: [win32]
+
+  '@inoo-ch/payload-image-optimizer@3.5.3':
+    resolution: {integrity: sha512-jHcbPLxtYYRkFRFKujmueTw0K6rtSPU2yMJkFSVNrMBJYzGD0LT4HmIqB0XyJxf0Z6FQXDCSC57GKdewKjkowg==}
+    engines: {node: ^18.20.2 || >=20.9.0, pnpm: ^9 || ^10}
+    peerDependencies:
+      next: ^14.0.0 || ^15.0.0 || ^16.0.0
+      payload: ^3.0.0
+      react: ^18.0.0 || ^19.0.0
+      sharp: '>=0.32.0'
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -5666,6 +5678,9 @@ packages:
   thread-stream@3.2.0:
     resolution: {integrity: sha512-zLBvqpwr4Esa0kRjcrzGU6zL25lePWaCLMx0RQFrmteozIfeNdaMLpG5U7PeHzvlFkAWaRKA9/KVW4F60iB+qw==}
 
+  thumbhash@0.1.1:
+    resolution: {integrity: sha512-kH5pKeIIBPQXAOni2AiY/Cu/NKdkFREdpH+TLdM0g6WA7RriCv0kPLgP731ady67MhTAqrVG/4mnEeibVuCJcg==}
+
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
 
@@ -6878,6 +6893,14 @@ snapshots:
 
   '@img/sharp-win32-x64@0.34.5':
     optional: true
+
+  '@inoo-ch/payload-image-optimizer@3.5.3(next@16.2.6(patch_hash=0b1978fd286b7d985840c36f375511a34432e4073270057cb425cda20b87cf58)(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.58.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.101.0))(payload@3.85.1(graphql@16.14.2)(typescript@5.7.3))(react@19.2.6)(sharp@0.34.2)':
+    dependencies:
+      next: 16.2.6(patch_hash=0b1978fd286b7d985840c36f375511a34432e4073270057cb425cda20b87cf58)(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.58.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(sass@1.101.0)
+      payload: 3.85.1(graphql@16.14.2)(typescript@5.7.3)
+      react: 19.2.6
+      sharp: 0.34.2
+      thumbhash: 0.1.1
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
@@ -12064,6 +12087,8 @@ snapshots:
   thread-stream@3.2.0:
     dependencies:
       real-require: 0.2.0
+
+  thumbhash@0.1.1: {}
 
   tinybench@2.9.0: {}
 

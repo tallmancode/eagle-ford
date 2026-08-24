@@ -24,6 +24,7 @@ import {
   sectionDividerVisibilityClass,
 } from '@/lib/blocks/section-block/sectionDividerUtils'
 import { cn } from '@/lib/utils/cn'
+import { getBetterEditorBlockProps } from '@/lib/blocks/betterEditor'
 import type { BlockRenderMeta } from '@/lib/blocks/form-block/types/formContext'
 import { contentContainsVehicleSpecialCategories } from '@/lib/blocks/vehicle-special-categories-block/contentContainsVehicleSpecialCategories'
 import { getVehicleSpecialCategories } from '@/lib/blocks/vehicle-special-categories-block/getVehicleSpecialCategories'
@@ -210,7 +211,12 @@ export async function SectionBlock(props: (Section | SectionInner) & { meta?: Bl
       .filter(Boolean)
       .join(' ')
     return (
-      <Tag className={outerClassName} style={spacingStyle} {...ariaProps}>
+      <Tag
+        className={outerClassName}
+        style={spacingStyle}
+        {...ariaProps}
+        {...getBetterEditorBlockProps(props)}
+      >
         <div className={contentClasses || undefined}>
           {renderSectionContent(sectionProps, gridCols, meta)}
         </div>
@@ -234,7 +240,12 @@ export async function SectionBlock(props: (Section | SectionInner) & { meta?: Bl
     .join(' ')
 
   return (
-    <Tag className={className} style={spacingStyle} {...ariaProps}>
+    <Tag
+      className={className}
+      style={spacingStyle}
+      {...ariaProps}
+      {...getBetterEditorBlockProps(props)}
+    >
       {renderSectionContent(sectionProps, gridCols, meta)}
     </Tag>
   )

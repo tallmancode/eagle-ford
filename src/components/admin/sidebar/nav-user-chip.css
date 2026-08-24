@@ -1,0 +1,42 @@
+/* Loaded from NavUserChip.tsx so Turbopack emits this with the component chunk.
+   Do not rely on custom.scss / admin-nav.scss for this — those Payload admin sheets can stay cached. */
+
+a.app-header__account,
+.app-header a.app-header__account,
+.app-header__account {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.admin-nav__user-trigger {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 9px;
+  border: 1px solid var(--nav-border);
+  border-radius: 10px;
+  background: var(--nav-surface);
+  color: var(--nav-text);
+  text-align: left;
+  text-decoration: none;
+  font-family: var(--nav-font-sans);
+  cursor: pointer;
+  transition: background-color var(--admin-nav-transition);
+}
+
+.admin-nav__user-trigger:hover {
+  background-color: var(--nav-hover);
+}
+
+.admin-nav__user-trigger:focus-visible {
+  outline: 2px solid var(--nav-accent);
+  outline-offset: 2px;
+}

@@ -20,16 +20,20 @@ type VehicleModelVariantsProps = {
   vehicle: Vehicle
   model: VehicleModel
   variants: VehicleVariant[]
+  showPrices?: boolean
+  defaultExpanded?: boolean
 }
 
 function VariantDetailContent({
   variant,
   vehicle,
   model,
+  showPrices = true,
 }: {
   variant: VehicleVariant
   vehicle: Vehicle
   model: VehicleModel
+  showPrices?: boolean
 }) {
   const detailImage = getVariantImage(variant, model, vehicle)
   const highlights = variant.highlights ?? []
@@ -78,21 +82,29 @@ function VariantDetailContent({
           </div>
         )}
 
-        <div className="pt-4 border-t border-border">
-          <p className="text-primary text-3xl font-bold">{formatPrice(variant.price)}</p>
-          <p className="text-sm text-muted-foreground">Retail Price From</p>
-        </div>
+        {showPrices ? (
+          <div className="pt-4 border-t border-border">
+            <p className="text-primary text-3xl font-bold">{formatPrice(variant.price)}</p>
+            <p className="text-sm text-muted-foreground">Retail Price From</p>
+          </div>
+        ) : null}
       </div>
     </div>
   )
 }
 
-export function VehicleModelVariants({ vehicle, model, variants }: VehicleModelVariantsProps) {
+export function VehicleModelVariants({
+  vehicle,
+  model,
+  variants,
+  showPrices = true,
+  defaultExpanded = true,
+}: VehicleModelVariantsProps) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const selectedVariant = variants[selectedIndex] ?? variants[0]
   if (!selectedVariant) return null
 
-  const firstVariantId = String(variants[0].id)
+  const firstVariantId = defaultExpanded ? String(variants[0].id) : undefined
 
   return (
     <section id="variants" className="py-14 px-4">
@@ -116,12 +128,17 @@ export function VehicleModelVariants({ vehicle, model, variants }: VehicleModelV
                         {variant.name}
                       </span>
                       <span className="text-sm font-medium whitespace-nowrap text-muted-foreground group-data-[state=open]:text-primary">
-                        {formatPrice(variant.price)}
+                        {showPrices ? formatPrice(variant.price) : '—'}
                       </span>
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="px-4 pt-2 pb-6">
-                    <VariantDetailContent variant={variant} vehicle={vehicle} model={model} />
+                    <VariantDetailContent
+                      variant={variant}
+                      vehicle={vehicle}
+                      model={model}
+                      showPrices={showPrices}
+                    />
                   </AccordionContent>
                 </AccordionItem>
               ))}
@@ -158,7 +175,7 @@ export function VehicleModelVariants({ vehicle, model, variants }: VehicleModelV
                           isSelected ? 'text-primary' : 'text-muted-foreground'
                         }`}
                       >
-                        {formatPrice(variant.price)}
+                        {showPrices ? formatPrice(variant.price) : '—'}
                       </span>
                     </button>
                   </li>
@@ -167,7 +184,12 @@ export function VehicleModelVariants({ vehicle, model, variants }: VehicleModelV
             </ul>
           </div>
 
-          <VariantDetailContent variant={selectedVariant} vehicle={vehicle} model={model} />
+          <VariantDetailContent
+            variant={selectedVariant}
+            vehicle={vehicle}
+            model={model}
+            showPrices={showPrices}
+          />
         </div>
       </div>
     </section>

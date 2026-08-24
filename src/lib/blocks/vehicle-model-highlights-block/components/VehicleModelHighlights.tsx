@@ -7,9 +7,10 @@ import type { VehicleModel } from '@/payload-types'
 
 type VehicleModelHighlightsProps = {
   model: VehicleModel
+  heading?: string | null
 }
 
-export function VehicleModelHighlights({ model }: VehicleModelHighlightsProps) {
+export function VehicleModelHighlights({ model, heading }: VehicleModelHighlightsProps) {
   const description = model.content?.description
 
   if (!description) {
@@ -19,7 +20,9 @@ export function VehicleModelHighlights({ model }: VehicleModelHighlightsProps) {
   return (
     <section id="overview" className="py-14 px-4">
       <div className="container mx-auto max-w-4xl">
-        <h2 className="text-primary text-3xl font-bold text-center mb-8">Overview</h2>
+        <h2 className="text-primary text-3xl font-bold text-center mb-8">
+          {heading?.trim() || 'Overview'}
+        </h2>
 
         <div className="text-muted-foreground leading-relaxed text-center">
           <ConvertRichText
