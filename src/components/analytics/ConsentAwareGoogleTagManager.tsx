@@ -2,23 +2,17 @@
 
 import { GoogleTagManager } from '@next/third-parties/google'
 
-import { shouldLoadGoogleTagManager } from '@/components/analytics/googleTagManager'
-
 type ConsentAwareGoogleTagManagerProps = {
-  enabled?: boolean | null
-  containerId?: string | null
+  gtmId: string | null
 }
 
 /**
- * Loads GTM only on live production when CMS analytics is enabled and the
- * container ID is valid. Consent Mode (not mount gating) controls storage.
+ * Mounts the GTM container when the server has already decided it should load
+ * (live production + CMS enabled + valid ID). Do not re-check env here —
+ * ALLOW_SEARCH_INDEXING is not available in the browser bundle.
+ * Consent Mode (not mount gating) controls storage.
  */
-export function ConsentAwareGoogleTagManager({
-  enabled,
-  containerId,
-}: ConsentAwareGoogleTagManagerProps) {
-  const gtmId = shouldLoadGoogleTagManager({ enabled, containerId })
-
+export function ConsentAwareGoogleTagManager({ gtmId }: ConsentAwareGoogleTagManagerProps) {
   if (!gtmId) {
     return null
   }
