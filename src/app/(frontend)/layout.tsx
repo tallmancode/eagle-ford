@@ -20,11 +20,7 @@ import { SiteFooter } from '@/components/footer/SiteFooter'
 import { getCachedGlobal } from '@/lib/utils/getGlobals'
 import { navNeedsVehicleMegaMenu } from '@/lib/data/vehicleMegaMenuTypes'
 import { getVehicleMegaMenuData } from '@/lib/data/getVehicleMegaMenuData'
-import {
-  buildJsonLdGraph,
-  getDealershipJsonLd,
-  getWebSiteJsonLd,
-} from '@/lib/seo/dealershipJsonLd'
+import { buildJsonLdGraph, getDealershipJsonLd, getWebSiteJsonLd } from '@/lib/seo/dealershipJsonLd'
 import type {
   Footer as GlobalFooter,
   Header as GlobalHeader,
@@ -34,7 +30,6 @@ import { PrivacyProvider } from '@/lib/providers/privacy'
 import { PrivacyBanner } from '@/lib/components/privacy-banner/PrivacyBanner'
 import { BackToTopButton } from '@/lib/components/back-to-top/BackToTopButton'
 import { WhatsAppFloatingButton } from '@/components/WhatsAppFloatingButton'
-import { ConsentAwareGoogleTagManager } from '@/components/analytics/ConsentAwareGoogleTagManager'
 import {
   isAnalyticsLiveProduction,
   shouldLoadGoogleTagManager,
@@ -93,9 +88,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     >
       <head>
         {gtmId ? (
-          <Script id="gtm-consent-default" strategy="beforeInteractive">
-            {CONSENT_DEFAULT_SCRIPT}
-          </Script>
+          <>
+            <Script id="gtm-consent-default" strategy="beforeInteractive">
+              {CONSENT_DEFAULT_SCRIPT}
+            </Script>
+            <Script id="gtm-init" strategy="afterInteractive">
+              {`(function(w,l){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});})(window,'dataLayer');`}
+            </Script>
+            <Script
+              id="gtm-script"
+              src={`https://www.googletagmanager.com/gtm.js?id=${gtmId}`}
+              strategy="afterInteractive"
+            />
+          </>
         ) : null}
       </head>
       <PrivacyProvider>
@@ -111,10 +116,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               />
             </noscript>
           ) : null}
-          <ConsentAwareGoogleTagManager
-            containerId={globalSettings.analytics?.googleTagManagerId}
-            enabled={globalSettings.analytics?.enableGoogleTagManager}
-          />
           <Suspense fallback={null}>
             <GTMPageView gtmId={gtmId} />
           </Suspense>
