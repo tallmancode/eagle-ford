@@ -12,9 +12,24 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel'
 import type { GoogleReview } from '@/lib/blocks/reviews-block/data/googleReviews'
+import { sizedGoogleAvatarUrl } from '@/lib/utils/sizedGoogleAvatarUrl'
 import { cn } from '@/lib/utils/cn'
 
 const AUTOPLAY_DELAY = 5000
+
+function ReviewAvatar({ src, className }: { src: string; className?: string }) {
+  return (
+    <Image
+      src={sizedGoogleAvatarUrl(src, 80)}
+      alt=""
+      width={40}
+      height={40}
+      sizes="40px"
+      quality={65}
+      className={cn('h-10 w-10 shrink-0 rounded-full object-cover', className)}
+    />
+  )
+}
 
 function GoogleLogo() {
   return (
@@ -70,14 +85,7 @@ function ReviewCard({
   return (
     <article className="flex h-full flex-col rounded-xl border border-border bg-card p-6 shadow-sm">
       <div className="mb-4 flex items-start gap-3">
-        <Image
-          src={review.avatarUrl}
-          alt=""
-          width={40}
-          height={40}
-          className="h-10 w-10 shrink-0 rounded-full object-cover"
-          unoptimized
-        />
+        <ReviewAvatar src={review.avatarUrl} />
         <div className="min-w-0 flex-1">
           <p className="truncate font-semibold text-foreground">{review.name}</p>
           <p className="mt-0.5 flex flex-wrap items-center gap-x-1 text-xs text-muted-foreground">
@@ -148,14 +156,7 @@ function ReviewModal({ review, onClose }: { review: GoogleReview | null; onClose
           ×
         </button>
         <div className="mb-4 flex items-center gap-3 pr-8">
-          <Image
-            src={review.avatarUrl}
-            alt=""
-            width={40}
-            height={40}
-            className="h-10 w-10 rounded-full object-cover"
-            unoptimized
-          />
+          <ReviewAvatar src={review.avatarUrl} />
           <div className="min-w-0">
             <p id="review-modal-name" className="font-semibold text-foreground">
               {review.name}

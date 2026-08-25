@@ -6,7 +6,8 @@ import { preload } from 'react-dom'
 export type HeroKey = keyof typeof HeroMappings
 
 const DEVICE_WIDTHS = [640, 750, 828, 1080, 1200, 1920, 2560, 3440]
-const LCP_QUALITY = 75
+/** Must match first-slide `quality` on Standard/Overlay carousel (avoid double-fetch). */
+const LCP_QUALITY = 65
 const MOBILE_MAX_WIDTH = 768
 const MOBILE_MEDIA = '(max-width: 767px)'
 const DESKTOP_MEDIA = '(min-width: 768px)'
