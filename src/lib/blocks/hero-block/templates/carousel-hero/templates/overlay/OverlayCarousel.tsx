@@ -91,12 +91,15 @@ export const OverlayCarousel: React.FC<Hero> = (props) => {
               (slide.alignment as keyof typeof alignmentClasses | null | undefined) ?? 'left'
             const alignClass = alignmentClasses[align] ?? alignmentClasses.left
 
+            const aspectRatio = slideAspectRatio(slide.image)
+
             return (
               <CarouselItem key={slide.id}>
-                <div className="relative w-full overflow-hidden">
+                <div className="relative w-full overflow-hidden" style={{ aspectRatio }}>
                   {loadImage ? (
                     <MediaImage
-                      imgClassName="w-full h-auto block"
+                      fill
+                      imgClassName="object-cover object-center"
                       resource={slide.image}
                       mobileResource={slide.mobileImage}
                       priority={isFirstSlide}
@@ -109,11 +112,7 @@ export const OverlayCarousel: React.FC<Hero> = (props) => {
                       quality={isFirstSlide ? FIRST_SLIDE_QUALITY : ADJACENT_SLIDE_QUALITY}
                     />
                   ) : (
-                    <div
-                      className="w-full bg-dark-900"
-                      style={{ aspectRatio: slideAspectRatio(slide.image) }}
-                      aria-hidden
-                    />
+                    <div className="absolute inset-0 bg-dark-900" aria-hidden />
                   )}
 
                   <div className="absolute inset-0 bg-dark-950/50" aria-hidden />
