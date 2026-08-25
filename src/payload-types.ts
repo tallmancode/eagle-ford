@@ -6837,6 +6837,42 @@ export interface FeatureRowsV2 {
     };
     id?: string | null;
   }[];
+  /**
+   * Colour of each row title.
+   */
+  titleColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Colour of each row description.
+   */
+  descriptionColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Colour of the row icon, icon border, and number.
+   */
+  iconColor?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   styles?: {
     /**
      * Padding per breakpoint. Empty values inherit from smaller screens.
