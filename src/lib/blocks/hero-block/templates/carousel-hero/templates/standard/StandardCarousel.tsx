@@ -118,24 +118,26 @@ export const StandardCarousel: React.FC<Hero> = (props) => {
             const href = resolveSlideHref(slide.reference)
             const isFirstSlide = index === 0
             const loadImage = isNearSlide(index, current, slides.length)
-            const image = loadImage ? (
-              <MediaImage
-                imgClassName="w-full h-auto"
-                resource={slide.image}
-                mobileResource={slide.mobileImage}
-                priority={isFirstSlide}
-                loading={isFirstSlide ? 'eager' : 'lazy'}
-                maxWidth={isFirstSlide ? FULL_BLEED_IMAGE_MAX_WIDTH : ADJACENT_SLIDE_MAX_WIDTH}
-                mobileMaxWidth={768}
-                size="100vw"
-                quality={isFirstSlide ? FIRST_SLIDE_QUALITY : ADJACENT_SLIDE_QUALITY}
-              />
-            ) : (
-              <div
-                className="w-full bg-dark-900"
-                style={{ aspectRatio: slideAspectRatio(slide.image) }}
-                aria-hidden
-              />
+            const aspectRatio = slideAspectRatio(slide.image)
+            const image = (
+              <div className="relative w-full overflow-hidden" style={{ aspectRatio }}>
+                {loadImage ? (
+                  <MediaImage
+                    fill
+                    imgClassName="object-cover object-center"
+                    resource={slide.image}
+                    mobileResource={slide.mobileImage}
+                    priority={isFirstSlide}
+                    loading={isFirstSlide ? 'eager' : 'lazy'}
+                    maxWidth={isFirstSlide ? FULL_BLEED_IMAGE_MAX_WIDTH : ADJACENT_SLIDE_MAX_WIDTH}
+                    mobileMaxWidth={768}
+                    size="100vw"
+                    quality={isFirstSlide ? FIRST_SLIDE_QUALITY : ADJACENT_SLIDE_QUALITY}
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-dark-900" aria-hidden />
+                )}
+              </div>
             )
             return (
               <CarouselItem key={slide.id}>
