@@ -140,19 +140,12 @@ export const MediaImage: React.FC<Props> = (props) => {
   let content: React.ReactNode
 
   if (mobile?.src) {
+    // Dual srcSets for art-direction / PSI. Fallback <img> must use desktop width/height
+    // so layout aspect ratio matches the desktop crop (mobile attrs were pushing heroes taller).
     const {
-      props: { srcSet: desktopSrcSet },
+      props: { srcSet: desktopSrcSet, ...desktopImg },
     } = getImageProps(
       imagePropArgs(desktop, fill, {
-        sizes,
-        quality,
-        className: imgClassName,
-      }),
-    )
-    const {
-      props: { srcSet: mobileSrcSet, ...mobileImg },
-    } = getImageProps(
-      imagePropArgs(mobile, fill, {
         sizes,
         quality,
         className: imgClassName,
@@ -160,18 +153,24 @@ export const MediaImage: React.FC<Props> = (props) => {
         loading: loadingProp,
       }),
     )
+    const {
+      props: { srcSet: mobileSrcSet },
+    } = getImageProps(
+      imagePropArgs(mobile, fill, {
+        sizes,
+        quality,
+        className: imgClassName,
+      }),
+    )
 
-    // Art-direction: desktop + mobile each need their own srcSet. Dropping the mobile
-    // srcSet left the <img> on a single largest src (e.g. w=3440) and failed PSI
-    // "Improve image delivery" / responsive-images checks.
     content = (
       <picture className={cn(fill && 'relative block size-full', pictureClassName)}>
         <source media={`not ${mobileMediaQuery}`} srcSet={desktopSrcSet} sizes={sizes} />
         <source media={mobileMediaQuery} srcSet={mobileSrcSet} sizes={sizes} />
         <img
-          {...mobileImg}
-          alt={mobileImg.alt ?? desktop.alt ?? ''}
-          fetchPriority={isPriority ? 'high' : mobileImg.fetchPriority}
+          {...desktopImg}
+          alt={desktopImg.alt ?? desktop.alt ?? ''}
+          fetchPriority={isPriority ? 'high' : desktopImg.fetchPriority}
         />
       </picture>
     )
