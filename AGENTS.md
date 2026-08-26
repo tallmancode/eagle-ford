@@ -27,6 +27,15 @@ This app is a **satellite site** that consumes live stock from Eagle Motor City 
 2. Admin → **Stock → Stock API Clients** → create client e.g. "Eagle Ford" → generate key
 3. Copy into this project's `.env` as `MOTOR_CITY_STOCK_API_KEY` (same key for stock reads and site-form leads)
 
+## Form submission metrics API (read by Motor City)
+
+Motor City’s admin dashboard pulls all form submissions (not only LMS) via:
+
+- `GET /api/form-submissions/metrics`
+- `GET /api/form-submissions/feed`
+- Auth: `Authorization: Bearer <FORM_SUBMISSIONS_API_KEY>`
+- Set `FORM_SUBMISSIONS_API_KEY` in this project’s `.env` / `APP_ENV`, and the matching `FORM_METRICS_EAGLE_FORD_*` values on Motor City
+
 ## CMS LMS leads (via Motor City)
 
 - Opt-in per form in Payload admin: **Forms → [form] → CMS LMS Lead Injection**
