@@ -1,5 +1,9 @@
 import type { Form } from '@/payload-types'
 
+import {
+  compactAttribution,
+  type LeadAttribution,
+} from '@/lib/attribution/captureAttribution'
 import { getUploadFieldsFromForm } from '@/lib/blocks/form-block/utils/getFormSteps'
 import { normalizeUploadValue } from '@/lib/blocks/form-block/utils/uploadFieldUtils'
 
@@ -16,6 +20,7 @@ export function buildFormSubmissionRequest(
   formId: string,
   form: Form,
   data: Record<string, unknown>,
+  attribution?: LeadAttribution | null,
 ): { body: BodyInit; headers?: HeadersInit } {
   const uploadFields = getUploadFieldsFromForm(form)
   const uploadFieldNames = new Set(uploadFields.map((f) => f.name))
@@ -33,14 +38,20 @@ export function buildFormSubmissionRequest(
     })
   }
 
+  const compact = compactAttribution(attribution)
+  const payload: Record<string, unknown> = {
+    form: formId,
+    submissionData,
+  }
+  if (compact) {
+    payload.attribution = compact
+  }
+
   const hasUploads = uploadFieldNames.size > 0
 
   if (!hasUploads) {
     return {
-      body: JSON.stringify({
-        form: formId,
-        submissionData,
-      }),
+      body: JSON.stringify(payload),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -48,13 +59,7 @@ export function buildFormSubmissionRequest(
   }
 
   const formData = new FormData()
-  formData.append(
-    '_payload',
-    JSON.stringify({
-      form: formId,
-      submissionData,
-    }),
-  )
+  formData.append('_payload', JSON.stringify(payload))
 
   for (const field of uploadFields) {
     const files = normalizeUploadValue(data[field.name])

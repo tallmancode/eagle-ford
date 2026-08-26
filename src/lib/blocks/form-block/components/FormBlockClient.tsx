@@ -10,6 +10,10 @@ import { useForm } from 'react-hook-form'
 
 import { richTextConverters } from '@/components/rich-text/richTextConverters'
 import type { Form, Page } from '@/payload-types'
+import { pushEnquirySubmitted } from '@/lib/analytics/enquirySubmitted'
+import { getAttributionForSubmit } from '@/lib/attribution/captureAttribution'
+import { getThankYouPathForFormTitle } from '@/lib/forms/enquiryFormIdentity'
+import { armThankYouGate } from '@/lib/forms/thankYouGate'
 import { getPagePath } from '@/lib/utils/getPagePath'
 import { buildInitialFormState } from '@/lib/blocks/form-block/components/buildInitialFormState'
 import { formFields } from '@/lib/blocks/form-block/components/fields'
@@ -77,6 +81,11 @@ function getRedirectUrl(form: Form): string | null {
   }
 
   return redirect.url ?? null
+}
+
+/** Prefer CMS redirect when populated; fall back to known form-title → thank-you map. */
+function resolvePostSubmitRedirect(form: Form): string | null {
+  return getRedirectUrl(form) ?? getThankYouPathForFormTitle(form.title)
 }
 
 function renderFormField(
@@ -191,6 +200,7 @@ type FormActionsProps = {
   fieldIndexStart: number
   nextLabel: string
   submitButtonLabel?: string | null
+  onNextStep?: () => void | Promise<void>
 }
 
 function FormActions({
@@ -204,6 +214,7 @@ function FormActions({
   fieldIndexStart,
   nextLabel,
   submitButtonLabel,
+  onNextStep,
 }: FormActionsProps) {
   const isHero = layout === 'hero'
   let fieldIndex = fieldIndexStart
@@ -230,17 +241,34 @@ function FormActions({
 
       {!isMultiStep && !isHero && <div className="hidden sm:block" />}
 
-      <Button
-        type="submit"
-        disabled={isLoading}
-        className={cn(
-          isHero
-            ? 'h-12 w-full cursor-pointer bg-primary-500 px-6 text-base font-semibold uppercase tracking-wide text-white hover:bg-primary-600 sm:ml-auto sm:w-auto lg:px-8'
-            : 'h-11 w-full rounded-full text-base sm:h-10 sm:text-sm',
-        )}
-      >
-        {isLastStep ? submitButtonLabel || 'Submit' : nextLabel}
-      </Button>
+      {isLastStep ? (
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className={cn(
+            isHero
+              ? 'h-12 w-full cursor-pointer bg-primary-500 px-6 text-base font-semibold uppercase tracking-wide text-white hover:bg-primary-600 sm:ml-auto sm:w-auto lg:px-8'
+              : 'h-11 w-full rounded-full text-base sm:h-10 sm:text-sm',
+          )}
+        >
+          {submitButtonLabel || 'Submit'}
+        </Button>
+      ) : (
+        <Button
+          type="button"
+          disabled={isLoading}
+          onClick={() => {
+            void onNextStep?.()
+          }}
+          className={cn(
+            isHero
+              ? 'h-12 w-full cursor-pointer bg-primary-500 px-6 text-base font-semibold uppercase tracking-wide text-white hover:bg-primary-600 sm:ml-auto sm:w-auto lg:px-8'
+              : 'h-11 w-full rounded-full text-base sm:h-10 sm:text-sm',
+          )}
+        >
+          {nextLabel}
+        </Button>
+      )}
     </div>
   )
 }
@@ -295,7 +323,8 @@ export function FormBlockClient({
       const submitForm = async () => {
         setError(undefined)
 
-        const { body, headers } = buildFormSubmissionRequest(formID, form, data)
+        const attribution = getAttributionForSubmit()
+        const { body, headers } = buildFormSubmissionRequest(formID, form, data, attribution)
 
         const loadingTimerID = setTimeout(() => {
           setIsLoading(true)
@@ -310,6 +339,7 @@ export function FormBlockClient({
 
           const res = (await req.json()) as {
             errors?: { message: string; path?: string }[]
+            doc?: { id?: string }
           }
 
           if (loadingTimerID) {
@@ -339,16 +369,28 @@ export function FormBlockClient({
           setIsLoading(false)
           setHasSubmitted(true)
 
+          const submissionId =
+            typeof res.doc?.id === 'string' && res.doc.id ? res.doc.id : undefined
+
           if (canSendAnalytics()) {
             sendGTMEvent({
               event: 'form_submit',
               form_id: formID,
               form_name: form.title,
             })
+
+            pushEnquirySubmitted({
+              formTitle: form.title,
+              formId: formID,
+              submissionId,
+              formData: data,
+              gclid: attribution?.gclid,
+            })
           }
 
-          const redirectUrl = getRedirectUrl(form)
+          const redirectUrl = resolvePostSubmitRedirect(form)
           if (redirectUrl) {
+            armThankYouGate(redirectUrl)
             router.push(redirectUrl)
           }
         } catch {
@@ -391,10 +433,10 @@ export function FormBlockClient({
   const handleFormAction = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
+    // Only the final step uses type="submit". Intermediate Next is type="button"
+    // so GTM native Form Submit does not fire on step advances.
     if (isLastStep) {
       void handleSubmit(onSubmit)()
-    } else {
-      await handleNextStep()
     }
   }
 
@@ -482,6 +524,7 @@ export function FormBlockClient({
                 fieldIndexStart={heroCheckboxFieldIndexStart}
                 nextLabel={nextLabel}
                 submitButtonLabel={submitButtonLabel}
+                onNextStep={handleNextStep}
               />
             </form>
           </>
@@ -567,6 +610,7 @@ export function FormBlockClient({
                   fieldIndexStart={0}
                   nextLabel={nextLabel}
                   submitButtonLabel={submitButtonLabel}
+                  onNextStep={handleNextStep}
                 />
               </form>
             </>

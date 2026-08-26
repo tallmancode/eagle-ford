@@ -3,6 +3,8 @@ import type { Metadata } from 'next'
 import type { Media, Page, Config, Special } from '@/payload-types'
 
 import { DEFAULT_OG_IMAGE_PATH } from '@/constants/site'
+import { CRAWLER_NOINDEX_ROBOTS } from '@/constants/crawlerPolicy'
+import { isThankYouSlug } from '@/lib/forms/enquiryFormIdentity'
 import { buildDocumentMetadata, resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
 import { getSpecialDisplayTitle } from '@/lib/specials/getSpecialDisplayTitle'
 import { getPagePath } from '@/lib/utils/getPagePath'
@@ -62,6 +64,7 @@ export const generateMeta = async (args: {
       description: doc.meta?.description,
       path,
       imageUrl: ogImage,
+      robots: isThankYouSlug(doc.slug) ? CRAWLER_NOINDEX_ROBOTS : undefined,
     })
   } catch (error) {
     const { captureException } = await import('@sentry/nextjs')

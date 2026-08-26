@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import { JsonLd } from '@/components/JsonLd/JsonLd'
+import { ThankYouGate } from '@/components/ThankYouGate'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { draftMode } from 'next/headers'
@@ -9,6 +10,7 @@ import React, { cache } from 'react'
 import { RenderBlocks } from '@/lib/blocks/RenderBlocks'
 import { getCmsPageJsonLd } from '@/lib/seo/dealershipJsonLd'
 import { resolveMediaOgUrl } from '@/lib/seo/buildDocumentMetadata'
+import { isThankYouSlug } from '@/lib/forms/enquiryFormIdentity'
 import { generateMeta } from '@/lib/utils/generateMeta'
 import { getPagePath } from '@/lib/utils/getPagePath'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
@@ -73,7 +75,7 @@ export default async function Page({
     typeof page.meta?.image === 'object' ? (page.meta.image as Media) : null,
   )
 
-  return (
+  const content = (
     <div>
       {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
@@ -94,6 +96,12 @@ export default async function Page({
       <RenderBlocks blocks={page.section ?? null} meta={{ searchParams }} />
     </div>
   )
+
+  if (isThankYouSlug(decodedSlug)) {
+    return <ThankYouGate slug={decodedSlug}>{content}</ThankYouGate>
+  }
+
+  return content
 }
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
