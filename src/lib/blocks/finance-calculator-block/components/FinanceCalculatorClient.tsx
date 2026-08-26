@@ -288,14 +288,7 @@ export function FinanceCalculatorClient({
           <FinanceCalculatorTabs activeTab={activeTab} onTabChange={setActiveTab} />
         )}
 
-        <form
-          onSubmit={(event) => {
-            event.preventDefault()
-            handleCalculate()
-          }}
-          className="flex flex-col gap-4"
-          aria-label="Vehicle finance calculator"
-        >
+        <div className="flex flex-col gap-4" role="group" aria-label="Vehicle finance calculator">
           <div
             role={isRepaymentOnly ? undefined : 'tabpanel'}
             id={isRepaymentOnly ? undefined : getFinanceCalculatorPanelId(activeTab)}
@@ -367,7 +360,8 @@ export function FinanceCalculatorClient({
 
           <div className="flex flex-col gap-3 pt-2 sm:flex-row">
             <Button
-              type="submit"
+              type="button"
+              onClick={handleCalculate}
               className="h-12 flex-1 bg-primary-500 text-base font-semibold text-white hover:bg-primary-600 sm:flex-none sm:px-8"
             >
               Calculate
@@ -381,7 +375,7 @@ export function FinanceCalculatorClient({
               Reset
             </Button>
           </div>
-        </form>
+        </div>
 
         {result && primaryResultValue && (
           <div className="mt-6 border-t border-neutral-100 pt-6">

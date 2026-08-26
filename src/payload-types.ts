@@ -10371,6 +10371,22 @@ export interface FormSubmission {
    */
   email?: string | null;
   /**
+   * Captured from the visitor landing URL (gclid / UTMs), retained ~90 days client-side
+   */
+  attribution?: {
+    gclid?: string | null;
+    gbraid?: string | null;
+    wbraid?: string | null;
+    utm_source?: string | null;
+    utm_medium?: string | null;
+    utm_campaign?: string | null;
+    utm_term?: string | null;
+    utm_content?: string | null;
+    landing_page?: string | null;
+    referrer?: string | null;
+    capturedAt?: string | null;
+  };
+  /**
    * Eagle Motor City site-form-leads document id
    */
   motorCityLeadId?: string | null;
@@ -11633,6 +11649,21 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
   lastName?: T;
   phone?: T;
   email?: T;
+  attribution?:
+    | T
+    | {
+        gclid?: T;
+        gbraid?: T;
+        wbraid?: T;
+        utm_source?: T;
+        utm_medium?: T;
+        utm_campaign?: T;
+        utm_term?: T;
+        utm_content?: T;
+        landing_page?: T;
+        referrer?: T;
+        capturedAt?: T;
+      };
   motorCityLeadId?: T;
   motorCityLeadStatus?: T;
   motorCityLeadError?: T;

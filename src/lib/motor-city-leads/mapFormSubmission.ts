@@ -1,6 +1,7 @@
 import type {
   FormLmsConfig,
   FormSubmissionDataItem,
+  LeadAttribution,
   LeadContact,
   LeadSeeks,
   MotorCitySiteFormLeadRequest,
@@ -112,8 +113,9 @@ export function mapFormSubmissionToLeadRequest(args: {
   formConfig: FormLmsConfig
   extLeadRef: string
   formTitle?: string | null
+  attribution?: LeadAttribution | null
 }): MapFormSubmissionResult {
-  const { submissionData, formConfig, extLeadRef, formTitle } = args
+  const { submissionData, formConfig, extLeadRef, formTitle, attribution } = args
 
   const dealerRef = formConfig.dealerRef?.trim()
   const dealerFloor = formConfig.dealerFloor?.trim()
@@ -215,6 +217,8 @@ export function mapFormSubmissionToLeadRequest(args: {
   }
   seeks.comments = commentParts.join(' — ').slice(0, 4000)
 
+  const compactAttribution = compactLeadAttribution(attribution)
+
   return {
     request: {
       extLeadRef: extLeadRef.slice(0, 50),
@@ -225,6 +229,32 @@ export function mapFormSubmissionToLeadRequest(args: {
       source,
       contact,
       seeks,
+      ...(compactAttribution ? { attribution: compactAttribution } : {}),
     },
   }
+}
+
+function compactLeadAttribution(
+  value: LeadAttribution | null | undefined,
+): LeadAttribution | undefined {
+  if (!value || typeof value !== 'object') return undefined
+  const out: LeadAttribution = {}
+  for (const key of [
+    'gclid',
+    'gbraid',
+    'wbraid',
+    'utm_source',
+    'utm_medium',
+    'utm_campaign',
+    'utm_term',
+    'utm_content',
+    'landing_page',
+    'referrer',
+    'capturedAt',
+  ] as const) {
+    const raw = value[key]
+    const trimmed = typeof raw === 'string' ? raw.trim() : ''
+    if (trimmed) out[key] = trimmed
+  }
+  return Object.keys(out).length ? out : undefined
 }

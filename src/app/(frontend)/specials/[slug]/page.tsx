@@ -100,11 +100,11 @@ async function resolveForm(
   form: SpecialListItem['enquiryForm'] | SpecialCategory['enquiryForm'],
 ): Promise<Form | null> {
   if (!form) return null
-  if (typeof form === 'object' && form.id && (form.fields || form.steps)) {
-    return form
-  }
 
   const formId = typeof form === 'object' ? form.id : form
+  if (!formId) return null
+
+  // Always depth 2 so confirmation redirect.reference resolves to a Page with slug.
   const payload = await getPayload({ config: configPromise })
   const result = await payload.findByID({
     collection: 'forms',
