@@ -18,7 +18,7 @@ vi.mock('next/navigation', () => ({
 
 const form: Form = {
   id: 'form-1',
-  title: 'Contact Us',
+  title: 'General Enquiry Form',
   formLayout: 'singlePage',
   fields: [
     {
@@ -57,12 +57,12 @@ afterEach(() => {
 })
 
 describe('FormBlockClient GTM tracking', () => {
-  it('fires a form_submit event after a successful submission', async () => {
+  it('fires form_submit and enquiry_submitted after a successful submission', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
-        status: 200,
-        json: async () => ({}),
+        status: 201,
+        json: async () => ({ doc: { id: 'sub-123' } }),
       }),
     )
 
@@ -80,6 +80,15 @@ describe('FormBlockClient GTM tracking', () => {
         form_name: form.title,
       })
     })
+
+    expect(sendGTMEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: 'enquiry_submitted',
+        form_name: 'general_enquiry',
+        department: 'sales',
+        submission_id: 'sub-123',
+      }),
+    )
   })
 
   it('does not fire form_submit outside live production', async () => {
@@ -103,5 +112,26 @@ describe('FormBlockClient GTM tracking', () => {
     })
 
     expect(sendGTMEvent).not.toHaveBeenCalled()
+  })
+
+  it('redirects known enquiry forms to the sales thank-you page', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        status: 201,
+        json: async () => ({ doc: { id: 'sub-456' } }),
+      }),
+    )
+
+    render(createElement(FormBlockClient, { form }))
+
+    fireEvent.change(screen.getByLabelText('Full Name *'), {
+      target: { value: 'Jane Doe' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => {
+      expect(push).toHaveBeenCalledWith('/sales-form-submitted')
+    })
   })
 })

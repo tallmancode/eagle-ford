@@ -13,21 +13,16 @@ function getFormId(form: Setting[QuoteFormSettingKey]): string | null {
   return form
 }
 
+/**
+ * Always load forms at depth 2 so redirect.reference.value is a populated Page
+ * (depth-1 Settings globals often leave it as a bare id string).
+ */
 async function resolveFormFromSetting(key: QuoteFormSettingKey): Promise<Form | null> {
   const settings = (await getCachedGlobal('settings', 1)) as Setting
   const formRef = settings[key]
   const formId = getFormId(formRef)
 
   if (!formId) return null
-
-  if (
-    typeof formRef === 'object' &&
-    formRef !== null &&
-    formRef.id &&
-    (formRef.fields || formRef.steps)
-  ) {
-    return formRef
-  }
 
   const payload = await getPayload({ config: configPromise })
   const result = await payload.findByID({

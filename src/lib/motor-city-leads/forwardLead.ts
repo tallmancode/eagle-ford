@@ -9,7 +9,7 @@ import {
 import { mapFormSubmissionToLeadRequest } from '@/lib/motor-city-leads/mapFormSubmission'
 import { captureLeadForwardEvent } from '@/lib/motor-city-leads/sentry'
 import { submitSiteFormLead } from '@/lib/motor-city-leads/submitLead'
-import type { FormLmsConfig, FormSubmissionDataItem } from '@/lib/motor-city-leads/types'
+import type { FormLmsConfig, FormSubmissionDataItem, LeadAttribution } from '@/lib/motor-city-leads/types'
 import { MotorCityLeadsError } from '@/lib/motor-city-leads/types'
 import { computeNextRetryAt, DEFAULT_RETRY_BASE_DELAY_MS, DEFAULT_RETRY_MAX_DELAY_MS } from '@/lib/http/retryPolicy'
 
@@ -23,6 +23,7 @@ export type FormSubmissionLeadDoc = {
   id: string
   form?: string | { id: string } | null
   submissionData?: FormSubmissionDataItem[] | null
+  attribution?: LeadAttribution | null
   motorCityLeadId?: string | null
   motorCityLeadStatus?: string | null
   motorCityLeadAttempts?: number | null
@@ -94,6 +95,7 @@ export async function forwardFormSubmissionLead(args: ForwardArgs): Promise<Forw
       formConfig: lmsConfig,
       extLeadRef: String(submission.id),
       formTitle: form.title,
+      attribution: submission.attribution,
     })
 
     const result = await submitSiteFormLead(mapped.request)
