@@ -1,4 +1,4 @@
-import type { Form, Hero } from '@/payload-types'
+import type { Hero } from '@/payload-types'
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { MediaImage } from '@/components/ui/media-image'
@@ -10,18 +10,23 @@ export async function FormHero(props: Hero) {
 
   if (!content?.image || !content.form) return null
 
-  let form: Form | null = null
+  const formId =
+    typeof content.form === 'object' && content.form !== null
+      ? content.form.id
+      : typeof content.form === 'string'
+        ? content.form
+        : null
 
-  if (typeof content.form === 'object' && content.form !== null) {
-    form = content.form
-  } else if (typeof content.form === 'string') {
-    const payload = await getPayload({ config: configPromise })
-    form = await payload.findByID({
-      collection: 'forms',
-      id: content.form,
-      depth: 2,
-    })
-  }
+  if (!formId) return null
+
+  // Always depth 2 so confirmation redirect.reference resolves to a Page with slug.
+  const payload = await getPayload({ config: configPromise })
+  const form = await payload.findByID({
+    collection: 'forms',
+    id: formId,
+    depth: 2,
+    disableErrors: true,
+  })
 
   if (!form?.id) return null
 

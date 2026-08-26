@@ -4,6 +4,7 @@ import { getPayload } from 'payload'
 
 import config from '@payload-config'
 import { getVehicleModelPath } from '@/lib/utils/vehicleModel'
+import { isThankYouSlug } from '@/lib/forms/enquiryFormIdentity'
 
 import { getSiteUrl } from './getSiteUrl'
 
@@ -91,7 +92,7 @@ const getCachedSitemapEntries = unstable_cache(
     ])
 
     const pageEntries = pages.docs
-      .filter((page) => Boolean(page.slug))
+      .filter((page) => Boolean(page.slug) && !isThankYouSlug(page.slug))
       .map((page) =>
         toSitemapEntry(
           page.slug === 'home' ? `${siteUrl}/` : `${siteUrl}/${page.slug}`,

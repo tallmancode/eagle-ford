@@ -3,7 +3,6 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import React from 'react'
 
-import type { Form } from '@/payload-types'
 import type { FormBlockType } from '@/payload-types'
 import type { FormBlockMeta } from '@/lib/blocks/form-block/types/formContext'
 import {
@@ -16,19 +15,25 @@ export async function FormBlockComponent(
 ) {
   const { enableIntro, form: formProp, introContent, meta, layout } = props
 
-  let form: Form | null = null
+  const formId =
+    typeof formProp === 'object' && formProp !== null
+      ? formProp.id
+      : typeof formProp === 'string'
+        ? formProp
+        : null
 
-  if (typeof formProp === 'object' && formProp !== null) {
-    form = formProp
-  } else if (typeof formProp === 'string') {
-    const payload = await getPayload({ config: configPromise })
-    const result = await payload.findByID({
-      collection: 'forms',
-      id: formProp,
-      depth: 2,
-    })
-    form = result
+  if (!formId) {
+    return null
   }
+
+  // Always depth 2 so confirmation redirect.reference resolves to a Page with slug.
+  const payload = await getPayload({ config: configPromise })
+  const form = await payload.findByID({
+    collection: 'forms',
+    id: formId,
+    depth: 2,
+    disableErrors: true,
+  })
 
   if (!form?.id) {
     return null
