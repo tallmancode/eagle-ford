@@ -29,6 +29,7 @@ import {
 } from '@/lib/form-submissions/contactFields'
 import { flattenFormSubmissionExportBatch } from '@/lib/form-submissions/flattenSubmissionExport'
 import { getLmsLeadInjectionFields } from '@/lib/motor-city-leads/formFields'
+import { getFormSubmissionAttributionFields } from '@/lib/form-submissions/attributionFields'
 import { getMotorCityLeadSubmissionFields } from '@/lib/motor-city-leads/formSubmissionFields'
 import { injectFormSubmissionLead } from '@/lib/motor-city-leads/injectFormSubmissionLead'
 import { patchExportCollectionFields } from '@/components/admin/export/patchExportCollectionFields'
@@ -85,6 +86,7 @@ export const plugins: Plugin[] = [
       fields: ({ defaultFields }) => [
         ...withFormSubmissionExportFieldTweaks(defaultFields),
         ...getFormSubmissionContactFields(),
+        ...getFormSubmissionAttributionFields(),
         ...getMotorCityLeadSubmissionFields(),
       ],
       hooks: {

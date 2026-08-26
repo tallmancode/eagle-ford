@@ -36,6 +36,7 @@ import {
 } from '@/components/analytics/googleTagManager'
 import { GTMPageView } from '@/components/analytics/GTMPageView'
 import { GTMCtaClickTracker } from '@/components/analytics/GTMCtaClickTracker'
+import { AttributionCapture } from '@/components/analytics/AttributionCapture'
 
 const fordF1 = localFont({
   src: [
@@ -120,6 +121,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <GTMPageView gtmId={gtmId} />
           </Suspense>
           <GTMCtaClickTracker gtmId={gtmId} />
+          <AttributionCapture />
           <JsonLd
             data={buildJsonLdGraph(
               getDealershipJsonLd(globalSettings.contactInfo),

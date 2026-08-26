@@ -46,6 +46,21 @@ export type LeadSeeks = {
   [key: string]: string | undefined
 }
 
+/** Optional ad / UTM attribution forwarded to Motor City (issue #357). */
+export type LeadAttribution = {
+  gclid?: string | null
+  gbraid?: string | null
+  wbraid?: string | null
+  utm_source?: string | null
+  utm_medium?: string | null
+  utm_campaign?: string | null
+  utm_term?: string | null
+  utm_content?: string | null
+  landing_page?: string | null
+  referrer?: string | null
+  capturedAt?: string | null
+}
+
 export type MotorCitySiteFormLeadRequest = {
   extLeadRef: string
   siteKey: string
@@ -55,6 +70,7 @@ export type MotorCitySiteFormLeadRequest = {
   source: string
   contact: LeadContact
   seeks: LeadSeeks
+  attribution?: LeadAttribution
 }
 
 export class MotorCityLeadsError extends Error {
