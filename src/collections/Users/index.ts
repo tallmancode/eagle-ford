@@ -3,7 +3,8 @@ import {
   isAdminOrDeveloper,
   isAdminOrDeveloperField,
   isAdminOrSelf,
-  isAuthenticated,
+  isAuthenticatedUsersRead,
+  isCallCenter,
 } from '@/lib/utils/accessUtil'
 import { isHttpsDeployment } from '@/lib/utils/getServerSideURL'
 
@@ -12,13 +13,14 @@ export const UsersCollection: CollectionConfig = {
   access: {
     create: isAdminOrDeveloper,
     delete: isAdminOrDeveloper,
-    read: isAuthenticated,
+    read: isAuthenticatedUsersRead,
     update: isAdminOrSelf,
   },
   admin: {
     defaultColumns: ['firstName', 'lastName', 'username', 'email', 'roles'],
     useAsTitle: 'username',
     group: 'Settings',
+    hidden: ({ user }) => isCallCenter(user),
   },
   auth: {
     maxLoginAttempts: 5,
@@ -79,6 +81,14 @@ export const UsersCollection: CollectionConfig = {
         {
           label: 'Staff',
           value: 'staff',
+        },
+        {
+          label: 'Call Center',
+          value: 'call-center',
+        },
+        {
+          label: 'Analytics',
+          value: 'analytics',
         },
       ],
       access: {

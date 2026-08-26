@@ -8,7 +8,7 @@ import {
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import { isAnyone, isAuthenticated } from '@/lib/utils/accessUtil'
+import { isAnyone, isAuthenticatedNotCallCenter } from '@/lib/utils/accessUtil'
 import { altFromFilename } from '@/lib/utils/altFromFilename'
 
 const filename = fileURLToPath(import.meta.url)
@@ -17,10 +17,10 @@ const dirname = path.dirname(filename)
 export const MediaCollection: CollectionConfig = {
   slug: 'media',
   access: {
-    create: isAuthenticated,
-    delete: isAuthenticated,
+    create: isAuthenticatedNotCallCenter,
+    delete: isAuthenticatedNotCallCenter,
     read: isAnyone,
-    update: isAuthenticated,
+    update: isAuthenticatedNotCallCenter,
   },
   hooks: {
     beforeChange: [

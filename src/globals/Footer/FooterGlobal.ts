@@ -1,6 +1,6 @@
 import type { GlobalConfig } from 'payload'
 import { NavLinksField } from '@/lib/fields/navigation/NavLinksField'
-import { isAdmin } from '@/lib/utils/accessUtil'
+import { isAdmin, isCallCenter } from '@/lib/utils/accessUtil'
 import { SocialAccountsField } from '@/lib/fields/social-icons'
 import { revalidateGlobalFooter } from '@/globals/Footer/hooks/revalidateGlobalFooter'
 
@@ -12,6 +12,7 @@ export const FooterGlobal: GlobalConfig = {
   },
   admin: {
     group: 'Layout',
+    hidden: ({ user }) => isCallCenter(user),
   },
   fields: [
     {

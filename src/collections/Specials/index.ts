@@ -1,7 +1,7 @@
 import { CollectionConfig, slugField } from 'payload'
 
 import { populatePublishedAt } from '@/lib/hooks/populatePublishedAt'
-import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
+import { isAuthenticatedNotCallCenter, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
 import { OFFER_TYPES } from '@/lib/specials/constants'
 import { revalidateSpecial, revalidateSpecialDelete } from './hooks/revalidateSpecial'
 
@@ -12,10 +12,10 @@ export const SpecialsCollection: CollectionConfig<'specials'> = {
     plural: 'Specials',
   },
   access: {
-    create: isAuthenticated,
-    delete: isAuthenticated,
+    create: isAuthenticatedNotCallCenter,
+    delete: isAuthenticatedNotCallCenter,
     read: isAuthenticatedOrPublished,
-    update: isAuthenticated,
+    update: isAuthenticatedNotCallCenter,
   },
   orderable: true,
   admin: {

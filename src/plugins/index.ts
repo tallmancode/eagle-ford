@@ -14,6 +14,7 @@ import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/
 
 import { Page } from '@/payload-types'
 import { getServerSideURL } from '@/lib/utils/getServerSideURL'
+import { isAuthenticated, isAuthenticatedNotCallCenter } from '@/lib/utils/accessUtil'
 import {
   FORM_UPLOAD_COLLECTIONS,
   getFormInputBlocks,
@@ -95,6 +96,12 @@ export const plugins: Plugin[] = [
       },
     },
     formOverrides: {
+      access: {
+        create: isAuthenticated,
+        read: isAuthenticated,
+        update: isAuthenticated,
+        delete: isAuthenticatedNotCallCenter,
+      },
       admin: {
         defaultColumns: ['title', 'lmsLeadInjection.enabled', 'updatedAt'],
       },

@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
+import { isAuthenticatedNotCallCenter, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
 import { generateSpecialTemplatePreviewPath } from '@/lib/utils/generateSpecialTemplatePreviewPath'
 import {
   revalidateSpecialTemplate,
@@ -14,10 +14,10 @@ export const SpecialTemplatesCollection: CollectionConfig<'special-templates'> =
     plural: 'Special Templates',
   },
   access: {
-    create: isAuthenticated,
-    delete: isAuthenticated,
+    create: isAuthenticatedNotCallCenter,
+    delete: isAuthenticatedNotCallCenter,
     read: isAuthenticatedOrPublished,
-    update: isAuthenticated,
+    update: isAuthenticatedNotCallCenter,
   },
   admin: {
     useAsTitle: 'title',
