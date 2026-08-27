@@ -111,6 +111,11 @@ export type NewUsedFilterOption = {
   count: number
 }
 
+export type ModelFilterOption = {
+  label: string
+  count: number
+}
+
 export type MotorCityStockFilterOptions = {
   dealerCode: string | null
   dealerCodes?: string[]
@@ -120,6 +125,7 @@ export type MotorCityStockFilterOptions = {
   brands: TaxonomyFilterOption[]
   fuelTypes: TaxonomyFilterOption[]
   transmissions: TaxonomyFilterOption[]
+  models: ModelFilterOption[]
   newUsed: NewUsedFilterOption[]
   priceRange: { min: number | null; max: number | null }
 }
