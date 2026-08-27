@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 
-import { isAnyone, isAuthenticated } from '@/lib/utils/accessUtil'
+import { isAnyone, isAuthenticatedNotCallCenter } from '@/lib/utils/accessUtil'
 
 export const VehicleCategories: CollectionConfig = {
   slug: 'vehicle-categories',
@@ -10,10 +10,10 @@ export const VehicleCategories: CollectionConfig = {
     plural: 'Vehicle Categories',
   },
   access: {
-    create: isAuthenticated,
-    delete: isAuthenticated,
+    create: isAuthenticatedNotCallCenter,
+    delete: isAuthenticatedNotCallCenter,
     read: isAnyone,
-    update: isAuthenticated,
+    update: isAuthenticatedNotCallCenter,
   },
   admin: {
     useAsTitle: 'title',

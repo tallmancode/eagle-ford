@@ -12,15 +12,15 @@ import {
   MetaTitleField,
   OverviewField,
 } from '@payloadcms/plugin-seo/fields'
-import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
+import { isAuthenticatedNotCallCenter, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
 
 export const PagesCollection: CollectionConfig<'pages'> = {
   slug: 'pages',
   access: {
-    create: isAuthenticated,
-    delete: isAuthenticated,
+    create: isAuthenticatedNotCallCenter,
+    delete: isAuthenticatedNotCallCenter,
     read: isAuthenticatedOrPublished,
-    update: isAuthenticated,
+    update: isAuthenticatedNotCallCenter,
   },
   admin: {
     defaultColumns: ['title', 'slug', 'updatedAt'],
