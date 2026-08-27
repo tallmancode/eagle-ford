@@ -44,7 +44,7 @@ Developer role: **Settings → Diagnostics → Force Sentry Test Error** to conf
 - `src/collections/` — CMS collections (pages, vehicles, etc.)
 - `src/globals/` — CMS globals (header, footer, settings)
 - `src/lib/blocks/` — Layout builder blocks
-- `src/components/analytics/` — GTM loaders and SPA event trackers (`page_view`, `form_submit`, `cta_click`)
+- `src/components/analytics/` — GTM loaders and SPA event trackers (`page_view`, `enquiry_submitted`, `cta_click`)
 - `src/constants/site.ts` — Site name and metadata constants
 
 Google Tag Manager is enabled in CMS **Settings → Analytics**. See [AGENTS.md](AGENTS.md#analytics--google-tag-manager) for Consent Mode, dataLayer events, and GTM Custom Event trigger setup.

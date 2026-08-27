@@ -63,16 +63,16 @@ Configurable tokens live in:
 
 Configured in Payload **Settings → Analytics** (`enableGoogleTagManager` + `googleTagManagerId`). No `NEXT_PUBLIC_GTM_ID` env var — the container ID lives in CMS.
 
-- **Live production only:** GTM, dataLayer events (`page_view` / `form_submit` / `cta_click`), Consent Mode updates, and the Facebook pixel run only when `NODE_ENV=production` **and** `ALLOW_SEARCH_INDEXING=true`. Staging and local/dev stay silent even if CMS GTM is enabled (`data-analytics="live"` on `<html>` is the client marker).
+- **Live production only:** GTM, dataLayer events (`page_view` / `enquiry_submitted` / `cta_click`), Consent Mode updates, and the Facebook pixel run only when `NODE_ENV=production` **and** `ALLOW_SEARCH_INDEXING=true`. Staging and local/dev stay silent even if CMS GTM is enabled (`data-analytics="live"` on `<html>` is the client marker).
 - When enabled on live, GTM **always loads** via `ConsentAwareGoogleTagManager`. Consent Mode (not mount gating) controls ads/analytics storage.
 - Consent defaults are set `denied` in a `beforeInteractive` script in `src/app/(frontend)/layout.tsx`. `PrivacyProvider` / `updateGoogleConsent` grant or keep denied after the banner (or auto-grant for non-EU visitors).
 - Client-side SPA events (App Router does not fire GTM History Change reliably):
-  - `page_view` — `{ event, page_path }` on route changes including query-string updates (`GTMPageView`)
-  - `form_submit` — `{ event, form_id, form_name }` on successful form submit (`FormBlockClient`)
-  - `cta_click` — `{ event, cta_name, cta_location, cta_href }` via delegated clicks on `[data-gtm-cta]` / `data-gtm-cta-location` (`GTMCtaClickTracker`)
+ - `page_view` — `{ event, page_path }` on route changes including query-string updates (`GTMPageView`)
+ - `enquiry_submitted` — `{ event, form_name, department, … }` on successful form submit (`FormBlockClient` / `pushEnquirySubmitted`)
+ - `cta_click` — `{ event, cta_name, cta_location, cta_href }` via delegated clicks on `[data-gtm-cta]` / `data-gtm-cta-location` (`GTMCtaClickTracker`)
 - CTA Button / Button (v2) blocks have **Track click in Google Tag Manager** (`trackAsCta`, default on).
 - Components: `src/components/analytics/ConsentAwareGoogleTagManager.tsx`, `GTMPageView.tsx`, `GTMCtaClickTracker.tsx`
-- **GTM UI:** add Custom Event triggers for `page_view`, `form_submit`, and `cta_click` (do not rely on History Change alone).
+- **GTM UI:** add Custom Event triggers for `page_view`, `enquiry_submitted`, and `cta_click` (do not rely on History Change or native Form Submit).
 - **Skill:** `.cursor/skills/adding-gtm/` is the rollout playbook for sibling Eagle satellites (Mazda/Suzuki/Mahindra) — copy this Ford reference implementation, do not invent a divergent pattern.
 
 ## Vehicle Catalog Hierarchy
@@ -161,19 +161,18 @@ feature/fix → PR → develop → PR → staging → PR → main → deploy
 
 ### VPS layout (this brand)
 
-| Resource | Production | Staging |
-|---|---|---|
-| APP_DIR | `/www/wwwroot/eagle/ford/production` | `/www/wwwroot/eagle/ford/staging` |
-| App port | `127.0.0.1:4411` | `127.0.0.1:5411` |
-| Mongo port | `127.0.0.1:4422` | `127.0.0.1:5422` |
-| Compose project | `eagle-ford-production` | `eagle-ford-staging` |
-| Hostname | live domain | `ford-stg.tallmancode.co.za` |
-| Docker compose | `docker-compose.prod.yml` | same file + env ports |
-| Migrate runbook | [`docs/vps-migrate-production.md`](docs/vps-migrate-production.md) | — |
-| Nginx conf | — | [`deploy/nginx/ford-stg.tallmancode.co.za.conf`](deploy/nginx/ford-stg.tallmancode.co.za.conf) |
+| Resource        | Production                                                         | Staging                                                                                        |
+| --------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| APP_DIR         | `/www/wwwroot/eagle/ford/production`                               | `/www/wwwroot/eagle/ford/staging`                                                              |
+| App port        | `127.0.0.1:4411`                                                   | `127.0.0.1:5411`                                                                               |
+| Mongo port      | `127.0.0.1:4422`                                                   | `127.0.0.1:5422`                                                                               |
+| Compose project | `eagle-ford-production`                                            | `eagle-ford-staging`                                                                           |
+| Hostname        | live domain                                                        | `ford-stg.tallmancode.co.za`                                                                   |
+| Docker compose  | `docker-compose.prod.yml`                                          | same file + env ports                                                                          |
+| Migrate runbook | [`docs/vps-migrate-production.md`](docs/vps-migrate-production.md) | —                                                                                              |
+| Nginx conf      | —                                                                  | [`deploy/nginx/ford-stg.tallmancode.co.za.conf`](deploy/nginx/ford-stg.tallmancode.co.za.conf) |
 
 Staging is Basic Auth protected. Satellite staging uses `MOTOR_CITY_STOCK_API_URL=http://127.0.0.1:5511`.
-
 
 ### GitHub Actions / secrets
 

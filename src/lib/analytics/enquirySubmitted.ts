@@ -13,10 +13,7 @@ export type EnquirySubmittedPayload = {
   page_path: string
 }
 
-function pickField(
-  data: Record<string, unknown> | undefined,
-  keys: string[],
-): string | undefined {
+function pickField(data: Record<string, unknown> | undefined, keys: string[]): string | undefined {
   if (!data) return undefined
   for (const key of keys) {
     const value = data[key]
@@ -28,7 +25,6 @@ function pickField(
 
 /**
  * Push marketing `enquiry_submitted` after a successful form create (HTTP 2xx).
- * Keeps legacy `form_submit` callers separate — call both until marketing sign-off.
  */
 export function pushEnquirySubmitted(args: {
   formTitle: string
@@ -44,8 +40,7 @@ export function pushEnquirySubmitted(args: {
   if (!identity) return
 
   const page_path =
-    args.pagePath ??
-    (typeof window !== 'undefined' ? window.location.pathname : '/')
+    args.pagePath ?? (typeof window !== 'undefined' ? window.location.pathname : '/')
 
   const payload: EnquirySubmittedPayload = {
     form_name: identity.formName,

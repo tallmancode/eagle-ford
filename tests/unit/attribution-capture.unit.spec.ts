@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   ATTRIBUTION_STORAGE_KEY,
   captureAttribution,
+  readGclidFromCookies,
   readStoredAttribution,
 } from '@/lib/attribution/captureAttribution'
 
@@ -47,5 +48,26 @@ describe('captureAttribution', () => {
     expect(JSON.parse(localStorage.getItem(ATTRIBUTION_STORAGE_KEY) || '{}').gclid).toBe(
       'first-click',
     )
+  })
+
+  it('parses gclid from the _gcl_aw cookie value', () => {
+    expect(readGclidFromCookies('_gcl_aw=GCL.1720000000.Cj0KCQjwCookie; path=/')).toBe(
+      'Cj0KCQjwCookie',
+    )
+  })
+
+  it('reads gclid from the _gcl_aw cookie when the URL has no click id', () => {
+    Object.defineProperty(document, 'cookie', {
+      configurable: true,
+      get: () => '_gcl_aw=GCL.1720000000.Cj0KCQjwCookie',
+    })
+
+    const stored = captureAttribution({
+      search: '',
+      pathname: '/test-drive',
+      now: Date.parse('2026-08-26T10:00:00.000Z'),
+    })
+
+    expect(stored?.gclid).toBe('Cj0KCQjwCookie')
   })
 })
