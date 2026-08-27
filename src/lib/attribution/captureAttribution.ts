@@ -76,6 +76,34 @@ function pickQueryParams(search: string): Partial<Record<QueryKey, string>> {
   return out
 }
 
+/**
+ * Google Ads auto-tagging stores the click id in `_gcl_aw` as `GCL.<timestamp>.<gclid>`.
+ * Used when the landing URL no longer has `?gclid=` (common after redirects / SPA).
+ */
+export function readGclidFromCookies(cookieHeader?: string): string | undefined {
+  const source =
+    cookieHeader ?? (typeof document !== 'undefined' ? document.cookie : '')
+  if (!source) return undefined
+
+  const match = source.match(/(?:^|;\s*)_gcl_aw=([^;]*)/)
+  if (!match?.[1]) return undefined
+
+  let raw = match[1]
+  try {
+    raw = decodeURIComponent(raw)
+  } catch {
+    // Keep raw cookie value.
+  }
+
+  const parts = raw.split('.')
+  if (parts.length >= 3 && parts[0] === 'GCL') {
+    const gclid = asTrimmed(parts.slice(2).join('.'))
+    return gclid || undefined
+  }
+
+  return undefined
+}
+
 function hasClickOrUtm(data: Partial<LeadAttribution>): boolean {
   return QUERY_KEYS.some((key) => Boolean(asTrimmed(data[key])))
 }
@@ -99,6 +127,11 @@ export function captureAttribution(args?: {
     args?.referrer ?? (typeof document !== 'undefined' ? document.referrer || '' : '')
 
   const incoming = pickQueryParams(search)
+  if (!incoming.gclid) {
+    const cookieGclid = readGclidFromCookies()
+    if (cookieGclid) incoming.gclid = cookieGclid
+  }
+
   const existing = readStoredAttribution(now)
 
   if (!hasClickOrUtm(incoming)) {
@@ -139,12 +172,7 @@ export function compactAttribution(
 ): LeadAttribution | undefined {
   if (!value) return undefined
   const out: LeadAttribution = {}
-  for (const key of [
-    ...QUERY_KEYS,
-    'landing_page',
-    'referrer',
-    'capturedAt',
-  ] as const) {
+  for (const key of [...QUERY_KEYS, 'landing_page', 'referrer', 'capturedAt'] as const) {
     const trimmed = asTrimmed(value[key])
     if (trimmed) out[key] = trimmed
   }

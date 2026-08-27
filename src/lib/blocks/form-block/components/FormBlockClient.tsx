@@ -2,7 +2,6 @@
 
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { RichText as ConvertRichText } from '@payloadcms/richtext-lexical/react'
-import { sendGTMEvent } from '@next/third-parties/google'
 import { canSendAnalytics } from '@/components/analytics/canSendAnalytics'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useRef, useState } from 'react'
@@ -201,6 +200,7 @@ type FormActionsProps = {
   nextLabel: string
   submitButtonLabel?: string | null
   onNextStep?: () => void | Promise<void>
+  onFinalSubmit?: () => void
 }
 
 function FormActions({
@@ -215,6 +215,7 @@ function FormActions({
   nextLabel,
   submitButtonLabel,
   onNextStep,
+  onFinalSubmit,
 }: FormActionsProps) {
   const isHero = layout === 'hero'
   let fieldIndex = fieldIndexStart
@@ -243,8 +244,11 @@ function FormActions({
 
       {isLastStep ? (
         <Button
-          type="submit"
+          type="button"
           disabled={isLoading}
+          onClick={() => {
+            onFinalSubmit?.()
+          }}
           className={cn(
             isHero
               ? 'h-12 w-full cursor-pointer bg-primary-500 px-6 text-base font-semibold uppercase tracking-wide text-white hover:bg-primary-600 sm:ml-auto sm:w-auto lg:px-8'
@@ -373,12 +377,6 @@ export function FormBlockClient({
             typeof res.doc?.id === 'string' && res.doc.id ? res.doc.id : undefined
 
           if (canSendAnalytics()) {
-            sendGTMEvent({
-              event: 'form_submit',
-              form_id: formID,
-              form_name: form.title,
-            })
-
             pushEnquirySubmitted({
               formTitle: form.title,
               formId: formID,
@@ -409,6 +407,10 @@ export function FormBlockClient({
     [form, formID, router, setFieldError],
   )
 
+  const runFinalSubmit = useCallback(() => {
+    void handleSubmit(onSubmit)()
+  }, [handleSubmit, onSubmit])
+
   const handleNextStep = async () => {
     if (!currentStep) {
       return
@@ -430,13 +432,26 @@ export function FormBlockClient({
     scrollToFormTop()
   }
 
-  const handleFormAction = async (event: React.FormEvent<HTMLFormElement>) => {
+  /**
+   * Never allow a native HTML submit event. GTM Form Submit listeners fire on
+   * the event itself — even when preventDefault runs and RHF validation fails.
+   * Final submit / Next / Enter are handled via type="button" and keydown.
+   */
+  const blockNativeSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    event.stopPropagation()
+  }
 
-    // Only the final step uses type="submit". Intermediate Next is type="button"
-    // so GTM native Form Submit does not fire on step advances.
+  const handleFormKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    if (event.key !== 'Enter') return
+    const target = event.target as HTMLElement | null
+    if (!target || target.tagName === 'TEXTAREA' || target.isContentEditable) return
+
+    event.preventDefault()
     if (isLastStep) {
-      void handleSubmit(onSubmit)()
+      runFinalSubmit()
+    } else {
+      void handleNextStep()
     }
   }
 
@@ -509,7 +524,8 @@ export function FormBlockClient({
 
             <form
               className={cn('grid grid-cols-1 gap-4 lg:grid-cols-3', heroFormFieldClassName)}
-              onSubmit={handleFormAction}
+              onSubmit={blockNativeSubmit}
+              onKeyDown={handleFormKeyDown}
               noValidate
             >
               {renderHeroFormFields(currentStep.fields ?? [], formMethods, hiddenFieldNames)}
@@ -525,6 +541,7 @@ export function FormBlockClient({
                 nextLabel={nextLabel}
                 submitButtonLabel={submitButtonLabel}
                 onNextStep={handleNextStep}
+                onFinalSubmit={runFinalSubmit}
               />
             </form>
           </>
@@ -593,7 +610,8 @@ export function FormBlockClient({
 
               <form
                 className="flex flex-wrap gap-x-4 gap-y-4 pt-4"
-                onSubmit={handleFormAction}
+                onSubmit={blockNativeSubmit}
+                onKeyDown={handleFormKeyDown}
                 noValidate
               >
                 {currentStep.fields?.map((field, index) =>
@@ -611,6 +629,7 @@ export function FormBlockClient({
                   nextLabel={nextLabel}
                   submitButtonLabel={submitButtonLabel}
                   onNextStep={handleNextStep}
+                  onFinalSubmit={runFinalSubmit}
                 />
               </form>
             </>
