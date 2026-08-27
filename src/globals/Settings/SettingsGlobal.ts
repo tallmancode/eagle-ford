@@ -7,7 +7,7 @@ import {
   MAX_BALLOON_PERCENT,
   REPAYMENT_PERIOD_OPTIONS,
 } from '@/lib/blocks/finance-calculator-block/financeCalculatorOptions'
-import { isAdmin } from '@/lib/utils/accessUtil'
+import { isAdmin, isCallCenter } from '@/lib/utils/accessUtil'
 import AddressField from '@/lib/fields/address-field/AddressField'
 import { sanitizeHex } from '@/lib/blocks/v2/apply/values'
 
@@ -19,6 +19,7 @@ export const SettingsGlobal: GlobalConfig = {
   },
   admin: {
     group: 'Settings',
+    hidden: ({ user }) => isCallCenter(user),
   },
   fields: [
     {
@@ -211,9 +212,7 @@ export const SettingsGlobal: GlobalConfig = {
               validate: (value: string | null | undefined) => {
                 if (!value) return true
                 const pattern = /^\+?[\d\s\-().]{7,20}$/
-                return (
-                  pattern.test(value) || 'Must be a valid phone number (e.g. 084 474 0088)'
-                )
+                return pattern.test(value) || 'Must be a valid phone number (e.g. 084 474 0088)'
               },
             },
             {

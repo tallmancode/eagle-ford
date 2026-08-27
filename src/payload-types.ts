@@ -10289,7 +10289,7 @@ export interface User {
   firstName: string;
   lastName: string;
   username?: string | null;
-  roles?: ('developer' | 'admin' | 'marketing' | 'manager' | 'staff')[] | null;
+  roles?: ('developer' | 'admin' | 'marketing' | 'manager' | 'staff' | 'call-center' | 'analytics')[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;

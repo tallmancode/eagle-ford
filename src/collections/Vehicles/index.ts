@@ -2,7 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 
 import { populatePublishedAt } from '@/lib/hooks/populatePublishedAt'
-import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
+import { isAuthenticatedNotCallCenter, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
 import { formatVehicleBadge } from '@/lib/utils/formatVehicleBadge'
 import { generatePreviewPath } from '@/lib/utils/generatePreviewPath'
 import { revalidateVehicle, revalidateVehicleDelete } from './hooks/revalidateVehicle'
@@ -14,10 +14,10 @@ export const VehiclesCollection: CollectionConfig<'vehicles'> = {
     plural: 'Vehicles',
   },
   access: {
-    create: isAuthenticated,
-    delete: isAuthenticated,
+    create: isAuthenticatedNotCallCenter,
+    delete: isAuthenticatedNotCallCenter,
     read: isAuthenticatedOrPublished,
-    update: isAuthenticated,
+    update: isAuthenticatedNotCallCenter,
   },
   admin: {
     useAsTitle: 'name',

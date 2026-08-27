@@ -3,7 +3,7 @@ import { slugField } from 'payload'
 
 import { populatePublishedAt } from '@/lib/hooks/populatePublishedAt'
 import { validateScopedSlugUniqueness } from '@/lib/hooks/validateScopedSlugUniqueness'
-import { isAuthenticated, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
+import { isAuthenticatedNotCallCenter, isAuthenticatedOrPublished } from '@/lib/utils/accessUtil'
 import {
   revalidateVehicleVariant,
   revalidateVehicleVariantDelete,
@@ -17,10 +17,10 @@ export const VehicleVariantsCollection: CollectionConfig<'vehicle-variants'> = {
     plural: 'Vehicle Variants',
   },
   access: {
-    create: isAuthenticated,
-    delete: isAuthenticated,
+    create: isAuthenticatedNotCallCenter,
+    delete: isAuthenticatedNotCallCenter,
     read: isAuthenticatedOrPublished,
-    update: isAuthenticated,
+    update: isAuthenticatedNotCallCenter,
   },
   admin: {
     useAsTitle: 'name',
