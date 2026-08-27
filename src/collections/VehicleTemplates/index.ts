@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { isAnyone, isAuthenticated } from '@/lib/utils/accessUtil'
+import { isAnyone, isAuthenticatedNotCallCenter } from '@/lib/utils/accessUtil'
 import {
   revalidateVehicleTemplate,
   revalidateVehicleTemplateDelete,
@@ -13,10 +13,10 @@ export const VehicleTemplatesCollection: CollectionConfig<'vehicle-templates'> =
     plural: 'Vehicle Templates',
   },
   access: {
-    create: isAuthenticated,
-    delete: isAuthenticated,
+    create: isAuthenticatedNotCallCenter,
+    delete: isAuthenticatedNotCallCenter,
     read: isAnyone,
-    update: isAuthenticated,
+    update: isAuthenticatedNotCallCenter,
   },
   admin: {
     useAsTitle: 'title',

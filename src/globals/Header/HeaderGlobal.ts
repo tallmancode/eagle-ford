@@ -1,7 +1,7 @@
 import type { GlobalConfig } from 'payload'
 import { revalidateGlobalHeader } from '@/globals/Header/hooks/revalidateGlobalHeader'
 import { NavLinksField } from '@/lib/fields/navigation/NavLinksField'
-import { isAdmin } from '@/lib/utils/accessUtil'
+import { isAdmin, isCallCenter } from '@/lib/utils/accessUtil'
 
 export const HeaderGlobal: GlobalConfig = {
   slug: 'header',
@@ -11,6 +11,7 @@ export const HeaderGlobal: GlobalConfig = {
   },
   admin: {
     group: 'Layout',
+    hidden: ({ user }) => isCallCenter(user),
   },
   fields: [
     {
