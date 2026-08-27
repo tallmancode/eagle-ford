@@ -8,7 +8,6 @@ import {
   formatBodyTypeLabel,
   getMileageBounds,
   getPriceBoundsFromRange,
-  getUniqueModels,
   type StockArchiveVehicle,
 } from '../utils'
 import { PriceRangeFilter } from './PriceRangeFilter'
@@ -69,7 +68,9 @@ export function StockArchiveFilters({
   const priceBounds = getPriceBoundsFromRange(filterOptions.priceRange, vehicles)
   const mileageBounds = getMileageBounds(vehicles)
   const histogram = buildPriceHistogram(vehicles, priceBounds)
-  const models = getUniqueModels(vehicles)
+  const models = (filterOptions.models ?? [])
+    .filter((option) => option.count > 0)
+    .map((option) => option.label)
 
   const visibleBodyTypes = filterOptions.bodyTypes.filter((option) => option.count > 0)
   const visibleFuelTypes = filterOptions.fuelTypes.filter((option) => option.count > 0)

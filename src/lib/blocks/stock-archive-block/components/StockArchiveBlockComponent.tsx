@@ -56,6 +56,7 @@ const EMPTY_FILTER_OPTIONS = {
   brands: [],
   fuelTypes: [],
   transmissions: [],
+  models: [],
   newUsed: [],
   priceRange: { min: null as number | null, max: null as number | null },
 }
