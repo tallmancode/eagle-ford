@@ -53,11 +53,12 @@ beforeEach(() => {
 afterEach(() => {
   cleanup()
   vi.restoreAllMocks()
+  localStorage.clear()
   document.documentElement.removeAttribute('data-analytics')
 })
 
 describe('FormBlockClient GTM tracking', () => {
-  it('fires form_submit and enquiry_submitted after a successful submission', async () => {
+  it('fires enquiry_submitted after a successful submission', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
@@ -74,24 +75,20 @@ describe('FormBlockClient GTM tracking', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
 
     await waitFor(() => {
-      expect(sendGTMEvent).toHaveBeenCalledWith({
-        event: 'form_submit',
-        form_id: form.id,
-        form_name: form.title,
-      })
+      expect(sendGTMEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          event: 'enquiry_submitted',
+          form_name: 'general_enquiry',
+          department: 'sales',
+          submission_id: 'sub-123',
+        }),
+      )
     })
 
-    expect(sendGTMEvent).toHaveBeenCalledWith(
-      expect.objectContaining({
-        event: 'enquiry_submitted',
-        form_name: 'general_enquiry',
-        department: 'sales',
-        submission_id: 'sub-123',
-      }),
-    )
+    expect(sendGTMEvent).toHaveBeenCalledTimes(1)
   })
 
-  it('does not fire form_submit outside live production', async () => {
+  it('does not fire enquiry_submitted outside live production', async () => {
     document.documentElement.removeAttribute('data-analytics')
 
     const fetchMock = vi.fn().mockResolvedValue({
@@ -112,6 +109,57 @@ describe('FormBlockClient GTM tracking', () => {
     })
 
     expect(sendGTMEvent).not.toHaveBeenCalled()
+  })
+
+  it('does not fire GTM events when client validation fails', async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+
+    render(createElement(FormBlockClient, { form }))
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => {
+      expect(screen.getByText(/full name is required/i)).toBeTruthy()
+    })
+
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(sendGTMEvent).not.toHaveBeenCalled()
+  })
+
+  it('includes gclid on enquiry_submitted when attribution is present', async () => {
+    localStorage.setItem(
+      'eagle-ford:attribution',
+      JSON.stringify({
+        gclid: 'Cj0KCQjwTest',
+        capturedAt: new Date().toISOString(),
+      }),
+    )
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        status: 201,
+        json: async () => ({ doc: { id: 'sub-gclid' } }),
+      }),
+    )
+
+    render(createElement(FormBlockClient, { form }))
+
+    fireEvent.change(screen.getByLabelText('Full Name *'), {
+      target: { value: 'Jane Doe' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => {
+      expect(sendGTMEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          event: 'enquiry_submitted',
+          gclid: 'Cj0KCQjwTest',
+        }),
+      )
+    })
+
+    expect(sendGTMEvent).toHaveBeenCalledTimes(1)
   })
 
   it('redirects known enquiry forms to the sales thank-you page', async () => {
