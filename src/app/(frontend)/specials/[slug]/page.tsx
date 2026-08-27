@@ -105,13 +105,14 @@ async function resolveForm(
   if (!formId) return null
 
   // Always depth 2 so confirmation redirect.reference resolves to a Page with slug.
+  // Forms are admin-only (read: isAuthenticated); server render must override access.
   const payload = await getPayload({ config: configPromise })
   const result = await payload.findByID({
     collection: 'forms',
     id: formId,
     depth: 2,
     disableErrors: true,
-    overrideAccess: false,
+    overrideAccess: true,
   })
 
   return result ?? null
