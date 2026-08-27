@@ -121,7 +121,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <GTMPageView gtmId={gtmId} />
           </Suspense>
           <GTMCtaClickTracker gtmId={gtmId} />
-          <AttributionCapture />
+          <Suspense fallback={null}>
+            <AttributionCapture />
+          </Suspense>
           <JsonLd
             data={buildJsonLdGraph(
               getDealershipJsonLd(globalSettings.contactInfo),
