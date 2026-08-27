@@ -16,6 +16,7 @@ export type {
   MotorCityStockVehicleMedia,
   MotorCityStockVehicleResponse,
   NewUsedFilterOption,
+  ModelFilterOption,
   TaxonomyFilterOption,
 } from '@/lib/motor-city-stock/types'
 export { MotorCityStockError } from '@/lib/motor-city-stock/types'
