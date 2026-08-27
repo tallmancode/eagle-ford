@@ -25,12 +25,14 @@ async function resolveFormFromSetting(key: QuoteFormSettingKey): Promise<Form | 
   if (!formId) return null
 
   const payload = await getPayload({ config: configPromise })
+  // Forms are admin-only (read: isAuthenticated). Server-rendered vehicle/showroom
+  // pages must override access — same pattern as FormBlockComponent.
   const result = await payload.findByID({
     collection: 'forms',
     id: formId,
     depth: 2,
     disableErrors: true,
-    overrideAccess: false,
+    overrideAccess: true,
   })
 
   return result ?? null
