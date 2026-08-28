@@ -1369,6 +1369,10 @@ export interface Form {
   id: string;
   title: string;
   /**
+   * Stable ID sent to Google Tag Manager as form_id (e.g. general_enquiry). Must be unique across all forms.
+   */
+  external_id?: string | null;
+  /**
    * Multi-step forms use the Steps list below. Single-page forms use the Fields list.
    */
   formLayout?: ('singlePage' | 'multiStep') | null;
@@ -11230,6 +11234,7 @@ export interface RedirectsSelect<T extends boolean = true> {
  */
 export interface FormsSelect<T extends boolean = true> {
   title?: T;
+  external_id?: T;
   formLayout?: T;
   fields?:
     | T

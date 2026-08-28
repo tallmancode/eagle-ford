@@ -6,6 +6,7 @@ import { resolveEnquiryFormIdentity } from '@/lib/forms/enquiryFormIdentity'
 export type EnquirySubmittedPayload = {
   form_name: string
   department: string
+  form_id?: string
   vehicle_model?: string
   stock_number?: string
   submission_id?: string
@@ -28,7 +29,7 @@ function pickField(data: Record<string, unknown> | undefined, keys: string[]): s
  */
 export function pushEnquirySubmitted(args: {
   formTitle: string
-  formId: string
+  externalId?: string | null
   submissionId?: string
   formData?: Record<string, unknown>
   gclid?: string
@@ -47,6 +48,9 @@ export function pushEnquirySubmitted(args: {
     department: identity.department,
     page_path,
   }
+
+  const externalId = args.externalId?.trim()
+  if (externalId) payload.form_id = externalId
 
   const vehicle_model = pickField(args.formData, [
     'model',

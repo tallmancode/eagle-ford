@@ -19,6 +19,7 @@ vi.mock('next/navigation', () => ({
 const form: Form = {
   id: 'form-1',
   title: 'General Enquiry Form',
+  external_id: 'general_enquiry',
   formLayout: 'singlePage',
   fields: [
     {
@@ -44,9 +45,55 @@ const form: Form = {
   createdAt: '2026-01-01T00:00:00.000Z',
 }
 
+const multiStepForm: Form = {
+  id: 'form-sell',
+  title: 'Sell Enquiry Form',
+  external_id: 'sell_your_car',
+  formLayout: 'multiStep',
+  steps: [
+    {
+      title: 'Vehicle details',
+      fields: [
+        {
+          blockType: 'text',
+          name: 'make',
+          label: 'Make',
+          required: true,
+        },
+      ],
+    },
+    {
+      title: 'Contact details',
+      fields: [
+        {
+          blockType: 'text',
+          name: 'fullName',
+          label: 'Full Name',
+          required: true,
+        },
+      ],
+    },
+  ],
+  submitButtonLabel: 'Submit',
+  confirmationType: 'message',
+  confirmationMessage: {
+    root: {
+      type: 'root',
+      children: [],
+      direction: null,
+      format: '',
+      indent: 0,
+      version: 1,
+    },
+  },
+  updatedAt: '2026-01-01T00:00:00.000Z',
+  createdAt: '2026-01-01T00:00:00.000Z',
+}
+
 beforeEach(() => {
   sendGTMEvent.mockClear()
   push.mockClear()
+  Element.prototype.scrollIntoView = vi.fn()
   document.documentElement.setAttribute('data-analytics', 'live')
 })
 
@@ -79,6 +126,7 @@ describe('FormBlockClient GTM tracking', () => {
         expect.objectContaining({
           event: 'enquiry_submitted',
           form_name: 'general_enquiry',
+          form_id: 'general_enquiry',
           department: 'sales',
           submission_id: 'sub-123',
         }),
@@ -162,7 +210,9 @@ describe('FormBlockClient GTM tracking', () => {
     expect(sendGTMEvent).toHaveBeenCalledTimes(1)
   })
 
-  it('redirects known enquiry forms to the sales thank-you page', async () => {
+  it('redirects known enquiry forms to the sales thank-you page after GTM defer', async () => {
+    const setTimeoutSpy = vi.spyOn(global, 'setTimeout')
+
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
@@ -179,7 +229,76 @@ describe('FormBlockClient GTM tracking', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
 
     await waitFor(() => {
-      expect(push).toHaveBeenCalledWith('/sales-form-submitted')
+      expect(sendGTMEvent).toHaveBeenCalled()
     })
+
+    expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 150)
+
+    await waitFor(
+      () => {
+        expect(push).toHaveBeenCalledWith('/sales-form-submitted')
+      },
+      { timeout: 500 },
+    )
+
+    setTimeoutSpy.mockRestore()
+  })
+
+  it('does not fire enquiry_submitted when advancing a multi-step form', async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+
+    render(createElement(FormBlockClient, { form: multiStepForm }))
+
+    fireEvent.change(screen.getByLabelText('Make *'), {
+      target: { value: 'Ford' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Full Name *')).toBeTruthy()
+    })
+
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(sendGTMEvent).not.toHaveBeenCalled()
+  })
+
+  it('fires enquiry_submitted for Sell Enquiry Form on final multi-step submit', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        status: 201,
+        json: async () => ({ doc: { id: 'sub-sell' } }),
+      }),
+    )
+
+    render(createElement(FormBlockClient, { form: multiStepForm }))
+
+    fireEvent.change(screen.getByLabelText('Make *'), {
+      target: { value: 'Ford' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Next' }))
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Full Name *')).toBeTruthy()
+    })
+
+    fireEvent.change(screen.getByLabelText('Full Name *'), {
+      target: { value: 'Jane Doe' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => {
+      expect(sendGTMEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          event: 'enquiry_submitted',
+          form_name: 'sell_your_car',
+          form_id: 'sell_your_car',
+          submission_id: 'sub-sell',
+        }),
+      )
+    })
+
+    expect(sendGTMEvent).toHaveBeenCalledTimes(1)
   })
 })
