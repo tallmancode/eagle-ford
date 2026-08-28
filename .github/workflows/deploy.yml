@@ -78,8 +78,9 @@ jobs:
         run: |
           set -e
 
-          SSH_OPTS="-p $SSH_PORT"
-          SCP_OPTS="-P $SSH_PORT"
+          # Keep the session alive during long Docker/Next.js builds (avoids "Broken pipe" ~5–10 min in)
+          SSH_OPTS="-p $SSH_PORT -o ServerAliveInterval=30 -o ServerAliveCountMax=60"
+          SCP_OPTS="-P $SSH_PORT -o ServerAliveInterval=30 -o ServerAliveCountMax=60"
           DEPLOY_BRANCH="main"
           ENV_FILE="$(mktemp)"
           trap 'rm -f "$ENV_FILE"' EXIT
