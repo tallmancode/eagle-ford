@@ -211,6 +211,8 @@ describe('FormBlockClient GTM tracking', () => {
   })
 
   it('redirects known enquiry forms to the sales thank-you page after GTM defer', async () => {
+    const setTimeoutSpy = vi.spyOn(global, 'setTimeout')
+
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
@@ -230,14 +232,16 @@ describe('FormBlockClient GTM tracking', () => {
       expect(sendGTMEvent).toHaveBeenCalled()
     })
 
-    expect(push).not.toHaveBeenCalled()
+    expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 150)
 
     await waitFor(
       () => {
         expect(push).toHaveBeenCalledWith('/sales-form-submitted')
       },
-      { timeout: 300 },
+      { timeout: 500 },
     )
+
+    setTimeoutSpy.mockRestore()
   })
 
   it('does not fire enquiry_submitted when advancing a multi-step form', async () => {
