@@ -376,10 +376,12 @@ export function FormBlockClient({
           const submissionId =
             typeof res.doc?.id === 'string' && res.doc.id ? res.doc.id : undefined
 
-          if (canSendAnalytics()) {
+          const didPushGtm = canSendAnalytics()
+
+          if (didPushGtm) {
             pushEnquirySubmitted({
               formTitle: form.title,
-              formId: formID,
+              externalId: form.external_id,
               submissionId,
               formData: data,
               gclid: attribution?.gclid,
@@ -389,7 +391,11 @@ export function FormBlockClient({
           const redirectUrl = resolvePostSubmitRedirect(form)
           if (redirectUrl) {
             armThankYouGate(redirectUrl)
-            router.push(redirectUrl)
+            if (didPushGtm) {
+              setTimeout(() => router.push(redirectUrl), 150)
+            } else {
+              router.push(redirectUrl)
+            }
           }
         } catch {
           if (loadingTimerID) {

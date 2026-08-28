@@ -81,8 +81,7 @@ function pickQueryParams(search: string): Partial<Record<QueryKey, string>> {
  * Used when the landing URL no longer has `?gclid=` (common after redirects / SPA).
  */
 export function readGclidFromCookies(cookieHeader?: string): string | undefined {
-  const source =
-    cookieHeader ?? (typeof document !== 'undefined' ? document.cookie : '')
+  const source = cookieHeader ?? (typeof document !== 'undefined' ? document.cookie : '')
   if (!source) return undefined
 
   const match = source.match(/(?:^|;\s*)_gcl_aw=([^;]*)/)
@@ -109,9 +108,10 @@ function hasClickOrUtm(data: Partial<LeadAttribution>): boolean {
 }
 
 /**
- * First-touch attribution within a 90-day window.
- * New gclid/UTMs on a later landing do not overwrite an existing click id
- * still inside the TTL; empty landings keep the stored record.
+ * Last-touch click ID within a 90-day window.
+ * A new gclid overwrites the stored record and resets capturedAt; same gclid
+ * is idempotent; empty landings keep the stored record; UTM-only visits do not
+ * clear an existing gclid.
  */
 export function captureAttribution(args?: {
   search?: string
@@ -146,18 +146,23 @@ export function captureAttribution(args?: {
     return existing
   }
 
-  // First-touch: keep existing gclid if still valid and a different click arrives later.
-  if (existing?.gclid && incoming.gclid && existing.gclid !== incoming.gclid) {
-    return existing
-  }
+  const isNewGclid =
+    Boolean(incoming.gclid) && (!existing?.gclid || existing.gclid !== incoming.gclid)
 
-  const next: LeadAttribution = {
-    ...existing,
-    ...incoming,
-    landing_page: existing?.landing_page || pathname || '/',
-    referrer: existing?.referrer || asTrimmed(referrer) || undefined,
-    capturedAt: existing?.capturedAt || new Date(now).toISOString(),
-  }
+  const next: LeadAttribution = isNewGclid
+    ? {
+        ...incoming,
+        landing_page: pathname || '/',
+        referrer: asTrimmed(referrer) || undefined,
+        capturedAt: new Date(now).toISOString(),
+      }
+    : {
+        ...existing,
+        ...incoming,
+        landing_page: existing?.landing_page || pathname || '/',
+        referrer: existing?.referrer || asTrimmed(referrer) || undefined,
+        capturedAt: existing?.capturedAt || new Date(now).toISOString(),
+      }
 
   writeStoredAttribution(next)
   return next

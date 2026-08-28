@@ -103,7 +103,7 @@ export const plugins: Plugin[] = [
         delete: isAuthenticatedNotCallCenter,
       },
       admin: {
-        defaultColumns: ['title', 'lmsLeadInjection.enabled', 'updatedAt'],
+        defaultColumns: ['title', 'external_id', 'lmsLeadInjection.enabled', 'updatedAt'],
       },
       fields: ({ defaultFields }) => {
         const formInputBlocks = getFormInputBlocks(FORM_UPLOAD_COLLECTIONS)
@@ -111,6 +111,23 @@ export const plugins: Plugin[] = [
         const result: Field[] = []
 
         for (const field of defaultFields) {
+          if ('name' in field && field.name === 'title') {
+            result.push(field)
+            result.push({
+              name: 'external_id',
+              type: 'text',
+              unique: true,
+              index: true,
+              label: 'External ID',
+              admin: {
+                description:
+                  'Stable ID sent to Google Tag Manager as form_id (e.g. general_enquiry). Must be unique across all forms.',
+                position: 'sidebar',
+              },
+            } as Field)
+            continue
+          }
+
           if ('name' in field && field.name === 'confirmationMessage') {
             result.push({
               ...field,
