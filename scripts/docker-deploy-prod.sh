@@ -42,14 +42,23 @@ done
 timeout 1 bash -c "echo > /dev/tcp/127.0.0.1/$MONGO_PORT" 2>/dev/null \
   || { echo "Mongo not reachable on $MONGO_PORT"; exit 1; }
 
-BUILD_ARGS=(--secret id=env,src=.env --network=host -t "$IMAGE")
+BUILD_ARGS=(--progress=plain --secret id=env,src=.env --network=host -t "$IMAGE")
 if [ "${NO_CACHE:-0}" = "1" ]; then
   BUILD_ARGS=(--no-cache "${BUILD_ARGS[@]}")
   echo "Building with --no-cache"
 fi
-docker build \
-  "${BUILD_ARGS[@]}" \
-  .
+echo "Starting Docker build (often 10–15 minutes)..."
+docker build "${BUILD_ARGS[@]}" . &
+build_pid=$!
+while kill -0 "$build_pid" 2>/dev/null; do
+  echo "[deploy heartbeat $(date -u +%Y-%m-%dT%H:%M:%SZ)] docker build in progress..."
+  sleep 45
+done
+if ! wait "$build_pid"; then
+  echo "ERROR: docker build failed"
+  exit 1
+fi
+echo "Docker build finished"
 
 # 3. Start app from pre-built image
 APP_IMAGE="$IMAGE" $COMPOSE up -d app --no-build --wait --wait-timeout 300
