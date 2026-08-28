@@ -31,7 +31,14 @@ import { VehicleTabsV2Block } from '@/lib/blocks/v2/vehicle-tabs-block/VehicleTa
 import { GalleryV2Block } from '@/lib/blocks/v2/gallery-block/GalleryBlockConfig'
 import { FeatureListV2Block } from '@/lib/blocks/v2/feature-list-block/FeatureListBlockConfig'
 import { FeatureRowsV2Block } from '@/lib/blocks/v2/feature-rows-block/FeatureRowsBlockConfig'
+import { FeatureV2Block } from '@/lib/blocks/v2/feature-block/FeatureBlockConfig'
+import { CtaBackgroundV2Block } from '@/lib/blocks/v2/cta-background-block/CtaBackgroundBlockConfig'
+import { CtaStatsV2Block } from '@/lib/blocks/v2/cta-stats-block/CtaStatsBlockConfig'
+import { QuoteCtaV2Block } from '@/lib/blocks/v2/quote-cta-block/QuoteCtaBlockConfig'
+import { CtaImageV2Block } from '@/lib/blocks/v2/cta-image-block/CtaImageBlockConfig'
+import { AutoLoanCalculatorV2Block } from '@/lib/blocks/v2/auto-loan-calculator-block/AutoLoanCalculatorBlockConfig'
 import { OverlapMediaStoryV2Block } from '@/lib/blocks/v2/overlap-media-story-block/OverlapMediaStoryBlockConfig'
+import { AsymmetricMediaStoryV2Block } from '@/lib/blocks/v2/asymmetric-media-story-block/AsymmetricMediaStoryBlockConfig'
 import { PopupCardsV2Block } from '@/lib/blocks/v2/popup-cards-block/PopupCardsBlockConfig'
 import { StatsV2Block } from '@/lib/blocks/v2/stats-block/StatsBlockConfig'
 import { TeamGridV2Block } from '@/lib/blocks/v2/team-grid-block/TeamGridBlockConfig'
@@ -132,7 +139,14 @@ const Blocks = [
   GalleryV2Block,
   FeatureListV2Block,
   FeatureRowsV2Block,
+  FeatureV2Block,
+  CtaBackgroundV2Block,
+  CtaStatsV2Block,
+  QuoteCtaV2Block,
+  CtaImageV2Block,
+  AutoLoanCalculatorV2Block,
   OverlapMediaStoryV2Block,
+  AsymmetricMediaStoryV2Block,
   PopupCardsV2Block,
   StatsV2Block,
   TeamGridV2Block,

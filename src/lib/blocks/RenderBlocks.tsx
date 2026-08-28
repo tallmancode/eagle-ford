@@ -32,7 +32,14 @@ import type {
   GalleryV2,
   FeatureListV2,
   FeatureRowsV2,
+  FeatureV2,
+  CtaBackgroundV2,
+  CtaStatsV2,
+  QuoteCtaV2,
+  CtaImageV2,
+  AutoLoanCalculatorV2,
   OverlapMediaStoryV2,
+  AsymmetricMediaStoryV2,
   PopupCardsV2,
   StatsV2,
   TeamGridV2,
@@ -132,7 +139,14 @@ import { VehicleTabsV2BlockComponent } from '@/lib/blocks/v2/vehicle-tabs-block/
 import { GalleryV2BlockComponent } from '@/lib/blocks/v2/gallery-block/components/GalleryBlockComponent'
 import { FeatureListV2BlockComponent } from '@/lib/blocks/v2/feature-list-block/components/FeatureListBlockComponent'
 import { FeatureRowsV2BlockComponent } from '@/lib/blocks/v2/feature-rows-block/components/FeatureRowsBlockComponent'
+import { FeatureV2BlockComponent } from '@/lib/blocks/v2/feature-block/components/FeatureBlockComponent'
+import { CtaBackgroundV2BlockComponent } from '@/lib/blocks/v2/cta-background-block/components/CtaBackgroundBlockComponent'
+import { CtaStatsV2BlockComponent } from '@/lib/blocks/v2/cta-stats-block/components/CtaStatsBlockComponent'
+import { QuoteCtaV2BlockComponent } from '@/lib/blocks/v2/quote-cta-block/components/QuoteCtaBlockComponent'
+import { CtaImageV2BlockComponent } from '@/lib/blocks/v2/cta-image-block/components/CtaImageBlockComponent'
+import { AutoLoanCalculatorV2BlockComponent } from '@/lib/blocks/v2/auto-loan-calculator-block/components/AutoLoanCalculatorBlockComponent'
 import { OverlapMediaStoryV2BlockComponent } from '@/lib/blocks/v2/overlap-media-story-block/components/OverlapMediaStoryBlockComponent'
+import { AsymmetricMediaStoryV2BlockComponent } from '@/lib/blocks/v2/asymmetric-media-story-block/components/AsymmetricMediaStoryBlockComponent'
 import { PopupCardsV2BlockComponent } from '@/lib/blocks/v2/popup-cards-block/components/PopupCardsBlockComponent'
 import { StatsV2BlockComponent } from '@/lib/blocks/v2/stats-block/components/StatsBlockComponent'
 import { TeamGridV2BlockComponent } from '@/lib/blocks/v2/team-grid-block/components/TeamGridBlockComponent'
@@ -239,7 +253,14 @@ type BlockComponentMap = {
   galleryV2: GalleryV2
   featureListV2: FeatureListV2
   featureRowsV2: FeatureRowsV2
+  featureV2: FeatureV2
+  ctaBackgroundV2: CtaBackgroundV2
+  ctaStatsV2: CtaStatsV2
+  quoteCtaV2: QuoteCtaV2
+  ctaImageV2: CtaImageV2
+  autoLoanCalculatorV2: AutoLoanCalculatorV2
   overlapMediaStoryV2: OverlapMediaStoryV2
+  asymmetricMediaStoryV2: AsymmetricMediaStoryV2
   popupCardsV2: PopupCardsV2
   statsV2: StatsV2
   teamGridV2: TeamGridV2
@@ -359,8 +380,21 @@ const blockComponents: {
   featureRowsV2: FeatureRowsV2BlockComponent as unknown as React.ComponentType<
     WithMeta<FeatureRowsV2>
   >,
+  featureV2: FeatureV2BlockComponent as unknown as React.ComponentType<WithMeta<FeatureV2>>,
+  ctaBackgroundV2: CtaBackgroundV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<CtaBackgroundV2>
+  >,
+  ctaStatsV2: CtaStatsV2BlockComponent as unknown as React.ComponentType<WithMeta<CtaStatsV2>>,
+  quoteCtaV2: QuoteCtaV2BlockComponent as unknown as React.ComponentType<WithMeta<QuoteCtaV2>>,
+  ctaImageV2: CtaImageV2BlockComponent as unknown as React.ComponentType<WithMeta<CtaImageV2>>,
+  autoLoanCalculatorV2: AutoLoanCalculatorV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<AutoLoanCalculatorV2>
+  >,
   overlapMediaStoryV2: OverlapMediaStoryV2BlockComponent as unknown as React.ComponentType<
     WithMeta<OverlapMediaStoryV2>
+  >,
+  asymmetricMediaStoryV2: AsymmetricMediaStoryV2BlockComponent as unknown as React.ComponentType<
+    WithMeta<AsymmetricMediaStoryV2>
   >,
   popupCardsV2: PopupCardsV2BlockComponent as unknown as React.ComponentType<WithMeta<PopupCardsV2>>,
   statsV2: StatsV2BlockComponent as unknown as React.ComponentType<WithMeta<StatsV2>>,
