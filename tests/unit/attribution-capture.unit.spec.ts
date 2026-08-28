@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   ATTRIBUTION_STORAGE_KEY,
+  ATTRIBUTION_TTL_MS,
   captureAttribution,
   readGclidFromCookies,
   readStoredAttribution,
@@ -31,7 +32,7 @@ describe('captureAttribution', () => {
     expect(readStoredAttribution()?.gclid).toBe('Cj0KCQjw')
   })
 
-  it('keeps first-touch gclid within the 90-day window', () => {
+  it('uses last-touch gclid within the 90-day window', () => {
     captureAttribution({
       search: '?gclid=first-click',
       pathname: '/',
@@ -44,10 +45,62 @@ describe('captureAttribution', () => {
       now: Date.parse('2026-08-26T10:00:00.000Z'),
     })
 
-    expect(second?.gclid).toBe('first-click')
+    expect(second?.gclid).toBe('second-click')
+    expect(second?.utm_campaign).toBe('later')
+    expect(second?.landing_page).toBe('/sell')
     expect(JSON.parse(localStorage.getItem(ATTRIBUTION_STORAGE_KEY) || '{}').gclid).toBe(
-      'first-click',
+      'second-click',
     )
+  })
+
+  it('resets capturedAt when a new gclid arrives', () => {
+    captureAttribution({
+      search: '?gclid=first-click',
+      pathname: '/',
+      now: Date.parse('2026-08-01T10:00:00.000Z'),
+    })
+
+    const second = captureAttribution({
+      search: '?gclid=second-click',
+      pathname: '/sell',
+      now: Date.parse('2026-08-26T10:00:00.000Z'),
+    })
+
+    expect(second?.capturedAt).toBe(new Date(Date.parse('2026-08-26T10:00:00.000Z')).toISOString())
+  })
+
+  it('allows a fresh gclid after the 90-day TTL expires', () => {
+    const start = Date.parse('2026-01-01T10:00:00.000Z')
+    captureAttribution({
+      search: '?gclid=old-click',
+      pathname: '/',
+      now: start,
+    })
+
+    const afterExpiry = captureAttribution({
+      search: '?gclid=new-click',
+      pathname: '/',
+      now: start + ATTRIBUTION_TTL_MS + 1,
+    })
+
+    expect(afterExpiry?.gclid).toBe('new-click')
+  })
+
+  it('keeps stored gclid on UTM-only visits', () => {
+    captureAttribution({
+      search: '?gclid=stored-click',
+      pathname: '/',
+      now: Date.parse('2026-08-01T10:00:00.000Z'),
+    })
+
+    const utmOnly = captureAttribution({
+      search: '?utm_campaign=organic',
+      pathname: '/contact',
+      now: Date.parse('2026-08-26T10:00:00.000Z'),
+    })
+
+    expect(utmOnly?.gclid).toBe('stored-click')
+    expect(utmOnly?.utm_campaign).toBeUndefined()
   })
 
   it('parses gclid from the _gcl_aw cookie value', () => {

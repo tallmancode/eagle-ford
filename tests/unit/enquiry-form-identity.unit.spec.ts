@@ -16,6 +16,7 @@ describe('enquiryFormIdentity', () => {
     expect(resolveEnquiryFormIdentity('Special Offer Enquiry Form')?.formName).toBe('special_offer')
     expect(resolveEnquiryFormIdentity('Test Drive Booking Form')?.formName).toBe('test_drive')
     expect(resolveEnquiryFormIdentity('Sell Your Car')?.formName).toBe('sell_your_car')
+    expect(resolveEnquiryFormIdentity('Sell Enquiry Form')?.formName).toBe('sell_your_car')
     expect(resolveEnquiryFormIdentity('Service Booking Form')?.formName).toBe('service_booking')
     expect(resolveEnquiryFormIdentity('Parts Enquiry Form')?.formName).toBe('parts')
     expect(resolveEnquiryFormIdentity('Wheel & Tyre Enquiry Form')?.formName).toBe('wheel_tyre')
@@ -24,9 +25,7 @@ describe('enquiryFormIdentity', () => {
 
   it('routes sales vs service thank-you paths', () => {
     expect(getThankYouPathForFormTitle('General Enquiry Form')).toBe('/sales-form-submitted')
-    expect(getThankYouPathForFormTitle('Wheel & Tyre Enquiry Form')).toBe(
-      '/service-form-submitted',
-    )
+    expect(getThankYouPathForFormTitle('Wheel & Tyre Enquiry Form')).toBe('/service-form-submitted')
     expect(getThankYouPathForFormTitle('Paint & Panel Enquiry Form')).toBe(
       '/service-form-submitted',
     )

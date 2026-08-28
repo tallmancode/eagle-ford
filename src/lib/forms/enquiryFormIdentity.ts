@@ -67,7 +67,7 @@ const ENQUIRY_FORM_IDENTITIES: EnquiryFormIdentity[] = [
     formName: 'sell_your_car',
     department: 'sales',
     thankYouSlug: SALES_THANK_YOU_SLUG,
-    titleMatchers: ['sell your car', 'sell my car'],
+    titleMatchers: ['sell your car', 'sell my car', 'sell enquiry'],
   },
   {
     formName: 'service_booking',
