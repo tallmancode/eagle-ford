@@ -67,9 +67,11 @@ Configured in Payload **Settings → Analytics** (`enableGoogleTagManager` + `go
 - When enabled on live, GTM **always loads** via `ConsentAwareGoogleTagManager`. Consent Mode (not mount gating) controls ads/analytics storage.
 - Consent defaults are set `denied` in a `beforeInteractive` script in `src/app/(frontend)/layout.tsx`. `PrivacyProvider` / `updateGoogleConsent` grant or keep denied after the banner (or auto-grant for non-EU visitors).
 - Client-side SPA events (App Router does not fire GTM History Change reliably):
- - `page_view` — `{ event, page_path }` on route changes including query-string updates (`GTMPageView`)
- - `enquiry_submitted` — `{ event, form_name, department, … }` on successful form submit (`FormBlockClient` / `pushEnquirySubmitted`)
- - `cta_click` — `{ event, cta_name, cta_location, cta_href }` via delegated clicks on `[data-gtm-cta]` / `data-gtm-cta-location` (`GTMCtaClickTracker`)
+- `page_view` — `{ event, page_path }` on route changes including query-string updates (`GTMPageView`)
+- `enquiry_submitted` — `{ event, form_name, form_id, department, submission_id, gclid?, … }` on successful form submit (`FormBlockClient` / `pushEnquirySubmitted`). `form_id` comes from the form’s CMS **External ID** field (`forms.external_id`); `form_name` is the stable marketing slug from title matching.
+- `cta_click` — `{ event, cta_name, cta_location, cta_href }` via delegated clicks on `[data-gtm-cta]` / `data-gtm-cta-location` (`GTMCtaClickTracker`)
+- Last-touch ad attribution (`gclid` / `_gcl_aw` cookie / UTMs) captured client-side (`eagle-ford:attribution`, 90-day TTL) via `AttributionCapture` (Suspense-wrapped in layout), stored on form-submissions and forwarded to Motor City LMS via site-form-leads. A new ad click overwrites the stored gclid within the window.
+- Forms: set **External ID** on each enquiry form in admin (e.g. `general_enquiry`, `sell_your_car`) — unique, sent to GTM as `form_id`.
 - CTA Button / Button (v2) blocks have **Track click in Google Tag Manager** (`trackAsCta`, default on).
 - Components: `src/components/analytics/ConsentAwareGoogleTagManager.tsx`, `GTMPageView.tsx`, `GTMCtaClickTracker.tsx`
 - **GTM UI:** add Custom Event triggers for `page_view`, `enquiry_submitted`, and `cta_click` (do not rely on History Change or native Form Submit).
