@@ -11,7 +11,7 @@ import { richTextConverters } from '@/components/rich-text/richTextConverters'
 import type { Form, Page } from '@/payload-types'
 import { pushEnquirySubmitted } from '@/lib/analytics/enquirySubmitted'
 import { getAttributionForSubmit } from '@/lib/attribution/captureAttribution'
-import { getThankYouPathForFormTitle } from '@/lib/forms/enquiryFormIdentity'
+import { getThankYouPathForForm } from '@/lib/forms/enquiryFormIdentity'
 import { armThankYouGate } from '@/lib/forms/thankYouGate'
 import { getPagePath } from '@/lib/utils/getPagePath'
 import { buildInitialFormState } from '@/lib/blocks/form-block/components/buildInitialFormState'
@@ -82,9 +82,9 @@ function getRedirectUrl(form: Form): string | null {
   return redirect.url ?? null
 }
 
-/** Prefer CMS redirect when populated; fall back to known form-title → thank-you map. */
+/** Prefer CMS redirect when populated; fall back to known form → thank-you map. */
 function resolvePostSubmitRedirect(form: Form): string | null {
-  return getRedirectUrl(form) ?? getThankYouPathForFormTitle(form.title)
+  return getRedirectUrl(form) ?? getThankYouPathForForm(form)
 }
 
 function renderFormField(
@@ -350,7 +350,7 @@ export function FormBlockClient({
             clearTimeout(loadingTimerID)
           }
 
-          if (req.status >= 400) {
+          if (!req.ok) {
             setIsLoading(false)
 
             const fieldErrors = res.errors?.filter((entry) => entry.path) ?? []
@@ -381,6 +381,7 @@ export function FormBlockClient({
           if (didPushGtm) {
             pushEnquirySubmitted({
               formTitle: form.title,
+              formName: form.form_name,
               externalId: form.external_id,
               submissionId,
               formData: data,

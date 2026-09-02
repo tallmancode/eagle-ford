@@ -31,6 +31,7 @@ import {
 import { flattenFormSubmissionExportBatch } from '@/lib/form-submissions/flattenSubmissionExport'
 import { getLmsLeadInjectionFields } from '@/lib/motor-city-leads/formFields'
 import { getFormSubmissionAttributionFields } from '@/lib/form-submissions/attributionFields'
+import { FORM_NAME_OPTIONS } from '@/lib/forms/enquiryFormIdentity'
 import { getMotorCityLeadSubmissionFields } from '@/lib/motor-city-leads/formSubmissionFields'
 import { injectFormSubmissionLead } from '@/lib/motor-city-leads/injectFormSubmissionLead'
 import { patchExportCollectionFields } from '@/components/admin/export/patchExportCollectionFields'
@@ -103,7 +104,7 @@ export const plugins: Plugin[] = [
         delete: isAuthenticatedNotCallCenter,
       },
       admin: {
-        defaultColumns: ['title', 'external_id', 'lmsLeadInjection.enabled', 'updatedAt'],
+        defaultColumns: ['title', 'form_name', 'external_id', 'lmsLeadInjection.enabled', 'updatedAt'],
       },
       fields: ({ defaultFields }) => {
         const formInputBlocks = getFormInputBlocks(FORM_UPLOAD_COLLECTIONS)
@@ -121,7 +122,27 @@ export const plugins: Plugin[] = [
               label: 'External ID',
               admin: {
                 description:
-                  'Stable ID sent to Google Tag Manager as form_id (e.g. general_enquiry). Must be unique across all forms.',
+                  'Stable ID sent to Google Tag Manager as form_id. Use lowercase letters, numbers, and underscores only (e.g. new_vehicle_quote). Must be unique across all forms.',
+                position: 'sidebar',
+              },
+              validate: (value: unknown) => {
+                if (value == null || value === '') return true
+                if (typeof value !== 'string') return 'External ID must be a string.'
+                if (!/^[a-z0-9_]+$/.test(value)) {
+                  return 'Use lowercase letters, numbers, and underscores only (e.g. new_vehicle_quote).'
+                }
+                return true
+              },
+            } as Field)
+            result.push({
+              name: 'form_name',
+              type: 'select',
+              required: true,
+              label: 'Analytics form name',
+              options: FORM_NAME_OPTIONS,
+              admin: {
+                description:
+                  'Marketing slug sent to Google Tag Manager as form_name. Required for conversion tracking — do not rename the form title instead.',
                 position: 'sidebar',
               },
             } as Field)

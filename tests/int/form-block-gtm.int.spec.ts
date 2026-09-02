@@ -19,6 +19,7 @@ vi.mock('next/navigation', () => ({
 const form: Form = {
   id: 'form-1',
   title: 'General Enquiry Form',
+  form_name: 'general_enquiry',
   external_id: 'general_enquiry',
   formLayout: 'singlePage',
   fields: [
@@ -48,6 +49,7 @@ const form: Form = {
 const multiStepForm: Form = {
   id: 'form-sell',
   title: 'Sell Enquiry Form',
+  form_name: 'sell_your_car',
   external_id: 'sell_your_car',
   formLayout: 'multiStep',
   steps: [
@@ -105,10 +107,37 @@ afterEach(() => {
 })
 
 describe('FormBlockClient GTM tracking', () => {
+  it('fires enquiry_submitted when Payload returns 201 Created', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 201,
+      json: async () => ({ doc: { id: 'sub-201' } }),
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    render(createElement(FormBlockClient, { form }))
+
+    fireEvent.change(screen.getByLabelText('Full Name *'), {
+      target: { value: 'Jane Doe' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalled()
+      expect(sendGTMEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          event: 'enquiry_submitted',
+          submission_id: 'sub-201',
+        }),
+      )
+    })
+  })
+
   it('fires enquiry_submitted after a successful submission', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
+        ok: true,
         status: 201,
         json: async () => ({ doc: { id: 'sub-123' } }),
       }),
@@ -140,6 +169,7 @@ describe('FormBlockClient GTM tracking', () => {
     document.documentElement.removeAttribute('data-analytics')
 
     const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
       status: 200,
       json: async () => ({}),
     })
@@ -186,6 +216,7 @@ describe('FormBlockClient GTM tracking', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
+        ok: true,
         status: 201,
         json: async () => ({ doc: { id: 'sub-gclid' } }),
       }),
@@ -216,6 +247,7 @@ describe('FormBlockClient GTM tracking', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
+        ok: true,
         status: 201,
         json: async () => ({ doc: { id: 'sub-456' } }),
       }),
@@ -267,6 +299,7 @@ describe('FormBlockClient GTM tracking', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
+        ok: true,
         status: 201,
         json: async () => ({ doc: { id: 'sub-sell' } }),
       }),
@@ -300,5 +333,120 @@ describe('FormBlockClient GTM tracking', () => {
     })
 
     expect(sendGTMEvent).toHaveBeenCalledTimes(1)
+  })
+
+  it('fires enquiry_submitted with parts department for the parts form', async () => {
+    const partsForm: Form = {
+      ...form,
+      id: 'form-parts',
+      title: 'Parts Enquiry Form',
+      form_name: 'parts',
+      external_id: 'parts',
+    }
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 201,
+        json: async () => ({ doc: { id: 'sub-parts' } }),
+      }),
+    )
+
+    render(createElement(FormBlockClient, { form: partsForm }))
+
+    fireEvent.change(screen.getByLabelText('Full Name *'), {
+      target: { value: 'Jane Doe' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => {
+      expect(sendGTMEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          event: 'enquiry_submitted',
+          form_name: 'parts',
+          form_id: 'parts',
+          department: 'parts',
+          submission_id: 'sub-parts',
+        }),
+      )
+    })
+  })
+
+  it('warns and skips enquiry_submitted when form_name cannot be resolved', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 201,
+        json: async () => ({ doc: { id: 'sub-unknown' } }),
+      }),
+    )
+
+    const unknownForm = {
+      ...form,
+      title: 'Custom Dealer Form',
+      form_name: null,
+    } as unknown as Form
+
+    render(createElement(FormBlockClient, { form: unknownForm }))
+
+    fireEvent.change(screen.getByLabelText('Full Name *'), {
+      target: { value: 'Jane Doe' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => {
+      expect(warnSpy).toHaveBeenCalledWith(
+        '[analytics] enquiry_submitted skipped: unresolved form',
+        expect.objectContaining({
+          formTitle: 'Custom Dealer Form',
+        }),
+      )
+    })
+
+    expect(sendGTMEvent).not.toHaveBeenCalled()
+    warnSpy.mockRestore()
+  })
+
+  it('normalizes dot-format external_id to underscores in GTM payload', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 201,
+        json: async () => ({ doc: { id: 'sub-dots' } }),
+      }),
+    )
+
+    const dottedForm: Form = {
+      ...form,
+      form_name: 'new_vehicle_quote',
+      external_id: 'new.vehicle.quote',
+    }
+
+    render(createElement(FormBlockClient, { form: dottedForm }))
+
+    fireEvent.change(screen.getByLabelText('Full Name *'), {
+      target: { value: 'Jane Doe' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Submit' }))
+
+    await waitFor(() => {
+      expect(sendGTMEvent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          event: 'enquiry_submitted',
+          form_name: 'new_vehicle_quote',
+          form_id: 'new_vehicle_quote',
+        }),
+      )
+    })
+
+    expect(warnSpy).toHaveBeenCalled()
+    warnSpy.mockRestore()
   })
 })

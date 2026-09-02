@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import * as Sentry from '@sentry/nextjs'
 
-import { StockArchiveError } from '@/lib/blocks/stock-archive-block/components/StockArchiveError'
 import { getTaxonomyLabel, getTaxonomySlug } from '@/lib/blocks/stock-archive-block/utils'
 import { getFinanceCalculatorDefaults } from '@/lib/blocks/finance-calculator-block/getFinanceCalculatorDefaults'
 import { getCachedStock } from '@/lib/motor-city-stock/getCachedStock'
@@ -86,7 +85,7 @@ export default async function ShowroomVehiclePage({ params: paramsPromise }: Arg
   } catch (error) {
     if (error instanceof MotorCityStockError) {
       // Fetch layer already reported via captureStockFetchEvent — avoid double capture.
-      return <StockArchiveError />
+      notFound()
     }
     Sentry.captureException(error, {
       tags: { area: 'showroom', phase: 'load-vehicle' },
@@ -168,7 +167,7 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   try {
     const vehicle = await getCachedStockVehicle(cmsId)
     if (!vehicle) {
-      return buildDocumentMetadata({ title: 'Vehicle', path: fallbackPath })
+      notFound()
     }
 
     const pageTitle = getStockVehiclePageTitle(vehicle)
@@ -185,8 +184,7 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
     })
   } catch (error) {
     if (error instanceof MotorCityStockError) {
-      // Fetch layer already reported via captureStockFetchEvent — avoid double capture.
-      return buildDocumentMetadata({ title: 'Vehicle', path: fallbackPath })
+      notFound()
     }
     Sentry.captureException(error, {
       tags: { area: 'showroom', phase: 'generateMetadata' },
