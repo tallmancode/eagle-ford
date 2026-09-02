@@ -1,9 +1,13 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  getFormDisplayLabel,
+  getThankYouPathForForm,
   getThankYouPathForFormTitle,
   isThankYouSlug,
   resolveEnquiryFormIdentity,
+  resolveEnquiryFormIdentityByFormName,
+  resolveEnquiryFormIdentityFromForm,
 } from '@/lib/forms/enquiryFormIdentity'
 
 describe('enquiryFormIdentity', () => {
@@ -23,7 +27,35 @@ describe('enquiryFormIdentity', () => {
     expect(resolveEnquiryFormIdentity('Paint and Panel Enquiry Form')?.formName).toBe('paint_panel')
   })
 
-  it('routes sales vs service thank-you paths', () => {
+  it('resolves identity from CMS form_name first', () => {
+    expect(
+      resolveEnquiryFormIdentityFromForm({
+        title: 'Unrelated Custom Title',
+        form_name: 'sell_your_car',
+      })?.formName,
+    ).toBe('sell_your_car')
+
+    expect(resolveEnquiryFormIdentityByFormName('new_vehicle_quote')?.department).toBe('sales')
+    expect(resolveEnquiryFormIdentityByFormName('parts')?.department).toBe('parts')
+    expect(resolveEnquiryFormIdentityByFormName('wheel_tyre')?.department).toBe('service')
+  })
+
+  it('returns display labels for CMS form_name values', () => {
+    expect(getFormDisplayLabel('parts')).toBe('Parts')
+    expect(getFormDisplayLabel('wheel_tyre')).toBe('Wheel & tyre')
+    expect(getFormDisplayLabel(null)).toBeNull()
+  })
+
+  it('routes sales vs service thank-you paths from CMS form_name', () => {
+    expect(
+      getThankYouPathForForm({ title: 'Anything', form_name: 'general_enquiry' }),
+    ).toBe('/sales-form-submitted')
+    expect(
+      getThankYouPathForForm({ title: 'Anything', form_name: 'wheel_tyre' }),
+    ).toBe('/service-form-submitted')
+  })
+
+  it('routes sales vs service thank-you paths from title fallback', () => {
     expect(getThankYouPathForFormTitle('General Enquiry Form')).toBe('/sales-form-submitted')
     expect(getThankYouPathForFormTitle('Wheel & Tyre Enquiry Form')).toBe('/service-form-submitted')
     expect(getThankYouPathForFormTitle('Paint & Panel Enquiry Form')).toBe(

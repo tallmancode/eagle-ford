@@ -4,6 +4,7 @@ import {
   ATTRIBUTION_STORAGE_KEY,
   ATTRIBUTION_TTL_MS,
   captureAttribution,
+  isAttributionExpired,
   readGclidFromCookies,
   readStoredAttribution,
 } from '@/lib/attribution/captureAttribution'
@@ -29,6 +30,9 @@ describe('captureAttribution', () => {
     expect(stored?.gclid).toBe('Cj0KCQjw')
     expect(stored?.utm_campaign).toBe('ranger')
     expect(stored?.landing_page).toBe('/specials/ranger')
+    expect(stored?.expiresAt).toBe(
+      new Date(Date.parse('2026-08-26T10:00:00.000Z') + ATTRIBUTION_TTL_MS).toISOString(),
+    )
     expect(readStoredAttribution()?.gclid).toBe('Cj0KCQjw')
   })
 
@@ -53,20 +57,22 @@ describe('captureAttribution', () => {
     )
   })
 
-  it('resets capturedAt when a new gclid arrives', () => {
+  it('resets capturedAt and expiresAt when a new gclid arrives', () => {
     captureAttribution({
       search: '?gclid=first-click',
       pathname: '/',
       now: Date.parse('2026-08-01T10:00:00.000Z'),
     })
 
+    const now = Date.parse('2026-08-26T10:00:00.000Z')
     const second = captureAttribution({
       search: '?gclid=second-click',
       pathname: '/sell',
-      now: Date.parse('2026-08-26T10:00:00.000Z'),
+      now,
     })
 
-    expect(second?.capturedAt).toBe(new Date(Date.parse('2026-08-26T10:00:00.000Z')).toISOString())
+    expect(second?.capturedAt).toBe(new Date(now).toISOString())
+    expect(second?.expiresAt).toBe(new Date(now + ATTRIBUTION_TTL_MS).toISOString())
   })
 
   it('allows a fresh gclid after the 90-day TTL expires', () => {
@@ -84,6 +90,46 @@ describe('captureAttribution', () => {
     })
 
     expect(afterExpiry?.gclid).toBe('new-click')
+  })
+
+  it('clears expired attribution on read using expiresAt', () => {
+    const capturedAt = Date.parse('2026-01-01T10:00:00.000Z')
+    localStorage.setItem(
+      ATTRIBUTION_STORAGE_KEY,
+      JSON.stringify({
+        gclid: 'expired-click',
+        capturedAt: new Date(capturedAt).toISOString(),
+        expiresAt: new Date(capturedAt + ATTRIBUTION_TTL_MS).toISOString(),
+      }),
+    )
+
+    expect(
+      readStoredAttribution(capturedAt + ATTRIBUTION_TTL_MS + 1),
+    ).toBeNull()
+    expect(localStorage.getItem(ATTRIBUTION_STORAGE_KEY)).toBeNull()
+  })
+
+  it('honours expiresAt over capturedAt when both are present', () => {
+    const now = Date.parse('2026-08-26T10:00:00.000Z')
+    expect(
+      isAttributionExpired(
+        {
+          capturedAt: new Date(now - 1000).toISOString(),
+          expiresAt: new Date(now + ATTRIBUTION_TTL_MS).toISOString(),
+        },
+        now,
+      ),
+    ).toBe(false)
+
+    expect(
+      isAttributionExpired(
+        {
+          capturedAt: new Date(now).toISOString(),
+          expiresAt: new Date(now - 1).toISOString(),
+        },
+        now,
+      ),
+    ).toBe(true)
   })
 
   it('keeps stored gclid on UTM-only visits', () => {
@@ -122,5 +168,6 @@ describe('captureAttribution', () => {
     })
 
     expect(stored?.gclid).toBe('Cj0KCQjwCookie')
+    expect(stored?.expiresAt).toBeTruthy()
   })
 })
