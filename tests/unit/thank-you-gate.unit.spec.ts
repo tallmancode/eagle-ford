@@ -34,10 +34,11 @@ describe('ThankYouGate', () => {
     armThankYouGate('/sales-form-submitted')
 
     render(
-      createElement(ThankYouGate, {
-        slug: 'sales-form-submitted',
-        children: createElement('p', null, 'Thank you'),
-      }),
+      createElement(
+        ThankYouGate,
+        { slug: 'sales-form-submitted' },
+        createElement('p', null, 'Thank you'),
+      ),
     )
 
     await waitFor(() => {
@@ -53,10 +54,11 @@ describe('ThankYouGate', () => {
 
   it('redirects home without page_view when the gate token is missing', async () => {
     render(
-      createElement(ThankYouGate, {
-        slug: 'sales-form-submitted',
-        children: createElement('p', null, 'Thank you'),
-      }),
+      createElement(
+        ThankYouGate,
+        { slug: 'sales-form-submitted' },
+        createElement('p', null, 'Thank you'),
+      ),
     )
 
     await waitFor(() => {
