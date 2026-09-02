@@ -44,3 +44,7 @@ Thumbs.db
 *.local
 backups/
 dumps/
+
+.cursor/skills
+.agents/skills/
+!.agents/skills/README.md
