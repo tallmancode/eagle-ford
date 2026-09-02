@@ -2,15 +2,14 @@
 
 import { sendGTMEvent } from '@next/third-parties/google'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type PropsWithChildren } from 'react'
 
 import { canSendAnalytics } from '@/components/analytics/canSendAnalytics'
 import { consumeThankYouGate, suppressNextPageView } from '@/lib/forms/thankYouGate'
 
-type ThankYouGateProps = {
+type ThankYouGateProps = PropsWithChildren<{
   slug: string
-  children: ReactNode
-}
+}>
 
 /**
  * Allows thank-you page content only once after a successful form redirect.
