@@ -83,7 +83,7 @@ export function useFormSubmission(form: Form) {
             clearTimeout(loadingTimerID)
           }
 
-          if (req.status >= 400) {
+          if (!req.ok) {
             setIsLoading(false)
             setError({
               message: res.errors?.[0]?.message || 'Internal Server Error',

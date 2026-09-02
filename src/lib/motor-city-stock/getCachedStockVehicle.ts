@@ -10,8 +10,13 @@ import {
 import type { FetchStockVehicleOptions, MotorCityStockVehicle } from '@/lib/motor-city-stock/types'
 import { MotorCityStockError } from '@/lib/motor-city-stock/types'
 
+function isInactiveVehicle(vehicle: MotorCityStockVehicle): boolean {
+  return vehicle.isActive === false
+}
+
 /**
  * Fetch a vehicle; on retryable upstream failure return last-good if present.
+ * Sold/inactive or missing vehicles return null (404) rather than StockArchiveError.
  * Exported for tests — production callers should use getCachedStockVehicle.
  */
 export async function loadStockVehicleWithFallback(
@@ -21,6 +26,12 @@ export async function loadStockVehicleWithFallback(
 
   try {
     const response = await fetchStockVehicle(options)
+
+    if (isInactiveVehicle(response.vehicle)) {
+      forgetLastGoodVehicle(dealerCode, options.cmsId)
+      return null
+    }
+
     rememberLastGoodVehicle(dealerCode, options.cmsId, response.vehicle)
     return response.vehicle
   } catch (error) {
@@ -34,6 +45,7 @@ export async function loadStockVehicleWithFallback(
     if (error instanceof MotorCityStockError && error.retryable) {
       const stale = getLastGoodVehicle(dealerCode, options.cmsId)
       if (stale) return stale
+      return null
     }
 
     throw error

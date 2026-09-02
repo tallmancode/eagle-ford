@@ -1369,9 +1369,23 @@ export interface Form {
   id: string;
   title: string;
   /**
-   * Stable ID sent to Google Tag Manager as form_id (e.g. general_enquiry). Must be unique across all forms.
+   * Stable ID sent to Google Tag Manager as form_id. Use lowercase letters, numbers, and underscores only (e.g. new_vehicle_quote). Must be unique across all forms.
    */
   external_id?: string | null;
+  /**
+   * Marketing slug sent to Google Tag Manager as form_name. Required for conversion tracking — do not rename the form title instead.
+   */
+  form_name:
+    | 'general_enquiry'
+    | 'new_vehicle_quote'
+    | 'used_vehicle_quote'
+    | 'special_offer'
+    | 'test_drive'
+    | 'sell_your_car'
+    | 'service_booking'
+    | 'parts'
+    | 'wheel_tyre'
+    | 'paint_panel';
   /**
    * Multi-step forms use the Steps list below. Single-page forms use the Fields list.
    */
@@ -10375,7 +10389,7 @@ export interface FormSubmission {
    */
   email?: string | null;
   /**
-   * Captured from the visitor landing URL (gclid / UTMs), retained ~90 days client-side
+   * Captured from the visitor landing URL (gclid / UTMs). gclid is retained 90 days from capture — see expiresAt.
    */
   attribution?: {
     gclid?: string | null;
@@ -10389,6 +10403,7 @@ export interface FormSubmission {
     landing_page?: string | null;
     referrer?: string | null;
     capturedAt?: string | null;
+    expiresAt?: string | null;
   };
   /**
    * Eagle Motor City site-form-leads document id
@@ -11235,6 +11250,7 @@ export interface RedirectsSelect<T extends boolean = true> {
 export interface FormsSelect<T extends boolean = true> {
   title?: T;
   external_id?: T;
+  form_name?: T;
   formLayout?: T;
   fields?:
     | T
@@ -11668,6 +11684,7 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         landing_page?: T;
         referrer?: T;
         capturedAt?: T;
+        expiresAt?: T;
       };
   motorCityLeadId?: T;
   motorCityLeadStatus?: T;

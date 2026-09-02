@@ -3,6 +3,7 @@ import configPromise from '@payload-config'
 import { getPayload } from 'payload'
 import { MediaImage } from '@/components/ui/media-image'
 import { FormBlockComponent } from '@/lib/blocks/form-block/components/FormBlockComponent'
+import { getFormDisplayLabel } from '@/lib/forms/enquiryFormIdentity'
 import { FULL_BLEED_IMAGE_MAX_WIDTH } from '@/lib/utils/getOptimalMediaSize'
 
 export async function FormHero(props: Hero) {
@@ -30,7 +31,8 @@ export async function FormHero(props: Hero) {
 
   if (!form?.id) return null
 
-  const heading = content.heading?.trim() || form.title
+  const heading =
+    content.heading?.trim() || getFormDisplayLabel(form.form_name) || form.title
 
   return (
     <section className="relative w-full">

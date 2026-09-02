@@ -284,7 +284,7 @@ describe('loadStockVehicleWithFallback', () => {
     await expect(loadStockVehicleWithFallback({ cmsId: 'cms-stale' })).resolves.toEqual(vehicle)
   })
 
-  it('rethrows retryable errors when no last-good is available', async () => {
+  it('returns null when retryable upstream fails with no last-good cache', async () => {
     vi.spyOn(
       await import('@/lib/motor-city-stock/fetchStockVehicle'),
       'fetchStockVehicle',
@@ -299,10 +299,28 @@ describe('loadStockVehicleWithFallback', () => {
       '@/lib/motor-city-stock/getCachedStockVehicle'
     )
 
-    await expect(loadStockVehicleWithFallback({ cmsId: 'cms-cold' })).rejects.toMatchObject({
-      status: 502,
-      retryable: true,
+    await expect(loadStockVehicleWithFallback({ cmsId: 'cms-cold' })).resolves.toBeNull()
+  })
+
+  it('returns null and clears cache when upstream returns inactive vehicle', async () => {
+    const inactive = { ...sampleVehicle('cms-inactive'), isActive: false }
+
+    vi.spyOn(
+      await import('@/lib/motor-city-stock/fetchStockVehicle'),
+      'fetchStockVehicle',
+    ).mockResolvedValue({
+      dealerCode: 'EC167',
+      vehicle: inactive,
     })
+
+    rememberLastGoodVehicle('EC167', 'cms-inactive', sampleVehicle('cms-inactive'), Date.now())
+
+    const { loadStockVehicleWithFallback } = await import(
+      '@/lib/motor-city-stock/getCachedStockVehicle'
+    )
+
+    await expect(loadStockVehicleWithFallback({ cmsId: 'cms-inactive' })).resolves.toBeNull()
+    expect(getLastGoodVehicle('EC167', 'cms-inactive', Date.now())).toBeNull()
   })
 })
 

@@ -1,7 +1,7 @@
 import { sendGTMEvent } from '@next/third-parties/google'
 
 import { canSendAnalytics } from '@/components/analytics/canSendAnalytics'
-import { resolveEnquiryFormIdentity } from '@/lib/forms/enquiryFormIdentity'
+import { resolveEnquiryFormIdentityFromForm } from '@/lib/forms/enquiryFormIdentity'
 
 export type EnquirySubmittedPayload = {
   form_name: string
@@ -24,11 +24,27 @@ function pickField(data: Record<string, unknown> | undefined, keys: string[]): s
   return undefined
 }
 
+/** Enforce snake_case — dots in legacy CMS data become underscores. */
+export function normalizeFormIdentifier(value: string): string {
+  return value.trim().replace(/\./g, '_')
+}
+
+function warnIfDotsNormalized(original: string, normalized: string, field: 'form_name' | 'form_id') {
+  if (original !== normalized && canSendAnalytics()) {
+    console.warn('[analytics] form identifier contained dots; normalized to underscores', {
+      field,
+      original,
+      normalized,
+    })
+  }
+}
+
 /**
  * Push marketing `enquiry_submitted` after a successful form create (HTTP 2xx).
  */
 export function pushEnquirySubmitted(args: {
   formTitle: string
+  formName?: string | null
   externalId?: string | null
   submissionId?: string
   formData?: Record<string, unknown>
@@ -37,20 +53,39 @@ export function pushEnquirySubmitted(args: {
 }): void {
   if (!canSendAnalytics()) return
 
-  const identity = resolveEnquiryFormIdentity(args.formTitle)
-  if (!identity) return
+  const identity = resolveEnquiryFormIdentityFromForm({
+    title: args.formTitle,
+    form_name: args.formName as Parameters<typeof resolveEnquiryFormIdentityFromForm>[0]['form_name'],
+  })
+
+  if (!identity) {
+    console.warn('[analytics] enquiry_submitted skipped: unresolved form', {
+      formTitle: args.formTitle,
+      formName: args.formName,
+      externalId: args.externalId,
+    })
+    return
+  }
 
   const page_path =
     args.pagePath ?? (typeof window !== 'undefined' ? window.location.pathname : '/')
 
+  const rawFormName = identity.formName
+  const form_name = normalizeFormIdentifier(rawFormName)
+  warnIfDotsNormalized(rawFormName, form_name, 'form_name')
+
   const payload: EnquirySubmittedPayload = {
-    form_name: identity.formName,
+    form_name,
     department: identity.department,
     page_path,
   }
 
   const externalId = args.externalId?.trim()
-  if (externalId) payload.form_id = externalId
+  if (externalId) {
+    const form_id = normalizeFormIdentifier(externalId)
+    warnIfDotsNormalized(externalId, form_id, 'form_id')
+    payload.form_id = form_id
+  }
 
   const vehicle_model = pickField(args.formData, [
     'model',
