@@ -10,6 +10,7 @@ export type LeadAttribution = {
   landing_page?: string
   referrer?: string
   capturedAt?: string
+  expiresAt?: string
 }
 
 export const ATTRIBUTION_STORAGE_KEY = 'eagle-ford:attribution'
@@ -33,7 +34,21 @@ function asTrimmed(value: unknown): string {
   return value.trim()
 }
 
-function isExpired(capturedAt: string | undefined, now = Date.now()): boolean {
+function computeExpiresAt(now: number): string {
+  return new Date(now + ATTRIBUTION_TTL_MS).toISOString()
+}
+
+export function isAttributionExpired(
+  record: Pick<LeadAttribution, 'capturedAt' | 'expiresAt'>,
+  now = Date.now(),
+): boolean {
+  const expiresAt = asTrimmed(record.expiresAt)
+  if (expiresAt) {
+    const ts = Date.parse(expiresAt)
+    if (!Number.isNaN(ts)) return now >= ts
+  }
+
+  const capturedAt = asTrimmed(record.capturedAt)
   if (!capturedAt) return true
   const ts = Date.parse(capturedAt)
   if (Number.isNaN(ts)) return true
@@ -47,7 +62,7 @@ export function readStoredAttribution(now = Date.now()): LeadAttribution | null 
     if (!raw) return null
     const parsed = JSON.parse(raw) as LeadAttribution
     if (!parsed || typeof parsed !== 'object') return null
-    if (isExpired(parsed.capturedAt, now)) {
+    if (isAttributionExpired(parsed, now)) {
       localStorage.removeItem(ATTRIBUTION_STORAGE_KEY)
       return null
     }
@@ -109,7 +124,7 @@ function hasClickOrUtm(data: Partial<LeadAttribution>): boolean {
 
 /**
  * Last-touch click ID within a 90-day window.
- * A new gclid overwrites the stored record and resets capturedAt; same gclid
+ * A new gclid overwrites the stored record and resets capturedAt / expiresAt; same gclid
  * is idempotent; empty landings keep the stored record; UTM-only visits do not
  * clear an existing gclid.
  */
@@ -155,6 +170,7 @@ export function captureAttribution(args?: {
         landing_page: pathname || '/',
         referrer: asTrimmed(referrer) || undefined,
         capturedAt: new Date(now).toISOString(),
+        expiresAt: computeExpiresAt(now),
       }
     : {
         ...existing,
@@ -162,6 +178,7 @@ export function captureAttribution(args?: {
         landing_page: existing?.landing_page || pathname || '/',
         referrer: existing?.referrer || asTrimmed(referrer) || undefined,
         capturedAt: existing?.capturedAt || new Date(now).toISOString(),
+        expiresAt: existing?.expiresAt || computeExpiresAt(now),
       }
 
   writeStoredAttribution(next)
@@ -177,7 +194,7 @@ export function compactAttribution(
 ): LeadAttribution | undefined {
   if (!value) return undefined
   const out: LeadAttribution = {}
-  for (const key of [...QUERY_KEYS, 'landing_page', 'referrer', 'capturedAt'] as const) {
+  for (const key of [...QUERY_KEYS, 'landing_page', 'referrer', 'capturedAt', 'expiresAt'] as const) {
     const trimmed = asTrimmed(value[key])
     if (trimmed) out[key] = trimmed
   }

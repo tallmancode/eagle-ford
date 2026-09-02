@@ -3,7 +3,9 @@
  * Matches GTM / Ads `form_name` values (issue #356) and thank-you routing (#355).
  */
 
-export type EnquiryDepartment = 'sales' | 'service'
+import type { Form } from '@/payload-types'
+
+export type EnquiryDepartment = 'sales' | 'service' | 'parts'
 
 export type EnquiryFormName =
   | 'general_enquiry'
@@ -23,6 +25,20 @@ export const SERVICE_THANK_YOU_SLUG = 'service-form-submitted'
 export const THANK_YOU_SLUGS = [SALES_THANK_YOU_SLUG, SERVICE_THANK_YOU_SLUG] as const
 
 export type ThankYouSlug = (typeof THANK_YOU_SLUGS)[number]
+
+/** CMS select options — underscore values only. */
+export const FORM_NAME_OPTIONS: { label: string; value: EnquiryFormName }[] = [
+  { label: 'General enquiry', value: 'general_enquiry' },
+  { label: 'New vehicle quote', value: 'new_vehicle_quote' },
+  { label: 'Used vehicle quote', value: 'used_vehicle_quote' },
+  { label: 'Special offer', value: 'special_offer' },
+  { label: 'Test drive', value: 'test_drive' },
+  { label: 'Sell your car', value: 'sell_your_car' },
+  { label: 'Service booking', value: 'service_booking' },
+  { label: 'Parts', value: 'parts' },
+  { label: 'Wheel & tyre', value: 'wheel_tyre' },
+  { label: 'Paint & panel', value: 'paint_panel' },
+]
 
 type EnquiryFormIdentity = {
   formName: EnquiryFormName
@@ -77,7 +93,7 @@ const ENQUIRY_FORM_IDENTITIES: EnquiryFormIdentity[] = [
   },
   {
     formName: 'parts',
-    department: 'service',
+    department: 'parts',
     thankYouSlug: SERVICE_THANK_YOU_SLUG,
     titleMatchers: ['parts enquiry', 'parts form'],
   },
@@ -95,6 +111,10 @@ const ENQUIRY_FORM_IDENTITIES: EnquiryFormIdentity[] = [
   },
 ]
 
+const FORM_NAME_LOOKUP = new Map<EnquiryFormName, EnquiryFormIdentity>(
+  ENQUIRY_FORM_IDENTITIES.map((identity) => [identity.formName, identity]),
+)
+
 export function normalizeFormTitle(title: string): string {
   return title
     .trim()
@@ -102,6 +122,13 @@ export function normalizeFormTitle(title: string): string {
     .replace(/&/g, ' and ')
     .replace(/[^a-z0-9\s]/g, ' ')
     .replace(/\s+/g, ' ')
+}
+
+export function resolveEnquiryFormIdentityByFormName(
+  formName: string | null | undefined,
+): EnquiryFormIdentity | null {
+  if (!formName?.trim()) return null
+  return FORM_NAME_LOOKUP.get(formName.trim() as EnquiryFormName) ?? null
 }
 
 export function resolveEnquiryFormIdentity(
@@ -121,6 +148,14 @@ export function resolveEnquiryFormIdentity(
   return null
 }
 
+export function resolveEnquiryFormIdentityFromForm(
+  form: Pick<Form, 'title' | 'form_name'>,
+): EnquiryFormIdentity | null {
+  const fromCms = resolveEnquiryFormIdentityByFormName(form.form_name)
+  if (fromCms) return fromCms
+  return resolveEnquiryFormIdentity(form.title)
+}
+
 export function isThankYouSlug(slug: string | null | undefined): slug is ThankYouSlug {
   return THANK_YOU_SLUGS.includes(slug as ThankYouSlug)
 }
@@ -129,4 +164,16 @@ export function getThankYouPathForFormTitle(title: string | null | undefined): s
   const identity = resolveEnquiryFormIdentity(title)
   if (!identity) return null
   return `/${identity.thankYouSlug}`
+}
+
+export function getThankYouPathForForm(form: Pick<Form, 'title' | 'form_name'>): string | null {
+  const identity = resolveEnquiryFormIdentityFromForm(form)
+  if (!identity) return null
+  return `/${identity.thankYouSlug}`
+}
+
+/** Human-readable label for form hero headings from CMS Analytics form name. */
+export function getFormDisplayLabel(formName: EnquiryFormName | null | undefined): string | null {
+  if (!formName) return null
+  return FORM_NAME_OPTIONS.find((option) => option.value === formName)?.label ?? null
 }

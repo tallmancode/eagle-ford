@@ -8,7 +8,8 @@ export function getFormSubmissionAttributionFields(): Field[] {
       type: 'group',
       admin: {
         readOnly: true,
-        description: 'Captured from the visitor landing URL (gclid / UTMs), retained ~90 days client-side',
+        description:
+          'Captured from the visitor landing URL (gclid / UTMs). gclid is retained 90 days from capture — see expiresAt.',
       },
       fields: [
         { name: 'gclid', type: 'text', admin: { readOnly: true } },
@@ -22,6 +23,7 @@ export function getFormSubmissionAttributionFields(): Field[] {
         { name: 'landing_page', type: 'text', admin: { readOnly: true } },
         { name: 'referrer', type: 'text', admin: { readOnly: true } },
         { name: 'capturedAt', type: 'text', admin: { readOnly: true } },
+        { name: 'expiresAt', type: 'text', admin: { readOnly: true } },
       ],
     },
   ]
